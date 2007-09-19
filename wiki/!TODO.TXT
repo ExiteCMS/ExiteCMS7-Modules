@@ -1,0 +1,10 @@
+General:
+========
+
+1) Need to work on documentation, changelog, release notes, etc...
+
+Module - Admin panel:
+=====================
+
+Module - Other panel:
+=====================

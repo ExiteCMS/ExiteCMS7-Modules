@@ -1,0 +1,550 @@
+<?php
+/*---------------------------------------------------+
+| PLi-Fusion Content Management System               |
++----------------------------------------------------+
+| Integrated by WanWizard (wanwizard@gmail.com)      |
+| http://www.pli-images.org/pli-fusion               |
++----------------------------------------------------*/
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
+require_once PATH_ROOT."/includes/theme_functions.php";
+
+/*---------------------------------------------------+
+| Image uploads - handling and preparation           |
++----------------------------------------------------*/
+$variables[] = array();
+
+// load the locale for this module
+include PATH_LOCALE.LOCALESET."admin/image_uploads.php";
+
+$variables['image_cats'][] = array('folder' => "wiki", 'name' => 'Wiki', 'path' => PATH_IMAGES."wiki/", 'selected' => true);
+$ufolder = IMAGES."wiki/";
+$afolder = PATH_IMAGES."wiki/";
+
+if (isset($status)) {
+	if ($status == "upn") {
+		$title = $locale['420'];
+		$variables['message'] = $locale['425'];
+	} elseif ($status == "upy") {
+		$title = $locale['420'];
+		$variables['message'] = "<img src='".$ufolder.$img."' alt='$img' /><br /><br />".$locale['426'];
+	}
+	// define the message panel variables
+	$variables['bold'] = true;
+	$template_panels[] = array('type' => 'body', 'name' => 'wiki.upload.status', 'title' => $title, 'template' => '_message_table_panel.tpl');
+	$template_variables['wiki.upload.status'] = $variables;
+	$variables = array();
+}
+
+// if a file is uploaded, process it
+if (isset($_POST['uploadimage'])) {
+	$error = "";
+	$image_types = array(
+		".gif",
+		".GIF",
+		".jpeg",
+		".JPEG",
+		".jpg",
+		".JPG",
+		".png",
+		".PNG"
+	);
+	$imgext = strrchr($_FILES['myfile']['name'], ".");
+	$imgname = $_FILES['myfile']['name'];
+	$imgsize = $_FILES['myfile']['size'];
+	$imgtemp = $_FILES['myfile']['tmp_name'];
+	if (!in_array($imgext, $image_types)) {
+		redirect(FUSION_REQUEST);
+	} elseif (is_uploaded_file($imgtemp)){
+		include PATH_INCLUDES."photo_functions_include.php";
+		$imgname = image_exists($afolder, substr("000000".$userdata['user_id'],-6).'_'.$imgname);
+		move_uploaded_file($imgtemp, $afolder.$imgname);
+		chmod($afolder.$imgname,0644);
+		redirect(FUSION_REQUEST);
+	}
+}
+
+/*---------------------------------------------------+
+| Locale definition for this installation module     |
++----------------------------------------------------*/
+
+if (file_exists(PATH_MODULES."wiki/locale/".$settings['locale'].".php")) {
+	include PATH_MODULES."wiki/locale/".$settings['locale'].".php";
+} else {
+	include PATH_MODULES."wiki/locale/English.php";
+}
+
+/**
+ * The Wikka mainscript.
+ * 
+ * This file is called each time a request is made from the browser.
+ * Most of the core methods used by the engine are located in the Wakka class.
+ * @see Wakka
+ * This file was originally written by Hendrik Mans for WakkaWiki
+ * and released under the terms of the modified BSD license
+ * @see /docs/WakkaWiki.LICENSE
+ *
+ * @package Wikka
+ * @subpackage Core
+ * @version $Id$
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @see /docs/Wikka.LICENSE
+ * @filesource
+ * 
+ * @author Hendrik Mans <hendrik@mans.de>
+ * @author Jason Tourtelotte <wikka-admin@jsnx.com>
+ * @author {@link http://wikkawiki.org/JavaWoman Marjolein Katsma}
+ * @author {@link http://wikkawiki.org/NilsLindenberg Nils Lindenberg}
+ * @author {@link http://wikkawiki.org/DotMG Mahefa Randimbisoa}
+ * @author {@link http://wikkawiki.org/DarTar Dario Taraborelli}
+ * 
+ * @copyright Copyright 2002-2003, Hendrik Mans <hendrik@mans.de>
+ * @copyright Copyright 2004-2005, Jason Tourtelotte <wikka-admin@jsnx.com>
+ * @copyright Copyright 2006, {@link http://wikkawiki.org/CreditsPage Wikka Development Team}
+ * 
+ * @todo use templating class for page generation;
+ * @todo add phpdoc documentation for configuration array elements;
+ * @todo	replace $_REQUEST with either $_GET or $_POST (or both if really
+ * 			necessary) - #312  
+ */
+
+// If you need to use this installation with a configuration file outside the 
+// installation directory uncomment the following line and adapt it to reflect 
+// the (filesystem) path to where your configuration file is located.
+// This would make it possible to store the configuration file outside of the
+// webroot, or to share one configuration file between several Wikka Wiki
+// installations.
+// This replaces the use of the environment variable WAKKA_CONFIG for security
+// reasons. [SEC]      
+#if (!defined('WAKKA_CONFIG')) define('WAKKA_CONFIG','path/to/your/wikka.config.php');
+
+error_reporting (E_ALL ^ E_NOTICE);
+
+if(!defined('ERROR_WAKKA_LIBRARY_MISSING')) define ('ERROR_WAKKA_LIBRARY_MISSING','The necessary file "libs/Wakka.class.php" could not be found. To run Wikka, please make sure the file exists and is placed in the right directory!');
+if(!defined('ERROR_WRONG_PHP_VERSION')) define ('ERROR_WRONG_PHP_VERSION', '$_REQUEST[] not found. Wakka requires PHP 4.1.0 or higher!');
+if(!defined('ERROR_SETUP_FILE_MISSING')) define ('ERROR_SETUP_FILE_MISSING', 'A file of the installer/ upgrader was not found. Please install Wikka again!');
+if(!defined('ERROR_SETUP_HEADER_MISSING')) define ('ERROR_SETUP_HEADER_MISSING', 'The file "setup/header.php" was not found. Please install Wikka again!');
+if(!defined('ERROR_SETUP_FOOTER_MISSING')) define ('ERROR_SETUP_FOOTER_MISSING', 'The file "setup/footer.php" was not found. Please install Wikka again!');
+if(!defined('ERROR_NO_DB_ACCESS')) define ('ERROR_NO_DB_ACCESS', 'The wiki is currently unavailable. <br /><br />Error: Unable to connect to the MySQL database.');
+if(!defined('PAGE_GENERATION_TIME')) define ('PAGE_GENERATION_TIME', 'Page was generated in %.4f seconds'); // %.4f - generation time in seconds with 4 digits after the dot   
+if(!defined('WIKI_UPGRADE_NOTICE')) define ('WIKI_UPGRADE_NOTICE', 'This site is currently being upgraded. Please try again later.');
+
+ob_start();
+
+/**
+ * Defines the current Wikka version. Do not change the version number or you will have problems upgrading.
+ */
+if (!defined('WAKKA_VERSION')) define('WAKKA_VERSION', '1.1.6.3');
+/**
+ * Defines the default cookie name.
+ */
+if(!defined('BASIC_COOKIE_NAME')) define('BASIC_COOKIE_NAME', 'Wikkawiki');
+
+/**
+ * Calculate page generation time.
+ */
+function getmicrotime() {
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
+}
+
+$tstart = getmicrotime();
+
+if ( ! function_exists("mysql_real_escape_string") )
+{
+/**
+ * Escape special characters in a string for use in a SQL statement.
+ * 
+ * This function is added for back-compatibility with MySQL 3.23.
+ * @param string $string the string to be escaped
+ * @return string a string with special characters escaped
+ */
+	function mysql_real_escape_string($string)
+	{
+		return mysql_escape_string($string);
+	}
+}
+
+/**
+ * Include main library if it exists.
+ * @see /libs/Wakka.class.php
+ */
+if (file_exists('libs/Wakka.class.php')) require_once('libs/Wakka.class.php');
+else die(ERROR_WAKKA_LIBRARY_MISSING);
+
+// stupid version check
+if (!isset($_REQUEST)) die(ERROR_WRONG_PHP_VERSION); // TODO replace with php version_compare
+
+/** 
+ * Workaround for the amazingly annoying magic quotes.
+ */
+function magicQuotesWorkaround(&$a)
+{
+	if (is_array($a))
+	{
+		foreach ($a as $k => $v)
+		{
+			if (is_array($v))
+				magicQuotesWorkaround($a[$k]);
+			else
+				$a[$k] = stripslashes($v);
+		}
+	}
+}
+set_magic_quotes_runtime(0);
+if (get_magic_quotes_gpc())
+{
+	magicQuotesWorkaround($_POST);
+	magicQuotesWorkaround($_GET);
+	magicQuotesWorkaround($_COOKIE);
+}
+
+/**
+ * Default configuration.
+ */
+// attempt to derive base URL fragments and whether rewrite mode is enabled (#438)
+$t_domain	= $_SERVER['SERVER_NAME'];
+$t_port		= $_SERVER['SERVER_PORT'] != 80 ? ':'.$_SERVER['SERVER_PORT'] : '';
+$t_request = $_SERVER['REQUEST_URI'];
+if (preg_match('@\.php$@', $t_request) && !preg_match('@index\.php$@', $t_request))
+{
+	$t_request = preg_replace('@/[^.]+\.php@', '/index.php', $t_request);	// handle "overridden" redirect from index.php (or plain wrong file name!)
+}
+if ( !preg_match('@wakka=@',$_SERVER['REQUEST_URI']) && isset($_SERVER['QUERY_STRING']) && preg_match('@wakka=@',$_SERVER['QUERY_STRING']))
+{
+	// looks like we got a rewritten request via .htaccess 
+	$t_query = '';
+	$t_request = preg_replace('@'.preg_quote('index.php').'@', '', $t_request);
+	$t_rewrite_mode = 1;
+}
+else
+{
+	// no rewritten request apparent
+	$t_query = '?wakka=';
+	$t_rewrite_mode = 0;
+}
+$wakkaDefaultConfig = array(
+	'mysql_host'				=> 'localhost',
+	'mysql_database'			=> 'wikka',
+	'mysql_user'				=> 'wikka',
+	'table_prefix'			=> 'wikka_',
+
+	'root_page'				=> 'HomePage',
+	'wakka_name'				=> 'MyWikkaSite',
+#	'base_url'				=> 'http://'.$_SERVER['SERVER_NAME'].($_SERVER['SERVER_PORT'] != 80 ? ':'.$_SERVER['SERVER_PORT'] : '').$_SERVER['REQUEST_URI'].(preg_match('/'.preg_quote('wikka.php').'$/', $_SERVER['REQUEST_URI']) ? '?wakka=' : ''),
+#	'rewrite_mode'			=> (preg_match('/'.preg_quote('wikka.php').'$/', $_SERVER['REQUEST_URI']) ? '0' : '1'),
+	'base_url'				=> 'http://'.$t_domain.$t_port.$t_request.$t_query,
+	'rewrite_mode'			=> $t_rewrite_mode,
+	'wiki_suffix'			=> '@wikka',
+
+	'action_path'			=> 'actions',
+	'handler_path'			=> 'handlers',
+	'gui_editor'				=> '1',
+	'stylesheet'				=> 'wikka.css',
+
+	// formatter and code highlighting paths
+	'wikka_formatter_path' 	=> 'formatters',		# (location of Wikka formatter - REQUIRED)
+	'wikka_highlighters_path'	=> 'formatters',		# (location of Wikka code highlighters - REQUIRED)
+	'geshi_path' 			=> '3rdparty/plugins/geshi',				# (location of GeSHi package)
+	'geshi_languages_path' 	=> '3rdparty/plugins/geshi/geshi',		# (location of GeSHi language highlighting files)
+
+	'header_action'			=> 'header',
+	'footer_action'			=> 'footer',
+
+	'navigation_links'		=> '[[CategoryCategory Categories]] :: PageIndex ::  RecentChanges :: RecentlyCommented',
+	'logged_in_navigation_links' => '[[CategoryCategory Categories]] :: PageIndex :: RecentChanges :: RecentlyCommented :: [[UserSettings Change settings]]',
+
+	'referrers_purge_time'	=> '30',
+	'pages_purge_time'		=> '0',
+	'xml_recent_changes'		=> '10',
+	'hide_comments'			=> '0',
+	'require_edit_note'		=> '0',		# edit note optional (0, default), edit note required (1) edit note disabled (2)
+	'anony_delete_own_comments'	=> '1',
+	'public_sysinfo'			=> '0',		# enable or disable public display of system information in SysInfo
+	'double_doublequote_html'	=> 'safe',
+	'external_link_tail' 		=> '<span class="exttail">&#8734;</span>',
+	'sql_debugging'			=> '0',
+	'admin_users' 			=> '',
+	'admin_email' 			=> '',
+	'upload_path' 			=> 'uploads',
+	'mime_types' 			=> 'mime_types.txt',
+
+	// code hilighting with GeSHi
+	'geshi_header'			=> 'div',				# 'div' (default) or 'pre' to surround code block
+	'geshi_line_numbers'		=> '1',			# disable line numbers (0), or enable normal (1) or fancy line numbers (2)
+	'geshi_tab_width'		=> '4',				# set tab width
+	'grabcode_button'		=> '1',				# allow code block downloading
+
+	'wikiping_server' 		=> '',
+
+	'default_write_acl'		=> '+',
+	'default_read_acl'		=> '*',
+	'default_comment_acl'		=> '*');
+
+// load config
+$wakkaConfig = array();
+if (file_exists("wakka.config.php")) rename("wakka.config.php", "wikka.config.php");
+#if (!$configfile = GetEnv("WAKKA_CONFIG")) $configfile = "wikka.config.php";
+if (defined('WAKKA_CONFIG'))	// use a define instead of GetEnv [SEC] 
+{
+	$configfile = WAKKA_CONFIG;
+}
+else
+{
+	$configfile = 'wikka.config.php';
+}
+if (file_exists($configfile)) include($configfile);
+
+$wakkaConfigLocation = $configfile;
+$wakkaConfig = array_merge($wakkaDefaultConfig, $wakkaConfig);
+
+/**
+ * Compare versions, start installer if necessary.
+ */
+if (!isset($wakkaConfig["wakka_version"])) $wakkaConfig["wakka_version"] = 0;
+if ($wakkaConfig["wakka_version"] !== WAKKA_VERSION)
+{
+	/**
+	 * Start installer.
+	 * 
+	 * Data entered by the user is submitted in $_POST, next action for the
+	 * installer (which will receive this data) is passed as a $_GET parameter!
+	 */
+	$installAction = 'default';
+	#if (isset($_REQUEST['installAction'])) $installAction = trim($_REQUEST['installAction']);
+	if (isset($_GET['installAction'])) $installAction = trim($_GET['installAction']);	#312
+	if (file_exists('setup'.DIRECTORY_SEPARATOR.'header.php')) include('setup'.DIRECTORY_SEPARATOR.'header.php'); else print '<em>'.ERROR_SETUP_HEADER_MISSING.'</em>'; #89
+	if (file_exists('setup'.DIRECTORY_SEPARATOR.$installAction.'.php')) include('setup'.DIRECTORY_SEPARATOR.$installAction.'.php'); else print '<em>'.ERROR_SETUP_FILE_MISSING.'</em>'; #89
+	if (file_exists('setup'.DIRECTORY_SEPARATOR.'footer.php')) include('setup'.DIRECTORY_SEPARATOR.'footer.php'); else print '<em>'.ERROR_SETUP_FOOTER_MISSING.'</em>'; #89
+	exit;
+}
+
+/**
+ * Start session.
+ */
+session_name(md5(BASIC_COOKIE_NAME.$wakkaConfig['wiki_suffix']));
+session_start();
+
+// fetch wakka location
+/**
+ * Fetch wakka location (requested page + parameters)
+ * 
+ * @todo files action uses POST, everything else uses GET #312
+ */
+#$wakka = $_REQUEST["wakka"];
+$wakka = $_GET['wakka']; #312
+
+/**
+ * Remove leading slash.
+ */
+$wakka = preg_replace("/^\//", "", $wakka);
+
+/**
+ * Split into page/method.
+ * 
+ * Note this splits at the FIRST / so $method may contain one or more slashes;
+ * this is not allowed, and ultimately handled in the Method() method. [SEC]
+ */
+if (preg_match("#^(.+?)/(.*)$#", $wakka, $matches)) list(, $page, $method) = $matches;
+else if (preg_match("#^(.*)$#", $wakka, $matches)) list(, $page) = $matches;
+//Fix lowercase mod_rewrite bug: URL rewriting makes pagename lowercase. #135
+if ((strtolower($page) == $page) && (isset($_SERVER['REQUEST_URI']))) #38
+{
+ $pattern = preg_quote($page, '/');
+ if (preg_match("/($pattern)/i", urldecode($_SERVER['REQUEST_URI']), $match_url))
+ {
+  $page = $match_url[1];
+ }
+}
+
+/**
+ * Create Wakka object
+ */
+$wakka =& new Wakka($wakkaConfig);
+
+/** 
+ * Check for database access.
+ */
+if (!$wakka->dblink)
+{
+	echo "<div style='font-family:Verdana;font-size:11px;text-align:center;'><b>Unable to establish connection to MySQL</b><br />".ERROR_NO_DB_ACCESS."</div>";
+}
+
+/** 
+ * auto login if logged-in to PLi-Fusion
+ */
+if (iMEMBER) 
+{
+	$userrec = $wakka->LoadSingle("select * from ".$wakka->config["table_prefix"]."users where name = '".$userdata['user_name']."' limit 1");
+	if (!$userrec) {
+		$wakka->Query("INSERT INTO ".$wakka->config['table_prefix']."users SET ".
+			"signuptime = now(), ".
+			"name = '".$userdata['user_name']."', ".
+			"email = '".mysql_real_escape_string($userdata['user_email'])."'");
+
+	}
+	$userrec = $wakka->LoadSingle("select * from ".$wakka->config["table_prefix"]."users where name = '".$userdata['user_name']."' limit 1");
+	$wakka -> SetUser($userrec);
+} else {
+	// make sure we're logged out
+	$wakka->LogoutUser();
+}
+
+$headerparms = '	<link rel="stylesheet" type="text/css" href="css/'.$wakka->GetConfigValue("stylesheet").'" />'.
+	'<link rel="stylesheet" type="text/css" href="css/print.css" media="print" />';
+if ($wakka->GetMethod() != 'edit') {
+	$headerparms .= "\n\t".'<link rel="alternate" type="application/rss+xml" title="'.$wakka->GetWakkaName().': revisions for '.$wakka->tag.' (RSS)" href="'.$wakka->Href('revisions.xml', $wakka->tag).'" />';
+	$headerparms .= "\n\t".'<link rel="alternate" type="application/rss+xml" title="'.$wakka->GetWakkaName().': recently edited pages (RSS)" href="'.$wakka->Href('recentchanges.xml', $wakka->tag).'" />'."\n";
+}
+
+/** 
+ * Run the engine.
+ */
+$wakka->Run($page, $method);
+if (!preg_match("/(xml|raw|mm|grabcode)$/", $method))
+{
+	$tend = getmicrotime();
+	//calculate the difference
+	$totaltime = ($tend - $tstart);
+	//output result
+//	print '<div class="smallprint">'.sprintf(PAGE_GENERATION_TIME, $totaltime)."</div>\n";
+}
+
+$content =  ob_get_contents();
+$page_output = $content;
+$page_length = strlen($page_output);
+
+// header("Cache-Control: pre-check=0");
+header("Cache-Control: no-cache");
+// header("Pragma: ");
+// header("Expires: ");
+
+$etag =  md5($content);
+header('ETag: '.$etag);
+
+header('Content-Length: '.$page_length);
+ob_end_clean();
+
+/** 
+ * Output the page.
+ */
+if (substr($_SERVER["QUERY_STRING"], -4) == ".xml") {
+
+	echo $page_output;
+
+} else {
+
+	$variables['html'] = $page_output;
+	$template_panels[] = array('type' => 'body', 'title' => $wakkaConfig['wakka_name'], 'name' => 'wiki', 'template' => '_custom_html.tpl');
+	$template_variables['wiki'] = $variables;
+
+	// in edit mode? Allow image uploads
+	if (iMEMBER && $method == "edit") {
+		$variables['ifolder'] = $ifolder;
+		$variables['view'] = isset($view) ? $view : "";
+
+		if (isset($view)) {
+			$image_ext = strrchr($afolder.$view,".");
+			if (in_array($image_ext, array(".gif",".GIF",".jpg",".JPG",".jpeg",".JPEG",".png",".PNG"))) {
+				$variables['view_image'] = $ufolder.$view;
+			} else {
+				$variables['view_image'] = "";
+			}
+		} else {
+			$variables['image_list'] = makefilelist($afolder, ".|..|imagelist.js|index.php", true);
+		}
+		$template_panels[] = array('type' => 'body', 'name' => 'modules.wiki.upload', 'template' => 'modules.wiki.upload.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/image_uploads.php");
+		$template_variables['modules.wiki.upload'] = $variables;
+	}
+	
+	require_once PATH_THEME."/theme.php";
+}
+?>
+<?php
+die();
+/*---------------------------------------------------+
+| PLi-Fusion Content Management System               |
++----------------------------------------------------+
+| Copyright 2007 WanWizard (wanwizard@gmail.com)     |
+| http://www.pli-images.org/pli-fusion               |
++----------------------------------------------------+
+| Some portions copyright ? 2002 - 2006 Nick Jones   |
+| http://www.php-fusion.co.uk/                       |
+| Released under the terms & conditions of v2 of the |
+| GNU General Public License. For details refer to   |
+| the included gpl.txt file or visit http://gnu.org  |
++----------------------------------------------------*/
+require_once dirname(__FILE__)."/../includes/core_functions.php";
+require_once PATH_ROOT."/includes/theme_functions.php";
+
+// load the locale for this module
+include PATH_LOCALE.LOCALESET."admin/image_uploads.php";
+
+// temp storage for template variables
+$variables = array();
+
+//check if the user has a right to be here. If not, bail out
+if (!checkrights("IM") || !defined("iAUTH") || $aid != iAUTH) fallback(BASEDIR."index.php");
+
+// set a default if the selected folder is not given
+if (!isset($ifolder)) $ifolder = "images";
+
+// include the TinyMCE buildlist code if regeneration of the list is requested
+if (isset($action) && $action = "update") include PATH_INCLUDES."buildlist.php";
+
+// build the list of available image categories (skip internal CMS image subdirectories)
+$variables['image_cats'] = array();
+$dirlist = makefilelist(PATH_IMAGES, ".|..|advertising|avatars|flags|smiley", true, 'folders');
+$variables['image_cats'][] = array('folder' => "images", 'name' => $locale['422'], 'path' => PATH_IMAGES, 'selected' => ($ifolder == "images"));
+foreach($dirlist as $entry) {
+	$name = ucwords(str_replace("_", " ", $entry));
+	$variables['image_cats'][] = array('folder' => $entry, 'name' => $name, 'path' => PATH_IMAGES.$entry."/", 'selected' => ($ifolder == $entry));
+}
+$ufolder = IMAGES.($ifolder == "images" ? "" : $ifolder."/");
+$afolder = PATH_IMAGES.($ifolder == "images" ? "" : $ifolder."/");
+
+if (isset($status)) {
+	if ($status == "del") {
+		$title = $locale['400'];
+		$variables['message'] = $locale['401'];
+	} elseif ($status == "upn") {
+		$title = $locale['420'];
+		$variables['message'] = $locale['425'];
+	} elseif ($status == "upy") {
+		$title = $locale['420'];
+		$variables['message'] = "<img src='".$ufolder.$img."' alt='$img' /><br /><br />".$locale['426'];
+	}
+	// define the message panel variables
+	$variables['bold'] = true;
+	$template_panels[] = array('type' => 'body', 'name' => 'admin.forums.status', 'title' => $title, 'template' => '_message_table_panel.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/forums.php");
+	$template_variables['admin.forums.status'] = $variables;
+	$variables = array();
+}
+
+if (isset($del)) {
+	unlink($afolder."$del");
+	if ($settings['tinymce_enabled'] == 1) include PATH_INCLUDES."buildlist.php";
+	redirect(FUSION_SELF.$aidlink."&status=del&ifolder=$ifolder");
+} else if (isset($_POST['uploadimage'])) {
+} else {
+	$variables['ifolder'] = $ifolder;
+	$variables['view'] = isset($view) ? $view : "";
+
+	if (isset($view)) {
+		$image_ext = strrchr($afolder.$view,".");
+		if (in_array($image_ext, array(".gif",".GIF",".jpg",".JPG",".jpeg",".JPEG",".png",".PNG"))) {
+			$variables['view_image'] = $ufolder.$view;
+		} else {
+			$variables['view_image'] = "";
+		}
+	} else {
+		$variables['image_list'] = makefilelist($afolder, ".|..|imagelist.js|index.php", true);
+	}
+}
+
+// define the admin body panel
+$template_panels[] = array('type' => 'body', 'name' => 'admin.images', 'template' => 'admin.images.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/image_uploads.php");
+$template_variables['admin.images'] = $variables;
+
+// Call the theme code to generate the output for this webpage
+require_once PATH_THEME."/theme.php";
+?>
