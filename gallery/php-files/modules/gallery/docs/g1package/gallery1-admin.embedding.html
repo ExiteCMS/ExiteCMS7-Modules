@@ -1,0 +1,121 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Embedding Gallery</title><meta name="generator" content="DocBook XSL Stylesheets V1.66.0"><link rel="start" href="index.html" title="Gallery Manual"><link rel="up" href="gallery1-admin.html" title="Chapter 2. Gallery 1.x Administration Guide"><link rel="prev" href="gallery1-admin.users.html" title="Users and Permissions"><link rel="next" href="gallery1-admin.securing.html" title="Securing Gallery"><link rel="stylesheet" href="html.css"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Embedding Gallery</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="gallery1-admin.users.html">Prev</a> </td><th width="60%" align="center">Chapter 2. Gallery 1.x Administration Guide</th><td width="20%" align="right"> <a accesskey="n" href="gallery1-admin.securing.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="gallery1-admin.embedding"></a>Embedding Gallery</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="gallery1-admin.embedding.html#gallery1-admin.embedding.nuke">PHP Nuke / PostNuke</a></span></dt><dt><span class="sect2"><a href="gallery1-admin.embedding.html#gallery1-admin.embedding.mambo">Mambo</a></span></dt></dl></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="gallery1-admin.embedding.nuke"></a>PHP Nuke / PostNuke</h3></div></div></div><p>
+   Embedding Gallery into PHP Nuke or PostNuke is incredibly easy.  We already
+   assume you have successfully setup your CMS (Content Management System).
+  </p><div class="orderedlist"><ol type="1"><li><p>
+     Download Gallery, from the
+     <a href="http://gallery.menalto.com/modules.php?op=modload&amp;name=phpWiki&amp;file=index&amp;pagename=Download" target="_top">Download Page</a>
+    </p></li><li><p>
+     Untar Gallery and upload it to your Nuke <tt class="filename">modules/</tt> directory.
+     It is very important that it goes in this directory
+    </p></li><li><p>
+     Install Gallery just as if you were doing a non-nuke installation, see one
+     of the following guides:
+     <a href="gallery1-install.unix-shell.html" title="Installing on a Unix/Linux Server with Shell Access">Unix with Shell Access</a>,
+     <a href="gallery1-install.unix-ftp.html" title="Installing on a Unix/Linux Server with FTP">Unix with FTP Access</a>,
+     <a href="gallery1-install.windows.html" title="Installing on a Windows Server (Apache)">Windows on Apache</a>,
+     <a href="gallery1-install.windows-iis.html" title="Installing on a Windows Server (IIS)">Windows on IIS</a>
+    </p></li><li><p>
+     Through Nuke, login as an admin and navigate to the "Modules" administration
+     tool.  Install and activate Gallery (in Postnuke, you may need to "regenerate"
+     the list of modules).  <span class="emphasis"><em>You must activate the module or only admins
+     will be able to access it</em></span>
+    </p></li><li><p>
+     Your Gallery is installed through Nuke!  In PHP-Nuke, Gallery should show
+     up in the Modules block.  In PostNuke, you may need to manually add it to the
+     menu.
+    </p></li></ol></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+    Please consult the documentation in the /gallery/contrib directory for more
+    information.  Embedding often requires some additional changes in the manner of
+    file patches before it will work properly.
+   </p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+    You can change the name of the <tt class="filename">gallery</tt> directory in your
+    <tt class="filename">modules/</tt> directory.  Gallery will detect the changes
+    and do the right thing.
+   </p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="gallery1-admin.embedding.mambo"></a>Mambo</h3></div></div></div><p>
+   Gallery is in fact a Mambo component right out of the box! If you have an existing Mambo version 4.5 or newer
+   installation, you'll have Gallery up and running embedded in your
+   Mambo site in a jiffy. Gallery will even integrate seamlessly with
+   your existing Mambo user information.
+  </p><div class="orderedlist"><ol type="1"><li><p>
+     First, grab the latest version of Gallery from the <a href="http://gallery.menalto.com/modules.php?op=modload&amp;name=phpWiki&amp;file=index&amp;pagename=Download" target="_top">Download
+     Page</a>.
+    </p></li><li><p>
+     Install Gallery just as if you were doing a non-Mambo
+     installation, all on its own. See one of the following guides for
+     further help here:
+     <a href="gallery1-install.unix-shell.html" title="Installing on a Unix/Linux Server with Shell Access">Unix with Shell Access</a>,
+     <a href="gallery1-install.unix-ftp.html" title="Installing on a Unix/Linux Server with FTP">Unix with FTP Access</a>,
+     <a href="gallery1-install.windows.html" title="Installing on a Windows Server (Apache)">Windows on Apache</a>,
+     <a href="gallery1-install.windows-iis.html" title="Installing on a Windows Server (IIS)">Windows on IIS</a>.
+    </p></li><li><p>
+     Make sure you have completed the Gallery setup all the way
+     through. Don't worry too much about the look and feel out of the
+     box just yet, because it will look slightly different once embedded into
+     Mambo.
+    </p></li><li><p>
+     Now log into your Mambo administrator console and install Gallery as
+     a component. The easiest method is to select <tt class="varname">Install/Uninstall</tt>
+     from the <tt class="varname">Components</tt> menu.
+	 </p><div class="mediaobject"><img src="images/gallery1-admin/component_menu.png"><div class="caption"><p>
+	    The <tt class="varname">Components</tt> Menu in the Mambo administrator console
+       </p></div></div><p>
+	 Since you already have Gallery
+     installed (you did step 1, right?!), you'll want to choose "Install
+     from directory". For "Install directory", enter the full
+     path on disk to your <tt class="filename">gallery/contrib/mambo</tt>
+     directory. It might look something like
+     <tt class="filename">/home/www/mysite.com/htdocs/gallery/contrib/mambo</tt>. The
+     Gallery setup Step 2 "Locations and URLs" tab has some full paths
+     specified which might help here. Then click the <tt class="varname">Install</tt>
+     button.
+	 </p><div class="mediaobject"><img src="images/gallery1-admin/install_from_directory.png"><div class="caption"><p>
+	    Specify the full path to your <tt class="filename">gallery/contrib/mambo</tt> directory
+       </p></div></div><p>
+	 If it was successful, click <tt class="varname">Continue</tt>. Otherwise, it's
+     likely you didn't enter the correct install path, so go back and
+     double check it.
+	 </p><div class="mediaobject"><img src="images/gallery1-admin/install_success.png"><div class="caption"><p>
+        If you see this, you've added Gallery successfully
+       </p></div></div><p>
+    </p></li><li><p>
+	 Now, you should be able to select "Gallery" from the <tt class="varname">Components</tt> menu.
+     You should then be at the Gallery component configuration page
+     inside the Mambo admin page. There are three Mambo-specific
+     settings for Gallery.
+	 </p><div class="mediaobject"><img src="images/gallery1-admin/gallery_setup.png"><div class="caption"><p>
+	    The Gallery component setup page
+       </p></div></div><p>
+	 The path to Gallery is the same path as you
+     entered earlier, only without the
+     <tt class="filename">/contrib/mambo</tt> part at the end. This tells
+     Mambo where to find your actual installation. The "Admin Level"
+     sets the lowest-privilege user level allowed to have admin access
+     to Gallery. Admin access allows the user to view, create, or
+     delete any or all items in Gallery. In Mambo terminology,
+     "Backend" users have a higher privilege level than "Frontend"
+     users. The final setting on this page asks whether you'd like
+     Gallery to suppress the right-hand module bar. This gives Gallery
+     a little extra space in the browser window. Remember... you can
+     return to this configuration page at any time to make changes
+     later on. All other Gallery configuration can be done via the
+     Gallery setup page you saw earlier.
+    </p></li><li><p>
+     You'll probably want to add Gallery to your main menu. From the
+     Mambo admin page, go to the <tt class="varname">Menu</tt> menu and select "Menu
+     Manager". For this example, we'll add Gallery to the main
+     menu. Click the configuration button for the main menu Menu
+     Items. You'll be presented with the existing menu contents. Click
+     <tt class="varname">New</tt> from the top toolbar. Gallery is a Mambo Component, so
+     select that. Give your menu item a display name and select
+     Gallery from the component list. Set the rest of the options as
+     you see fit and click Save from the toolbar. If all went well,
+     you'll now have a link to your Gallery in your main menu from
+     your Mambo page. If you're logged in as the administrator, click
+     <tt class="varname">[new album]</tt> and get Gallerying!
+	 </p><div class="mediaobject"><img src="images/gallery1-admin/main_menu.png"><div class="caption"><p>
+	    Link to your embedded Gallery in the main menu
+       </p></div></div><p>
+    </p></li></ol></div><p>
+   If you get stuck at any point, remember that there's always help
+   available on the Gallery website and in the forums.
+  </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="gallery1-admin.users.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="gallery1-admin.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="gallery1-admin.securing.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Users and Permissions </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Securing Gallery</td></tr></table></div></body></html>

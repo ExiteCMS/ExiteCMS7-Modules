@@ -1,0 +1,6 @@
+<?php
+/* $Id: inline_moviethumb.frame.default 5409 2004-03-02 14:10:38Z jenst $ */
+?>
+<?php
+	include (dirname(__FILE__) . '/inline_imagewrap.inc');
+?>

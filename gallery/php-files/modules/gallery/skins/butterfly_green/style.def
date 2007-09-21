@@ -1,0 +1,7 @@
+<?php
+/* $Id: style.def 15408 2006-12-08 02:05:13Z ckdake $ */
+$name=_("Butterfly Green");
+$description=_("White with green pipes and butterfly motif");
+$version='1.0.4';
+$last_update='2005-02-17';
+?>

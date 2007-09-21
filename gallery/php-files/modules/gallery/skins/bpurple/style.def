@@ -1,0 +1,7 @@
+<?php
+/* $Id: style.def 15408 2006-12-08 02:05:13Z ckdake $ */
+$name = _("Bpurple");
+$description = _("White with grey pipes and purple highlight");
+$version = '1.0.5';
+$last_update = '2006-08-14';
+?>

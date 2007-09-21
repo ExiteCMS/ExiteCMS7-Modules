@@ -1,0 +1,7 @@
+<?php
+/* $Id: style.def 15408 2006-12-08 02:05:13Z ckdake $ */
+$name=_("Lilac");
+$description=_("Pale purple with grey pipes and white highlight");
+$version='1.0.3';
+$last_update='2005-03-01';
+?>

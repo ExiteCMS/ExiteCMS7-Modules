@@ -1,0 +1,7 @@
+<?php
+/* $Id: style.def 15408 2006-12-08 02:05:13Z ckdake $ */
+$name=_("Slick");
+$description=_("Graduated grey background with grey pipes and red highlight");
+$version='1.0.4';
+$last_update='2005-03-02';
+?>
