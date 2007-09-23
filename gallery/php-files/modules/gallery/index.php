@@ -23,15 +23,6 @@
 <?php
 // Hack prevention.
 
-/*---------------------------------------------------+
-| PLi-Fusion Content Management System               |
-+----------------------------------------------------+
-| Integrated by WanWizard (wanwizard@gmail.com)      |
-| http://www.pli-images.org/pli-fusion               |
-+----------------------------------------------------*/
-require_once dirname(__FILE__)."/../../includes/core_functions.php";
-require_once PATH_ROOT."/includes/theme_functions.php";
-
 global $GALLERY_EMBEDDED_INSIDE;
 global $GALLERY_EMBEDDED_INSIDE_TYPE;
 global $GALLERY_MODULENAME;
@@ -54,9 +45,6 @@ $GALLERY_EMBEDDED_INSIDE_TYPE = 'ExiteCMS';
 if (empty($include)) {
 	$include = "albums.php";
 }
-
-// start capturing Gallery output
-ob_start();
 
 /*
  * As a security precaution, only allow one of the following files to be included.
@@ -144,32 +132,5 @@ if (!in_array($include, $safe_to_include)) {
 		    'Gallery', $include);
 } else {
 	include(dirname(__FILE__) . "/$include");
-}
-
-// get the captured content
-$content =  ob_get_contents();
-
-// make sure the content is not cached
-// header("Cache-Control: no-cache");
-
-// clear the output buffer
-ob_end_clean();
-
-/** 
- * Output the page.
- */
-if (substr($_SERVER["QUERY_STRING"], -4) == ".xml") {
-
-	echo $content;
-
-} else {
-
-	// create the panel
-	$variables['html'] = $content;
-	$template_panels[] = array('type' => 'body', 'title' => 'Gallery', 'name' => 'gallery', 'template' => '_custom_html.tpl');
-	$template_variables['gallery'] = $variables;
-
-	// and call the template engine to generate the page
-	require_once PATH_THEME."/theme.php";
 }
 ?>

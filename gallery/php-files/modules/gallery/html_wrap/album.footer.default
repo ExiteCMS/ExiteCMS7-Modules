@@ -14,7 +14,7 @@ includeTemplate('album.footer.tpl');
         <tr>
           <td style="vertical-align: top">
             <!-- The Gallery code version number, linked to the Gallery home page -->
-            <span class="fineprint">
+            <span class="smallalt">
 	    <?php print poweredBy() ?>
             </span>
 <?php 
@@ -33,17 +33,6 @@ if ($gallery->user->isAdmin() ) { ?>
 
           <!-- donation block -->
 
-          <td width="300" align="right">
-            <span class="fineprint"> 
-              Are you happy with Gallery?<br>
-	      Make us happy too!  Donate!<br>
-	      (only admins see this message and button)<br>
-            </span>
-          </td>
-          <td width="90" align="right">
-            <a href="<?php echo $gallery->url ?>/donate.php?donate_tag=v<?php echo $gallery->version ?>"><img align="right"
-              src="<?php echo getImagePath('donate.jpg') ?>" width="88" height="31" border="0" ALT="<?php echo _("Donate to Gallery now!!") ?>"></a>
-          </td>
           <?php } ?>
         </tr>
       </table>

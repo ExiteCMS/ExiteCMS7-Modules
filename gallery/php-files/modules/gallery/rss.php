@@ -269,11 +269,8 @@ $description = sprintf(_("%s in %s"), $image_str, $total_str);
 header("Content-Type: application/xml");
 
 $xml_header = 'xml version="1.0"';
-if ($gallery->locale == 0) {
-	$gallery->locale = 'ISO-8859-1';
-}
 
-echo '<' . '?xml version="1.0" encoding="' . $gallery->locale . '"?' . '>';
+echo '<' . '?xml version="1.0" encoding="' . $GLOBALS['locale']['charset'] . '"?' . '>';
 
 ?>
 

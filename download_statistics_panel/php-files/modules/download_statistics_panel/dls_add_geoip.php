@@ -1,13 +1,21 @@
  <?php
 /*---------------------------------------------------+
+| ExiteCMS Content Management System                 |
++----------------------------------------------------+
+| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| for support, please visit http://exitecms.exite.eu |
++----------------------------------------------------+
+| Some portions copyright 2002 - 2006 Nick Jones     |
+| http://www.php-fusion.co.uk/                       |
++----------------------------------------------------+
+| Released under the terms & conditions of v2 of the |
+| GNU General Public License. For details refer to   |
+| the included gpl.txt file or visit http://gnu.org  |
 | PHP-Fusion 6 Content Management System Infusion
 +----------------------------------------------------+
 | downloadstats.php
 | fetch and process the downloads of the PLi download
 | sites
-+----------------------------------------------------+
-| Copyright © 2006 WanWizard
-| http://www.pli-images.org/
 +----------------------------------------------------*/
 
 // make sure we're running in CLI mode
@@ -40,7 +48,7 @@ function writelog($key, $message="") {
 $webroot = "";
 while(!file_exists($webroot."includes/core_functions.php")) { 
 	$webroot .= '../'; 
-	if (strlen($webroot)>100) die('Unable to find the PLi-Fusion core modules!'); 
+	if (strlen($webroot)>100) die('Unable to find the ExiteCMS core modules!'); 
 }
 require_once $webroot."includes/core_functions.php";
 require_once PATH_INCLUDES."geoip_include.php";

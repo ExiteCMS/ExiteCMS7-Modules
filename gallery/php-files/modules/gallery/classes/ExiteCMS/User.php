@@ -20,53 +20,55 @@
  * $Id: User.php 15632 2007-01-02 06:01:08Z jenst $
  */
 
-/* This class is written for phpBB2 and provides full integration of the phpbb users database
+/* This class is written for ExiteCMS and provides full integration of the users database
  * Instead of using or duplicating memberships manually in Gallery.
  *
- * Gallery <-> phpBB2 integration ver. (www.snailsource.com)
- * Written by Martin Smallridge       <info@snailsource.com>
+ * Gallery <-> ExiteCMS integration
+ * Written by Harro 'WanWizard' Verton  <wanwizard@gmail.com>
  *
- * This file was modified for official integration into Gallery 1.4.3 by
- * Jens Tkotz
 */
 
-class phpbb_User extends Abstract_User {
+class ExiteCMS_User extends Abstract_User {
 	var $db;
 
-	function phpbb_User() {
-		global $gallery, $userdata;
-		$this->db = $gallery->database{"phpbb"};
+	function ExiteCMS_User() {
+		global $gallery;
+		$this->db = $gallery->database{"ExiteCMS"};
 	}
 
 	function loadByUid($uid) {
-		global $userdata, $table_prefix;
-		$sql = "SELECT username, user_email FROM ".$table_prefix."users WHERE user_id='$uid'";
-		$results = $this->db->query($sql);
-		$row = $this->db->fetch_row($results);
-		$this->username = $row[0];
-		$this->fullname = $row[0];
-		$this->email = $row[1];
-		$this->uid = $uid;
-
-		if ($userdata['user_level'] == '1') {
-			$this->isAdmin = 1;
-			$this->canCreateAlbums = 1;
+		global $db_prefix;
+		if ($row = dbarray(dbquery("SELECT user_name, user_fullname, user_email FROM ".$db_prefix."users WHERE user_id='$uid'"))) {
+			$this->username = $row['user_name'];
+			$this->fullname = $row['user_fullname'];
+			$this->email = $row['user_email'];
+			$this->uid = $uid;
+		
+			// WANWIZARD => Needs to be a group membership check
+			if (iSUPERADMIN) {
+				$this->isAdmin = 1;
+				$this->canCreateAlbums = 1;
+			}
+		} else {
+			$this->uid = -1;
 		}
 	}
 
 	function loadByUserName($uname) {
-		global $userdata, $table_prefix;
-		$results = $this->db->query("SELECT user_id, user_email FROM ".$table_prefix."users WHERE username='$uname'");
-		$row = $this->db->fetch_row($results);
-		$this->uid = $row[0];
-		$uid = $row[0];
-		$this->fullname = $uname;
-		$this->email = $row[1];
-		$this->username = $uname;
-
-		if ($userdata['user_level'] == '1') {
-			$this->isAdmin = 1;
-			$this->canCreateAlbums = 1;
+		global $db_prefix;
+		if ($row = dbarray(dbquery("SELECT user_id, user_fullname, user_email FROM ".$db_prefix."users WHERE user_name='$uname'"))) {
+			$this->uid = $row['user_id'];
+			$this->fullname = $row['user_fullname'];
+			$this->email = $row['user_email'];
+			$this->username = $uname;
+		
+			// WANWIZARD => Needs to be a group membership check
+			if (iSUPERADMIN) {
+				$this->isAdmin = 1;
+				$this->canCreateAlbums = 1;
+			}
+		} else {
+			$this->uid = -1;
 		}
 	}
 

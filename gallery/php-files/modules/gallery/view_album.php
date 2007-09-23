@@ -605,10 +605,11 @@ if (canVote()) {
 		$options .= $nv_pairs[$count]["name"];
 	}
 
-	$va_poll_box3 = sprintf(gTranslate('core', "To vote for an image, click on %s."), $options);
-	$va_poll_box3 .= ' ';
-	$va_poll_box3 .= sprintf(gTranslate('core', "You MUST click on %s for your vote to be recorded."), "<b>".gTranslate('core', "Vote")."</b>");
-	$va_poll_box3 .= ' ';
+	$va_poll_box3 = "";
+//	$va_poll_box3 = sprintf(gTranslate('core', "To vote for an image, click on %s."), $options);
+//	$va_poll_box3 .= ' ';
+//	$va_poll_box3 .= sprintf(gTranslate('core', "You MUST click on %s for your vote to be recorded."), "<b>".gTranslate('core', "Vote")."</b>");
+//	$va_poll_box3 .= ' ';
 	if ($gallery->album->getPollType() == 'rank') {
 		$voteCount = $gallery->album->getPollScale();
 		$va_poll_box3 .= gTranslate('core',
@@ -616,18 +617,12 @@ if (canVote()) {
 			"You have a total of %d votes and can change them later if you wish.", $voteCount, '', true);
 	}
 	else {
-		$va_poll_box3 .= gTranslate('core', "You can change your votes later, if you wish.");
+//		$va_poll_box3 .= gTranslate('core', "You can change your votes later, if you wish.");
 	}
 
 	echo "\n<div class=\"g-va-poll-box3\">\n";
     echo $va_poll_box3;
     echo "\n</div>\n";
-?>
-	<div align="center">
- 		<input type=submit name="Vote" value="<?php print gTranslate('core', "Vote") ?>">
-	</div>
-
-<?php
 }
 ?>
 
@@ -808,15 +803,17 @@ if ($numPhotos) {
 
             // Caption itself
             echo "\n<div align=\"center\" class=\"modcaption\">\n";
+			$capt = "";
             $id = $gallery->album->getPhotoId($i);
             if ($gallery->album->isHidden($i) && !$gallery->session->offline) {
-                echo "(" . gTranslate('core', "hidden") .")<br>";
+                $capt .= ($capt == "" ? "" : "* ") . gTranslate('core', "hidden");
             }
             $photo = $gallery->album->getPhoto($i);
             if ($gallery->user->canWriteToAlbum($gallery->album) &&
               $photo->isHighlight() && !$gallery->session->offline) {
-                echo "(" . gTranslate('core', "highlight") .")<br>";
+                $capt .= ($capt == "" ? "" : " * ") . gTranslate('core', "hightlight");
             }
+			echo $capt,"<br>";
             if (isset($myAlbum)) {
             	$myDescription = $myAlbum->fields['description'];
             	$buf = '';

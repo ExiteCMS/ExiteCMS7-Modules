@@ -30,26 +30,9 @@ $mod_title = $locale['don000'];							// title or name of this module
 $mod_description = "";									// short description of it's purpose
 $mod_version = "1.0.0";									// module version number
 $mod_developer = "WanWizard";							// author's name
-$mod_email = "wanwizard@gmail.com";						// author's email address
-$mod_weburl = "http://www.pli-images.org/pli-fusion/";	// author's website
+$mod_email = "wanwizard@gmail.com";
+$mod_weburl = "http://exitecms.exite.eu/";
 $mod_type = "M";
-
-/*---------------------------------------------------+
-| Version and revision control                       |
-+----------------------------------------------------*/
-
-// check for a minumum version of the PLi-Fusion engine
-if (str_replace(".", "", $settings['version']) < 700) {
-	$mod_errors .= sprintf($locale['mod001'], '7.00');
-}
-// check for a maximum version of the PLi-Fusion engine
-if (str_replace(".", "", $settings['version']) > 700) {
-	$mod_errors .= sprintf($locale['mod002'], '7.00');
-}
-// check for a specific revision number range that is supported
-if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
-	$mod_errors .= sprintf($locale['mod003'], 0, 999999);
-}
 
 /*---------------------------------------------------+
 | Module administration panel installation details   |
@@ -60,6 +43,23 @@ $mod_admin_image = "donations.gif";						// icon to be used for the admin panel
 $mod_admin_panel = "admin_panel.php";					// name of the admin panel for this module
 $mod_admin_rights = "wD";								// admin rights code. This HAS to be assigned by PLi-Fusion to avoid duplicates!
 $mod_admin_page = 4;									// admin page this panel has to be placed on
+
+/*---------------------------------------------------+
+| Version and revision control                       |
++----------------------------------------------------*/
+
+// check for a minumum version of the ExiteCMS engine
+if (str_replace(".", "", $settings['version']) < 700) {
+	$mod_errors .= sprintf($locale['mod001'], '7.00');
+}
+// check for a maximum version of the ExiteCMS engine
+if (str_replace(".", "", $settings['version']) > 700) {
+	$mod_errors .= sprintf($locale['mod002'], '7.00');
+}
+// check for a specific revision number range that is supported
+if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
+	$mod_errors .= sprintf($locale['mod003'], 0, 999999);
+}
 
 /*---------------------------------------------------+
 | Menu entries for this module                       |

@@ -31,6 +31,18 @@ foreach ($sensitiveList as $sensitive) {
     }
 }
 
+/*---------------------------------------------------+
+| ExiteCMS Content Management System                 |
++----------------------------------------------------+
+| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| for support, please visit http://exitecms.exite.eu |
++----------------------------------------------------*/
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
+require_once PATH_ROOT."/includes/theme_functions.php";
+
+// start capturing all output
+ob_start();
+
 /*
 * Turn down the error reporting to just critical errors for now.
 * In v1.2, we know that we'll have lots and lots of warnings if
@@ -192,50 +204,29 @@ if ($gallerySanity != NULL) {
     exit;
 }
 
-if (isset($GALLERY_EMBEDDED_INSIDE)) {
-    /* Okay, we are embedded */
-    switch($GALLERY_EMBEDDED_INSIDE_TYPE) {
-        case 'ExiteCMS':
-            //print_r($GLOBALS['board_config']['version']);
-            include_once(dirname(__FILE__) . "/classes/Database.php");
-            include_once(dirname(__FILE__) . "/classes/database/mysql/Database.php");
-            include_once(dirname(__FILE__) . "/classes/ExiteCMS/UserDB.php");
-            include_once(dirname(__FILE__) . "/classes/ExiteCMS/User.php");
+// ExiteCMS embedding
+$GALLERY_EMBEDDED_INSIDE = 'ExiteCMS';
 
-          	$dbhost = $GLOBALS['db_host'];
-        	$dbuser = $GLOBALS['db_user'];
-        	$dbpasswd = $GLOBALS['db_passwd'];
-        	$dbname = $GLOBALS['db_name'];
+include_once(dirname(__FILE__) . "/classes/Database.php");
+include_once(dirname(__FILE__) . "/classes/database/mysql/Database.php");
+include_once(dirname(__FILE__) . "/classes/ExiteCMS/UserDB.php");
+include_once(dirname(__FILE__) . "/classes/ExiteCMS/User.php");
 
-            $gallery->database{"phpbb"} = new MySQL_Database($dbhost, $dbuser, $dbpasswd, $dbname);
+$dbhost = $GLOBALS['user_db_host'];
+$dbuser = $GLOBALS['user_db_user'];
+$dbpasswd = $GLOBALS['user_db_pass'];
+$dbname = $GLOBALS['user_db_name'];
 
-            //	    $gallery->database{"phpbb"}->setTablePrefix($GLOBALS['table_prefix']);
-            $gallery->database{"prefix"} = $GLOBALS['table_prefix'];
-            /* Load our user database (and user object) */
-            $gallery->userDB = new phpbb_UserDB;
-            if (isset($GLOBALS['userdata']) && isset($GLOBALS['userdata']['username'])) {
-                $gallery->session->username = $GLOBALS['userdata']['username'];
-                $gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
-            }
-            elseif ($gallery->session->username) {
-                $gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
-            }
+$gallery->database{"ExiteCMS"} = new MySQL_Database($dbhost, $dbuser, $dbpasswd, $dbname);
 
-            break;
-    }
-}
-else {
-    /* Standalone */
-    include_once(dirname(__FILE__) . "/classes/gallery/UserDB.php");
-    include_once(dirname(__FILE__) . "/classes/gallery/User.php");
-
-    /* Load our user database (and user object) */
-    $gallery->userDB = new Gallery_UserDB;
-
-    /* Load their user object with their username as the key */
-    if (isset($gallery->session->username) && !empty($gallery->session->username)) {
-        $gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
-    }
+$gallery->database{"prefix"} = $GLOBALS['user_db_prefix'];
+/* Load our user database (and user object) */
+$gallery->userDB = new ExiteCMS_UserDB;
+if (isset($GLOBALS['userdata']) && isset($GLOBALS['userdata']['user_name'])) {
+	$gallery->session->username = $GLOBALS['userdata']['user_name'];
+	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
+} elseif ($gallery->session->username) {
+	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
 }
 
 /* If there's no specific user, they are the special Everybody user */

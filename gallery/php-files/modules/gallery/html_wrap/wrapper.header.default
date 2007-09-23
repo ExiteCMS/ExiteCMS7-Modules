@@ -53,6 +53,14 @@ if(isset($GALLERY_EMBEDDED_INSIDE)) {
 		$index = $tmp_index;
 	break;
 
+	case 'ExiteCMS':
+		/*
+		 * ExiteCMS uses a templating system and also owns the HEAD tags.
+		 * Everything needed for integration is loaded in init.php
+		 */
+
+	break;
+
 	case 'phpBB2':
 		/*
 		 * PhpBB2 uses a templating system and also owns the HEAD tags. The 
@@ -100,4 +108,4 @@ if(isset($GALLERY_EMBEDDED_INSIDE)) {
 }
 
 includeTemplate('header.tpl');
-?> 
+?>

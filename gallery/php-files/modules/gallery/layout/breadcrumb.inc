@@ -37,7 +37,7 @@ if(!includeTemplate('breadcrumb.tpl')
 	    if (!$name) {
 	        $name = $gallery->user->getUsername();
 	    }
-	    echo "\t". '<td class="bread" height="18" style="text-align:'. langLeft() .'; padding-left: 5px; padding-right: 5px;">'. _("Logged in as:") .' '. $name .'</td>';
+//	    echo "\t". '<td class="bread" height="18" style="text-align:'. langLeft() .'; padding-left: 5px; padding-right: 5px;">'. _("Logged in as:") .' '. $name .'</td>';
 	}
 	?>
 		

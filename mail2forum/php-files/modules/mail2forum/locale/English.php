@@ -75,8 +75,8 @@ $locale['m2f802'] = "Database error. M2F_Status contains values, but these can n
 $locale['m2f803'] = "Database error. Can not find the forum forum_id from the post record points to:";
 $locale['m2f804'] = "M2F_INTERVAL to short to process all email. Choose a larger interval. If this error persists, please contact M2F";
 $locale['m2f805'] = "Cancelled by the system administrator";
-$locale['m2f811'] = "Sent using PLi-Fusion Mail2Forum: http://www.pli-images.org/pli-fusion";
-$locale['m2f812'] = "<a href='http://www.pli-images.org/pli-fusion'>Sent using PLi-Fusion Mail2Forum</a>";
+$locale['m2f811'] = "Sent using ExiteCMS Mail2Forum: http://exitecms.exite.eu";
+$locale['m2f812'] = "<a href='http://exitecms.exite.eu'>Sent using ExiteCMS</a>";
 $locale['m2f813'] = "Click here to go to this forum post";
 $locale['m2f814'] = "* *  * note: this is an edit of a previous post * * *";
 $locale['m2f815'] = "wrote";
@@ -128,7 +128,7 @@ $locale['m2f914'] = "Message-multipart has an unsupported primary content-type: 
 $locale['m2f950'] = "There are no forums you can subscribe to";
 $locale['m2f951'] = "Subscriptions succesfully updated";
 // Subscription intro message
-$locale['m2f990'] = "Mail-to-Forum is a PLi-Fusion installable module which binds the content of a forum with that of a mailing list.\n<ul>
+$locale['m2f990'] = "Mail-to-Forum is a ExiteCMS installable module which binds the content of a forum with that of a mailing list.\n<ul>
 	<li>Any posts made in a designated forum will be automatically emailed to every member of the corresponding mailing list.\n
 	<li>Any mail sent to the mailing list will be automatically added as posts to this forum.\n
 	<li>Special formatting makes sure that replies to Mail-to-Forum emails will be added to the correct thread.</ul>";

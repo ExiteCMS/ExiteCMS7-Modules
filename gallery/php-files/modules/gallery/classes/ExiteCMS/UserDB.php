@@ -20,36 +20,34 @@
  * $Id: UserDB.php 15632 2007-01-02 06:01:08Z jenst $
  */
 
-/* This class is written for phpBB2 and provides full integration of the phpbb users database
+/* This class is written for ExiteCMS and provides full integration of the users database
  * Instead of using or duplicating memberships manually in Gallery.
  *
- * Gallery <-> phpBB2 integration ver. (www.snailsource.com)
- * Written by Martin Smallridge       <info@snailsource.com>
+ * Gallery <-> ExiteCMS integratio
+ * Written by Harro 'WanWizard' Verton <wanwizard@gmail.com>
  *
- * This file was modified for official integration into Gallery 1.4.3 by
- * Jens Tkotz
 */
 
-class phpbb_UserDB extends Abstract_UserDB {
+class ExiteCMS_UserDB extends Abstract_UserDB {
 	var $db;
 
-	function phpbb_UserDB() {
+	function ExiteCMS_UserDB() {
 		global $gallery;
-		$this->db = $gallery->database{"phpbb"};
+		$this->db = $gallery->database{"ExiteCMS"};
 		$this->nobody = new NobodyUser();
 		$this->everybody = new EverybodyUser();
 		$this->loggedIn = new LoggedInUser();
 	}
 
 	function getUidList() {
-		global $table_prefix;
+		global $db_prefix;
 		$uidList = array();
 		$db = $this->db;
 
-		$result = $db->query("select user_id from ".$table_prefix."users");
+		$result = dbquery("select user_id from ".$db_prefix."users");
 
-		while ($row = $db->fetch_row($result)) {
-			array_push($uidList, $row[0]);
+		while ($row = dbarray($result)) {
+			array_push($uidList, $row['user_id']);
 		}
 
 		array_push($uidList, $this->nobody->getUid());
@@ -69,7 +67,7 @@ class phpbb_UserDB extends Abstract_UserDB {
 			return $this->loggedIn;
 		} 
 
-		$user = new phpbb_User();
+		$user = new ExiteCMS_User();
 		$user->loadByUsername($username);
 		return $user;
 	}
@@ -86,7 +84,7 @@ class phpbb_UserDB extends Abstract_UserDB {
 			return $this->loggedIn;
 		} 
 
-		$user = new phpbb_User();
+		$user = new ExiteCMS_User();
 		$user->loadByUid($uid);
 		return $user;
 	}

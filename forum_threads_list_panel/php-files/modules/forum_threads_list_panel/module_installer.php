@@ -27,8 +27,15 @@ $mod_description = "Shows the latest threads in a body panel, with links to my p
 $mod_version = "1.0.0";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://www.pli-images.org/pli-fusion/";
+$mod_weburl = "http://exitecms.exite.eu/";
 $mod_type = "P";
+
+/*---------------------------------------------------+
+| Module administration panel installation details   |
++----------------------------------------------------*/
+
+$mod_folder = "forum_threads_list_panel";
+// no administration module for this plugin
 
 /*---------------------------------------------------+
 | Version and revision control                       |
@@ -46,13 +53,6 @@ if (str_replace(".", "", $settings['version']) > 700) {
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 	$mod_errors .= sprintf($locale['mod003'], 0, 999999);
 }
-
-/*---------------------------------------------------+
-| Module administration panel installation details   |
-+----------------------------------------------------*/
-
-$mod_folder = "forum_threads_list_panel";
-// no administration module for this plugin
 
 /*---------------------------------------------------+
 | Menu entries for this module                       |

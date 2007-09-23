@@ -185,8 +185,8 @@ $iconElements = array();
 
 if ($gallery->user->isLoggedIn() && !$gallery->session->offline) {
 
-	$displayName = $gallery->user->displayName();
-	$adminCommands .= sprintf(gTranslate('core', "Welcome, %s"), $displayName) . "&nbsp;&nbsp;<br>";
+//	$displayName = $gallery->user->displayName();
+//	$adminCommands .= sprintf(gTranslate('core', "Welcome, %s"), $displayName) . "&nbsp;&nbsp;<br>";
 }
 
 if ($gallery->app->gallery_slideshow_type != "off" && $numPhotos != 0) {
@@ -200,7 +200,7 @@ if ($gallery->user->canCreateAlbums() && !$gallery->session->offline) {
 }
 
 if ($gallery->user->isLoggedIn() && !$gallery->session->offline) {
-    if ($gallery->user->isAdmin()) {
+/*    if ($gallery->user->isAdmin()) {
 
         $iconText = getIconText('unsortedList.gif', gTranslate('core', "Administer startpage"));
         $linkurl = makeGalleryUrl('administer_startpage.php', array('type' => 'popup'));
@@ -215,7 +215,7 @@ if ($gallery->user->isLoggedIn() && !$gallery->session->offline) {
             $iconElements[] = "<a href=\"$docsUrl\">". $iconText .'</a>';
         }
     }
-
+*/
     if ($gallery->userDB->canModifyUser()) {
         $iconText = getIconText('yast_sysadmin.gif', gTranslate('core', "Preferences"));
         $iconElements[] = popup_link($iconText, "user_preferences.php", false, true, 500, 500);

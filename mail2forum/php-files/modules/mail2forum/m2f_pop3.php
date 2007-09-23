@@ -1,16 +1,19 @@
 <?php
 /*---------------------------------------------------+
-| PLi-Fusion 7 Content Management System Infusion
+| ExiteCMS Content Management System                 |
++----------------------------------------------------+
+| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| for support, please visit http://exitecms.exite.eu |
++----------------------------------------------------+
+| Some portions copyright 2002 - 2006 Nick Jones     |
+| http://www.php-fusion.co.uk/                       |
++----------------------------------------------------+
+| Released under the terms & conditions of v2 of the |
+| GNU General Public License. For details refer to   |
+| the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------+
 | Mail2Forum - CLI POP3 processor
 | uses the POP3 and MIME classes from the PEAR library
-+----------------------------------------------------+
-| Copyright © 2006-2007 WanWizard
-| http://www.pli-images.org/PLi-Fusion/
-+----------------------------------------------------+
-| Released under the terms & conditions of v2 of the
-| GNU General Public License. For details refer to
-| the included gpl.txt file or visit http://gnu.org
 +----------------------------------------------------*/
 if (isset($_SERVER['SERVER_SOFTWARE'])) {
 	die("This is a batch program that needs to run from cron!");
@@ -31,7 +34,7 @@ ini_set('max_execution_time', '0');
 $webroot = "";
 while(!file_exists($webroot."includes/core_functions.php")) { 
 	$webroot .= '../'; 
-	if (strlen($webroot)>100) die('Unable to find the PLi-Fusion document root!'); 
+	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
 require_once $webroot."includes/core_functions.php";
 

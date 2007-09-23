@@ -24,8 +24,7 @@ define('M2F_POLL_THRESHOLD', 7*24*60*60);
 // number of attachments. When more attachments are linked to a single post, viewthread.php will duplicate the
 // message for every attachment found, with one of the attachments linked to every message.
 //
-// The PLi-Fusion engine (which is a highly enhanced version of PHP-Fusion) supports multiple attachments per post.
-// If you are interested in the PLi-Fusion version of the forum code, drop us a line...
+// The ExiteCMS engine supports multiple attachments per post.
 //
 // default: 1
 define('M2F_MAX_ATTACHMENTS', 1);

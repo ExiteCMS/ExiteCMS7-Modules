@@ -30,26 +30,9 @@ $mod_title = $locale['wiki100'];						// title or name of this module
 $mod_description = $locale['wiki101'];					// short description of it's purpose
 $mod_version = $locale['wikiver'];						// module version number
 $mod_developer = "WanWizard";							// author's name
-$mod_email = "wanwizard@gmail.com";						// author's email address
-$mod_weburl = "http://www.pli-images.org/pli-fusion/";	// author's website
+$mod_email = "wanwizard@gmail.com";
+$mod_weburl = "http://exitecms.exite.eu/";
 $mod_type = "M";
-
-/*---------------------------------------------------+
-| Version and revision control                       |
-+----------------------------------------------------*/
-
-// check for a minumum version of the PLi-Fusion engine
-if (str_replace(".", "", $settings['version']) < 700) {
-	$mod_errors .= sprintf($locale['mod001'], '7.00');
-}
-// check for a maximum version of the PLi-Fusion engine
-if (str_replace(".", "", $settings['version']) > 700) {
-	$mod_errors .= sprintf($locale['mod002'], '7.00');
-}
-// check for a specific revision number range that is supported
-if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
-	$mod_errors .= sprintf($locale['mod003'], 0, 999999);
-}
 
 /*---------------------------------------------------+
 | Module administration panel installation details   |
@@ -60,6 +43,23 @@ $mod_admin_image = "";									// icon to be used for the admin panel
 $mod_admin_panel = "";									// name of the admin panel for this module
 $mod_admin_rights = "wW";								// admin rights code. This HAS to be assigned by PLi-Fusion to avoid duplicates!
 $mod_admin_page = 1;									// admin page this panel has to be placed on
+
+/*---------------------------------------------------+
+| Version and revision control                       |
++----------------------------------------------------*/
+
+// check for a minumum version of the ExiteCMS engine
+if (str_replace(".", "", $settings['version']) < 700) {
+	$mod_errors .= sprintf($locale['mod001'], '7.00');
+}
+// check for a maximum version of the ExiteCMS engine
+if (str_replace(".", "", $settings['version']) > 700) {
+	$mod_errors .= sprintf($locale['mod002'], '7.00');
+}
+// check for a specific revision number range that is supported
+if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
+	$mod_errors .= sprintf($locale['mod003'], 0, 999999);
+}
 
 /*---------------------------------------------------+
 | Menu entries for this module                       |
@@ -125,7 +125,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   FULLTEXT KEY body (body)
 ) ENGINE=MyISAM;");
 
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (1, 'HomePage', now(), '{{image url=\"images/wikka_logo.jpg\" alt=\"wikka logo\" title=\"Welcome to this Wikka Wiki!\"}}\n\nThis site is running on version ##{{wikkaversion}}## (see WikkaReleaseNotes). \nYou need to double-click on any page or click on the \"Edit page\" link at the bottom to get started. \n\nFor more information, visit the [[Wikka:HomePage WikkaWiki website]]! \n\nUseful pages: FormattingRules, WikkaDocumentation, OrphanedPages, WantedPages, TextSearch.', '###WEBMASTER###', '##WEBMASTER##', 'Y', '', 'page')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (1, 'HomePage', now(), '{{image url=\"images/wikka_logo.jpg\" alt=\"wikka logo\" title=\"Welcome to this Wikka Wiki!\"}}\n\nThis site is running on version ##{{wikkaversion}}## (see WikkaReleaseNotes). \nYou need to double-click on any page or click on the \"Edit page\" link at the bottom to get started. \n\nFor more information, visit the [[Wikka:HomePage WikkaWiki website]]! \n\nUseful pages: FormattingRules, WikkaDocumentation, OrphanedPages, WantedPages, TextSearch.', '##WEBMASTER##', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (2, 'RecentChanges', now(), '{{RecentChanges}}{{nocomments}}\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (3, 'RecentlyCommented', now(), '{{RecentlyCommented}}{{nocomments}}\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (4, 'UserSettings', now(), '{{UserSettings}}{{nocomments}}\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
@@ -178,8 +178,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
 ) ENGINE=MyISAM;");
 
 // add a user group for this module
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_name, group_description, group_forumname, group_visible) VALUES ('Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_name, group_description, group_forumname, group_visible) VALUES ('Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('$mod_admin_rights', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_description, group_forumname, group_visible) VALUES ('$mod_admin_rights', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_wiki");
 
@@ -221,7 +221,8 @@ if (!function_exists('install_wiki')) {
 			$result2 = dbquery("INSERT INTO ".$db_prefix."wiki_users (name, email, revisioncount, changescount, doubleclickedit, signuptime, show_comments) VALUES ('".$data['user_name']."', '".$data['user_email']."', 20, 50, 'Y', now(), 'N')");
 			// and update references to the webmaster
 			if ($data['user_id'] == 1) {
-				$result2 = dbquery("UPDATE ".$db_prefix."wiki_pages SET owner = '".$data['user_name']."' WHERE owner = '###WEBMASTER###'");
+				$result2 = dbquery("UPDATE ".$db_prefix."wiki_pages SET owner = '".$data['user_name']."' WHERE owner = '##WEBMASTER##'");
+				$result2 = dbquery("UPDATE ".$db_prefix."wiki_pages SET user = '".$data['user_name']."' WHERE user = '##WEBMASTER##'");
 			}
 			// add them to the Wiki Admins group
 			if (isset($admins['group_id'])) {
