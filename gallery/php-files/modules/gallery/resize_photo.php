@@ -130,14 +130,14 @@ if ($gallery->session->albumName && isset($index)) {
 <?php } ?>
 <p>
 	<input type="hidden" name="index" value="<?php echo $index ?>">
-	<input type="submit" name="remove_resized" value="<?php echo gTranslate('core', "Get rid of resized") ?>">
+	<input type="submit" class="button" name="remove_resized" value="<?php echo gTranslate('core', "Get rid of resized") ?>">
 	<?php echo gTranslate('core', "(Use only the original picture)"); ?>
 
 </p>
 <br>
 
-<input type="submit" name="change_size" value="<?php echo gTranslate('core', "Change Size") ?>">
-<input type="button" value="<?php echo gTranslate('core', "Cancel") ?>" onclick="parent.close()">
+<input type="submit" class="button" name="change_size" value="<?php echo gTranslate('core', "Change Size") ?>">
+<input type="button" class="button" value="<?php echo gTranslate('core', "Cancel") ?>" onclick="parent.close()">
 
 </form>
 

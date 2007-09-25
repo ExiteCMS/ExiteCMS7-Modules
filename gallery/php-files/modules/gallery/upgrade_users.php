@@ -64,7 +64,7 @@ else {
 
 	<center>
 	<form>
-	<input type="submit" value="<?php echo $button ?>" onclick='location.reload()'>
+	<input type="submit" class="button" value="<?php echo $button ?>" onclick='location.reload()'>
 	</form>
 	</center>
 </div>

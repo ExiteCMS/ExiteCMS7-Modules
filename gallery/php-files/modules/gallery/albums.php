@@ -352,16 +352,17 @@ for ($i = $start; $i <= $end; $i++) {
       <tr valign="middle">
         <td class="leftspacer"></td>
         <td>
-          <table cellspacing="0" cellpadding="0" border="0" class="mod_title_bg">
+          <table cellspacing="0" cellpadding="0" border="0" width='100%' class="mod_title_bg">
             <tr>
               <td class="mod_title_left"></td>
               <td class="title">
                 <?php
-			echo editField($gallery->album, "title", $albumURL);
-			if ($gallery->user->canDownloadAlbum($gallery->album) && $gallery->album->numPhotos(1)) {
-			    $iconText = getIconText('compressed.png', gTranslate('core', "Download entire album as archive"), 'yes');
-			    echo popup_link($iconText, "download.php?set_albumName=$tmpAlbumName",false,false,500,500);
-			}
+			echo editField($gallery->album, "title", $albumURL),"&nbsp;";
+		?>
+              </td>
+              <td class="" style='white-space:nowrap;text-align:right;'>
+                <?php
+			include(dirname(__FILE__) . '/layout/adminAlbumCommands.inc');
 		?>
               </td>
               <td class="mod_title_right"></td>
@@ -377,8 +378,6 @@ for ($i = $start; $i <= $end; $i++) {
     </table>
 
   <?php
-	include(dirname(__FILE__) . '/layout/adminAlbumCommands.inc');
-
 	/*
 	* Description
 	*/
@@ -402,7 +401,7 @@ for ($i = $start; $i <= $end; $i++) {
 	* Url (only for admins and owner)
 	*/
 	if ($gallery->user->isAdmin() || $gallery->user->isOwnerOfAlbum($gallery->album)) {
-		echo gTranslate('core', "URL:") . ' <a href="'. $albumURL . '">';
+		echo "<br>",gTranslate('core', "URL:") . ' <a href="'. $albumURL . '">';
 		if (!$gallery->session->offline) {
 			echo breakString(urldecode($albumURL), 60, '&', 5);
 		} else {
@@ -422,7 +421,7 @@ for ($i = $start; $i <= $end; $i++) {
 
 	}
 
-	echo "\n<br><span class=\"fineprint\">";
+	echo "\n<br><br><span class=\"fineprint\">";
 
 	/*
 	* Created / Last Changed

@@ -251,7 +251,7 @@ if (empty($action)) {
 		<br>
 		<?php echo makeFormIntro("tools/find_orphans.php", array("method" => "GET")); ?>
 		<input type="hidden" name="action" value="albums">
-		<input type="submit" value="<?php echo _("Re-Attach Orphaned Albums!") ?>">
+		<input type="submit" class="button" value="<?php echo _("Re-Attach Orphaned Albums!") ?>">
 		</form>
 		</center>
 <?php
@@ -288,7 +288,7 @@ if (empty($action)) {
 		<br>
 		<?php echo makeFormIntro("tools/find_orphans.php", array("method" => "GET")); ?>
 		<input type="hidden" name="action" value="images">
-		<input type="submit" value="<?php echo _("Delete Orphaned Files!") ?>">
+		<input type="submit" class="button" value="<?php echo _("Delete Orphaned Files!") ?>">
 		</form>
 		</center>
 <?php 

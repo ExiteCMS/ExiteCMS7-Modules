@@ -68,8 +68,8 @@ if ($gallery->album) {
 ?>
 <input type="hidden" name="guid" value="<?php echo $gallery->album->fields['guid']; ?>">
 <input type="hidden" name="formaction" value="">
-<input type="submit" name="deleteButton" value="<?php echo _("Delete") ?>" onclick="deletealbum_form.formaction.value='delete'">
-<input type="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="deleteButton" value="<?php echo _("Delete") ?>" onclick="deletealbum_form.formaction.value='delete'">
+<input type="button" class="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </form>
 <?php
 } else {

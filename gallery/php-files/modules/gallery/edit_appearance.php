@@ -299,9 +299,9 @@ foreach ($properties as $key => $val) {
 <input type="checkbox" name="setNested" id="setNested" value="1"><label for="setNested"><?php echo gTranslate('core', "Apply values to nested albums (except album title and summary).") ?></label>
 <br>
 <br>
-<input type="submit" name="apply" value="<?php echo gTranslate('core', "Apply") ?>">
-<input type="reset" value="<?php echo gTranslate('core', "Undo") ?>">
-<input type="button" name="close" value="<?php echo gTranslate('core', "Close") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="apply" value="<?php echo gTranslate('core', "Apply") ?>">
+<input type="reset" class="button" value="<?php echo gTranslate('core', "Undo") ?>">
+<input type="button" class="button" name="close" value="<?php echo gTranslate('core', "Close") ?>" onclick='parent.close()'>
 
 </form>
 

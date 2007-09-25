@@ -80,15 +80,15 @@ else {
         echo "\n". '<input type="radio" name="full" value="1"'. ($full ? ' checked' : '') .'>'. gTranslate('core', "Full Version") .'<br>';
         echo "\n". '<input type="radio" name="full" value="0"'. (!$full ? ' checked' : '') .'>'. gTranslate('core', "Resized Version") .'<br>';
         echo "\n<br>";
-        echo "\n". '<input type="submit" name="doit" value="'. gTranslate('core', "Download") .'">';
-        echo "\n". '<input type="button" value="'. gTranslate('core', "Cancel") .'" onclick="parent.close()">';
+        echo "\n". '<input type="submit" class="button" name="doit" value="'. gTranslate('core', "Download") .'">';
+        echo "\n". '<input type="button" class="button" value="'. gTranslate('core', "Cancel") .'" onclick="parent.close()">';
         echo "\n</form>";
     }
     else {
 	echo "<br><br>";
 	echo gTranslate('core', "This album is not empty, but contains no photo or movie! Download wouldn't make sense.");
 	echo "<br><br>";
-        echo "\n". '<input type="button" value="'. gTranslate('core', "Close Window") .'" onclick="parent.close()">';
+        echo "\n". '<input type="button" class="button" value="'. gTranslate('core', "Close Window") .'" onclick="parent.close()">';
     }
 }
 ?>

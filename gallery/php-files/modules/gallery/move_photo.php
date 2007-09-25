@@ -264,8 +264,8 @@ for ($i = 1; $i <= $numPhotos; $i++) {
 ?>
 </select>
 <p>
-<input type="submit" value=<?php echo '"' . $reorder ? gTranslate('core', 'Reorder it!') : gTranslate('core', 'Move it!') . '"' ?>>
-<input type="button" name="close" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" value=<?php echo '"' . $reorder ? gTranslate('core', 'Reorder it!') : gTranslate('core', 'Move it!') . '"' ?>>
+<input type="button" class="button" name="close" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </form>
 
 <?php
@@ -352,8 +352,8 @@ if (!$uptodate) {
 }
 ?>
 <p>
-<input type="submit" value="<?php echo $title ?>">
-<input type="button" name="close" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" value="<?php echo $title ?>">
+<input type="button" class="button" name="close" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </form>
 <?php
 } // end reorder

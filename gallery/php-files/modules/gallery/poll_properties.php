@@ -137,9 +137,9 @@ for ($i=0; $i<$gallery->album->getPollScale() ; $i++) {
 <input type="checkbox" name="setNested" value="1" class="popup"><?php echo _("Apply values to nested albums.") ?>
 </p>
 
-<input type="submit" name="apply" value="<?php echo _("Apply") ?>">
-<input type="reset" value="<?php echo _("Undo") ?>">
-<input type="submit" value="<?php echo _("Close") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="apply" value="<?php echo _("Apply") ?>">
+<input type="reset" class="button" value="<?php echo _("Undo") ?>">
+<input type="submit" class="button" value="<?php echo _("Close") ?>" onclick='parent.close()'>
 
 </form>
 </div>

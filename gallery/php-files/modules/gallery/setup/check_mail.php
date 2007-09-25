@@ -97,7 +97,7 @@ if (isset($submit)) {
 	<tr>
 		<td style="white-space:nowrap;"><?php echo _("Your email address:") ?></td>
 		<td><input name="email_address" width="50"></td>
-		<td><input type="submit" name="submit" value="<?php echo _("Send Email") ?>"></td>
+		<td><input type="submit" class="button" name="submit" value="<?php echo _("Send Email") ?>"></td>
 		<td width="100%">&nbsp;</td>
 	</tr>
 </table>

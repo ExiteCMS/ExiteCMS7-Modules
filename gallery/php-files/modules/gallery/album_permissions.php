@@ -145,8 +145,8 @@ foreach($perms as $perm => $permDesc) {
     $permsTable->addElement(array('content' => $permDesc, 'cellArgs' => array('colspan' => 2)));
     $permsTable->addElement(
 	   array('content' =>
-	    "\n\t<input type=\"submit\" name=\"submit[$perm]\" value=\"-->\"><br>".
-	    "\n\t<input type=\"submit\" name=\"submit[$perm]\" value=\"<--\">"
+	    "\n\t<input type=\"submit\" class=\"button\" name=\"submit[$perm]\" value=\"-->\"><br>".
+	    "\n\t<input type=\"submit\" class=\"button\" name=\"submit[$perm]\" value=\"<--\">"
 	));
     $permsTable->addElement(
 	array('content' => drawSelect("actionUid", $uids[$perm], '', 3, array(), true))
@@ -161,8 +161,8 @@ echo $permsTable->render();
 <label for="setNested"><?php echo gTranslate('core', "Apply permissions to all sub-albums"); ?></label>
 <input type="checkbox" id="setNested" name="setNested" value="setNested" <?php if (getRequestVar('setNested')) echo 'CHECKED'; ?>>
 <br><br>
-<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-<input type="button" name="done" value="<?php echo gTranslate('core', "Done") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+<input type="button" class="button" name="done" value="<?php echo gTranslate('core', "Done") ?>" onclick='parent.close()'>
 </form>
 </div>
 <?php print gallery_validation_link("album_permissions.php"); ?>

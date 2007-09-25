@@ -109,8 +109,8 @@ if (!empty($formaction) && $formaction == 'create') {
 	?>
 	<br><br>
 	<form>
-		<input type="submit" name="moreuser" value="<?php echo _("Create another user") ?>">
-		<input type="submit" name="dismiss" value="<?php echo _("Back to usermanagement") ?>">
+		<input type="submit" class="button" name="moreuser" value="<?php echo _("Create another user") ?>">
+		<input type="submit" class="button" name="dismiss" value="<?php echo _("Back to usermanagement") ?>">
 	</form>
 	</div>
 </body>
@@ -161,8 +161,8 @@ echo _("Create a new user here.");
 <br>
 
 <input type="hidden" name="formaction" value="">
-<input type="submit" name="create" value="<?php echo _("Create user") ?>" onclick="usercreate_form.formaction.value='create'">
-<input type="submit" name="cancel" value="<?php echo _("Back to usermanagement") ?>" onclick="usercreate_form.formaction.value='cancel'">
+<input type="submit" class="button" name="create" value="<?php echo _("Create user") ?>" onclick="usercreate_form.formaction.value='create'">
+<input type="submit" class="button" name="cancel" value="<?php echo _("Back to usermanagement") ?>" onclick="usercreate_form.formaction.value='cancel'">
 </form>
 </div>
 

@@ -117,8 +117,8 @@ echo makeFormIntro("sort_album.php");
   </tr>
 </table>
 <br>
-<input type="submit" name="confirm" value="<?php echo _("Sort") ?>">
-<input type="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="confirm" value="<?php echo _("Sort") ?>">
+<input type="button" class="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </form>
 <?php
 	}

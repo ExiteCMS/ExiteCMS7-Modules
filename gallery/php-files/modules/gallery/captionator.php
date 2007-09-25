@@ -52,7 +52,7 @@ if (isset($save) || isset($next) || isset($prev)) {
     if ($captionedAlbum != $gallery->album->fields['name']) {
         echo gallery_error(gTranslate('core', "Captioned album does not match current album - aborting changes!"));
         echo '<br><br>';
-        echo '<input type="submit" onclick="window.location=\'' . makeAlbumUrl($captionedAlbum) . '\'" value="Exit">';
+        echo '<input type="submit" class="button" onclick="window.location=\'' . makeAlbumUrl($captionedAlbum) . '\'" value="Exit">';
         exit;
     }
 
@@ -167,7 +167,7 @@ if ($borderwidth == 0) {
     $bordercolor = $gallery->album->fields["bgcolor"];
     $borderwidth = 0;
 } else {
-    $bordercolor = "black";
+    $bordercolor = $gallery->album->fields["bordercolor"];
 }
 
 $adminText = gTranslate('core', "Multiple caption editor.") . " ";
@@ -178,7 +178,7 @@ if ($maxPages > 1) {
 						   gTranslate('core',"one page", "%d pages", $maxPages));
 }
 else {
-	$adminText .= gTranslate('core', "One item in this album.", "%d items in this album.", $numPhoto);
+	$adminText .= gTranslate('core', "One item in this album.", "%d items in this album.", $numPhotos);
 }
 
 $adminbox['text'] = $adminText;
@@ -206,18 +206,18 @@ echo makeFormIntro("captionator.php") ?>
 <input type="hidden" name="captionedAlbum" value="<?php echo $gallery->album->fields['name']; ?>">
 
 <div align="right">
-	<input type="submit" name="save" value="<?php echo gTranslate('core', "Save and Exit") ?>">
+	<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save and Exit") ?>">
 <?php
 if (!isset($last)) {
-    echo '<input type="submit" name="next" value="'. sprintf(gTranslate('core', "Save and Edit Next %d"),$perPage) .'">';
+    echo '<input type="submit" class="button" name="next" value="'. sprintf(gTranslate('core', "Save and Edit Next %d"),$perPage) .'">';
 }
 
 if ($page != 1) {
-    echo '<input type="submit" name="prev" value="'. sprintf(gTranslate('core', "Save and Edit Previous %d"), $perPage) .'">';
+    echo '<input type="submit" class="button" name="prev" value="'. sprintf(gTranslate('core', "Save and Edit Previous %d"), $perPage) .'">';
 }
 ?>
 
-<input type="submit" name="cancel" value="<?php echo gTranslate('core', "Exit") ?>">
+<input type="submit" class="button" name="cancel" value="<?php echo gTranslate('core', "Exit") ?>">
 </div>
 
 <!-- image grid table -->
@@ -319,18 +319,18 @@ if ($gallery->album->isHidden($i) && !$gallery->session->offline) {
 </table>
 
 <p align="right">
-	<input type="submit" name="save" value="<?php echo gTranslate('core', "Save and Exit") ?>">
+	<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save and Exit") ?>">
 <?php
 if (!isset($last)) {
-    echo '<input type="submit" name="next" value="'. sprintf(gTranslate('core', "Save and Edit Next %d"),$perPage) .'">';
+    echo '<input type="submit" class="button" name="next" value="'. sprintf(gTranslate('core', "Save and Edit Next %d"),$perPage) .'">';
 }
 
 if ($page != 1) {
-    echo '<input type="submit" name="prev" value="'. sprintf(gTranslate('core', "Save and Edit Previous %d"), $perPage) .'">';
+    echo '<input type="submit" class="button" name="prev" value="'. sprintf(gTranslate('core', "Save and Edit Previous %d"), $perPage) .'">';
 }
 ?>
 
-<input type="submit" name="cancel" value="<?php echo gTranslate('core', "Exit") ?>">
+<input type="submit" class="button" name="cancel" value="<?php echo gTranslate('core', "Exit") ?>">
 </p>
 
 </form>

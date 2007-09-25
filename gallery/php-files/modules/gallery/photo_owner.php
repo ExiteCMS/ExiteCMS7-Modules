@@ -100,8 +100,8 @@ asort($uAll);
 
 <p>
 	<input type="hidden" name="id" value="<?php echo $id ?>">
-	<input type="submit" name="save" value="<?php echo _("Save") ?>">
-	<input type="button" name="done" value="<?php echo _("Done") ?>" onclick='parent.close()'>
+	<input type="submit" class="button" name="save" value="<?php echo _("Save") ?>">
+	<input type="button" class="button" name="done" value="<?php echo _("Done") ?>" onclick='parent.close()'>
 </p>
 </form>
 </div>

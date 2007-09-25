@@ -150,11 +150,11 @@ echo makeFormIntro('backup_albums.php', array('name' => 'theform', ));
 </table>
 
 <p>
-<input type="submit" name="backup" value=<?php echo  _("Backup") ?>>
+<input type="submit" class="button" name="backup" value=<?php echo  _("Backup") ?>>
 <?php if ($showForce) { ?>
-<input type="submit" name="force" value=<?php echo  _("Force Backup") ?>>
+<input type="submit" class="button" name="force" value=<?php echo  _("Force Backup") ?>>
 <?php } ?>
-<input type="button" value=<?php echo  _("Cancel") ?> onclick='parent.close()'>
+<input type="button" class="button" value=<?php echo  _("Cancel") ?> onclick='parent.close()'>
 
 </form>
 <p>

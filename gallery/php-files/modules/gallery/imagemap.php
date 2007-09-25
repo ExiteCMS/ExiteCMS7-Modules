@@ -237,7 +237,7 @@ echo makeFormIntro('imagemap.php',
 	<input type="<?php echo $type; ?>" name="xvals">
 	<input type="<?php echo $type; ?>" name="yvals">
 	<br>
-	<input type="button" onClick="resetAndClear();" value="<?php echo gTranslate('core', "Clear and reset canvas"); ?>">
+	<input type="button" class="button" onClick="resetAndClear();" value="<?php echo gTranslate('core', "Clear and reset canvas"); ?>">
 	<hr>
 	<?php echo gTranslate('core', "Optional link-url"); ?><br>
 	<input type="text" size="50" name="areaurl" id="areaurl"><br>
@@ -248,7 +248,7 @@ echo makeFormIntro('imagemap.php',
 	<input type="text" id="areatext" size="40">
 	<?php } ?>
 
-	<input type="submit" value="<?php echo gTranslate('core', "Save Imagemap") ?>" onclick="document.areas.formaction.value='create'">
+	<input type="submit" class="button" value="<?php echo gTranslate('core', "Save Imagemap") ?>" onclick="document.areas.formaction.value='create'">
     <hr>
 <?php
 //print_r($photo);
@@ -263,10 +263,10 @@ if (!empty($allImageAreas)) {
     echo "\n</select>";
 
     echo "\n<hr>";
-    echo "<input type=\"submit\" value=\"". gTranslate('core', "Delete selected ImageMap(s)") ."\" onclick=\"document.areas.formaction.value='delete'\">";
+    echo "<input type=\"submit\" class=\"button\" value=\"". gTranslate('core', "Delete selected ImageMap(s)") ."\" onclick=\"document.areas.formaction.value='delete'\">";
 
     echo "\n<hr>";
-    echo "<input type=\"submit\" value=\"". gTranslate('core', "Update selected ImageMap(s)") ."\" onclick=\"document.areas.formaction.value='update'\">";
+    echo "<input type=\"submit\" class=\"button\" value=\"". gTranslate('core', "Update selected ImageMap(s)") ."\" onclick=\"document.areas.formaction.value='update'\">";
 
     echo '<div class="attention">'. gTranslate('core', "Be aware, that the text of ALL selected entries will be updated!") .'</div>';
 }

@@ -95,8 +95,8 @@ elseif (empty($order)) {
 </p>
 
 <input type="hidden" name="sort" value="1">
-<input type="submit" name="confirm" value="<?php echo gTranslate('core', "Sort") ?>">
-<input type="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="confirm" value="<?php echo gTranslate('core', "Sort") ?>">
+<input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
 </form>
 <?php
 }
@@ -106,7 +106,7 @@ else {
     $albumDB->sortByField($fieldname, $order);
     dismissAndReload();
 ?>
-    <input type="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
+    <input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
 <?php
 }
 ?>

@@ -127,8 +127,8 @@ if (!empty($newName)) {
 <input type="hidden" name="oldName" value="<?php echo $gallery->session->albumName?>">
 <input type="hidden" name="useLoad" value="<?php echo $useLoad?>">    
 <p>
-<input type="submit" name="rename" value="<?php echo _("Rename") ?>">
-<input type="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="rename" value="<?php echo _("Rename") ?>">
+<input type="button" class="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </form>
 
 <script language="javascript1.2" type="text/JavaScript">

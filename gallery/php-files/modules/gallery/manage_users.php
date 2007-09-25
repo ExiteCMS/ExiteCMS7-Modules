@@ -89,15 +89,15 @@ echo _("To select multiple users (only recognized for deletion), hold down the C
 ?>
 
 <p>
-<input type="submit" name="create" value="<?php echo _("Create new user") ?>">
+<input type="submit" class="button" name="create" value="<?php echo _("Create new user") ?>">
 <?php if ($gallery->app->multiple_create == "yes") { ?>
-	<input type="submit" name="bulk_create" value="<?php echo _("Bulk Create") ?>"> 
+	<input type="submit" class="button" name="bulk_create" value="<?php echo _("Bulk Create") ?>"> 
 <?php }
 if (count($displayUsers)) { ?>
-<input type="submit" name="modify" value="<?php echo _("Modify") ?>">
-<input type="submit" name="delete" value="<?php echo _("Delete") ?>">
+<input type="submit" class="button" name="modify" value="<?php echo _("Modify") ?>">
+<input type="submit" class="button" name="delete" value="<?php echo _("Delete") ?>">
 <?php } ?>
-<input type="button" value="<?php echo _("Done") ?>" onclick='parent.close()'>
+<input type="button" class="button" value="<?php echo _("Done") ?>" onclick='parent.close()'>
 </form>
 
 </div>

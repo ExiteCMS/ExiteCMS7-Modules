@@ -145,12 +145,12 @@ if (!$gallery->album->numPhotos(1)) {
 
 <p>
 	<input type="hidden" name="index" value="<?php echo $index ?>">
-	<input type="submit" name="save" value="<?php echo _("Save") ?>">
+	<input type="submit" class="button" name="save" value="<?php echo _("Save") ?>">
 <?php // only allow preview if there is a highlight
  if (isset($highlightIndex)) { ?>
-	<input type="submit" name="preview" value="<?php echo _("Preview") ?>">
+	<input type="submit" class="button" name="preview" value="<?php echo _("Preview") ?>">
 <?php } ?>
-	<input type="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
+	<input type="button" class="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </p>
 </form>
 

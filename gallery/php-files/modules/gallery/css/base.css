@@ -20,7 +20,6 @@
 .title {
     font-size: 1.4em;
     font-weight: bold;
-    white-space: nowrap;
 }
 
 .mod_title			/* album title -- Text is controlled by .title */
@@ -44,7 +43,7 @@
 	}
 .desc                           /* album descriptions on main page */
 	{
-	  font-size: 1em;
+	  font-size: 1.2em;
 	}
 .caption                        /* photo captions on all pages */
 	{
@@ -123,6 +122,7 @@ a.error:hover {
 .head {
     font-size: 1.4em;
     font-weight: bold;
+    color:#0c386f;
     white-space: nowrap;
 }
 
@@ -360,6 +360,7 @@ a.error:hover {
 
 #adminbox {
     width: 100%;
+     color:#0c386f; font-size: 1em;
 }
 
 #adminbox td {
@@ -369,7 +370,6 @@ a.error:hover {
 }
 
 #adminbox a {
-    font-size: 10px;
 }
 
 #adminbox a:hover {

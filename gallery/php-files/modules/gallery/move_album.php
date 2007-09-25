@@ -113,8 +113,8 @@ if ($gallery->session->albumName && isset($index)) {
         }
 ?>
         </select>
-        <input type="submit" name="move" value="<?php echo gTranslate('core', "Move it!") ?>">
-        <input type="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+        <input type="submit" class="button" name="move" value="<?php echo gTranslate('core', "Move it!") ?>">
+        <input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </form>
 
 <p>
@@ -130,8 +130,8 @@ if ($gallery->session->albumName && isset($index)) {
         <?php printAlbumOptionList(false, true); ?>
 </select>
         <br><br>
-        <input type="submit" name="move" value="<?php echo gTranslate('core', "Move to Album!") ?>">
-        <input type="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+        <input type="submit" class="button" name="move" value="<?php echo gTranslate('core', "Move to Album!") ?>">
+        <input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </form>
 <?php
         } // End Reorder

@@ -169,9 +169,9 @@ function num_special_fields($extra_fields) {
 	<input type="checkbox" name="setNested" value="1"><?php echo gTranslate('core', "Apply values to nested albums.") ?>.
 </p>
 <p>
-	<input type="submit" name="apply" value="<?php echo gTranslate('core', "Apply") ?>">
-	<input type="reset" value="<?php echo gTranslate('core', "Undo") ?>">
-	<input type="button" name="close" value="<?php echo gTranslate('core', "Close") ?>" onclick='parent.close()'>
+	<input type="submit" class="button" name="apply" value="<?php echo gTranslate('core', "Apply") ?>">
+	<input type="reset" class="button" value="<?php echo gTranslate('core', "Undo") ?>">
+	<input type="button" class="button" name="close" value="<?php echo gTranslate('core', "Close") ?>" onclick='parent.close()'>
 </p>
 </form>
 </div>

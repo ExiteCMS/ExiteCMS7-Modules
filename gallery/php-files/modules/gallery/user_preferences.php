@@ -142,8 +142,8 @@ include(dirname(__FILE__) . '/html/userData.inc');
 ?>
 <br>
 <div align="center">
-	<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-	<input type="button" name="close" value="<?php echo gTranslate('core', "Close Window") ?>" onclick="parent.close()">
+	<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+	<input type="button" class="button" name="close" value="<?php echo gTranslate('core', "Close Window") ?>" onclick="parent.close()">
 </div>
 </form>
 </div>

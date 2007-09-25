@@ -73,8 +73,8 @@ if (isset($save)) {
 	<input type="hidden" name="set_albumName" value="<?php echo $gallery->session->albumName ?>">
 	<textarea name="data" rows="10" cols="50"><?php echo $gallery->album->fields[$field] ?></textarea>
 	<p>
-		<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-		<input type="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
+		<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+		<input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Close Window") ?>" onclick='parent.close()'>
 	</p>
 	</form>
 

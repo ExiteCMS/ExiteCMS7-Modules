@@ -129,7 +129,7 @@ if ($gallery->session->albumName && isset($index)) {
 			}
 		       	?>
 			<form>
-			<input type="button" value="<?php echo _("Dismiss") ?>" onclick='parent.close()'>
+			<input type="button" class="button" value="<?php echo _("Dismiss") ?>" onclick='parent.close()'>
 			</form>
 		       	<?php
 		       	return;
@@ -210,8 +210,8 @@ for ($i = 1; $i <= $numPhotos; $i++) {
 	}
 ?>
 <p>
-<input type="submit" value="<?php echo gTranslate('core', "Copy to Album!") ?>">
-<input type="button" name="close" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" value="<?php echo gTranslate('core', "Copy to Album!") ?>">
+<input type="button" class="button" name="close" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </form>
 <?php
 } else {

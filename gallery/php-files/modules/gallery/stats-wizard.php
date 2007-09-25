@@ -137,7 +137,7 @@ if (!$GALLERY_EMBEDDED_INSIDE) {
 	
 	echo "\n</tr>";
 	echo "\n</table>";
-	echo "\n". '<input type="submit" name="submitbutton" value="'. _("Show statistics") . '">';
+	echo "\n". '<input type="submit" class="button" name="submitbutton" value="'. _("Show statistics") . '">';
 	echo "\n</form>";
 
 	echo "\n". '<div align="left">';

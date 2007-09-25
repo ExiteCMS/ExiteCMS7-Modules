@@ -160,9 +160,9 @@ doctype();
 <?php include(dirname(__FILE__) . '/html/userData.inc'); ?>
 
 <br>
-<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-<input type="submit" name="dismiss" value="<?php echo gTranslate('core', "Back to usermanagement") ?>">
-<input type="button" value="<?php echo gTranslate('core', "Done") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+<input type="submit" class="button" name="dismiss" value="<?php echo gTranslate('core', "Back to usermanagement") ?>">
+<input type="button" class="button" value="<?php echo gTranslate('core', "Done") ?>" onclick='parent.close()'>
 </form>
 </div>
 

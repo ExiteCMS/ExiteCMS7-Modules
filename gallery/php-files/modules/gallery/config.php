@@ -43,7 +43,7 @@ $gallery->app->feature["mirror"] = 0; // (missing <i>mirrorSites</i> -- it's opt
 
 /* Constants */
 $gallery->app->galleryTitle = "";
-$gallery->app->useIcons = "no";
+$gallery->app->useIcons = "yes";
 $gallery->app->skinname = "none";
 $gallery->app->uploadMode = "form";
 $gallery->app->albumDir = "/var/www/virtual/pli-images.office.vnvadvies.nl/files/gallery";
@@ -153,7 +153,7 @@ $gallery->app->userDir = "/var/www/virtual/pli-images.office.vnvadvies.nl/files/
 /* Defaults */
 $gallery->app->default["cols"] = "3";
 $gallery->app->default["rows"] = "4";
-$gallery->app->default["bordercolor"] = "black";
+$gallery->app->default["bordercolor"] = "#0C386F";
 $gallery->app->default["border"] = "1";
 $gallery->app->default["font"] = "arial";
 $gallery->app->default["thumb_size"] = "150";

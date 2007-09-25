@@ -141,8 +141,8 @@ if ($gallery->album && isset($id)) {
 	}
 ?>
 <input type="hidden" name="formaction" value="">
-<input type="submit" name="confirm" value="<?php echo gTranslate('core', "Delete") ?>" onclick="deletephoto_form.formaction.value='delete'">
-<input type="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+<input type="submit" class="button" name="confirm" value="<?php echo gTranslate('core', "Delete") ?>" onclick="deletephoto_form.formaction.value='delete'">
+<input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </form>
 <br>
 <?php

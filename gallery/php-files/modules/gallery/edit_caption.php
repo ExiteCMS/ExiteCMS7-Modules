@@ -180,8 +180,8 @@ echo "</td>";
 </table>
 
 <p>
-	<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-	<input type="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+	<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+	<input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </p>
 
 </form>

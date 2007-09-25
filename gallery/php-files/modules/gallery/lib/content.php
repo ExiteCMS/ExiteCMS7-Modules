@@ -39,15 +39,15 @@ function editField($album, $field, $link = null) {
 	if ($link) {
 		$buf .= '</a>';
 	}
+	$buf .= '&nbsp;';
 
 	if ($gallery->user->canChangeTextOfAlbum($album)) {
 		if (!strcmp($buf, "")) {
 			$buf = "<i>&lt;". gTranslate('common', "Empty") . "&gt;</i>";
 		}
-		$url = "edit_field.php?set_albumName={$album->fields['name']}&field=$field"; // should replace with &amp; for validatation
-		$buf .= ' <span class="editlink">';
-		$buf .= popup_link( "[". sprintf(gTranslate('common', "edit %s"), gTranslate('common', $field)) . "]", $url) ;
-		$buf .= '</span>';
+	    $iconText = getIconText('page_edit.gif', gTranslate('core', sprintf(gTranslate('common', "edit %s"), gTranslate('common', $field))), 'yes');
+		$buf .= popup_link($iconText, "edit_field.php?set_albumName={$album->fields['name']}&field=$field");
+
 	}
 
 	return $buf;
@@ -148,7 +148,7 @@ function drawCommentAddForm($commenter_name = '', $cols = 50) {
 	<td><textarea name="comment_text" cols="<?php echo $cols ?>" rows="5"></textarea></td>
 </tr>
 <tr>
-	<td colspan="2" class="commentboxfooter" align="right"><input name="save" type="submit" value="<?php echo gTranslate('common', "Post comment") ?>"></td>
+	<td colspan="2" class="commentboxfooter" align="right"><input name="save" type="submit" class="button" value="<?php echo gTranslate('common', "Post comment") ?>"></td>
 </tr>
 </table>
 <?php
@@ -556,7 +556,14 @@ function getIconText($iconName = '', $altText = '', $overrideMode = '', $useBrac
 			$altText = '';
 		}
 
-		if (file_exists("$base/images/icons/$iconName")) {
+		if (file_exists(PATH_THEME."images/$iconName")) {
+			$imgSrc = THEME .'images/'. $iconName;
+			$linkText = "<img src=\"$imgSrc\" title=\"$altText\" alt=\"$altText\" style=\"border: none;\">";
+
+			if ($iconMode == "both") {
+				$linkText .= "<br>$text";
+			}
+		} elseif (file_exists("$base/images/icons/$iconName")) {
 			$imgSrc = $gallery->app->photoAlbumURL .'/images/icons/'. $iconName;
 			$linkText = "<img src=\"$imgSrc\" title=\"$altText\" alt=\"$altText\" style=\"border: none;\">";
 

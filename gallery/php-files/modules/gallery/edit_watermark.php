@@ -116,9 +116,9 @@ includeLayout ('watermarkform.inc');
 ?>
 <p>
 	<input type="hidden" name="index" value="<?php echo $index ?>">
-	<input type="submit" name="save" value="<?php echo gTranslate('core', "Save") ?>">
-	<input type="submit" name="preview" value="<?php echo gTranslate('core', "Preview") ?>">
-	<input type="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
+	<input type="submit" class="button" name="save" value="<?php echo gTranslate('core', "Save") ?>">
+	<input type="submit" class="button" name="preview" value="<?php echo gTranslate('core', "Preview") ?>">
+	<input type="button" class="button" name="cancel" value="<?php echo gTranslate('core', "Cancel") ?>" onclick='parent.close()'>
 </p>
 </form>
 

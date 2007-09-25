@@ -335,7 +335,7 @@ function gSubmit($name, $value, $additionalAttrs = array()) {
 
 	$attrList['type'] = 'submit';
 	$attrList['value'] = $value;
-	$attrList['class'] = 'g-button';
+	$attrList['class'] = 'button';
 	$attrList['title'] = isset($additionalAttrs['title']) ? $additionalAttrs['title'] : $value;
 
 	$attrList = array_merge($attrList, $additionalAttrs);
@@ -350,7 +350,7 @@ function gButton($name, $value, $onClick, $additionalAttrs = array()) {
 	$attrList['name'] = $attrList['id'] = $name;
 	$attrList['type'] = 'button';
 	$attrList['value'] = $value;
-	$attrList['class'] = 'g-button';
+	$attrList['class'] = 'button';
 	$attrList['onClick'] = $onClick;
 	$attrList['title'] = isset($additionalAttrs['title']) ? $additionalAttrs['title'] : $value;
 

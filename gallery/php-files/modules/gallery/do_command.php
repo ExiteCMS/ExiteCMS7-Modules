@@ -89,7 +89,7 @@ switch ($cmd) {
 		<input type="radio" name="rebuild_type" value="recursive"><?php echo gTranslate('core', "Yes"); ?>
 		<input type="radio" name="rebuild_type" value="single" checked><?php echo gTranslate('core', "No"); ?>
 		<br><br>
-		<input type="submit" value="<?php echo gTranslate('core', "Start") ?>"><br><br>
+		<input type="submit" class="button" value="<?php echo gTranslate('core', "Start") ?>"><br><br>
 	</form>
 <?php
 			}
@@ -259,9 +259,9 @@ switch ($cmd) {
 	<div align="center">
 	<form>
 <?php if (isset($backUrl)) :?>
-		<input type="button" value="<?php echo gTranslate('core', "Dismiss") ?>" onclick="document.location='<?php echo $backUrl; ?>'">
+		<input type="button" class="button" value="<?php echo gTranslate('core', "Dismiss") ?>" onclick="document.location='<?php echo $backUrl; ?>'">
 <?php else : ?>
-		<input type="button" value="<?php echo gTranslate('core', "Dismiss") ?>" onclick="parent.close()">
+		<input type="button" class="button" value="<?php echo gTranslate('core', "Dismiss") ?>" onclick="parent.close()">
 <?php endif ?>
 	</form>
 	</div>
