@@ -225,7 +225,7 @@ $gallery->userDB = new ExiteCMS_UserDB;
 if (isset($GLOBALS['userdata']) && isset($GLOBALS['userdata']['user_name'])) {
 	$gallery->session->username = $GLOBALS['userdata']['user_name'];
 	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
-} elseif ($gallery->session->username) {
+} elseif (isset($gallery->session->username) && $gallery->session->username) {
 	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
 }
 

@@ -62,7 +62,7 @@
 			<b>{ssprintf format=$locale.039 var1=$unread var2=$rows}</b>
 			{/if}
 			<br /><br />
-			<a href='{$smarty.const.FUSION_SELF}?markasread={$userdata.user_id}'><img src='{$smarty.const.THEME}forum/markread.gif' /></a>
+			{buttonlink name=$locale.091 link=$smarty.const.FUSION_SELF|cat:"?markasread="|cat:$userdata.user_id}
 		</td>
 	</tr>
 </table>
