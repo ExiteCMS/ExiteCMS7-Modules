@@ -34,6 +34,8 @@ $locale['dls156'] = "Image downloads per country";
 $locale['dls157'] = "IP Address";
 $locale['dls158'] = "Plugin";
 $locale['dls159'] = "Box type";
+$locale['dls160'] = "Mirror";
+$locale['dls161'] = "Downloads";
 // Statistics information
 $locale['dls290'] = "Statistics information";
 $locale['dls291'] = "Gathering statistics since <b>%s</b>";
@@ -41,6 +43,7 @@ $locale['dls292'] = "There are <b>%u</b> statistics records in the database";
 $locale['dls293'] = "These cover <b>%u</b> different download URL's";
 $locale['dls294'] = "The most recent download took place on <b>%s</b>";
 // Error message
+$locale['dls298'] = "Mirror site not logged";
 $locale['dls299'] = "There is no data available to generate the report.";
 
 //

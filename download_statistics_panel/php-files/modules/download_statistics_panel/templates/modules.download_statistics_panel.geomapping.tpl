@@ -21,7 +21,7 @@
 <table cellpadding='0' cellspacing='1' width='790' class='tbl-border'>
 	<tr>
 		<td class='tbl1'>
-			<div id='map' style='width: 790px; height: 550px' style:'z-index:1;'>
+			<div id='map' style='width: 790px; height: 550px; z-index:1;'>
 {literal}				<script type='text/javascript'>
 //<![CDATA[
 
@@ -31,7 +31,7 @@ function Gload() {
 		icon.image = '/modules/download_statistics_panel/icons/' + color + '.png';
 		var mymarker = new GMarker(point, icon);
 		GEvent.addListener(mymarker, 'mouseover', function() {
-			mymarker.openInfoWindowHtml('<span style="height:50px;font-size:10pt"><img width="18" height="12" src="{/literal}{$smarty.const.IMAGES}{literal}flags/' + cc + '.gif" alt="" />&nbsp;' + cn + '<br /><br />' + users + ' user(s)</span>');
+			mymarker.openInfoWindowHtml('<span style="height:50px;font-size:10pt"><img width="18" height="12" src="{/literal}{$smarty.const.IMAGES}{literal}flags/' + cc + '.gif" alt="" />&nbsp;' + cn + '<br /><br />' + users + ' user(s)<\/span>');
 		});
 		GEvent.addListener(mymarker, 'mouseout', function() {
 			//map.closeInfoWindow();

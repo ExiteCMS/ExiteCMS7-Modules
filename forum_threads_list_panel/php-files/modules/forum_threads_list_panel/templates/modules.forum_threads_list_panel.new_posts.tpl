@@ -41,7 +41,7 @@
 			<a href='{$smarty.const.BASEDIR}forum/viewforum.php?forum_id={$posts[id].forum_id}&amp;forum_cat={$posts[id].forum_cat}'>{$posts[id].forum_name}</a>
 		</td>
 		<td class='{cycle values='tbl1,tbl2' advance=no}'>
-			<a href='{$smarty.const.BASEDIR}forum/viewthread.php?forum_id={$posts[id].forum_id}&amp;thread_id={$posts[id].thread_id}&amp;pid={$posts[id].post_id}#post_{$posts[id].post_id}'>{$posts[id].thread_subject}{if $posts[id].poll} <b>{$locale.FPM_200}</b>{/if}</a>
+			<a href='{$smarty.const.BASEDIR}forum/viewthread.php?forum_id={$posts[id].forum_id}&amp;thread_id={$posts[id].thread_id}&amp;pid={$posts[id].post_id}#post_{$posts[id].post_id}'>{$posts[id].thread_subject}{if $posts[id].poll} <b>{$locale.112}</b>{/if}</a>
 		</td>
 		<td align='center' width='1%' class='{cycle values='tbl1,tbl2' advance=no}' style='white-space:nowrap'>
 			{$posts[id].thread_views}

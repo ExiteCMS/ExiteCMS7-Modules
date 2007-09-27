@@ -34,15 +34,15 @@
 	<br />
 	<table align='center' cellpadding='0' cellspacing='1' width='400' class='tbl-border'>
 		<tr class='tbl2' align='center'>
-			<td width=80%'>
-				<b>{$locale.dls207}</b>
+			<td width='80%'>
+				<b>{$locale.dls160}</b>
 			</td>
 			<td width='20%'>
-				<b>{$locale.dls302}</b>
+				<b>{$locale.dls161}</b>
 			</td>
 		</tr>
 	{/if}
-	<tr class='{cycle values='tbl1,tbl2'}' align='center'>
+	<tr class='{cycle values='tbl1'}' align='center'>
 		<td>
 			{$stats_mirrors[id].mirror}
 		</td>
@@ -62,16 +62,16 @@
 			<td align='center' class='tbl'>
 				{$locale.dls121}
 				<select name='top' class='textbox' style='width:50px;'>
-					<option value='1'{if $top == 5} selected{/if}>5</option>
-					<option value='2'{if $top == 10} selected{/if}>10</option>
-					<option value='3'{if $top == 15} selected{/if}>15</option>
-					<option value='4'{if $top == 20} selected{/if}>20</option>
-					<option value='5'{if $top == 25} selected{/if}>25</option>
+					<option value='1'{if $top == 5} selected="selected"{/if}>5</option>
+					<option value='2'{if $top == 10} selected="selected"{/if}>10</option>
+					<option value='3'{if $top == 15} selected="selected"{/if}>15</option>
+					<option value='4'{if $top == 20} selected="selected"{/if}>20</option>
+					<option value='5'{if $top == 25} selected="selected"{/if}>25</option>
 				</select>
 				{$locale.dls122}
 				<select name='report' class='textbox' style='width:200px;'>
 				{section name=id loop=$reports}
-					<option value='{$reports[id].number}'{if $report == $reports[id].number} selected{/if}>{$reports[id].name}</option>
+					<option value='{$reports[id].number}'{if $report == $reports[id].number} selected="selected"{/if}>{$reports[id].name}</option>
 				{/section}
 				</select>
 			</td>
@@ -84,11 +84,11 @@
 			<td align='center' class='tbl'>
 				{$locale.dls123}
 				<select name='filter' class='textbox' style='width:200px;'>
-					<option value='0'{if $filter == 0} selected{/if}> </option>
-					<option value='1'{if $filter == 1} selected{/if}>{$locale.dls140}</option>
-					<option value='2'{if $filter == 2} selected{/if}>{$locale.dls141}</option>
-					<option value='3'{if $filter == 3} selected{/if}>{$locale.dls142}</option>
-					<option value='4'{if $filter == 4} selected{/if}>{$locale.dls143}</option>
+					<option value='0'{if $filter == 0} selected="selected"{/if}>&nbsp;</option>
+					<option value='1'{if $filter == 1} selected="selected"{/if}>{$locale.dls140}</option>
+					<option value='2'{if $filter == 2} selected="selected"{/if}>{$locale.dls141}</option>
+					<option value='3'{if $filter == 3} selected="selected"{/if}>{$locale.dls142}</option>
+					<option value='4'{if $filter == 4} selected="selected"{/if}>{$locale.dls143}</option>
 				</select>
 			</td>
 		</tr>

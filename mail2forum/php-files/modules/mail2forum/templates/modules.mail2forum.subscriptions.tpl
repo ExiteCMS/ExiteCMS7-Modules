@@ -40,7 +40,7 @@
 			<td class='tbl'>
 				<select name='m2f_html' class='textbox' style='width:150px'>
 				{foreach from=$ar_html item=choice name=fe}
-				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_html} selected{/if}>{$choice}</option>
+				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_html} selected="selected"{/if}>{$choice}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -52,7 +52,7 @@
 			<td class='tbl'>
 				<select name='m2f_attach' class='textbox' style='width:150px'>
 				{foreach from=$ar_attach item=choice name=fe}
-				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_attach} selected{/if}>{$choice}</option>
+				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_attach} selected="selected"{/if}>{$choice}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -66,7 +66,7 @@
 			<td class='tbl'>
 				<select name='m2f_inline' class='textbox' style='width:150px'>
 				{foreach from=$ar_inline item=choice name=fe}
-				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_inline} selected{/if}>{$choice}</option>
+				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_inline} selected="selected"{/if}>{$choice}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -78,7 +78,7 @@
 			<td class='tbl'>
 				<select name='m2f_thumbnail' class='textbox' style='width:150px'>
 				{foreach from=$ar_thumbnail item=choice name=fe}
-				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_thumbnail} selected{/if}>{$choice}</option>
+				<option value='{$smarty.foreach.fe.index}'{if $smarty.foreach.fe.index == $config.m2f_thumbnail} selected="selected"{/if}>{$choice}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -109,13 +109,13 @@
 	{section name=id loop=$subscriptions}
 		{if $smarty.section.id.first}
 		<tr>
-			<td width='' class='tbl2'>
+			<td class='tbl2'>
 				<b>{$locale.m2f400}</b>
 			</td>
 			<td align='center' width='80' class='tbl2' style='white-space:nowrap'>
 				<b>{$locale.m2f401}</b>
 			</td>
-			<td width='' class='tbl2' style='white-space:nowrap'>
+			<td class='tbl2' style='white-space:nowrap'>
 				<b>{$locale.m2f402}</b>
 			</td>
 		</tr>
@@ -129,8 +129,8 @@
 			</td>
 			<td align='center' class='{cycle values='tbl1,tbl2' advance=no}'>
 				<select name='m2f_subscribed[{$smarty.section.id.index}]' class='textbox'>
-					<option value='0'{if $subscriptions[id].subscribed == "0"} selected{/if}>{$locale.m2f306}</option>
-					<option value='1'{if $subscriptions[id].subscribed == "1"} selected{/if}>{$locale.m2f307}</option>
+					<option value='0'{if $subscriptions[id].subscribed == "0"} selected="selected"{/if}>{$locale.m2f306}</option>
+					<option value='1'{if $subscriptions[id].subscribed == "1"} selected="selected"{/if}>{$locale.m2f307}</option>
 				</select>
 			</td>
 			<td align='left' class='{cycle values='tbl1,tbl2' advance=no}' style='white-space:nowrap'>

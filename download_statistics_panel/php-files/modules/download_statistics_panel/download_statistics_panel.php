@@ -55,7 +55,7 @@ $variables['stats_files'] = $data['count'];
 $variables['stats_mirrors'] = array();
 $result = dbquery("SELECT ds_mirror, count(*) as count FROM ".$db_prefix."dls_statistics GROUP BY ds_mirror");
 while ($data = dbarray($result)) {
-	$data['mirror'] = $data['ds_mirror'] ? ("http://download".$data['ds_mirror'].".pli-images.org") : "Mirror site not recorded";
+	$data['mirror'] = $data['ds_mirror'] ? ("http://download".$data['ds_mirror'].".pli-images.org") : $locale['dls298'];
 	$variables['stats_mirrors'][] = $data;
 }
 

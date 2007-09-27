@@ -28,7 +28,7 @@
 	<tr>
 		{if $smarty.const.THEME_WIDTH == "100%" || $smarty.const.THEME_WIDTH > "990"}
 			<td width='45%' class='{cycle values="tbl1,tbl2" advance=false}'><a href='{$smarty.const.FORUM}viewforum.php?forum_id={$threadlist[entry].forum_id}' title='{$threadlist[entry].forum_name}'>{$threadlist[entry].forum_name}</a></td>
-			<td width='55%' class='{cycle values="tbl1,tbl2" advance=false}'><a href='{$smarty.const.FORUM}viewthread.php?forum_id={$threadlist[entry].forum_id}&amp;thread_id={$threadlist[entry].thread_id}&amp;pid={$threadlist[entry].last_id}#post_{$threadlist[entry].last_id}' title='{$threadlist[entry].thread_subject}'>{$threadlist[entry].thread_subject|truncate:40}{$threadlist[entry].fpm_append}</a></td>
+			<td width='55%' class='{cycle values="tbl1,tbl2" advance=false}'><a href='{$smarty.const.FORUM}viewthread.php?forum_id={$threadlist[entry].forum_id}&amp;thread_id={$threadlist[entry].thread_id}&amp;pid={$threadlist[entry].last_id}#post_{$threadlist[entry].last_id}' title='{$threadlist[entry].thread_subject}'>{$threadlist[entry].thread_subject|truncate:40}{if $threadlist[entry].poll} <b>{$locale.112}</b>{/if}</a></td>
 		{else}
 			<td width='100%' class='{cycle values="tbl1,tbl2" advance=false}'><a href='{$smarty.const.FORUM}viewthread.php?forum_id={$threadlist[entry].forum_id}&amp;thread_id={$threadlist[entry].thread_id}&amp;pid={$threadlist[entry].last_id}#post_{$threadlist[entry].last_id}' title='{$threadlist[entry].thread_subject} ($threadlist[entry].forum_name})'>{$threadlist[entry].thread_subject|truncate:40}{$threadlist[entry].fpm_append}</a></td>
 		{/if}

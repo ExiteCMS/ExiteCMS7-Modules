@@ -36,7 +36,7 @@ if (dbrows($result) == 0) {
 } else {
 	$i = 0;
 	while ($data = dbarray($result)) {
-		$data['fpm_append'] = fpm_panels_poll_exists($data['forum_id'], $data['thread_id']);
+		$data['poll'] = fpm_panels_poll_exists($data['forum_id'], $data['thread_id']);
 		$data['count_posts']--;
 		$threadlist[] = $data;
 	}

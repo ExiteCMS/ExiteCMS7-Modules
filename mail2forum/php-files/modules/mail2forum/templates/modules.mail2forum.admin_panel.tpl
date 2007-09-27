@@ -62,21 +62,18 @@
 <br /><br />
 </center>
 {/if}
-<table align='center' cellpadding='0' cellspacing='1' width='80%' class='tbl-border'>
+<table align='center' cellpadding='0' cellspacing='1' width='95%' class='tbl-border'>
 {section name=id loop=$forums}
 	{if $smarty.section.id.first}
 	<tr>
 		<td class='tbl2'>
 			<b>{$locale.m2f201}</b>
 		</td>
-		<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>
+		<td align='center' width='1%' class='tbl2' style='white-space:nowrap' colspan='2'>
 			<b>{$locale.m2f202}</b>
 		</td>
 		<td align='center' width='1%' class='tbl2' style='white-space:nowrap' colspan='2'>
 			<b>{$locale.m2f214}</b>
-		</td>
-		<td align='center' width='1%' class='tbl2' style='white-space:nowrap' colspan='2'>
-			<b>{$locale.m2f204}</b>
 		</td>
 		<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>
 			<b>{$locale.m2f205}</b>
@@ -100,6 +97,9 @@
 			<input type='hidden' name='forum_posting' value='{$forums[id].forum_posting}'>
 		</td>
 		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
+			{$forums[id].m2f_subscribers}
+		</td>
+		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
 			<select name='m2f_type' class='textbox'>
 				{foreach from=$mailtypes item=type name=mailtype}
 				<option value='{$smarty.foreach.mailtype.index}'{if $smarty.foreach.mailtype.index == $forums[id].m2f_type} selected{/if}>{$type}</option>
@@ -115,34 +115,27 @@
 			<input type='hidden' name='m2f_forumid' value='{$forums[id].forum_id}' />
 		</td>
 		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
-			{$forums[id].m2f_subscribers}
-			{if $forums[id].m2f_subscribers > 0}
-				&nbsp;[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=subscribers&amp;forum_id={$forums[id].forum_id}'>{$locale.m2f217}</a>]
-			{/if} 
-		</td>
-		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
-		{if $forums[id].m2f_config}
-			{if $forums[id].m2f_subscribe}
-				&nbsp;[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=deactivate&amp;forum_id={$forums[id].forum_id}'>{$locale.m2f219}</a>]
-			{else}
-				[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=activate&amp;forum_id={$forums[id].forum_id}'>{$locale.m2f218}</a>]
-			{/if}
-		{/if}
-		</td>
-		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
 			{if $forums[id].m2f_config}{$forums[id].m2f_sent}{else}0{/if}
 		</td>
 		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
 			{if $forums[id].m2f_config}{$forums[id].m2f_received}{else}0{/if}
 		</td>
-		<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>
+		<td align='left' width='1%' class='tbl1' style='white-space:nowrap'>
 		{if $forums[id].m2f_config}
-			{if $forums[id].m2f_active}
-				[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=setstatus&amp;status=0&amp;forum_id={$forums[id].forum_id}'>{$locale.m2f212}</a>]
+			{if $forums[id].m2f_subscribe}
+				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=deactivate&amp;forum_id={$forums[id].forum_id}'><img src='{$smarty.const.THEME}images/cog_delete.gif' alt='{$locale.m2f219}' title='{$locale.m2f219}' /></a>
 			{else}
-				[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=setstatus&amp;status=1&amp;forum_id={$forums[id].forum_id}'>{$locale.m2f211}</a>]
+				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=activate&amp;forum_id={$forums[id].forum_id}'><img src='{$smarty.const.THEME}images/cog_add.gif' alt='{$locale.m2f218}' title='{$locale.m2f218}' /></a>
+			{/if}
+			{if $forums[id].m2f_active}
+				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=setstatus&amp;status=0&amp;forum_id={$forums[id].forum_id}'><img src='{$smarty.const.THEME}images/page_red.gif' alt='{$locale.m2f212}' title='{$locale.m2f212}' /></a>
+			{else}
+				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=setstatus&amp;status=1&amp;forum_id={$forums[id].forum_id}'><img src='{$smarty.const.THEME}images/page_green.gif' alt='{$locale.m2f211}' title='{$locale.m2f211}' /></a>
 			{/if}
 		{/if}
+		{if $forums[id].m2f_subscribers > 0}
+			<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;step=subscribers&amp;forum_id={$forums[id].forum_id}'><img src='{$smarty.const.THEME}images/image_view.gif' alt='{$locale.m2f217}' title='{$locale.m2f217}'></a>
+		{/if} 
 		</td>
 	</tr>
 	</form>

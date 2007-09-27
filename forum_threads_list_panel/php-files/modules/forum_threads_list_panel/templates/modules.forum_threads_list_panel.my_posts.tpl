@@ -44,7 +44,7 @@
 		</td>
 		<td class='{cycle values='tbl1,tbl2' advance=no}'>
 			<span class='small'>
-				<a href='{$smarty.const.FORUM}viewthread.php?{$posts[id].rstart}forum_id={$posts[id].forum_id}&amp;thread_id={$posts[id].thread_id}&amp;pid={$posts[id].post_id}#post_{$posts[id].post_id}' title='{$posts[id].post_subject}'>{$posts[id].post_subject|truncate:40:"..."}{if $posts[id].poll} <b>{$locale.FPM_200}</b>{/if}</a>
+				<a href='{$smarty.const.FORUM}viewthread.php?{$posts[id].rstart}forum_id={$posts[id].forum_id}&amp;thread_id={$posts[id].thread_id}&amp;pid={$posts[id].post_id}#post_{$posts[id].post_id}' title='{$posts[id].post_subject}'>{$posts[id].post_subject|truncate:40:"..."}{if $posts[id].poll} <b>{$locale.112}</b>{/if}</a>
 			</span>
 		</td>
 		<td align='center' width='1%' class='{cycle values='tbl1,tbl2'}' style='white-space:nowrap'>

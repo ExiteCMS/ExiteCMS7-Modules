@@ -75,7 +75,7 @@ $variables['rows'] = $rows;
 $variables['rowstart'] = $rowstart;
 
 // define the search body panel variables
-$template_panels[] = array('type' => 'body', 'name' => 'my_posts', 'title' => $title, 'template' => 'modules.forum_threads_list_panel.my_posts.tpl', 'locale' => array(PATH_LOCALE.LOCALESET."admin/forum_polls.php"));
+$template_panels[] = array('type' => 'body', 'name' => 'my_posts', 'title' => $title, 'template' => 'modules.forum_threads_list_panel.my_posts.tpl');
 $template_variables['my_posts'] = $variables;
 
 

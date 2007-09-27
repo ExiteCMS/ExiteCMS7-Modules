@@ -11,18 +11,18 @@ $locale['m2f200'] = "Forum list";
 $locale['m2f201'] = "Forum name";
 $locale['m2f202'] = "Forum Postability";
 $locale['m2f203'] = "Options";
-$locale['m2f204'] = "Subscribers";
+$locale['m2f204'] = "";
 $locale['m2f205'] = "Sent";
 $locale['m2f210'] = "Configure";
-$locale['m2f211'] = "<font color='green'>Enable</font>";
-$locale['m2f212'] = "<font color='red'>Disable</font>";
+$locale['m2f211'] = "Activate this configuration";
+$locale['m2f212'] = "Disable this configuration";
 $locale['m2f213'] = "Received";
 $locale['m2f214'] = "Mail system";
 $locale['m2f215'] = "Remove";
 $locale['m2f216'] = "Cancel";
-$locale['m2f217'] = "View";
-$locale['m2f218'] = "Activate";
-$locale['m2f219'] = "Deactivate";
+$locale['m2f217'] = "View the subscribers list";
+$locale['m2f218'] = "Allow users to subscribe";
+$locale['m2f219'] = "Disable user subscriptions";
 // Supported mailbox types
 $locale['m2f230'] = "SMTP/POP3";
 $locale['m2f231'] = "SMTP/IMAP";
@@ -128,10 +128,12 @@ $locale['m2f914'] = "Message-multipart has an unsupported primary content-type: 
 $locale['m2f950'] = "There are no forums you can subscribe to";
 $locale['m2f951'] = "Subscriptions succesfully updated";
 // Subscription intro message
-$locale['m2f990'] = "Mail-to-Forum is a ExiteCMS installable module which binds the content of a forum with that of a mailing list.\n<ul>
-	<li>Any posts made in a designated forum will be automatically emailed to every member of the corresponding mailing list.\n
-	<li>Any mail sent to the mailing list will be automatically added as posts to this forum.\n
-	<li>Special formatting makes sure that replies to Mail-to-Forum emails will be added to the correct thread.</ul>";
+$locale['m2f990'] = "Mail-to-Forum is a ExiteCMS installable module which binds the content of a forum with that of a mailing list.\n
+<ul>
+	<li>Any posts made in a designated forum will be automatically emailed to every member of the corresponding mailing list.</li>\n
+	<li>Any mail sent to the mailing list will be automatically added as posts to this forum.</li>\n
+	<li>Special formatting makes sure that replies to Mail-to-Forum emails will be added to the correct thread.</li>\n
+</ul>";
 // M2F post error messages (used in NDR reports)
 $locale['m2f991'] = "Mail2Forum - post error message";
 $locale['m2f992'] = "Your reply with subject '%s' could not be delivered.\r\nThe forum thread you replied to does not belong to this forum.";

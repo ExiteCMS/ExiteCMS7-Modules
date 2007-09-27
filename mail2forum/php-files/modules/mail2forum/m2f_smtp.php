@@ -360,8 +360,7 @@ while (true) {
 							while ($attachment = dbarray($res_att)) {
 								if (M2F_SMTP_DEBUG) logdebug('ATTACHMENT', print_r($attachment, true));
 								if (USE_PLI_ENHANCEMENTS) {
-									$attachURL = $settings['siteurl']."forum/viewthread.php?forum_id=".$postrecord['forum_id']."&thread_id=".$postrecord['thread_id']."&getfile=".$attachment['attach_id']."&user_name=".$recipient['user_name']."&user_pass=";
-									$attachURL = str_replace(" ", "%20", $attachURL);
+									$attachURL = $settings['siteurl']."getfile.php?type=a&file_id=".$attachment['attach_id'];
 								} else {
 									$attachURL = $settings['siteurl']."forum/attachments/".$attachment['attach_name'];
 								}

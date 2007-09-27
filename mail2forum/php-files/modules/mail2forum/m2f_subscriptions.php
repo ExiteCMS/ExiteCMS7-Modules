@@ -81,7 +81,7 @@ if (isset($_POST['save'])) {
 }
 
 $variables['subscriptions'] = array();
-$result = dbquery("SELECT * FROM ".$db_prefix."M2F_forums mf, ".$db_prefix."forums f WHERE mf.m2f_subscribe = 1 AND mf.m2f_active = 1 AND mf.m2f_forumid = f.forum_id AND ".groupaccess('mf.m2f_access'));
+$result = dbquery("SELECT * FROM ".$db_prefix."M2F_forums mf, ".$db_prefix."forums f WHERE mf.m2f_subscribe = 1 AND mf.m2f_active = 1 AND mf.m2f_forumid = f.forum_id AND ".groupaccess('mf.m2f_access')." ORDER BY f.forum_name");
 while ($data = dbarray($result)) {
 		$result2 = dbquery("SELECT * FROM ".$db_prefix."M2F_subscriptions WHERE m2f_forumid = '".$data['m2f_forumid']."' AND m2f_userid = '".$userdata['user_id']."'");
 		if ($data2 = dbarray($result2)) {

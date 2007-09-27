@@ -70,7 +70,7 @@ while ($data = dbarray($result)) {
 $variables['posts'] = $posts;
 
 // define the search body panel variables
-$template_panels[] = array('type' => 'body', 'name' => 'my_new_posts', 'template' => 'modules.forum_threads_list_panel.new_posts_detail.tpl', 'locale' => array(PATH_LOCALE.LOCALESET."admin/forum_polls.php"));
+$template_panels[] = array('type' => 'body', 'name' => 'my_new_posts', 'template' => 'modules.forum_threads_list_panel.new_posts_detail.tpl');
 $template_variables['my_new_posts'] = $variables;
 
 // Call the theme code to generate the output for this webpage
