@@ -15,7 +15,7 @@
 {* forum_threads_list_panel                                                *}
 {*                                                                         *}
 {***************************************************************************}
-{include file="_opentable.tpl" name=$_name title=$locale.025 state=$_state style=$_style}
+{include file="_opentable_x.tpl" name=$_name title=$locale.025 state=$_state style=$_style}
 <table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>
 	<tr>
 		{if $smarty.const.THEME_WIDTH == "100%" || $smarty.const.THEME_WIDTH > "990"}<td class='tbl2'><b>{$locale.030}</b></td>{/if}
@@ -55,7 +55,7 @@
 	</tr>
 	{/if}
 </table>
-{include file="_closetable.tpl"}
+{include file="_closetable_x.tpl"}
 {***************************************************************************}
 {* End of template                                                         *}
 {***************************************************************************}
