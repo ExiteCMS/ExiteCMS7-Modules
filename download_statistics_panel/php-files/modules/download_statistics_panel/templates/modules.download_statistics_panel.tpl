@@ -57,6 +57,10 @@
 {include file="_closetable.tpl"}
 {include file="_opentable.tpl" name=$_name title=$locale.dls120 state=$_state style=$_style}
 <form name='selectionforum' method='post' action='{$smarty.const.FUSION_SELF}'>
+	<input type='hidden' name='date_first' value='{$date_first}' />
+	<input type='hidden' name='date_last' value='{$date_last}' />
+	<input type='hidden' name='stats_count' value='{$stats_counts}' />
+	<input type='hidden' name='stats_files' value='{$stats_files}' />
 	<table align='center' cellpadding='0' cellspacing='0' width='500'>
 		<tr>
 			<td align='center' class='tbl'>

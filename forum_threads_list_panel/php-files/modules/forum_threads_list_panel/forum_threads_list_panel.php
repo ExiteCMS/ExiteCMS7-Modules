@@ -19,7 +19,7 @@ require_once PATH_INCLUDES."forum_functions_include.php";
 
 // get the list of latest threads
 $result = dbquery(
-	"SELECT tf.*, tt.*, tu.user_id,user_name, MAX(tp.post_id) as last_id, COUNT(tp.post_id) as count_posts FROM ".$db_prefix."forums tf
+	"SELECT tf.*, tt.*, tu.user_id,user_name FROM ".$db_prefix."forums tf
 	INNER JOIN ".$db_prefix."threads tt USING(forum_id)
 	INNER JOIN ".$db_prefix."posts tp USING(thread_id)
 	INNER JOIN ".$db_prefix."users tu ON tt.thread_lastuser=tu.user_id
@@ -37,7 +37,9 @@ if (dbrows($result) == 0) {
 	$i = 0;
 	while ($data = dbarray($result)) {
 		$data['poll'] = fpm_panels_poll_exists($data['forum_id'], $data['thread_id']);
-		$data['count_posts']--;
+		$data2 = dbarray(dbquery("SELECT MAX(post_id) AS last_id FROM ".$db_prefix."posts WHERE thread_id = '".$data['thread_id']."'"));
+		$data['last_id'] = $data2['last_id'];
+		$data['count_posts'] = dbcount("(*)", "posts", "thread_id = '".$data['thread_id']."'") - 1;
 		$threadlist[] = $data;
 	}
 

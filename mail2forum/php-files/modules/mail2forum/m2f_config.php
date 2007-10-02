@@ -29,6 +29,12 @@ define('M2F_POLL_THRESHOLD', 7*24*60*60);
 // default: 1
 define('M2F_MAX_ATTACHMENTS', 1);
 
+// Maximum size of an attachments. Attachments bigger that the size defined here will never be send out via
+// email, only a link will be included
+//
+// default: 5242880
+define('M2F_MAX_ATTACH_SIZE', 5242880);
+
 // With this switch you control the from address of outgoing email. The default behaviour is to use the email
 //   address from the poster, as defined in the members profile. If the member has elected to hide his email 
 //   address from other member (the 'hide email' option set to 'Yes'), the from is composed of the Nick of the

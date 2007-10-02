@@ -300,7 +300,7 @@ $icons = array('yellow', 'orange', 'red', 'cyan', 'blue', 'purple', 'green');
 if ($google_key != "") {
 
 	// consolidate the IP statistics per country
-	$result = dbquery("SELECT DISTINCT ds_ip, ds_cc FROM ".$db_prefix."dls_statistics WHERE ds_file LIKE '%software.ver'");
+	$result = dbquery("SELECT DISTINCT ds_ip, ds_cc FROM ".$db_prefix."dls_statistics WHERE ds_onmap = '1'");
 	// and add them to the country table
 	while ($data = dbarray($result)) {
 		if (isset($countries[$data['ds_cc']])) {

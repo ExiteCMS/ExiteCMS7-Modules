@@ -8,71 +8,6 @@
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
-/*---------------------------------------------------+
-| Image uploads - handling and preparation           |
-+----------------------------------------------------*/
-$variables[] = array();
-
-// load the locale for this module
-include PATH_LOCALE.LOCALESET."admin/image_uploads.php";
-
-$variables['image_cats'][] = array('folder' => "wiki", 'name' => 'Wiki', 'path' => PATH_IMAGES."wiki/", 'selected' => true);
-$ufolder = IMAGES."wiki/";
-$afolder = PATH_IMAGES."wiki/";
-
-if (isset($status)) {
-	if ($status == "upn") {
-		$title = $locale['420'];
-		$variables['message'] = $locale['425'];
-	} elseif ($status == "upy") {
-		$title = $locale['420'];
-		$variables['message'] = "<img src='".$ufolder.$img."' alt='$img' /><br /><br />".$locale['426'];
-	}
-	// define the message panel variables
-	$variables['bold'] = true;
-	$template_panels[] = array('type' => 'body', 'name' => 'wiki.upload.status', 'title' => $title, 'template' => '_message_table_panel.tpl');
-	$template_variables['wiki.upload.status'] = $variables;
-	$variables = array();
-}
-
-// if a file is uploaded, process it
-if (isset($_POST['uploadimage'])) {
-	$error = "";
-	$image_types = array(
-		".gif",
-		".GIF",
-		".jpeg",
-		".JPEG",
-		".jpg",
-		".JPG",
-		".png",
-		".PNG"
-	);
-	$imgext = strrchr($_FILES['myfile']['name'], ".");
-	$imgname = $_FILES['myfile']['name'];
-	$imgsize = $_FILES['myfile']['size'];
-	$imgtemp = $_FILES['myfile']['tmp_name'];
-	if (!in_array($imgext, $image_types)) {
-		redirect(FUSION_REQUEST);
-	} elseif (is_uploaded_file($imgtemp)){
-		include PATH_INCLUDES."photo_functions_include.php";
-		$imgname = image_exists($afolder, substr("000000".$userdata['user_id'],-6).'_'.$imgname);
-		move_uploaded_file($imgtemp, $afolder.$imgname);
-		chmod($afolder.$imgname,0644);
-		redirect(FUSION_REQUEST);
-	}
-}
-
-/*---------------------------------------------------+
-| Locale definition for this installation module     |
-+----------------------------------------------------*/
-
-if (file_exists(PATH_MODULES."wiki/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."wiki/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."wiki/locale/English.php";
-}
-
 /**
  * The Wikka mainscript.
  * 
@@ -436,26 +371,7 @@ if (substr($_SERVER["QUERY_STRING"], -4) == ".xml") {
 	$variables['html'] = $page_output;
 	$template_panels[] = array('type' => 'body', 'title' => $wakkaConfig['wakka_name'], 'name' => 'wiki', 'template' => '_custom_html.tpl');
 	$template_variables['wiki'] = $variables;
-
-	// in edit mode? Allow image uploads
-	if (iMEMBER && $method == "edit") {
-		$variables['ifolder'] = $ifolder;
-		$variables['view'] = isset($view) ? $view : "";
-
-		if (isset($view)) {
-			$image_ext = strrchr($afolder.$view,".");
-			if (in_array($image_ext, array(".gif",".GIF",".jpg",".JPG",".jpeg",".JPEG",".png",".PNG"))) {
-				$variables['view_image'] = $ufolder.$view;
-			} else {
-				$variables['view_image'] = "";
-			}
-		} else {
-			$variables['image_list'] = makefilelist($afolder, ".|..|imagelist.js|index.php", true);
-		}
-		$template_panels[] = array('type' => 'body', 'name' => 'modules.wiki.upload', 'template' => 'modules.wiki.upload.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/image_uploads.php");
-		$template_variables['modules.wiki.upload'] = $variables;
-	}
-	
+		
 	require_once PATH_THEME."/theme.php";
 }
 ?>

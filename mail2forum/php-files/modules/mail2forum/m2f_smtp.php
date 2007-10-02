@@ -387,9 +387,12 @@ while (true) {
 												// ignore the attachments
 												break;
 											case 1:
-												// attach the attachments to the email
-												$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
-												break;
+												// check the size of the attachments, don't send it out if it's to big
+												if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < M2F_MAX_ATTACH_SIZE) {
+													// attach the attachments to the email
+													$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
+													break;
+												}
 											case 2:
 												// add a link pointing to the attachment
 												$HTMLbody .= "<br><br>Attachment: <a href=\"".$attachURL."\">".($attachment['attach_realname']==""?$attachment['attach_name']:$attachment['attach_realname'])."</a>";
@@ -404,9 +407,12 @@ while (true) {
 											// ignore the attachments
 											break;
 										case 1:
-											// attach the attachments to the email
-											$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
-											break;
+											// check the size of the attachments, don't send it out if it's to big
+											if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < M2F_MAX_ATTACH_SIZE) {
+												// attach the attachments to the email
+												$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
+												break;
+											}
 										case 2:
 											// add a link pointing to the attachment
 											$TEXTbody .= "\r\n\r\nAttachment: ".$attachURL;

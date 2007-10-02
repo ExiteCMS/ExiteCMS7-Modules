@@ -34,21 +34,36 @@ require_once PATH_INCLUDES."geoip_include.php";
 
 // first panel: statistics overview
 
-$data = dbarray(dbquery("SELECT MIN(ds_timestamp) AS timestamp FROM ".$db_prefix."dls_statistics"));
-if (!is_array($data)) $data = array("timestamp" => time());
-$variables['date_first'] = $data['timestamp'];
+if (isset($_POST['date_first'])) {
+	$variables['date_first'] = $_POST['date_first'];
+} else {
+	$data = dbarray(dbquery("SELECT MIN(ds_timestamp) AS timestamp FROM ".$db_prefix."dls_statistics"));
+	if (!is_array($data)) $data = array("timestamp" => time());
+	$variables['date_first'] = $data['timestamp'];
+}
 
-$data = dbarray(dbquery("SELECT MAX(ds_timestamp) AS timestamp FROM ".$db_prefix."dls_statistics"));
-if (!is_array($data)) $data = array("timestamp" => time());
-$variables['date_last'] = $data['timestamp'];
+if (isset($_POST['date_last'])) {
+	$variables['date_last'] = $_POST['date_last'];
+} else {
+	$data = dbarray(dbquery("SELECT MAX(ds_timestamp) AS timestamp FROM ".$db_prefix."dls_statistics"));
+	if (!is_array($data)) $data = array("timestamp" => time());
+	$variables['date_last'] = $data['timestamp'];
+}
 
-$data = dbarray(dbquery("SELECT COUNT(*) AS count FROM ".$db_prefix."dls_statistics"));
-if (!is_array($data)) $data = array("count" => 0);
-$variables['stats_count'] = $data['count'];
+if (isset($_POST['stats_count'])) {
+	$variables['stats_count'] = $_POST['stats_count'];
+} else {
+	$data = dbarray(dbquery("SELECT COUNT(*) AS count FROM ".$db_prefix."dls_statistics"));
+	if (!is_array($data)) $data = array("count" => 0);
+	$variables['stats_count'] = $data['count'];
+}
 
-$data = dbarray(dbquery("SELECT COUNT(DISTINCT ds_url) AS count FROM ".$db_prefix."dls_statistics"));
-if (!is_array($data)) $data = array("count" => 0);
-$variables['stats_files'] = $data['count'];
+if (isset($_POST['stats_files'])) {
+	$variables['stats_files'] = $_POST['stats_files'];
+} else {
+	$result = dbquery("SELECT COUNT(ds_url) AS count FROM ".$db_prefix."dls_statistics GROUP BY ds_url");
+	$variables['stats_files'] = dbrows($result);
+}
 
 // second panels: statistics per download mirror
 

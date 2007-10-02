@@ -107,6 +107,7 @@ WikiEdit.prototype.init = function(id, name, nameClass, imgPath) {
  this.addButton("hr","Line","'','\\n----\\n',2");
  this.addButton("textred","Marked text","'\\'\\'','\\'\\'',2");
  this.addButton("createlink","Hyperlink","","document.getElementById('" + this.id + "')._owner.createLink");
+ this.addButton("createimage","Image","","document.getElementById('" + this.id + "')._owner.createImage");
 // this.addButton("createtable","Insert Table","'','\\n#|\\n|| | ||\\n|| | ||\\n|#\\n',2");
  this.addButton(" ");
  this.addButton("help","Help & About","","document.getElementById('" + this.id + "')._owner.help");
@@ -634,6 +635,27 @@ WikiEdit.prototype.createLink = function (isAlt)
      this.sel = lnk+" "+sl;
     };
     str = this.sel1+"[["+this.trim(this.sel)+"]]"+this.sel2;
+    t.value = str;
+    t.setSelectionRange(this.sel1.length, str.length-this.sel2.length);
+    return true;
+  }
+  return false;
+}
+
+WikiEdit.prototype.createImage = function (isAlt)
+{
+  var t = this.area;
+  t.focus();
+
+  this.getDefines();
+
+  var n = new RegExp("\n");
+  if (!n.test(this.sel)) {
+    if (!isAlt) {
+     lnk = prompt("Image:", this.sel);
+     if (lnk!=null) this.sel = lnk;
+    };
+    str = this.sel1+"{{image class=\"center\" alt=\"description here\" title=\"title here\" url=\"/images/wiki/"+this.trim(this.sel)+"\"}}"+this.sel2;
     t.value = str;
     t.setSelectionRange(this.sel1.length, str.length-this.sel2.length);
     return true;

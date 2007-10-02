@@ -4,39 +4,29 @@
 		<td>
 <?php 
 	echo $this->HasAccess("write") ? "<a href=\"".$this->href("edit")."\" title=\"Click to edit this page\">Edit page</a> |\n" : "";
+	echo "<a href=\"".$this->href("upload")."\" title=\"Click to upload new images\">Upload Image</a> |\n";
 	echo "<a href=\"".$this->href("history")."\" title=\"Click to view recent edits to this page\">Page History</a> |\n";
-	echo $this->GetPageTime() ? "<a href=\"".$this->href("revisions")."\" title=\"Click to view recent revisions list for this page\">".$this->GetPageTime()."</a> |\n" : "";
+	echo $this->GetPageTime() ? "<a href=\"".$this->href("revisions")."\" title=\"Click to view recent revisions list for this page\">Revisions</a> |\n" : "";
+//	echo $this->GetPageTime() ? "<a href=\"".$this->href("revisions")."\" title=\"Click to view recent revisions list for this page\">".$this->GetPageTime()."</a> |\n" : "";
 	echo ($this->GetUser() ? "<a href='".$this->href("referrers")."' title='Click to view a list of URLs referring to this page.'>Referrers</a> |\n" : "");
 	// if this page exists
 	if ($this->page)
 	{
-		if ($owner = $this->GetPageOwner())
-		{
-			if ($owner == "(Public)")
-			{
-				print("Public page ".($this->IsAdmin() ? "<a href=\"".$this->href("acls")."\">(Edit ACLs)</a>\n" : "\n"));
-			}
-			// if owner is current user
-			elseif ($this->UserIsOwner())
-			{
-           			if ($this->IsAdmin())
-           			{
-					print("Owner: ".$this->Link($owner, "", "", 0)." | <a href=\"".$this->href("acls")."\">Edit ACLs</a>\n");
-            		} 
-            		else 
-            		{
-					print("You own this page | <a href=\"".$this->href("acls")."\">Edit ACLs</a>\n");
-				}
-			}
-			else
-			{
-				print("Owner: ".$this->Link($owner, "", "", 0)."\n");
-			}
+		switch ($owner = $this->GetPageOwner()) {
+			case "(Public)":
+				print("Public page\n");
+				break;
+			case $this->UserIsOwner():
+				print("You own this page\n");
+				break;
+			case false;
+				print("Nobody".($this->GetUser() ? " (<a href=\"".$this->href("claim")."\">Take Ownership</a>)\n" : "\n"));
+			default:
+				print("Owner: <a href='".BASEDIR."profile.php?lookup=$owner'>".$owner."</a>\n");
 		}
-		else
-		{
-			print("Nobody".($this->GetUser() ? " (<a href=\"".$this->href("claim")."\">Take Ownership</a>)\n" : "\n"));
-		}
+		if ($this->IsAdmin()) {
+			print("| <a href=\"".$this->href("acls")."\">Edit ACLs</a>\n");
+		}	
 	}
 
 	print "</td><td width='1%' align='right' style='white-space:nowrap;'>";

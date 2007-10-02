@@ -156,6 +156,9 @@ if (dbrows($result) != 0) {
 		}
 	}
 }
+// set the ds_onmap marker
+$result = dbquery("UPDATE ".$db_prefix."dls_statistics SET ds_onmap = '1' WHERE ds_processed = '0' AND ds_file LIKE '%software.ver'");
+
 // mark all newly imported statistics records as processed
 $result = dbquery("UPDATE ".$db_prefix."dls_statistics SET ds_processed = '1' WHERE ds_processed = '0'");
 

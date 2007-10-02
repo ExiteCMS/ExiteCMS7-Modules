@@ -178,8 +178,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
 ) ENGINE=MyISAM;");
 
 // add a user group for this module
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('$mod_admin_rights', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_description, group_forumname, group_visible) VALUES ('$mod_admin_rights', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."02', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_wiki");
 
@@ -199,8 +199,8 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##w
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_users");
 
 // delete the user groups
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_name = 'Wiki Admins'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_name = 'Wiki Editors'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."02'");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_wiki");
 
@@ -210,10 +210,10 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_wiki");
 if (!function_exists('install_wiki')) {
 	function install_wiki() {
 		
-		global $db_prefix;
+		global $db_prefix, $mod_admin_rights;
 
 		// get the group_id of the Wiki Admins group
-		$admins = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Admins'"));
+		$admins = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'"));
 		
 		// add all webmasters to the wiki user table
 		$result = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_level = '103'");
