@@ -12,7 +12,7 @@
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
-if (eregi("forum_threads_panel.php", $_SERVER['PHP_SELF']) || !defined('ExiteCMS_INIT')) die();
+if (eregi("forum_threads_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
 
 define('NEWEST_THREADS', 5);
 define('HOTTEST_THREADS', 5);

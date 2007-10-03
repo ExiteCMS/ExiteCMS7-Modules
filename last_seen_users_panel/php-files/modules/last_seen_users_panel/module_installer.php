@@ -11,31 +11,35 @@
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
-if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('ExiteCMS_INIT')) fallback(BASEDIR."index.php");
+if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CMS_OK')) fallback(BASEDIR."index.php");
 
 /*---------------------------------------------------+
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-// no locales for this plugin
+if (file_exists(PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php")) {
+	include PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php";
+} else {
+	include PATH_MODULES."last_seen_users_panel/locale/English.php";
+}
 
 /*---------------------------------------------------+
 | Module identification                              |
 +----------------------------------------------------*/
-$mod_title = "Last seen users side panel";
-$mod_description = "Shows the last members logged on, and the time there were last seen";
-$mod_version = "1.0.0";
-$mod_developer = "WanWizard";
+$mod_title = $locale['lsup100'];						// title or name of this module
+$mod_description = $locale['lsup101'];					// short description of it's purpose
+$mod_version = "1.0.0";									// module version number
+$mod_folder = "last_seen_users_panel";					// sub-folder of the /modules folder
+$mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
-$mod_type = "P";
+$mod_type = "M";
 
 /*---------------------------------------------------+
 | Module administration panel installation details   |
 +----------------------------------------------------*/
 
-$mod_folder = "last_seen_users_panel";
-// no administration module for this plugin
+// no admin module
 
 /*---------------------------------------------------+
 | Version and revision control                       |
@@ -58,19 +62,19 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 | Menu entries for this module                       |
 +----------------------------------------------------*/
 
-$mod_site_links = array();
+$mod_site_links = array();								// site_links definitions. Multiple can be defined
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
 +----------------------------------------------------*/
 
-$mod_install_cmds = array();
+$mod_install_cmds = array();							// commands to execute when installing this module
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
 +----------------------------------------------------*/
 
-$mod_uninstall_cmds = array();
+$mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 
 /*---------------------------------------------------+
 | function to upgrade from a previous revision       |

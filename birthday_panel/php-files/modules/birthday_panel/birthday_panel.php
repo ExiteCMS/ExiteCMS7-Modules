@@ -9,7 +9,7 @@
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
-if (eregi("birthday_panel.php", $_SERVER['PHP_SELF']) || !defined('ExiteCMS_INIT')) die();
+if (eregi("birthday_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
 
 // load the locale for this panel
 if (file_exists(PATH_MODULES."birthday_panel/locale/".$settings['locale'].".php")) {

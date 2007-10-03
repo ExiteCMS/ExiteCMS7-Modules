@@ -29,7 +29,7 @@
 			</td>
 			<td align='left' class='tbl1' style='white-space:nowrap'>
 				<select name='send_to_myself' class='textbox'>
-					<option value='0' selected >{$locale.nl472}</option>
+					<option value='0' selected="selected">{$locale.nl472}</option>
 					<option value='1'>{$locale.nl473}</option>
 				</select>
 				<span class='alt'>{$locale.nl478}</span>
@@ -61,7 +61,7 @@
 			</td>
 			<td align='left' class='tbl1' style='white-space:nowrap'>
 				<select name='send_to_all' class='textbox'>
-					<option value='0' selected >{$locale.nl472}</option>
+					<option value='0' selected="selected">{$locale.nl472}</option>
 					<option value='1'>{$locale.nl473}</option>
 				</select>
 				<span class='alt'>{$locale.nl471}</span>

@@ -159,11 +159,11 @@ if ($this->HasAccess("read") && $this->page) {
 		}
 		if (isset($_GET['view']) && stripinput($_GET['view']) == $file) {
 			print ("<tr>
-						<td class='tbl' colspan='4' align='center'>
+						<td class='tbl2' colspan='4' align='center'>
 							<img src='".IMAGES."wiki/$file' alt='$file' />
 						</td>
 					</tr>\n");
-			print ("<tr height='20'>
+			print ("<tr>
 						<td class='tbl2' colspan='4' align='center'>
 							<div style='vertical-align:middle;display:table-cell;padding:4px;'>
 								<b>WikiFormat</b>: {{image class=\"center\" alt=\"\" title=\"\" url=\"".IMAGES."wiki/$file\"}}

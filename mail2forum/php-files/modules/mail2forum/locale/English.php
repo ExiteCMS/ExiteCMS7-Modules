@@ -1,5 +1,5 @@
 <?php
-$locale['m2fver'] = "0.1.0";
+$locale['m2fver'] = "0.1.1";
 // Infusion titles & description
 $locale['m2f100'] = "Mail2Forum";
 $locale['m2f101'] = "Mail2Forum implements an interface between the mail and the web world. Posted messages are emailed to subscribers, their replies are posted on the forum on their behalf";

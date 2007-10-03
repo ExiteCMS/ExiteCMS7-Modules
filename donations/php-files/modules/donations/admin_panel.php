@@ -256,7 +256,7 @@ if (isset($error) && isNum($error) && $error) {
 $variables['countries'] = array();
 $result = dbquery("SELECT DISTINCT ip_code, ip_name FROM ".$db_prefix."GeoIP ORDER BY ip_name");
 while ($data = dbarray($result)) {
-	$variables['countries'][] = $data;
+	if (!empty($data['ip_code'])) $variables['countries'][] = $data;
 }
 
 // create the forums dropdown

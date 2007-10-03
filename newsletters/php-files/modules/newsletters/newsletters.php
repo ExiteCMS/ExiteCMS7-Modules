@@ -314,7 +314,10 @@ if (isset($_POST['send'])) {
 	$content = str_replace("{:DATE:L:}", "<span style='font-family:monospace;color:red;font-size:12px'>".showdate('longdate')."</span>", $content);
 	$content = str_replace("{:DATE:D:}", "<span style='font-family:monospace;color:red;font-size:12px'>".showdate('%d-%m-%Y')."</span>", $content);
 	$content = str_replace("{:DATE:T:}", "<span style='font-family:monospace;color:red;font-size:12px'>".showdate('%T')."</span>", $content);
-	$variables['html'] = str_replace("{:DATE:}", "<span style='font-family:monospace;color:red;font-size:12px'>".showdate('shortdate')."</span>", $content);
+	$content = str_replace("{:DATE:}", "<span style='font-family:monospace;color:red;font-size:12px'>".showdate('shortdate')."</span>", $content);
+	// convert &, htmlentities is way to strict for this!
+	$variables['html'] = str_replace('&', '&amp;', str_replace('&amp;', '&', $content));
+
 	$template_panels[] = array('type' => 'body', 'title' => $subject, 'name' => 'modules.newsletters.preview', 'template' => '_custom_html.tpl');
 	$template_variables['modules.newsletters.preview'] = $variables;
 	$variables = array();

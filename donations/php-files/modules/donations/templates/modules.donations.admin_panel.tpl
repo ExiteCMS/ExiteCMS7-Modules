@@ -82,7 +82,7 @@ function InputIsValid() {
 		<td class='tbl'>
 			<select name='donate_country' class='textbox' style='width:225px;'>
 			{section name=cc loop=$countries}
-			<option value='{$countries[cc].ip_code}'{if $countries[cc].ip_code == $donate_country} selected{/if}>{$countries[cc].ip_name}</option>
+			<option value='{$countries[cc].ip_code}'{if $countries[cc].ip_code == $donate_country} selected="selected"{/if}>{$countries[cc].ip_name}</option>
 			{/section}
 			</select>
 		</td>
@@ -92,7 +92,7 @@ function InputIsValid() {
 			{$locale.don213} :
 		</td>
 		<td class='tbl'>
-			<input type='text' name='donate_amount' value='{$donate_amount}' class='textbox' style='width:75px;' maxlength='30' onKeyPress='return(currencyFormat(this,\",\",\".\",event))' />
+			<input type='text' name='donate_amount' value='{$donate_amount}' class='textbox' style='width:75px;' maxlength='30' onkeypress='return(currencyFormat(this,\",\",\".\",event))' />
 		</td>
 	</tr>
 	<tr>
@@ -116,22 +116,22 @@ function InputIsValid() {
 			{$locale.don217} :
 		</td>
 		<td class='tbl'>
-			<select name='donate_type' class='textbox'{if  $donate_type == "0"} disabled{/if}>
-				{if $action == "edit"}<option value='0'{if $donate_type == "0"} selected{/if}>{$locale.don425}</option>{/if}
-				<option value='1'{if $donate_type == "1"} selected{/if}>{$locale.don426}</option>
-				<option value='2'{if $donate_type == "2"} selected{/if}>{$locale.don427}</option>
+			<select name='donate_type' class='textbox'{if  $donate_type == "0"} disabled="disabled"{/if}>
+				{if $action == "edit"}<option value='0'{if $donate_type == "0"} selected="selected"{/if}>{$locale.don425}</option>{/if}
+				<option value='1'{if $donate_type == "1"} selected="selected"{/if}>{$locale.don426}</option>
+				<option value='2'{if $donate_type == "2"} selected="selected"{/if}>{$locale.don427}</option>
 			</select>
 		</td>
 	</tr>
 	<tr>
 		<td align='center' colspan='2' class='tbl'>
-			<input type='hidden' name='donate_id' value='{$donate_id}'>
-			<input type='hidden' name='donate_state' value='{$donate_state}'>
-			<input type='hidden' name='donate_timestamp' value='{$donate_timestamp}'>
+			<input type='hidden' name='donate_id' value='{$donate_id}' />
+			<input type='hidden' name='donate_state' value='{$donate_state}' />
+			<input type='hidden' name='donate_timestamp' value='{$donate_timestamp}' />
 			{if $action == "add"}
-				<input type='submit' name='save' value='{$locale.don430}' class='button'>
+				<input type='submit' name='save' value='{$locale.don430}' class='button' />
 			{elseif $action == "edit"}
-				<input type='submit' name='save' value='{$locale.don431}' class='button'>
+				<input type='submit' name='save' value='{$locale.don431}' class='button' />
 			{/if}
 		</td>
 	</tr>
@@ -148,14 +148,14 @@ function InputIsValid() {
 						<td class='tbl1' style='text-align:center;'>
 							{$locale.don451} :
 							<select name='new_forum_id' class='textbox' style='width:300px;'>
-								<option value='0'{if $settings.donate_forum_id == 0} selected{/if}>{$locale.don450}</option>
+								<option value='0'{if $settings.donate_forum_id == 0} selected="selected"{/if}>{$locale.don450}</option>
 							{section name=id loop=$forums}
 								{if $forums[id].forum_new_cat}
 									{if !$smarty.section.id.first}</optgroup>{/if}
 									<optgroup label='{$forums[id].forum_cat_name}'>
 									{assign var='hasvalues' value=false}
 								{else}
-									<option value='{$forums[id].forum_id}'{if $forums[id].forum_id == $settings.donate_forum_id} selected{/if}>{$forums[id].forum_name}</option>
+									<option value='{$forums[id].forum_id}'{if $forums[id].forum_id == $settings.donate_forum_id} selected="selected"{/if}>{$forums[id].forum_name}</option>
 									{assign var='hasvalues' value=true}
 								{/if}
 								{if $smarty.section.id.last && $hasvalues}</optgroup>{/if}
@@ -166,11 +166,11 @@ function InputIsValid() {
 					<tr>
 						<td class='tbl1' style='text-align:center;'>
 							<input type='submit' name='save_notify' value='{$locale.don431}' class='button' />
-							<input type='hidden' name='forum_id' value='{$settings.donate_forum_id}'>
+							<input type='hidden' name='forum_id' value='{$settings.donate_forum_id}' />
 						</td>
 					</tr>
 					<tr>
-						<td class='tbl1' class='small' style='text-align:center;'>
+						<td class='tbl1' style='text-align:center;'>
 							<span class='small2'>
 								{ssprintf format=$locale.don452 var1=$locale.don453}
 							</span>
@@ -219,7 +219,7 @@ function InputIsValid() {
 			<td align='left' class='{cycle values='tbl1,tbl2'}'>
 				[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;id={$donations[id].donate_id}'>{$locale.don432}</a>]
 				{if $donations[id].donate_state == '1'}
-					[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;id={$donations[id].donate_id}' onClick='return DeleteItem()'>{$locale.don433}</a>]
+					[<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;id={$donations[id].donate_id}' onclick='return DeleteItem()'>{$locale.don433}</a>]
 				{/if}
 			</td>
 		</tr>
