@@ -2,8 +2,8 @@
 // Infusion titles & description
 $locale['dls100'] = "Download Statistics";
 $locale['dls101'] = "This infusion implements the PLi external download statistics system";
-$locale['dls102'] = "";
-$locale['dlsver'] = "0.0.3";
+$locale['dls102'] = "Download Statistics";
+$locale['dlsver'] = "0.0.4";
 $locale['dls110'] = "Download Statistics is not infused. You have to do this before starting the download statistics processor";
 // Statistics selection
 $locale['dls120'] = "Statistics report selection";

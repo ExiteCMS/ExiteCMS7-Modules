@@ -28,6 +28,9 @@ if (is_array($vars))
 }
 $url = $this->cleanUrl(trim($vars['url']));
 
+// no path given? Then add the default wiki path
+if (strpos($url, "/") === false) $url = IMAGES."wiki/".$url;
+
 $output = '<img class="'.$class.'" src="'.$url.'" alt="'.$alt.'" title="'.$title.'" />';
 
 

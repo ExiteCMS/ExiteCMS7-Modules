@@ -166,7 +166,7 @@ if ($this->HasAccess("read") && $this->page) {
 			print ("<tr>
 						<td class='tbl2' colspan='4' align='center'>
 							<div style='vertical-align:middle;display:table-cell;padding:4px;'>
-								<b>WikiFormat</b>: {{image class=\"center\" alt=\"\" title=\"\" url=\"".IMAGES."wiki/$file\"}}
+								<b>Copy to Wiki</b>:<br /> {{image class=\"center\" alt=\"$file\" title=\" description here \" url=\"$file\"}}
 							</div>
 						</td>
 					</tr>\n");
@@ -201,7 +201,7 @@ if ($this->HasAccess("read") && $this->page) {
 		</tr>
 		<tr>
 			<td align='center' class='tbl'>
-				<input type='submit' name='uploadimage' value='Upload' class='button' style='width:200px;' />
+				<input type='submit' name='uploadimage' value='Upload' class='button' />
 			</td>
 		</tr>
 	</table>
