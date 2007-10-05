@@ -178,8 +178,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
 ) ENGINE=MyISAM;");
 
 // add a user group for this module
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."02', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admin', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."02', 'Wiki Editors', 'Wiki Editor', '1')");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_wiki");
 
