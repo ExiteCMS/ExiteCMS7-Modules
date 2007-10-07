@@ -4,6 +4,8 @@
 | (these have to be moved to the admin panel some day!)
 +----------------------------------------------------*/
 
+define('M2F_HOST', "www.pli-images.org");
+
 // Polling interval for the different M2F processors. Note that this is not the wait time. If a cycle takes 1 minute
 //   and 20 seconds, the processor sleeps for 3 minutes and 40 seconds. If the processors needs more time to process
 //   than the interval specified here, a warning will be written to the logfile.

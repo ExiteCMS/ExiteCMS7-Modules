@@ -36,6 +36,10 @@ while(!file_exists($webroot."includes/core_functions.php")) {
 	$webroot .= '../'; 
 	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
+
+// make sure the host is known
+$_SERVER['HTTP_HOST'] = M2F_HOST;
+
 require_once $webroot."includes/core_functions.php";
 
 // include for attachment manipulation functions

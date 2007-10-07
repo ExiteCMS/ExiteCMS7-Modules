@@ -25,6 +25,10 @@ while(!file_exists($webroot."includes/core_functions.php")) {
 	$webroot .= '../'; 
 	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
+
+// make sure the host is known
+$_SERVER['HTTP_HOST'] = M2F_HOST;
+
 require_once $webroot."includes/core_functions.php";
 
 if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
@@ -112,8 +116,8 @@ $module_lastmod = filemtime('m2f_smtp.php');
 // get the last modified timestamp of the config file
 $config_lastmod = filemtime('m2f_config.php');
 
-// check if the Mail2Forum Infusion is installed
-$result = dbquery("SELECT * FROM ".$db_prefix."infusions WHERE inf_title = '".$locale['m2f100']."'");
+// check if the Mail2Forum module is installed
+$result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
 if (dbrows($result) == 0) {
 	if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' '.$locale['m2f110'], true, 1);
 	die('Mail2Forum is not infused');
