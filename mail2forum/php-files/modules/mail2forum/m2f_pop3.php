@@ -343,7 +343,7 @@ function  addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 // process a single MIME-multipart (could be recursive!)
 function processmessageparts($messagepart) {
 
-	global $post, $striphtml;
+	global $locale, $post, $striphtml;
 
 	switch (strtolower($messagepart->ctype_primary)) {
 		case "multipart":
@@ -362,9 +362,9 @@ function processmessageparts($messagepart) {
 					if (!isset($post['body'])) {
 						$post['body'] = $messagepart->body;
 						// convert charactersets if needed
-						if (function_exists('iconv') && $message->ctype_parameters['charset'] != $locale['charset']) {
+						if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $locale['charset']) {
 							// convert body text
-							$post['body'] = iconv($message->ctype_parameters['charset'], $locale['charset'], $post['body']);
+							$post['body'] = iconv($messagepart->ctype_parameters['charset'], $locale['charset'], $post['body']);
 						}
 					}
 					break;
