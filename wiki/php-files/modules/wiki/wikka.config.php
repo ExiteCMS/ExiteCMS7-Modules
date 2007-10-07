@@ -64,7 +64,7 @@ if ($data = dbarray($result)) {
 }
 
 // generate the default write ACL based on group membership
-$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Editors'");
+/*$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Editors'");
 if ($data = dbarray($result)) {
 	$users = allusersingroup($data['group_id']);
 	$acl = "";
@@ -72,5 +72,5 @@ if ($data = dbarray($result)) {
 		$acl .= ($acl == "" ? "" : "\n") . $user['user_name'];
 	}
 	if ($acl != "") $wakkaConfig['default_write_acl'] = $acl;
-}
+}*/
 ?>

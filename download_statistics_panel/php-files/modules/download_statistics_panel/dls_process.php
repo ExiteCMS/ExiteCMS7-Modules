@@ -67,10 +67,10 @@ $logfile = "/logs/downloads.log";
 
 // TODO - need to move this to an admin interface and config table!!
 $stats_urls = array();
-$stats_urls[] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
-$stats_urls[] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;		// NedLinux
-$stats_urls[] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
-// $stats_urls[] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
+$stats_urls['Exite'] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
+$stats_urls['NedLinux'] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;	// NedLinux
+$stats_urls['Graver'] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
+//$stats_urls['Snoopy'] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
 
 /*---------------------------------------------------+
 | main 

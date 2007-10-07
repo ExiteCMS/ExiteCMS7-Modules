@@ -468,8 +468,8 @@ $module_lastmod = filemtime('m2f_pop3.php');
 // get the last modified timestamp of the config file
 $config_lastmod = filemtime('m2f_config.php');
 
-// check if the Mail2Forum Infusion is installed
-$result = dbquery("SELECT * FROM ".$db_prefix."infusions WHERE inf_title = '".$locale['m2f100']."'");
+// check if the Mail2Forum module is installed
+$result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
 if (dbrows($result) == 0) {
 	if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' NOT_INFUSED', true, 1);
 	die($locale['m2f110']);

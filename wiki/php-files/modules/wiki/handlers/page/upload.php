@@ -11,7 +11,7 @@
 +----------------------------------------------------*/
 global $db_prefix, $locale, $userdata, $imagetypes;
 
-if ($this->HasAccess("read") && $this->page) {
+if ($this->HasAccess("read")) {
 
 	// error handling
 	if (isset($_GET['status'])) {
