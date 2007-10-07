@@ -232,7 +232,7 @@ else if ($user = $this->GetUser())
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" value="<?php echo UPDATE_SETTINGS_INPUT ?>" /><!-- <input type="button" value="<?php echo LOGOUT_BUTTON_LABEL; ?>" onclick="document.location='<?php echo $this->href('', '', 'action=logout'); ?>'" /></td>-->
+			<td><input type="submit" class='button' value="<?php echo UPDATE_SETTINGS_INPUT ?>" /><!-- <input type="button" value="<?php echo LOGOUT_BUTTON_LABEL; ?>" onclick="document.location='<?php echo $this->href('', '', 'action=logout'); ?>'" /></td>-->
 			</td>
 		</tr>
 	</table>
