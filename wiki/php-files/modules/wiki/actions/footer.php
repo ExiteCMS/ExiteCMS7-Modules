@@ -4,7 +4,7 @@
 		<td>
 <?php 
 	echo $this->HasAccess("write") ? "<a href=\"".$this->href("edit")."\" title=\"Click to edit this page\">Edit page</a> |\n" : "";
-	echo "<a href=\"".$this->href("upload")."\" title=\"Click to upload new images\">Upload Image</a> |\n";
+	echo $this->HasAccess("write") ? "<a href=\"".$this->href("upload")."\" title=\"Click to upload new images\">Upload Image</a> |\n" : "";
 	echo "<a href=\"".$this->href("history")."\" title=\"Click to view recent edits to this page\">Page History</a> |\n";
 	echo $this->GetPageTime() ? "<a href=\"".$this->href("revisions")."\" title=\"Click to view recent revisions list for this page\">Revisions</a> |\n" : "";
 //	echo $this->GetPageTime() ? "<a href=\"".$this->href("revisions")."\" title=\"Click to view recent revisions list for this page\">".$this->GetPageTime()."</a> |\n" : "";
