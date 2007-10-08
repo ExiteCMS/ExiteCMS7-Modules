@@ -363,11 +363,7 @@ while (true) {
 							// although PHP-Fusion does not support multiple attachments, we do... ;-)
 							while ($attachment = dbarray($res_att)) {
 								if (M2F_SMTP_DEBUG) logdebug('ATTACHMENT', print_r($attachment, true));
-								if (USE_PLI_ENHANCEMENTS) {
-									$attachURL = $settings['siteurl']."getfile.php?type=a&file_id=".$attachment['attach_id'];
-								} else {
-									$attachURL = $settings['siteurl']."forum/attachments/".$attachment['attach_name'];
-								}
+								$attachURL = $settings['siteurl']."getfile.php?type=a&file_id=".$attachment['attach_id'];
 								if ($recipient['m2f_html'] == 1) {
 									// If the attachment is an image and the config is 'show inline'
 									$isimage = array_search($attachment['attach_ext'], $imagetypes);
