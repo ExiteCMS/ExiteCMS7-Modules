@@ -19,7 +19,7 @@
 <table cellpadding='0' cellspacing='0' width='100%'>
 	{section name=entry loop=$members}
 	<tr>
-		<td class='side-small' align='left'>
+		<td class='small' align='left'>
 			{if $members[entry].cc_flag == ""}
 				<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />&nbsp;
 			{else}
@@ -33,7 +33,7 @@
 				{/if}
 			</span>
 		</td>
-		<td class='side-small' align='right'>
+		<td class='small' align='right'>
 			{$members[entry].lastseen}
 		</td>
 	</tr>

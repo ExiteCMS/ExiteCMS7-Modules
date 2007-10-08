@@ -49,31 +49,31 @@
 	<br />
 {/if}
 {section name=shout loop=$shouts}
-	<span class='shoutboxname'>
-		<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />
-		{if $smarty.const.iMEMBER}
-			{if $shouts[shout].user_name|default:"" != ""}
-				<a href='{$smarty.const.BASEDIR}profile.php?lookup={$shouts[shout].shout_name}' class='side'>{$shouts[shout].user_name}</a>
-			{else}
-				{$shouts[shout].shout_name}
-			{/if}
+	<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />
+	<b>
+	{if $smarty.const.iMEMBER}
+		{if $shouts[shout].user_name|default:"" != ""}
+			<a href='{$smarty.const.BASEDIR}profile.php?lookup={$shouts[shout].shout_name}' class='side'>{$shouts[shout].user_name}</a>
 		{else}
-			{if $shouts[shout].user_name|default:"" != ""}
-				{$shouts[shout].user_name}
-			{else}
-				{$locale.usera}
-			{/if}
+			{$shouts[shout].shout_name}
 		{/if}
-	</span>
+	{else}
+		{if $shouts[shout].user_name|default:"" != ""}
+			{$shouts[shout].user_name}
+		{else}
+			{$locale.usera}
+		{/if}
+	{/if}
+	</b>
 	<br />
-	<span class='shoutboxdate'>
+	<span class='small2'>
 		{$shouts[shout].shout_datestamp|date_format:"shortdate"}
 	</span>
 	{if $smarty.const.iADMIN && $allow_edit}
 		[<a href='{$smarty.const.ADMIN}shoutbox.php{$aidlink}&amp;action=edit&amp;shout_id={$shouts[shout].shout_id}' class='side'>{$locale.048}</a>]
 	{/if}
 	<br />
-	<span class='shoutbox'>{$shouts[shout].shout_message}</span>
+	{$shouts[shout].shout_message}
 	<br />
 	{if !$smarty.section.shout.last}
 		<br />

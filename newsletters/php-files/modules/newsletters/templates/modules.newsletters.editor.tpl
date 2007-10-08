@@ -69,7 +69,7 @@
 	<tr>
 		<td align='left'>
 			<br />
-			<span class='alt'>
+			<span class='small'>
 				{$locale.nl439}
 				<br />
 				{$locale.nl440}

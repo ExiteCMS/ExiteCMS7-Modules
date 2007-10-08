@@ -34,10 +34,10 @@
 	<table cellpadding='0' cellspacing='0' width='100%'>
 	{/if}
 		<tr>
-			<td class='side-small'>
+			<td class='small'>
 				<img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> <a href='{$smarty.const.FORUM}viewthread.php?forum_id={$hot_threads[id].forum_id}&amp;thread_id={$hot_threads[id].thread_id}' title='{$hot_threads[id].thread_subject}' class='side'>{$hot_threads[id].thread_subject|truncate:18:"...":true}</a>
 			</td>
-			<td align='right' class='side-small'>
+			<td align='right' class='small'>
 				[{$hot_threads[id].count_posts}]
 			</td>
 		</tr>

@@ -32,7 +32,7 @@
 					<option value='0' selected="selected">{$locale.nl472}</option>
 					<option value='1'>{$locale.nl473}</option>
 				</select>
-				<span class='alt'>{$locale.nl478}</span>
+				<span class='small'>{$locale.nl478}</span>
 			</td>
 		</tr>
 		<tr>
@@ -47,7 +47,7 @@
 			<td align='left' class='tbl1' style='white-space:nowrap'>
 				<input type='text' name='users' value='' maxlength='255' class='textbox' style='width:400px;' />
 				<br />
-				<span class='alt'>{$locale.nl476}</span>
+				<span class='small'>{$locale.nl476}</span>
 			</td>
 		</tr>
 		<tr>
@@ -64,7 +64,7 @@
 					<option value='0' selected="selected">{$locale.nl472}</option>
 					<option value='1'>{$locale.nl473}</option>
 				</select>
-				<span class='alt'>{$locale.nl471}</span>
+				<span class='small'>{$locale.nl471}</span>
 			</td>
 		</tr>
 		<tr>
@@ -107,7 +107,7 @@
 					{section name=minutes start=0 loop=61}
 						<option>{$smarty.section.minutes.index}</option>
 					{/section}
-				</select> : 00 <span class='alt'>{$locale.nl470}</span>
+				</select> : 00 <span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
@@ -145,7 +145,7 @@
 					{section name=minutes start=0 loop=61}
 						<option>{$smarty.section.minutes.index}</option>
 					{/section}
-				</select> : 00 <span class='alt'>{$locale.nl470}</span>
+				</select> : 00 <span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
@@ -154,7 +154,7 @@
 			</td>
 			<td align='left' class='tbl1' style='white-space:nowrap'>
 				<input type='text' name='days_mt' value='' maxlength='8' class='textbox' style='width:50px;' />
-				<span class='alt'>{$locale.nl470}</span>
+				<span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
@@ -163,7 +163,7 @@
 			</td>
 			<td align='left' class='tbl1' style='white-space:nowrap'>
 				<input type='text' name='days_lt' value='' maxlength='8' class='textbox' style='width:50px;' />
-				<span class='alt'>{$locale.nl470}</span>
+				<span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
@@ -201,7 +201,7 @@
 					{section name=minutes start=0 loop=61}
 						<option>{$smarty.section.minutes.index}</option>
 					{/section}
-				</select> : 00 <span class='alt'>{$locale.nl470}</span>
+				</select> : 00 <span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
@@ -239,7 +239,7 @@
 					{section name=minutes start=0 loop=61}
 						<option>{$smarty.section.minutes.index}</option>
 					{/section}
-				</select> : 00 <span class='alt'>{$locale.nl470}</span>
+				</select> : 00 <span class='small'>{$locale.nl470}</span>
 			</td>
 		</tr>
 		<tr>
