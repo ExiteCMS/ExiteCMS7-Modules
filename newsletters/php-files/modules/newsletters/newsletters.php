@@ -233,16 +233,19 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 				
 				switch ($data2['user_newsletters']) {
 					case 1:
+						$format = "HTML";
 						$mail->IsHTML(true);
 						$mail->Body = $html;
 						$mail->AltBody = $text;
 						break;
 					case 2:
+						$format = "plain/text";
 						$mail->IsHTML(false);
 						$mail->Body = $text;
 						$mail->AltBody = "";
 						break;
 					default:
+						$format = "unknown";
 				}
 				$mail->Subject = $subject;
 

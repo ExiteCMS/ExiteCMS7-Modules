@@ -28,7 +28,7 @@ if (file_exists(PATH_MODULES."newsletters/locale/".$settings['locale'].".php")) 
 +----------------------------------------------------*/
 $mod_title = $locale['nl100'];							// title or name of this module
 $mod_description = $locale['nl101'];					// short description of it's purpose
-$mod_version = "1.0.0";									// module version number
+$mod_version = $locale['nlver'];						// module version number
 $mod_folder = "newsletters";							// sub-folder of the /modules folder
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";

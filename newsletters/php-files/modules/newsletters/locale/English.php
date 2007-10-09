@@ -1,4 +1,5 @@
 <?php
+$locale['nlver'] = "1.0.0";
 // Infusion titles & description
 $locale['nl100'] = "Newsletters";
 $locale['nl101'] = "Newsletter management system.";
