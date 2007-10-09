@@ -251,6 +251,16 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 				} else {
 					$sc++;
 				}
+				// clear everything
+				$mail->ClearAddresses();
+				$mail->ClearAllRecipients();
+				$mail->ClearAttachments();
+				$mail->ClearBCCs();
+				$mail->ClearCCs();
+				$mail->ClearCustomHeaders();
+				$mail->ClearReplyTos();
+				$mail->Body = "";
+				$mail->AltBody = "";
 			}
 		}
 	}
