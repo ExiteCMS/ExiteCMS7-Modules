@@ -28,7 +28,7 @@
 					{$locale.122}
 					<br />
 				{/if}
-				<textarea name='shout_message' rows='4' class='textbox' style='width:140px;'></textarea>
+				<textarea name='shout_message' rows='4' cols='20' class='textbox' style='width:140px;'></textarea>
 			</td>
 		</tr>
 		<tr>

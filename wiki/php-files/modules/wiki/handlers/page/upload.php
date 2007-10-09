@@ -21,7 +21,7 @@ if ($this->HasAccess("read")) {
 				$error = stripinput($GET['image'])." succesfully uploaded";
 				break;
 			case "upe":
-				$error = "An image file with this name is already uploaded. Choose a different name";
+				$error = stripinput($GET['image'])." succesfully replaced";
 				break;
 			case "upn":
 				$error = "The file uploaded is not recognized as a valid image";
@@ -54,10 +54,10 @@ if ($this->HasAccess("read")) {
 				// really an image?
 				if (verify_image($imgtemp)){
 					$imgname = PATH_IMAGES."wiki/".substr("000000".$userdata['user_id'], -6)."_".$imgname;
-					// destination doesn't exist yet?
-					if (!file_exists($imgname)) {
-						move_uploaded_file($imgtemp, $imgname);
-						chmod($afolder.$imgname,0644);
+					$newfile = !file_exists($imgname);
+					move_uploaded_file($imgtemp, $imgname);
+					chmod($afolder.$imgname,0644);
+					if ($newfile) {
 						redirect($this->Href('upload')."&status=upy&image=".$_FILES['myfile']['name']);
 					} else {
 						redirect($this->Href('upload')."&status=upe");
@@ -184,7 +184,7 @@ if ($this->HasAccess("read")) {
 	<script type='text/javascript'>
 	function DeleteItem()
 	{
-	return confirm('Delete Download?');
+	return confirm('Delete uploaded image?');
 	}
 	</script>");
 
