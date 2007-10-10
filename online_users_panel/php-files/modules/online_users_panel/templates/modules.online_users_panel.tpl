@@ -19,12 +19,7 @@
 <img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.012}<br />
 <div style='margin-left:8px;'>
 {section name=member loop=$members}
-{if $smarty.const.iMEMBER}
-	<a href='{$smarty.const.BASEDIR}profile.php?lookup={$members[member].user_id}' class='side'>{$members[member].user_name}</a>
-{else}
-	<u>{$members[member].user_name}</u>
-{/if}
-{if $smarty.section.member.last}{else}, {/if}
+	{if $smarty.const.iMEMBER}<a href='{$smarty.const.BASEDIR}profile.php?lookup={$members[member].user_id}' class='side'>{$members[member].user_name}</a>{else}<u>{$members[member].user_name}</u>{/if}{if $smarty.section.member.last}{else}, {/if}
 {sectionelse}
 	{$locale.013}
 {/section}
