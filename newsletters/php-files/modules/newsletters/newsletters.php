@@ -112,12 +112,22 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 	$variables = array();
 	unset($newsletter_id);
 
+} else if (isset($_POST['delete'])) {
+
+	// verify the parameter
+	if (!isset($_POST['newsletter_id']) || !isNum($_POST['newsletter_id'])) fallback(BASEDIR."index.php");
+
+	$result = dbquery("DELETE FROM ".$db_prefix."newsletters WHERE newsletter_id='$newsletter_id'");
+
 } else if (isset($_POST['send_cancel'])) {
 
 	// abort sending this newsletter out
 	unset($newsletter_id);
 		
 } else if (isset($_POST['send_send'])) {
+
+	// verify the parameter
+	if (!isset($_POST['newsletter_id']) || !isNum($_POST['newsletter_id'])) fallback(BASEDIR."index.php");
 
 	// send the newsletter to the required audience
 	$result = dbquery("SELECT * FROM ".$db_prefix."newsletters WHERE newsletter_id='".$_POST['newsletter_id']."'");
@@ -251,6 +261,9 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 
 				if(!$mail->Send()) {
 					$error[] = $data2['user_name']." (".$data2['user_email']."), format = ".$format."<br />";
+					unset($mail);
+					$mail = new PHPMailer();
+					mailer_init();
 				} else {
 					$sc++;
 				}
@@ -290,11 +303,13 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 	$variables['bold'] = true;
 	$template_panels[] = array('type' => 'body', 'title' => $locale['nl479'], 'name' => 'modules.newsletters.message', 'template' => '_message_table_panel.tpl');
 	$template_variables['modules.newsletters.message'] = $variables;
-	$variables = array();
+
 	// if this was not a test send, mark it as sent
 	if (!$send_to_myself) {
 		$result = dbquery("UPDATE ".$db_prefix."newsletters SET newsletter_sent='1', newsletter_send_datestamp='".time()."' WHERE newsletter_id='".$_POST['newsletter_id']."'");
 	}
+
+	$variables = array();
 	unset($newsletter_id);
 } 
 
@@ -344,7 +359,7 @@ if (isset($_POST['send'])) {
 
 	// prepare the newsletters selection panel
 	$variables['newsletters'] = array();
-	$result = dbquery("SELECT * FROM ".$db_prefix."newsletters ORDER BY newsletter_datestamp DESC");
+	$result = dbquery("SELECT * FROM ".$db_prefix."newsletters ORDER BY newsletter_sent, newsletter_datestamp DESC");
 	while ($data = dbarray($result)) {
 		$data['newsletter_subject'] = stripslashes($data['newsletter_subject']);
 		$data['selected'] = (isset($newsletter_id) && $newsletter_id == $data['newsletter_id']);
@@ -354,9 +369,10 @@ if (isset($_POST['send'])) {
 	// define the main newsletters body panel
 	$template_panels[] = array('type' => 'body', 'name' => 'modules.newsletters', 'template' => 'modules.newsletters.tpl', 'locale' => $locale_include);
 	$template_variables['modules.newsletters'] = $variables;
-	$variables = array();
 
 	// prepare the preview/add/edit panel
+	$variables = array();
+
 	if (isset($_POST['preview'])) {
 		$subject = stripslashes(descript($_POST['subject']));
 		$subject = str_replace("{:USER_NAME:}", "<span style='font-family:monospace;color:red;font-size:12px'>".$userdata['user_name']."</span>", $subject);
@@ -392,6 +408,7 @@ if (isset($_POST['send'])) {
 		$subject = phpentities(stripslash($_POST['subject']));
 		$content = phpentities(stripslash($_POST['content']));
 	}
+
 	if (isset($_POST['edit'])) {
 		$result = dbquery("SELECT * FROM ".$db_prefix."newsletters WHERE newsletter_id='$newsletter_id'");
 		if (dbrows($result) != 0) {
@@ -405,17 +422,24 @@ if (isset($_POST['send'])) {
 			unset($newsletter_id);
 		}
 	}
+
 	if (isset($newsletter_id)) {
 		$title = $locale['nl411'];
+		$variables['newsletter_id'] = isset($newsletter_id) ? $newsletter_id : 0;
+		$variables['subject'] = isset($subject) ? $subject : "";
+		$variables['content'] = isset($content) ? $content : "";
+		$variables['plain'] = isset($plain) ? $plain : 1;
+		$variables['html'] = isset($html) ? $html  : 0;
+		$variables['sent'] = isset($sent) ? $sent : 0;
 	} else {
 		$title = $locale['nl410'];
+		$variables['newsletter_id'] = 0;
+		$variables['subject'] = "";
+		$variables['content'] = "";
+		$variables['plain'] = 1;
+		$variables['html'] = 0;
+		$variables['sent'] = 0;
 	}
-	$variables['newsletter_id'] = isset($newsletter_id) ? $newsletter_id : 0;
-	$variables['subject'] = isset($subject) ? $subject : "";
-	$variables['content'] = isset($content) ? $content : "";
-	$variables['plain'] = isset($plain) ? $plain : 1;
-	$variables['html'] = isset($html) ? $html  : 0;
-	$variables['sent'] = isset($sent) ? $sent : 0;
 
 	define('LOAD_TINYMCE', true);
 
