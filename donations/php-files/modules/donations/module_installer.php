@@ -89,6 +89,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "ALTER TABLE ##PREFIX##se
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_function");
 
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('donate_forum_id', '0')");
+
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
 +----------------------------------------------------*/
@@ -96,7 +98,9 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "install_function")
 $mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##donations");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
+$mod_uninstall_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
+
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'donate_forum_id'");
 
 /*---------------------------------------------------+
 | function for special installations                 |

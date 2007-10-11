@@ -120,7 +120,7 @@ if (isset($_POST['save_notify'])) {
 			$error = 9;
 		}
 		// update the settings record
-		$result = dbquery("UPDATE ".$db_prefix."settings SET donate_forum_id = '".$new_forum_id."'");
+		$result = dbquery("UPDATE ".$db_prefix."CMSconfig SET cfg_value = '".$new_forum_id."' WHERE cfg_name = 'donate_forum_id'");
 		$settings['donate_forum_id'] = $new_forum_id;
 	} else {
 		// oops

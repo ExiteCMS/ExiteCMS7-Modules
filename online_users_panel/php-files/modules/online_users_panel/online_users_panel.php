@@ -39,7 +39,7 @@ $rows = dbrows($result);
 if ($rows > $settings['max_users']) {
 	$settings['max_users'] = $rows;
 	$settings['max_users_datestamp'] = time();
-	$result2 = dbquery("UPDATE ".$db_prefix."settings SET max_users = '".$rows."', max_users_datestamp = '".$settings['max_users_datestamp']."'");
+	$result2 = dbquery("UPDATE ".$db_prefix."CMSconfig SET cfg_value = '".$rows."', max_users_datestamp = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users'");
 }
 // get who's online
 $variables['guests'] = 0;
