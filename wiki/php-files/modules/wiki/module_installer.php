@@ -177,6 +177,15 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_signuptime (signuptime)
 ) ENGINE=MyISAM;");
 
+// wiki_images
+$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_images (
+  image_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
+  image_user_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
+  image_name VARCHAR( 100 ) NOT NULL ,
+  image_realname VARCHAR( 100 ) NOT NULL ,
+PRIMARY KEY ( image_id )
+) ENGINE=MyISAM;");
+
 // add a user group for this module
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."02', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
@@ -197,6 +206,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##w
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_referrers");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_referrer_blacklist");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_users");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_images");
 
 // delete the user groups
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
@@ -245,6 +255,19 @@ if (!function_exists('uninstall_wiki')) {
 +----------------------------------------------------*/
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
+		global $db_prefix;
+
+		switch($current_version) {
+			case "1.1.6.3":
+				// create the wiki_images table
+				$result = dbquery("CREATE TABLE ".$db_prefix."wiki_images (
+				  image_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
+				  image_user_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
+				  image_name VARCHAR( 100 ) NOT NULL ,
+				  image_realname VARCHAR( 100 ) NOT NULL ,
+				PRIMARY KEY ( image_id )
+				) ENGINE=MyISAM;");			
+		}
 	}
 }
 ?>
