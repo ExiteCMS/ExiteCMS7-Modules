@@ -92,7 +92,7 @@ while ($data = dbarray($result)) {
 		} else {
 			$data['subscribed'] = 0;
 			$data['m2f_subid'] = 0;
-			$data['m2f_forumid'] = 0;
+			$data['m2f_forumid'] = $data['forum_id'];
 			$data['update'] = "0";
 		}
 	$variables['subscriptions'][] = $data;
