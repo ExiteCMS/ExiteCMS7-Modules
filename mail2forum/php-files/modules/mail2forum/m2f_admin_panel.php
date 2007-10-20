@@ -217,7 +217,7 @@ if (isset($_POST['delete'])) {
 
 } else {
 	$variables['error'] = isset($error) ? $error : "";
-	$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_cat != '0' ORDER BY forum_cat, forum_id");
+	$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_cat != '0' ORDER BY forum_name");
 	$variables['forums'] = array();
 	while ($data = dbarray($result)) {
 		$m2fres = dbquery("SELECT * FROM ".$db_prefix."M2F_forums WHERE m2f_forumid = '".$data['forum_id']."'");
