@@ -1,4 +1,4 @@
-{***************************************************************************}
+.{***************************************************************************}
 {*                                                                         *}
 {* PLi-Fusion CMS template: modules.newsletters.editor.tpl                 *}
 {*                                                                         *}
@@ -29,7 +29,7 @@
 		<td valign='top'>
 			{$locale.nl431}
 			<br />
-			<textarea name='content' cols='95' rows='15' class='textbox' style='width:100%; height:{math equation="x/2" format="%u" x=$smarty.const.BROWSER_HEIGHT}px'>{$content}</textarea>
+			<textarea name='content' cols='95' rows='15' class='{if $settings.tinymce_enabled != 1}textbox{/if}' style='width:100%; height:{math equation="x/2" format="%u" x=$smarty.const.BROWSER_HEIGHT}px'>{$content}</textarea>
 		</td>
 	</tr>
 	{if $settings.tinymce_enabled != 1}
