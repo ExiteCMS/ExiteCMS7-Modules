@@ -23,9 +23,14 @@ if (isset($_GET['aid'])) {
 	require_once PATH_INCLUDES."advertisement.php";
 	
 	// array's to store the variables for this panel
-	$variables = array();
-	$variables['advertisement'] = get_advert(0,0,0);
-		
-	$template_variables['modules.ad_side_panel'] = $variables;
+	$ad = get_advert(0,0,0);
+
+	if ($ad == "") {
+		$no_panel_displayed = true;
+	} else {
+		$variables = array();
+		$variables['advertisement'] = $ad;
+		$template_variables['modules.ad_side_panel'] = $variables;
+	}
 }
 ?>

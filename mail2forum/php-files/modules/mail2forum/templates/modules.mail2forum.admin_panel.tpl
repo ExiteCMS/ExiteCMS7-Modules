@@ -142,6 +142,11 @@
 	{if $smarty.section.id.last}
 	{/if}
 {sectionelse}
+	<br />
+	<center>
+	<b>{$locale.m2f952}</b>
+	</center>
+	<br />
 {/section}
 </table>
 {include file="_closetable.tpl"}

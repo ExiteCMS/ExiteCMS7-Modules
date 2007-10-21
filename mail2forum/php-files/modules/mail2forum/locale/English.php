@@ -1,5 +1,5 @@
 <?php
-$locale['m2fver'] = "0.1.1";
+$locale['m2fver'] = "1.0.0";
 // Infusion titles & description
 $locale['m2f100'] = "Mail2Forum";
 $locale['m2f101'] = "Mail2Forum implements an interface between the mail and the web world. Posted messages are emailed to subscribers, their replies are posted on the forum on their behalf";
@@ -127,6 +127,7 @@ $locale['m2f913'] = "Message-multipart has an unknown secondary content-type: %s
 $locale['m2f914'] = "Message-multipart has an unsupported primary content-type: %s !";
 $locale['m2f950'] = "There are no forums you can subscribe to";
 $locale['m2f951'] = "Subscriptions succesfully updated";
+$locale['m2f952'] = "There are no forums to configure";
 // Subscription intro message
 $locale['m2f990'] = "Mail-to-Forum is a ExiteCMS installable module which binds the content of a forum with that of a mailing list.\n
 <ul>

@@ -33,7 +33,9 @@ require_once PATH_INCLUDES."geoip_include.php";
 
 // select the last logged in users from the users table
 $result = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_lastvisit>'0' AND user_id != 1 AND user_status='0' ORDER BY user_lastvisit DESC LIMIT 0,".MAX_USERS);
-if (dbrows($result) != 0) {
+if (dbrows($result) == 0) {
+	$no_panel_displayed = true;
+} else {
 	while ($data = dbarray($result)) {
 		// calculated 'lastseen'
 		$lastseen = time() - $data['user_lastvisit'];
@@ -67,9 +69,8 @@ if (dbrows($result) != 0) {
 		// store the result in the members array
 		$members[] = array('user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'cc_flag' => $cc_flag, 'lastseen' => $lastseen);
 	}
+
+	$variables['members'] = $members;
+	$template_variables['modules.last_seen_users_panel'] = $variables;
 }
-
-$variables['members'] = $members;
-$template_variables['modules.last_seen_users_panel'] = $variables;
-
 ?>

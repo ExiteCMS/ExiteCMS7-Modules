@@ -91,20 +91,23 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_forums (
   m2f_id smallint(5) unsigned NOT NULL auto_increment,
   m2f_forumid smallint(5) unsigned NOT NULL default '0',
+  m2f_type tinyint(3) unsigned NOT NULL default '0',
   m2f_access tinyint(3) unsigned NOT NULL default '0',
   m2f_email varchar(255) default NULL,
-  m2f_pop3user varchar(100) default NULL,
-  m2f_pop3pass varchar(100) default NULL,
+  m2f_userid varchar(100) default NULL,
+  m2f_password varchar(100) default NULL,
   m2f_sent mediumint(8) unsigned NOT NULL default '0',
   m2f_received mediumint(8) unsigned NOT NULL default '0',
   m2f_active tinyint(1) unsigned NOT NULL default '0',
+  m2f_subscribe tinyint(1) unsigned NOT NULL default '0',
+  m2f_posting tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (m2f_id),
   UNIQUE KEY m2f_forumid (m2f_forumid)
 ) ENGINE=MyISAM;");
 
 // M2F_subscriptions: user subscription table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_subscriptions (
-  m2f_subid smallint(5) unsigned NOT NULL default '0',
+  m2f_subid smallint(5) unsigned NOT NULL auto_increment,
   m2f_forumid smallint(5) unsigned NOT NULL default '0',
   m2f_userid smallint(5) unsigned NOT NULL default '0',
   m2f_subscribed tinyint(1) unsigned NOT NULL default '0',
@@ -129,15 +132,15 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function
 /*---------------------------------------------------+
 | function for special installations                 |
 +----------------------------------------------------*/
-if (!function_exists('install_donations')) {
-	function install_donations() {
+if (!function_exists('install_function')) {
+	function install_function() {
 	}
 }
 /*---------------------------------------------------+
 | function for special de-installations              |
 +----------------------------------------------------*/
-if (!function_exists('uninstall_donations')) {
-	function uninstall_donations() {
+if (!function_exists('uninstall_function')) {
+	function uninstall_function() {
 	}
 }
 
@@ -146,6 +149,12 @@ if (!function_exists('uninstall_donations')) {
 +----------------------------------------------------*/
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
+
+		switch($current_version) {
+			case "0.1.1":
+				// pre-release version, no database or other changes
+		}
+
 	}
 }
 ?>
