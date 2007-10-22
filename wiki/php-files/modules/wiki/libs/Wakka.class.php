@@ -840,13 +840,15 @@ class Wakka
 	 * @return string
 	 */
 	function Link($tag, $method='', $text='', $track=TRUE, $escapeText=TRUE, $title='') {
+		global $settings;
+		
 		if (!$text) $text = $tag;
 		// escape text?
 		if ($escapeText) $text = $this->htmlspecialchars_ent($text);
 		$tag = $this->htmlspecialchars_ent($tag); #142 & #148
 		$method = $this->htmlspecialchars_ent($method);
 		$title_attr = $title ? ' title="'.$this->htmlspecialchars_ent($title).'"' : '';
-		$url = '';
+		$url = ''; $external = true;
 
 		// is this an interwiki link?
 		if (preg_match("/^([A-ZÄÖÜ][A-Za-zÄÖÜßäöü]+)[:](\S*)$/", $tag, $matches))	# before the : should be a WikiName; anything after can be (nearly) anything that's allowed in a URL
@@ -868,7 +870,9 @@ class Wakka
 			// check for protocol-less URLs
 			else if (!preg_match("/:/", $tag))
 			{
-				$url = "http://".$tag;
+				// assume these are inter-website links
+				$external = false;
+				$url = $tag;
 			}
 		}
 		else
@@ -880,11 +884,11 @@ class Wakka
 			return ($linkedPage ? "<a href=\"".$this->Href($method, $linkedPage['tag'])."\"$title_attr>".$text."</a>" : "<a class=\"missingpage\" href=\"".$this->Href("show", $tag)."\" title=\"Create this page\">".$text."</a>");
 		}
 		$external_link_tail = $this->GetConfigValue("external_link_tail");
-		if ($this->GetConfigValue("external_link_new_window"))
+		if ($this->GetConfigValue("external_link_new_window") && $external)
 		{
 			return $url ? "<a class=\"ext\" target=\"_blank\" href=\"$url\">$text</a>$external_link_tail" : $text;
 		} else {
-			return $url ? "<a class=\"ext\" href=\"$url\">$text</a>$external_link_tail" : $text;
+			return $url ? "<a class=\"ext\" href=\"$url\">$text</a>" : $text;
 		}
 	}
 
