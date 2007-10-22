@@ -174,7 +174,7 @@ $wakkaDefaultConfig = array(
 	'action_path'			=> 'actions',
 	'handler_path'			=> 'handlers',
 	'gui_editor'				=> '1',
-	'stylesheet'				=> 'wikka.css',
+	'stylesheet'				=> 'css/wikka.css',
 
 	// formatter and code highlighting paths
 	'wikka_formatter_path' 	=> 'formatters',		# (location of Wikka formatter - REQUIRED)
@@ -324,7 +324,7 @@ if (iMEMBER)
 	$wakka->LogoutUser();
 }
 
-$headerparms = '	<link rel="stylesheet" type="text/css" href="css/'.$wakka->GetConfigValue("stylesheet").'" />'.
+$headerparms = '	<link rel="stylesheet" type="text/css" href="'.$wakka->GetConfigValue("stylesheet").'" />'.
 	'<link rel="stylesheet" type="text/css" href="css/print.css" media="print" />';
 if ($wakka->GetMethod() != 'edit') {
 	$headerparms .= "\n\t".'<link rel="alternate" type="application/rss+xml" title="'.$wakka->GetWakkaName().': revisions for '.$wakka->tag.' (RSS)" href="'.$wakka->Href('revisions.xml', $wakka->tag).'" />';

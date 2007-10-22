@@ -14,7 +14,6 @@ $wakkaConfig = array(
 	'action_path' => 'actions',
 	'handler_path' => 'handlers',
 	'gui_editor' => '1',
-	'stylesheet' => 'wikka.css',
 	'wikka_formatter_path' => 'formatters',
 	'wikka_highlighters_path' => 'formatters',
 	'geshi_path' => '3rdparty/plugins/geshi',
@@ -51,6 +50,14 @@ $wakkaConfig = array(
 	'meta_keywords' => '',
 	'meta_description' => ''
 );
+
+// check if there is a stylesheet for the Wiki in the current theme
+// if not, take the Wiki module default
+if (file_exists(PATH_THEME."wikka.css")) {
+	$wakkaConfig['stylesheet'] = THEME.'wikka.css';
+} else {
+	$wakkaConfig['stylesheet'] = 'css/wikka.css';
+}
 
 // generate the admin users based on group membership
 $result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Admins'");
