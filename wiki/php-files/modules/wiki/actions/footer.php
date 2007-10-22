@@ -22,7 +22,11 @@
 			case false;
 				print("Nobody".($this->GetUser() ? " (<a href=\"".$this->href("claim")."\">Take Ownership</a>)\n" : "\n"));
 			default:
-				print("Owner: <a href='".BASEDIR."profile.php?lookup=$owner'>".$owner."</a>\n");
+				if (iMEMBER) {
+					print("Owner: <a href='".BASEDIR."profile.php?lookup=$owner'>".$owner."</a>\n");
+				} else {
+					print("Owner: $owner\n");
+				}
 		}
 		if ($this->IsAdmin()) {
 			print("| <a href=\"".$this->href("acls")."\">Edit ACLs</a>\n");
