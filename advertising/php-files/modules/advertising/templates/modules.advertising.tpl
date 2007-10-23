@@ -17,44 +17,44 @@
 {if $errormessage|default:"" != ""}
 	{include file="_message_table_panel.tpl" name=$_name title=$errortitle state=$_state style=$_style message=$errormessage bold=true}
 {elseif !$smarty.const.iMEMBER}
-	{include file="_opentable.tpl" name=$_name title=$locale.500  state=$_state style=$_style}
+	{include file="_opentable.tpl" name=$_name title=$locale.ads500 state=$_state style=$_style}
 	<div align='center'>
 		<br />
-		<b>{$locale.502|string_format:$locale.950}</b>
+		<b>{$locale.ads502|string_format:$locale.ads950}</b>
 		<br /><br />
 	</div>
 	{include file="_closetable.tpl"}
 {elseif !$is_client}
-	{include file="_opentable.tpl" name=$_name title=$locale.500  state=$_state style=$_style}
+	{include file="_opentable.tpl" name=$_name title=$locale.ads500 state=$_state style=$_style}
 	<div align='center'>
 		<br />
-		<b>{$userdata.user_name|string_format:$locale.950}</b>
+		<b>{$userdata.user_name|string_format:$locale.ads950}</b>
 		<br /><br />
 	</div>
 	{include file="_closetable.tpl"}
 {else}
 	{if $is_updated}
-		{include file="_opentable.tpl" name=$_name title=$locale.500  state=$_state style=$_style}
+		{include file="_opentable.tpl" name=$_name title=$locale.ads500 state=$_state style=$_style}
 		<div align='center'>
 			<br />
-			<b>{$id|string_format:$locale.951}</b>
+			<b>{$id|string_format:$locale.ads951}</b>
 			<br /><br />
 		</div>
 		{include file="_closetable.tpl"}
 	{/if}
 	{section name=ad loop=$ads1}
-		{include file="_opentable.tpl" name=$_name title=$locale.402  state=$_state style=$_style}
+		{include file="_opentable.tpl" name=$_name title=$locale.ads402 state=$_state style=$_style}
 		{if $smarty.section.ad.first}
 		<table align='center' cellpadding='0' cellspacing='1' width='790' class='tbl-border'>
 			<tr>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.460}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.461}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.462}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.501}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.463}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.479}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.464}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.465}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads460}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads461}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads462}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads501}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads463}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads479}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads464}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads465}</b></td>
 			</tr>
 		{/if}
 			<tr>
@@ -75,41 +75,41 @@
 					<form name='edit_advert' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id={$ads1[ad].adverts_id}'>
 						<input class='textbox' type='text' name='adverts_url' size='40' maxlength='200' value='{$ads1[ad].adverts_url}'>
 						<br /><br />
-						<input type='submit' name='change' value='{$locale.444}' class='button' />&nbsp;
-						<input type='submit' name='email' value='{$locale.445}' class='button' />
+						<input type='submit' name='change' value='{$locale.ads444}' class='button' />&nbsp;
+						<input type='submit' name='email' value='{$locale.ads445}' class='button' />
 					</form>
 				</td>
 			</tr>
 		</table>
 		<br />
 		<form name='email_all' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id=all'>
-			<div align='center'><input type='submit' name='email' value='{$locale.446}' class='button' /></div>
+			<div align='center'><input type='submit' name='email' value='{$locale.ads446}' class='button' /></div>
 		</form>
 		{include file="_closetable.tpl"}
 	{sectionelse}
-		{include file="_opentable.tpl" name=$_name title=$locale.402  state=$_state style=$_style}
+		{include file="_opentable.tpl" name=$_name title=$locale.ads402  state=$_state style=$_style}
 		<div align='center'>
 			<br />
-			<b>{$userdata.user_name|string_format:$locale.954}</b>
+			<b>{$userdata.user_name|string_format:$locale.ads954}</b>
 			<br /><br />
-			<b>{$locale.955}</b>
+			<b>{$locale.ads955}</b>
 			<br /><br />
 		</div>
 		{include file="_closetable.tpl"}
 	{/section}
 	{section name=ad loop=$ads2}
 		{if $smarty.section.ad.first}
-		{include file="_opentable.tpl" name=$_name title=$locale.403  state=$_state style=$_style}
+		{include file="_opentable.tpl" name=$_name title=$locale.ads403  state=$_state style=$_style}
 		<table align='center' cellpadding='0' cellspacing='1' width='790' class='tbl-border'>
 			<tr>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.460}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.461}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.462}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.501}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.463}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.479}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.464}</b></td>
-				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.465}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads460}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads461}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads462}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads501}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads463}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads479}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads464}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads465}</b></td>
 			</tr>
 		{/if}
 			<tr>
@@ -130,22 +130,22 @@
 					<form name='edit_advert' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id={$ads2[ad].adverts_id}'>
 						<input class='textbox' type='text' name='adverts_url' size='40' maxlength='200' value='{$ads2[ad].adverts_url}'>
 						<br /><br />
-						<input type='submit' name='change' value='{$locale.444}' class='button' />&nbsp;
-						<input type='submit' name='email' value='{$locale.445}' class='button' />
+						<input type='submit' name='change' value='{$locale.ads444}' class='button' />&nbsp;
+						<input type='submit' name='email' value='{$locale.ads445}' class='button' />
 					</form>
 				</td>
 			</tr>
 		</table>
 		<br />
 		<form name='email_all' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id=all'>
-			<div align='center'><input type='submit' name='email' value='{$locale.446}' class='button' /></div>
+			<div align='center'><input type='submit' name='email' value='{$locale.ads446}' class='button' /></div>
 		</form>
 		{include file="_closetable.tpl"}
 	{sectionelse}
-		{include file="_opentable.tpl" name=$_name title=$locale.403  state=$_state style=$_style}
+		{include file="_opentable.tpl" name=$_name title=$locale.ads403  state=$_state style=$_style}
 		<div align='center'>
 			<br />
-			<b>{$userdata.user_name|string_format:$locale.954}</b>
+			<b>{$userdata.user_name|string_format:$locale.ads954}</b>
 			<br /><br />
 		</div>
 		{include file="_closetable.tpl"}
