@@ -19,11 +19,18 @@ if (isset($_GET['aid'])) {
 	// load the locale for this module
 	require_once PATH_LOCALE.LOCALESET."admin/adverts.php";
 
-	// load the advertisement include module
-	require_once PATH_INCLUDES."advertisement.php";
+	// check if the advertising module is installed
+	if (file_exists(PATH_INCLUDES."advertisement.php")) {
+		
+		// load the advertisement include module
+		require_once PATH_INCLUDES."advertisement.php";
 	
-	// array's to store the variables for this panel
-	$ad = get_advert(0,0,0);
+		// array's to store the variables for this panel
+		$ad = get_advert(0,0,0);
+
+	} else {
+		$ad = "";
+	}
 
 	if ($ad == "") {
 		$no_panel_displayed = true;
