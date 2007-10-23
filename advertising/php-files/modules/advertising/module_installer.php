@@ -122,7 +122,7 @@ if (!function_exists('install_function')) {
 		$group = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'"));
 		if (is_array($group)) {
 			// modify the visibility
-			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$locale['402']."' AND link_url = 'advertising.php'"));
+			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$locale['402']."' AND link_url = 'advertising.php'");
 		}
 	}
 }
