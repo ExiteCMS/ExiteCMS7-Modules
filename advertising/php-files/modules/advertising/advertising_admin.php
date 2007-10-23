@@ -565,8 +565,8 @@ if ($action == "list") {
 		$variables['errormessage'] = $errormessage;
 		$variables['errortitle'] = $errortitle;
 	}
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising', 'template' => 'modules.advertising.tpl', 'locale' => $locale_file);
-	$template_variables['modules.advertising'] = $variables;
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.admin', 'template' => 'modules.advertising.admin.tpl', 'locale' => $locale_file);
+	$template_variables['modules.advertising.admin'] = $variables;
 
 	// loop through all advertising clients
 	$result = dbquery("SELECT DISTINCT user_id, user_name FROM ".$db_prefix."users WHERE user_sponsor = '1' ORDER BY user_name");

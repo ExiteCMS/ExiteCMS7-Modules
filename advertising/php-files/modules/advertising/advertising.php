@@ -9,14 +9,19 @@
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
-require_once dirname(__FILE__)."/includes/core_functions.php";
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // temp storage for template variables
 $variables = array();
 
-// include the locale for this module
-include PATH_LOCALE.LOCALESET."admin/adverts.php";
+// load the locale for this panel
+if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
+        $locale_file = PATH_MODULES."advertising/locale/".$settings['locale'].".php";
+} else {
+        $locale_file = PATH_MODULES."advertising/locale/English.php";
+}
+include $locale_file;
 
 // include the sendmail module
 include PATH_INCLUDES."sendmail_include.php";
@@ -257,8 +262,8 @@ $variables['is_updated'] = $is_updated;
 $variables['errormessage'] = $errormessage;
 
 // define the body panel variables
-$template_panels[] = array('type' => 'body', 'name' => 'advertising', 'template' => 'main.advertising.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/adverts.php");
-$template_variables['advertising'] = $variables;
+$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising', 'template' => 'modules.advertising.tpl', 'locale' => $locale_file);
+$template_variables['modules.advertising'] = $variables;
 
 // Call the theme code to generate the output for this webpage
 require_once PATH_THEME."/theme.php";
