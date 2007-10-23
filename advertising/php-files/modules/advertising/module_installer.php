@@ -16,17 +16,16 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 
 if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
-        $locale_file = PATH_MODULES."advertising/locale/".$settings['locale'].".php";
+        include PATH_MODULES."advertising/locale/".$settings['locale'].".php";
 } else {
-        $locale_file = PATH_MODULES."advertising/locale/English.php";
+        include PATH_MODULES."advertising/locale/English.php";
 }
-include $locale_file;
 
 /*---------------------------------------------------+
 | Module identification                              |
 +----------------------------------------------------*/
-$mod_title = $locale['402'];							// title or name of this module
-$mod_description = $locale['406'];						// short description of it's purpose
+$mod_title = $locale['ads402'];							// title or name of this module
+$mod_description = $locale['ads406'];					// short description of it's purpose
 $mod_version = "1.0.0";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
@@ -65,7 +64,7 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 +----------------------------------------------------*/
 
 $mod_site_links = array();								// site_links definitions. Multiple can be defined
-$mod_site_links[] = array('name' => $locale['402'], 'url' => 'advertising.php', 'panel' => '', 'visibility' => 100);
+$mod_site_links[] = array('name' => $locale['ads402'], 'url' => 'advertising.php', 'panel' => '', 'visibility' => 100);
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
@@ -122,7 +121,7 @@ if (!function_exists('install_function')) {
 		$group = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'"));
 		if (is_array($group)) {
 			// modify the visibility
-			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$locale['402']."' AND link_url = 'advertising.php'");
+			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$locale['ads402']."' AND link_url = 'advertising.php'");
 		}
 	}
 }

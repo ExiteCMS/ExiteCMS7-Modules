@@ -19,7 +19,7 @@
 <form name='addsponsor' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=add'>
 	<table align='center' cellpadding='0' cellspacing='0'>
 	<tr>
-		<td class='tbl'>{$locale.410}:</td>
+		<td class='tbl'>{$locale.ads410}:</td>
 		<td class='tbl'>
 			<select class='textbox' name='new_sponsor' onkeydown='incrementalSelect(this,event)'>
 			{html_options options=$users}
@@ -29,8 +29,8 @@
 	<tr>
 		<td align='center' colspan='2' class='tbl'>
 			<br />
-			<input type='submit' name='cancel' value='{$locale.441}' class='button'>&nbsp;
-			<input type='submit' name='save' value='{$locale.440}' class='button'>
+			<input type='submit' name='cancel' value='{$locale.ads441}' class='button'>&nbsp;
+			<input type='submit' name='save' value='{$locale.ads440}' class='button'>
 		</td>
 	</tr>
 	</table>

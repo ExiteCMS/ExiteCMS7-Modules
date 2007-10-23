@@ -26,8 +26,8 @@
 	<tr>
 		<td align='center' class='tbl'>
 			<br />
-			<input type='submit' name='no' value='{$locale.422}' class='button' />&nbsp;
-			<input type='submit' name='yes' value='{$locale.423}' class='button' />
+			<input type='submit' name='no' value='{$locale.ads422}' class='button' />&nbsp;
+			<input type='submit' name='yes' value='{$locale.ads423}' class='button' />
 		</td>
 	</tr>
 	</table>

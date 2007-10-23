@@ -69,71 +69,71 @@ if (iMEMBER) {
 				// Build the message body
 				if ($id == "all") {
 					$result = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_userid = '".$userdata['user_id']."' ORDER BY adverts_contract_start");
-					$subject = $locale['510'];
+					$subject = $locale['ads510'];
 				} else {
 					$result = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_userid = '".$userdata['user_id']."' AND adverts_id = '$id'");
-					$subject = sprintf($locale['511'], $id);
+					$subject = sprintf($locale['ads511'], $id);
 				}
 				// get the number of priority codes used.
 				$result2 = dbquery("SELECT DISTINCT adverts_priority FROM ".$db_prefix."advertising");
 				$prio_count = dbrows($result2);
-				$html_body = "<font face='sans_serif'>".sprintf($locale['512'],showdate('longdate', time()))."<br><br>";
-				$text_body = sprintf($locale['512'],showdate('longdate', time()))."\r\n";
+				$html_body = "<font face='sans_serif'>".sprintf($locale['ads512'],showdate('longdate', time()))."<br><br>";
+				$text_body = sprintf($locale['ads512'],showdate('longdate', time()))."\r\n";
 				if (dbrows($result)) {
 					while ($data = dbarray($result)) {
 						// open table
 						$html_body .= "<table width='500' cellspacing='0' cellpadding='0' border='0'>\r\n";
 						$text_body .= str_repeat("-",80)."\r\n";
 						// advert ID
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['460']."</td><td>: ".$data['adverts_id']."</td></tr>\r\n";
-						$text_body .= str_pad($locale['460'],25).": ".$data['adverts_id']."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads460']."</td><td>: ".$data['adverts_id']."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads460'],25).": ".$data['adverts_id']."\r\n";
 						// advert location
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['462']."</td><td>: ".$ad_locations[$data['adverts_location']]."</td></tr>\r\n";
-						$text_body .= str_pad($locale['462'],25).": ".$ad_locations[$data['adverts_location']]."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads462']."</td><td>: ".$ad_locations[$data['adverts_location']]."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads462'],25).": ".$ad_locations[$data['adverts_location']]."\r\n";
 						// only report priority if it's being used
 						if ($prio_count > 1) {
-							$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['424']."</td><td>: ".$data['adverts_priority']."</td></tr>\r\n";
-							$text_body .= str_pad($locale['424'],25).": ".$data['adverts_priority']."\r\n";
+							$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads424']."</td><td>: ".$data['adverts_priority']."</td></tr>\r\n";
+							$text_body .= str_pad($locale['ads424'],25).": ".$data['adverts_priority']."\r\n";
 						}
 						// contract type
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['411']."</td><td>: ".$contract_types[$data['adverts_contract']]."</td></tr>\r\n";
-						$text_body .= str_pad($locale['411'],25).": ".$contract_types[$data['adverts_contract']]."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads411']."</td><td>: ".$contract_types[$data['adverts_contract']]."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads411'],25).": ".$contract_types[$data['adverts_contract']]."\r\n";
 						switch ($data['adverts_contract']) {
 							case 0:
 								break;
 							case 1:
-								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['412'].": ".showdate('shortdate',$data['adverts_contract_start']);
-								$text_body .= "&nbsp;- ".str_pad($locale['412'],23).": ".showdate('shortdate',$data['adverts_contract_start'])."\r\n";
+								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['ads412'].": ".showdate('shortdate',$data['adverts_contract_start']);
+								$text_body .= "&nbsp;- ".str_pad($locale['ads412'],23).": ".showdate('shortdate',$data['adverts_contract_start'])."\r\n";
 								if ($data['adverts_contract_end']) {
-									$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['413'].": ".showdate('shortdate',$data['adverts_contract_end']);
-									$text_body .= "&nbsp;- ".str_pad($locale['413'],23).": ".showdate('shortdate',$data['adverts_contract_end'])."\r\n";
+									$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['ads413'].": ".showdate('shortdate',$data['adverts_contract_end']);
+									$text_body .= "&nbsp;- ".str_pad($locale['ads413'],23).": ".showdate('shortdate',$data['adverts_contract_end'])."\r\n";
 								}
 								break;
 							case 2:
-								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['414'].": ".$data['adverts_sold'];
-								$text_body .= "- ".str_pad($locale['414'],23).": ".$data['adverts_sold']."\r\n";
-								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['413'].": ".$data['adverts_sold']-$data['adverts_shown'];
-								$text_body .= "- ".str_pad($locale['413'],23).": ".$data['adverts_sold']-$data['adverts_shown']."\r\n";
+								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['ads414'].": ".$data['adverts_sold'];
+								$text_body .= "- ".str_pad($locale['ads414'],23).": ".$data['adverts_sold']."\r\n";
+								$html_body .= "<tr><td width='1%' style='white-space:nowrap'></td><td>: ".$locale['ads413'].": ".$data['adverts_sold']-$data['adverts_shown'];
+								$text_body .= "- ".str_pad($locale['ads413'],23).": ".$data['adverts_sold']-$data['adverts_shown']."\r\n";
 								break;
 						}
 						
 						// number of advert display requests
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['479']."</td><td>: ".$data['adverts_shown']."</td></tr>\r\n";
-						$text_body .= str_pad($locale['479'],25).": ".$data['adverts_shown']."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads479']."</td><td>: ".$data['adverts_shown']."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads479'],25).": ".$data['adverts_shown']."\r\n";
 						// number of user clicks
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['464']."</td><td>: ".$data['adverts_clicks']."</td></tr>\r\n";
-						$text_body .= str_pad($locale['464'],25).": ".$data['adverts_clicks']."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads464']."</td><td>: ".$data['adverts_clicks']."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads464'],25).": ".$data['adverts_clicks']."\r\n";
 						// precentage clicks
 						$percent = $data['adverts_shown'] == 0 ? 0 : substr(100 * $data['adverts_clicks'] / $data['adverts_shown'], 0, 5);
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['465']."</td><td>: ".$percent." %</td></tr>\r\n";
-						$text_body .= str_pad($locale['465'],25).": ".$percent." %\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads465']."</td><td>: ".$percent." %</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads465'],25).": ".$percent." %\r\n";
 						// advert image displayed
 						$ad_image = substr($data['adverts_image'],0,strlen($userdata['user_name'])) == $userdata['user_name'] ? substr($data['adverts_image'],strlen($userdata['user_name'])+1) : $data['adverts_image'];
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['417']."</td><td>: ".$ad_image."</td></tr>\r\n";
-						$text_body .= str_pad($locale['417'],25).": ".$ad_image."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads417']."</td><td>: ".$ad_image."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads417'],25).": ".$ad_image."\r\n";
 						// advert URL link
-						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['418']."</td><td>: ".$data['adverts_url']."</td></tr>\r\n";
-						$text_body .= str_pad($locale['418'],25).": ".$data['adverts_url']."\r\n";
+						$html_body .= "<tr><td width='1%' style='white-space:nowrap'>".$locale['ads418']."</td><td>: ".$data['adverts_url']."</td></tr>\r\n";
+						$text_body .= str_pad($locale['ads418'],25).": ".$data['adverts_url']."\r\n";
 						// end of table
 						$html_body .= "</table><br><hr><br>";
 						$text_body .= str_repeat("-",80)."\r\n\r\n";
@@ -157,13 +157,13 @@ if (iMEMBER) {
 					if ($error != "") {
 						$errormessage = $error;
 					} elseif ($id == "all") {
-						$errormessage = $locale['953'];
+						$errormessage = $locale['ads953'];
 					} else {
-						$errormessage = sprintf($locale['952'], $id);
+						$errormessage = sprintf($locale['ads952'], $id);
 					}
 				} else {
-					opentable($locale['500']);
-					echo "<div align='center'>\n<br /><b>".$locale['901']."</b><br /><br />\n</div>\n";
+					opentable($locale['ads500']);
+					echo "<div align='center'>\n<br /><b>".$locale['ads901']."</b><br /><br />\n</div>\n";
 					closetable();
 				}
 			}
@@ -185,15 +185,15 @@ if (iMEMBER) {
 						break;
 					case 1:
 						if ($data['adverts_contract_start'] > time()) {
-							$contract_type .= " (".$locale['472']." ".showdate("%d-%m-%Y", $data['adverts_contract_start']).")";
+							$contract_type .= " (".$locale['ads472']." ".showdate("%d-%m-%Y", $data['adverts_contract_start']).")";
 						} elseif ($data['adverts_contract_end'] != 0) {
-							$contract_type .= " (".$locale['471']." ".showdate("%d-%m-%Y", $data['adverts_contract_end']).")";
+							$contract_type .= " (".$locale['ads471']." ".showdate("%d-%m-%Y", $data['adverts_contract_end']).")";
 						} else {
-							$contract_type .= " (".$locale['478'].")";
+							$contract_type .= " (".$locale['ads478'].")";
 						}
 						break;
 					case 2:
-						$contract_type .= " (".($data['adverts_sold']-$data['adverts_shown'])." ".$locale['477'].")";
+						$contract_type .= " (".($data['adverts_sold']-$data['adverts_shown'])." ".$locale['ads477'].")";
 						break;
 				}
 				$data['contract_type'] = $contract_type;
@@ -225,15 +225,15 @@ if (iMEMBER) {
 						break;
 					case 1:
 						if ($data['adverts_contract_start'] > time()) {
-							$contract_type .= " (".$locale['472']." ".showdate("%d-%m-%Y", $data['adverts_contract_start']).")";
+							$contract_type .= " (".$locale['ads472']." ".showdate("%d-%m-%Y", $data['adverts_contract_start']).")";
 						} elseif ($data['adverts_contract_end'] != 0) {
-							$contract_type .= " (".$locale['471']." ".showdate("%d-%m-%Y", $data['adverts_contract_end']).")";
+							$contract_type .= " (".$locale['ads471']." ".showdate("%d-%m-%Y", $data['adverts_contract_end']).")";
 						} else {
-							$contract_type .= " (".$locale['478'].")";
+							$contract_type .= " (".$locale['ads478'].")";
 						}
 						break;
 					case 2:
-						$contract_type .= " (".($data['adverts_sold']-$data['adverts_shown'])." ".$locale['477'].")";
+						$contract_type .= " (".($data['adverts_sold']-$data['adverts_shown'])." ".$locale['ads477'].")";
 						break;
 				}
 				$data['contract_type'] = $contract_type;

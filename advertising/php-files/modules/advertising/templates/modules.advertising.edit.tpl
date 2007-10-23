@@ -72,7 +72,7 @@ function hidefields(ref) {
 <form name='advertisement' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action={$action}{if $action == "edit"}&amp;adverts_id={$adverts_id}{/if}&amp;id={$ad_client_id}' enctype='multipart/form-data'>
 	<table align='center' width='600' cellpadding='0' cellspacing='0'>
 		<tr>
-			<td width='175' class='tbl'>{$locale.411}:</td>
+			<td width='175' class='tbl'>{$locale.ads411}:</td>
 			<td class='tbl'>
 				<select class='textbox' name='adverts_contract' onchange='hidefields(this)'>
 					{html_options options=$contract_types selected=$adverts_contract}
@@ -80,7 +80,7 @@ function hidefields(ref) {
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.412}:</td>
+			<td width='175' class='tbl'>{$locale.ads412}:</td>
 			<td class='tbl'>
 				<select name='contract_start[mday]' class='textbox'>
 					{section name=sd start=1 loop=32}
@@ -100,7 +100,7 @@ function hidefields(ref) {
 			</td>
 		</tr>
 		<tr id='enddate' style='{if $adverts_contract != 1}display:none{/if}'>
-			<td width='175' class='tbl'>{$locale.413}:</td>
+			<td width='175' class='tbl'>{$locale.ads413}:</td>
 			<td class='tbl'>
 				<select name='contract_end[mday]' class='textbox'>
 					{section name=sd start=1 loop=32}
@@ -120,21 +120,21 @@ function hidefields(ref) {
 			</td>
 		</tr>
 		<tr id='sold1' style='{if $adverts_contract !=2}display:none{/if}'>
-			<td width='175' class='tbl'>{$locale.414}:</td>
+			<td width='175' class='tbl'>{$locale.ads414}:</td>
 			<td class='tbl'>{$adverts_sold}</td>
 		</tr>
 		<tr id='sold2' style='{if $adverts_contract !=2}display:none{/if}'>
-			<td width='175' class='tbl'>{$locale.415}:</td>
+			<td width='175' class='tbl'>{$locale.ads415}:</td>
 			<td class='tbl'>
 				<select class='textbox' name='change' size='1'>
-					<option value='+' selected="selected">{$locale.420}</option>
-					<option value='-'>{$locale.421}</option>
+					<option value='+' selected="selected">{$locale.ads420}</option>
+					<option value='-'>{$locale.ads421}</option>
 				</select>&nbsp;
 				<input type='text' class='textbox' name='adverts_purchased' value='0' size='12' maxlength='11' />
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.416}:</td>
+			<td width='175' class='tbl'>{$locale.ads416}:</td>
 			<td class='tbl'>
 				<select class='textbox' name='adverts_location'>
 					{section name=adloc loop=$locations}
@@ -144,7 +144,7 @@ function hidefields(ref) {
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.417}:</td>
+			<td width='175' class='tbl'>{$locale.ads417}:</td>
 			<td class='tbl'>
 				{if $ad_images|@count}
 					<select class='textbox' name='adverts_image'>
@@ -153,12 +153,12 @@ function hidefields(ref) {
 						{/section}
 					</select>
 				{else}
-					<b>{$locale.449}</b>
+					<b>{$locale.ads449}</b>
 				{/if}
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.424}:</td>
+			<td width='175' class='tbl'>{$locale.ads424}:</td>
 			<td class='tbl'>
 				<select name='adverts_priority' class='textbox'>
 					{section name=sd start=1 loop=6}
@@ -168,17 +168,17 @@ function hidefields(ref) {
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.418}:</td>
+			<td width='175' class='tbl'>{$locale.ads418}:</td>
 			<td class='tbl'>
 				<input type='text' class='textbox' name='adverts_url' value='{$adverts_url}' size='60' maxlength='200' />
 			</td>
 		</tr>
 		<tr>
-			<td width='175' class='tbl'>{$locale.419}:</td>
+			<td width='175' class='tbl'>{$locale.ads419}:</td>
 			<td class='tbl'>
 				<select class='textbox' name='adverts_status'>
-					<option value='0'{if $adverts_status == 0} selected="selected"{/if}>{$locale.422}</option>
-					<option value='1'{if $adverts_status == 1} selected="selected"{/if}>{$locale.423}</option>
+					<option value='0'{if $adverts_status == 0} selected="selected"{/if}>{$locale.ads422}</option>
+					<option value='1'{if $adverts_status == 1} selected="selected"{/if}>{$locale.ads423}</option>
 				</select>
 			</td>
 		</tr>
@@ -189,13 +189,13 @@ function hidefields(ref) {
 				<input type='hidden' name='adverts_sold' value='{$adverts_sold}' />
 				<input type='hidden' name='adverts_userid' value='{$adverts_userid}' />
 				<br />
-				<input type='submit' name='cancel' value='{$locale.441}' class='button' />&nbsp;
-				<input type='submit' name='save' value='{$locale.440}' class='button' />&nbsp;
+				<input type='submit' name='cancel' value='{$locale.ads441}' class='button' />&nbsp;
+				<input type='submit' name='save' value='{$locale.ads440}' class='button' />&nbsp;
 				{if $action == "edit"}
 					{if $adverts_expired|default:false}
-						<input type='submit' name='activate' value='{$locale.443}' class='button' />
+						<input type='submit' name='activate' value='{$locale.ads443}' class='button' />
 					{else}
-						<input type='submit' name='expire' value='{$locale.442}' class='button' />
+						<input type='submit' name='expire' value='{$locale.ads442}' class='button' />
 					{/if}
 				{/if}
 			</td>
@@ -207,7 +207,7 @@ function hidefields(ref) {
 		</tr>
 		<tr>
 			<td width='175' class='tbl'>
-				<br />{$locale.530}:<br />
+				<br />{$locale.ads530}:<br />
 			</td>
 			<td class='tbl'>
 				<br /><input type='file' name='myfile' class='textbox' style='width:250px;' /><br />
@@ -216,7 +216,7 @@ function hidefields(ref) {
 		<tr>
 			<td align='center' colspan='2' class='tbl'>
 				<br />
-				<input type='submit' name='upload' value='{$locale.449}' class='button' />
+				<input type='submit' name='upload' value='{$locale.ads449}' class='button' />
 			</td>
 		</tr>
 	</table>
@@ -228,7 +228,7 @@ function hidefields(ref) {
 			<td align='center' class='tbl'>
 				<hr /><br />
 				<input type='hidden' name='adverts_id' value='{$adverts_id}' />
-				<input type='submit' name='moveuser' value='{$locale.425}' class='button' /> : 
+				<input type='submit' name='moveuser' value='{$locale.ads425}' class='button' /> : 
 				<select class='textbox' name='newid' onkeydown='incrementalSelect(this,event)'>
 					<option value='0'>--------</option>
 					{html_options options=$users}

@@ -85,24 +85,24 @@ if (isset($_POST['moveuser'])) {
 							if (!copy(PATH_IMAGES_ADS.$advert['adverts_image'], PATH_IMAGES_ADS.$user_to['user_name']."_".$ad_image)) {
 								die('copy failed!');
 							} else {
-								$errormessage = sprintf($locale['920'], $user_from['user_name'], $user_to['user_name']);
+								$errormessage = sprintf($locale['ads920'], $user_from['user_name'], $user_to['user_name']);
 								$action = "list";
 							}
 						}
 					} else {
-						$errormessage = $locale['921'];	// ad not found in the database
+						$errormessage = $locale['ads921'];	// ad not found in the database
 					}
 				} else {
-					$errormessage = $locale['922'];	// invalid advert_id passed in the POST
+					$errormessage = $locale['ads922'];	// invalid advert_id passed in the POST
 				}
 			} else {
-				$errormessage = $locale['923'];	// client ID not found in the database
+				$errormessage = $locale['ads923'];	// client ID not found in the database
 			}
 		} else {
-			$errormessage = $locale['924'];	// invalid client ID passed in the POST
+			$errormessage = $locale['ads924'];	// invalid client ID passed in the POST
 		}
 	} else {
-		$errormessage = $locale['923'];	// client ID not found in the database
+		$errormessage = $locale['ads923'];	// client ID not found in the database
 	}
 }
 
@@ -143,11 +143,11 @@ if (isset($_POST['save'])) {
 			if ($adverts_contract_end != 0) $adverts_contract_end = time_local2system($adverts_contract_end);
 			$adverts_sold = $_POST['adverts_sold'];
 			if (!isNum($_POST['adverts_purchased'])) {
-				$errormessage .= $locale['903']."<br />";
+				$errormessage .= $locale['ads903']."<br />";
 			} else {
 				$adverts_sold = $adverts_sold + ($_POST['change']=="-"?-1:1) * $_POST['adverts_purchased'];
 				if ($adverts_sold < 0) {
-					$errormessage .= $locale['904']."<br />";
+					$errormessage .= $locale['ads904']."<br />";
 				}
 			}
 			// reset enddate if not based on a fixed date
@@ -162,7 +162,7 @@ if (isset($_POST['save'])) {
 				$dimensions = @getimagesize(PATH_IMAGES_ADS.$adverts_image);
 				$maxsize = explode("x", $ad_dimensions[$adverts_location]);
 				if ($dimensions[0] > $maxsize[0] || $dimensions[1] > $maxsize[1]) {
-					$errormessage = sprintf($locale['912'], $ad_dimensions[$adverts_location], $dimensions[0]."x".$dimensions[1]);
+					$errormessage = sprintf($locale['ads912'], $ad_dimensions[$adverts_location], $dimensions[0]."x".$dimensions[1]);
 				}
 			}
 			if ($errormessage == "") {
@@ -172,13 +172,13 @@ if (isset($_POST['save'])) {
 						$result = dbquery("INSERT INTO ".$db_prefix."advertising (adverts_userid, adverts_contract, adverts_contract_start, adverts_contract_end, adverts_priority, adverts_location, adverts_url, adverts_sold, adverts_image, adverts_status) 
 							VALUES ('".$adverts_userid."', '".$adverts_contract."', '".$adverts_contract_start."', '".$adverts_contract_end."', '".$adverts_priority."', '".$adverts_location."', '".$adverts_url."', '".$adverts_sold."', '".$adverts_image."', '".$adverts_status."')");
 						$adverts_id = mysql_insert_id();
-						$errormessage = $locale['906'];
+						$errormessage = $locale['ads906'];
 						break;
 					case "edit":
 						$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_userid = '".$adverts_userid."', adverts_contract = '".$adverts_contract."', adverts_contract_start = '".$adverts_contract_start."', adverts_contract_end = '".$adverts_contract_end."',
 							adverts_priority = '".$adverts_priority."', adverts_location = '".$adverts_location."', adverts_url = '".$adverts_url."', adverts_sold = '".$adverts_sold."', adverts_image = '".$adverts_image."', adverts_status = '".$adverts_status."'
 							WHERE adverts_id = '".$adverts_id."'");
-						$errormessage = $locale['907'];
+						$errormessage = $locale['ads907'];
 						break;
 					default:
 						break;
@@ -190,7 +190,7 @@ if (isset($_POST['save'])) {
 				$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_expired = '".$adverts_expired."' WHERE adverts_id = '".$adverts_id."'");
 				$action = "list";	
 			} else {
-				$errortitle = $locale['900'];
+				$errortitle = $locale['ads900'];
 			}
 	}
 }
@@ -206,7 +206,7 @@ if (isset($_POST['upload']) || isset($_POST['uploadimage'])) {
 		$imgsize = $_FILES['myfile']['size'];
 		$imgtemp = $_FILES['myfile']['tmp_name'];
 		if (!in_array($imgext, $image_types)) {
-			$errormessage = $locale['960'];
+			$errormessage = $locale['ads960'];
 		} elseif (is_uploaded_file($imgtemp)){
 			if (@getimagesize($imgtemp) && @verify_image($imgtemp)) {
 				// check if the file exists. if so, suffix it
@@ -220,10 +220,10 @@ if (isset($_POST['upload']) || isset($_POST['uploadimage'])) {
 				move_uploaded_file($imgtemp, $destfile);
 				chmod($destfile,0664);
 			} else {
-				$errormessage = $locale['961'];
+				$errormessage = $locale['ads961'];
 			}
 		} else {
-			$errormessage = $locale['962'];
+			$errormessage = $locale['ads962'];
 		}
 		// save the action to be able to reload the form data later
 		if (isset($_POST['upload'])) {
@@ -269,8 +269,8 @@ if ($action == "delclientconf") {
 				}
 			}
 
-			$errortitle = $locale['476'];
-			$errormessage = $locale['910'];
+			$errortitle = $locale['ads476'];
+			$errormessage = $locale['ads910'];
 		}
 	}
 	$action = "list";
@@ -278,19 +278,19 @@ if ($action == "delclientconf") {
 
 if ($action == "enable") {
 	$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_status = '1' WHERE adverts_id = '".$adverts_id."'");
-	$errormessage = sprintf($locale['913'], $adverts_id);
+	$errormessage = sprintf($locale['ads913'], $adverts_id);
 	$action = "list";
 }
 if ($action == "disable") {
 	$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_status = '0' WHERE adverts_id = '".$adverts_id."'");
-	$errormessage = sprintf($locale['914'], $adverts_id);
+	$errormessage = sprintf($locale['ads914'], $adverts_id);
 	$action = "list";
 }
 
 // set the title and prepare the action
 switch ($action) {
 	case "delclient":
-		$title = $locale['476'];
+		$title = $locale['ads476'];
 		$result = dbquery("SELECT user_name FROM ".$db_prefix."users WHERE user_id = '$id'");
 		if ($data = dbarray($result)) {
 			$ad_client = $data['user_name'];
@@ -303,16 +303,16 @@ switch ($action) {
 	case "imgdel":
 		$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_status = '0' WHERE adverts_image = '".$image."'");
 		unlink(PATH_IMAGES_ADS.$image);
-		$errormessage = $locale['971'];
+		$errormessage = $locale['ads971'];
 		$action = "images";
 		break;
 	case "images":
 		break;
 	case "addad":
-		$title = $locale['400'];
+		$title = $locale['ads400'];
 		$result = dbquery("SELECT user_name FROM ".$db_prefix."users WHERE user_id = '$id'");
 		if ($data = dbarray($result)) {
-			$title .= $locale['408']."<b>".$data['user_name']."</b>";
+			$title .= $locale['ads408']."<b>".$data['user_name']."</b>";
 			$ad_client = $data['user_name'];
 			$ad_client_id = $id;
 		}
@@ -335,13 +335,13 @@ switch ($action) {
 		}
 		break;
 	case "add":
-		$title = $locale['447'];
+		$title = $locale['ads447'];
 		break;
 	case "edit":
-		$title = $locale['401'];
+		$title = $locale['ads401'];
 		$result = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_id = '$adverts_id'");
 		if (dbrows($result) == 0) {
-			$errormessage = $locale['901'];
+			$errormessage = $locale['ads901'];
 		} else {
 			// initialise variables
 			if (isset($_POST['adverts_userid'])) {
@@ -383,7 +383,7 @@ switch ($action) {
 			}
 			$result = dbquery("SELECT user_name FROM ".$db_prefix."users WHERE user_id = '$adverts_userid'");
 			if ($data = dbarray($result)) {
-				$title .= $locale['408']."<b>".$data['user_name']."</b>";
+				$title .= $locale['ads408']."<b>".$data['user_name']."</b>";
 				$ad_client = $data['user_name'];
 				$ad_client_id = $adverts_userid;
 			}
@@ -393,11 +393,11 @@ switch ($action) {
 		if (!isset($adverts_id) && !isNum($adverts_id)) fallback(BASEDIR."index.php");
 		$result = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_id = '$adverts_id'");
 		if (dbrows($result) == 0) {
-			$errortitle = $locale['900'];
-			$errormessage = $locale['901'];
+			$errortitle = $locale['ads900'];
+			$errormessage = $locale['ads901'];
 		} else {
 			$result = dbquery("DELETE FROM ".$db_prefix."advertising WHERE adverts_id = '$adverts_id'");
-			$errormessage = $locale['902'];
+			$errormessage = $locale['ads902'];
 		}
 		$action = "list";
 		break;
@@ -418,8 +418,8 @@ switch ($action) {
 		$adverts_status = $_POST['adverts_status'];
 		$adverts_expired = $_POST['adverts_expired'];
 		$action = $action_save;
-		$title = $action =="add"?$locale['400']:$locale['401'];
-		$title .= $locale['408']."<b>".$ad_client."</b>";
+		$title = $action =="add"?$locale['ads400']:$locale['ads401'];
+		$title .= $locale['ads408']."<b>".$ad_client."</b>";
 		$ad_client_id = $id;
 		break;
 	case "list":
@@ -432,7 +432,7 @@ switch ($action) {
 switch ($action) {
 	case "delclient":
 		$variables['id'] = $id;
-		$variables['question'] = sprintf($locale['909'], $ad_client);
+		$variables['question'] = sprintf($locale['ads909'], $ad_client);
 		if (isset($errormessage)) {
 			$variables['errormessage'] = $errormessage;
 			$variables['errortitle'] = $errortitle;
@@ -590,13 +590,13 @@ if ($action == "list") {
 					case 0:
 					case 1:
 						if ($data2['adverts_contract_start'] > time()) {
-							$contract_type .= " (".$locale['472']." ".showdate("%d-%m-%Y", $data2['adverts_contract_start']).")";
+							$contract_type .= " (".$locale['ads472']." ".showdate("%d-%m-%Y", $data2['adverts_contract_start']).")";
 						} elseif ($data2['adverts_contract_end'] != 0) {
-							$contract_type .= " (".$locale['471']." ".showdate("%d-%m-%Y", $data2['adverts_contract_end']).")";
+							$contract_type .= " (".$locale['ads471']." ".showdate("%d-%m-%Y", $data2['adverts_contract_end']).")";
 						}
 						break;
 					case 2:
-						$contract_type .= " (".($data2['adverts_sold']-$data2['adverts_shown'])." ".$locale['477'].")";
+						$contract_type .= " (".($data2['adverts_sold']-$data2['adverts_shown'])." ".$locale['ads477'].")";
 						break;
 				}
 				$data2['contract_type'] = $contract_type;
@@ -620,13 +620,13 @@ if ($action == "list") {
 					case 0:
 					case 1:
 						if ($data2['adverts_contract_start'] > time()) {
-							$contract_type .= " (".$locale['472']." ".showdate("%d-%m-%Y", $data2['adverts_contract_start']).")";
+							$contract_type .= " (".$locale['ads472']." ".showdate("%d-%m-%Y", $data2['adverts_contract_start']).")";
 						} elseif ($data2['adverts_contract_end'] != 0) {
-							$contract_type .= " (".$locale['471']." ".showdate("%d-%m-%Y", $data2['adverts_contract_end']).")";
+							$contract_type .= " (".$locale['ads471']." ".showdate("%d-%m-%Y", $data2['adverts_contract_end']).")";
 						}
 						break;
 					case 2:
-						$contract_type .= " (".($data2['adverts_sold']-$data2['adverts_shown'])." ".$locale['477'].")";
+						$contract_type .= " (".($data2['adverts_sold']-$data2['adverts_shown'])." ".$locale['ads477'].")";
 						break;
 				}
 				$data2['contract_type'] = $contract_type;
