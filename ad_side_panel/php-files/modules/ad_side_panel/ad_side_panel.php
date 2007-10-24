@@ -16,17 +16,22 @@ if (isset($_GET['aid'])) {
 	$no_panel_displayed = true;
 } else {
 
-	// load the locale for this module
-	require_once PATH_LOCALE.LOCALESET."admin/adverts.php";
-
 	// check if the advertising module is installed
-	if (file_exists(PATH_INCLUDES."advertisement.php")) {
-		
-		// load the advertisement include module
-		require_once PATH_INCLUDES."advertisement.php";
+	if (file_exists(PATH_MODULES."advertising/get_ad.php")) {
+
+		// load the locale for this panel
+		if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
+		        $locale_file = PATH_MODULES."advertising/locale/".$settings['locale'].".php";
+		} else {
+		        $locale_file = PATH_MODULES."advertising/locale/English.php";
+		}
+		include $locale_file;
+
+		// load the ad include module
+		require_once PATH_MODULES."advertising/get_ad.php";
 	
 		// array's to store the variables for this panel
-		$ad = get_advert(0,0,0);
+		$ad = get_ad(0,0,0);
 
 	} else {
 		$ad = "";
