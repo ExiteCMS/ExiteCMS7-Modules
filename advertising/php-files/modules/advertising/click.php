@@ -15,12 +15,12 @@
 require_once dirname(__FILE__)."/includes/core_functions.php";
 
 // get the requested ad from the database
-$result = dbquery("SELECT * FROM ".$db_prefix."adverts where adverts_id = '".$id."'");
+$result = dbquery("SELECT * FROM ".$db_prefix."advertising where adverts_id = '".$id."'");
 if(dbrows($result)) {
 	$row = dbarray($result);
 	// update the hit (don't count the clients own hits!)
 	if (!isset($userdata['user_id']) || $userdata['user_id'] != $row['adverts_userid']) {
-		dbquery("UPDATE ".$db_prefix."adverts SET adverts_clicks=adverts_clicks+1 where adverts_id='".$id."'");
+		dbquery("UPDATE ".$db_prefix."advertising SET adverts_clicks=adverts_clicks+1 where adverts_id='".$id."'");
 	}
 }
 // click recorded, redirect back to the previous page
