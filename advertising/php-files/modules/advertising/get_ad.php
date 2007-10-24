@@ -58,8 +58,8 @@ function get_ad($location, $bheight=60, $bwidth=468) {
 		$bresult2 = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_id='".$ads[$bannum]."'");
 		$advert = dbarray($bresult2);
 		if($numrows > 0) {
-//			$advert_html = "<a target='_blank' href='".BASEDIR."click.php?id=".$advert['adverts_id']."'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")."></a>";
-			$advert_html = "<a target='_blank' href='".$advert['adverts_url']."' onclick='window.location.href=\"".BASEDIR."click.php?id=".$advert['adverts_id']."\";return true;'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")." alt='' /></a>";
+//			$advert_html = "<a target='_blank' href='".MODULES."advertising/click.php?id=".$advert['adverts_id']."'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")."></a>";
+			$advert_html = "<a target='_blank' href='".$advert['adverts_url']."' onclick='window.location.href=\"".MODULES."advertising/click.php?id=".$advert['adverts_id']."\";return true;'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")." alt='' /></a>";
 			//check ownership user to client id
 			if(isset($userdata['user_id']) && $advert['adverts_userid']!=$userdata['user_id']) {
 			 	// increment the advert_shown counter
