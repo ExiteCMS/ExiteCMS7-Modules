@@ -12,7 +12,7 @@
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
-require_once dirname(__FILE__)."/includes/core_functions.php";
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
 
 // get the requested ad from the database
 $result = dbquery("SELECT * FROM ".$db_prefix."advertising where adverts_id = '".$id."'");
