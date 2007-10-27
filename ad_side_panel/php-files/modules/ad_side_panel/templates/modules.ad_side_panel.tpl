@@ -14,7 +14,7 @@
 {* This template generates the PLi-Fusion infusion panel: ad_side_panel    *}
 {*                                                                         *}
 {***************************************************************************}
-{include file="_openside.tpl" name=$_name title=$locale.409 state=$_state style=' '}
+{include file="_openside.tpl" name=$_name title=$_title state=$_state style=' '}
 <center>{$advertisement}</center>
 {include file="_closeside.tpl"}
 {***************************************************************************}
