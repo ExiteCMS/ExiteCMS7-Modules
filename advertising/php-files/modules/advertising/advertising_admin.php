@@ -602,8 +602,8 @@ if ($action == "list") {
 				$data2['contract_type'] = $contract_type;
 				$ads1[] = $data2;
 			}
-			$variables['ads1'] = $ads1;
 		}
+		$variables['ads1'] = $ads1;
 		// retrieve all expired ads
 		$result2 = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_expired = '1' AND adverts_userid = '".$data['user_id']."' ORDER BY adverts_id DESC");
 		$ads2 = array();
@@ -632,8 +632,8 @@ if ($action == "list") {
 				$data2['contract_type'] = $contract_type;
 				$ads2[] = $data2;
 			}
-			$variables['ads2'] = $ads2;
 		}
+		$variables['ads2'] = $ads2;
 		$c++;
 		$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.overview'.$c, 'template' => 'modules.advertising.overview.tpl', 'locale' => $locale_file);
 		$template_variables['modules.advertising.overview'.$c] = $variables;
