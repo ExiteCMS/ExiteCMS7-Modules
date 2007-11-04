@@ -1,12 +1,13 @@
 <?php
 /*---------------------------------------------------+
-| PLi-Fusion Content Management System               |
+| ExiteCMS Content Management System                 |
 +----------------------------------------------------+
-| Copyright 2007 WanWizard (wanwizard@gmail.com)     |
-| http://www.pli-images.org/pli-fusion               |
+| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| for support, please visit http://exitecms.exite.eu |
 +----------------------------------------------------+
-| Some portions copyright ? 2002 - 2006 Nick Jones   |
+| Some portions copyright 2002 - 2006 Nick Jones     |
 | http://www.php-fusion.co.uk/                       |
++----------------------------------------------------+
 | Released under the terms & conditions of v2 of the |
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
@@ -28,7 +29,7 @@ if (file_exists(PATH_MODULES."wiki/locale/".$settings['locale'].".php")) {
 +----------------------------------------------------*/
 $mod_title = $locale['wiki100'];						// title or name of this module
 $mod_description = $locale['wiki101'];					// short description of it's purpose
-$mod_version = $locale['wikiver'];						// module version number
+$mod_version = "1.0.2";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -39,10 +40,10 @@ $mod_type = "M";
 +----------------------------------------------------*/
 
 $mod_folder = "wiki";									// sub-folder of the /modules folder
-$mod_admin_image = "";									// icon to be used for the admin panel
-$mod_admin_panel = "";									// name of the admin panel for this module
-$mod_admin_rights = "wW";								// admin rights code. This HAS to be assigned by PLi-Fusion to avoid duplicates!
-$mod_admin_page = 1;									// admin page this panel has to be placed on
+$mod_admin_image = "wiki_admin.gif";					// icon to be used for the admin panel
+$mod_admin_panel = "wiki_admin.php";					// name of the admin panel for this module
+$mod_admin_rights = "wW";								// admin rights code. This HAS to be assigned by the ExiteCMS team to avoid duplicates!
+$mod_admin_page = 4;									// admin page this panel has to be placed on
 
 /*---------------------------------------------------+
 | Version and revision control                       |
@@ -74,7 +75,7 @@ $mod_site_links[] = array('name' => $locale['wiki102'], 'url' => 'index.php', 'p
 
 $mod_install_cmds = array();							// commands to execute when installing this module
 
-// wiki_acls
+// create the table: wiki_acls
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_acls (
   page_tag varchar(75) NOT NULL default '',
   read_acl text NOT NULL,
@@ -83,9 +84,10 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   PRIMARY KEY  (page_tag)
 ) ENGINE=MyISAM;");
 
+// and add initial record(s) to it
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_acls (page_tag, read_acl, write_acl, comment_acl) VALUES ('UserSettings', '*', '+', '+')");
 
-// wiki_comments
+// create the table: wiki_comments
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_comments (
   id int(10) unsigned NOT NULL auto_increment,
   page_tag varchar(75) NOT NULL default '',
@@ -97,7 +99,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_time (`time`)
 ) ENGINE=MyISAM;");
 
-// wiki_links
+// create the table: wiki_links
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_links (
   from_tag varchar(75) NOT NULL default '',
   to_tag varchar(75) NOT NULL default '',
@@ -106,7 +108,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_to (to_tag)
 ) ENGINE=MyISAM;");
 
-// wiki_pages
+// create the table: wiki_pages
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_pages (
   id int(10) unsigned NOT NULL auto_increment,
   tag varchar(75) NOT NULL default '',
@@ -125,6 +127,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   FULLTEXT KEY body (body)
 ) ENGINE=MyISAM;");
 
+// and add initial record(s) to it
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (1, 'HomePage', now(), '{{image url=\"images/wikka_logo.jpg\" alt=\"wikka logo\" title=\"Welcome to this Wikka Wiki!\"}}\n\nThis site is running on version ##{{wikkaversion}}## (see WikkaReleaseNotes). \nYou need to double-click on any page or click on the \"Edit page\" link at the bottom to get started. \n\nFor more information, visit the [[Wikka:HomePage WikkaWiki website]]! \n\nUseful pages: FormattingRules, WikkaDocumentation, OrphanedPages, WantedPages, TextSearch.', '##WEBMASTER##', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (2, 'RecentChanges', now(), '{{RecentChanges}}{{nocomments}}\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (3, 'RecentlyCommented', now(), '{{RecentlyCommented}}{{nocomments}}\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
@@ -148,13 +151,13 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wi
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (21, 'SandBox', now(), 'Test your formatting skills here.\n\n\n\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (22, 'SysInfo', now(), '===== System Information =====\n\n~-Wikka version: ##{{wikkaversion}}##\n~-PHP version: ##{{phpversion}}##\n~-\"\"MySQL\"\" version: ##{{mysqlversion}}##\n~-\"\"GeSHi\"\" version: ##{{geshiversion}}##\n~-Server:\n~~-Host: ##{{system show=\"host\"}}##\n~~-Operative System: ##{{system show=\"os\"}}##\n~~-Machine: ##{{system show=\"machine\"}}##\n\n----\nCategoryWiki', '(Public)', '##WEBMASTER##', 'Y', '', 'page')");
 
-// wiki_referrer_blacklist
+// create the table: wiki_referrer_blacklist
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_referrer_blacklist (
   spammer varchar(150) NOT NULL default '',
   KEY idx_spammer (spammer)
 ) ENGINE=MyISAM;");
 
-// wiki_referrers
+// create the table: wiki_referrers
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_referrers (
   page_tag varchar(75) NOT NULL default '',
   referrer varchar(150) NOT NULL default '',
@@ -163,7 +166,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_time (`time`)
 ) ENGINE=MyISAM;");
 
-// wiki_users
+// create the table: wiki_users
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_users (
   name varchar(75) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
@@ -177,7 +180,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_signuptime (signuptime)
 ) ENGINE=MyISAM;");
 
-// wiki_images
+// create the table: wiki_images
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_images (
   image_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
   image_user_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
@@ -186,11 +189,21 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
 PRIMARY KEY ( image_id )
 ) ENGINE=MyISAM;");
 
-// add a user group for this module
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."02', 'Wiki Editors', 'Wiki Editors', 'Wiki Editor', '1')");
+// add the Wiki config variables
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_root_page', 'HomePage')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_wakka_name', 'ExiteCMS Wiki')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_navigation_links', '[[CategoryCategory Categories]] | PageIndex |  RecentChanges | RecentlyCommented')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_logged_in_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented | [[UserSettings Change settings]]')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_hide_comments', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_require_edit_note', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_anony_delete_own_comments', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_external_link_new_window', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_default_write_acl', '101')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_default_read_acl', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##CMSconfig (cfg_name, cfg_value) VALUES ('wiki_default_comment_acl', '101')");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "install_wiki");
+// custom module install code
+// $mod_install_cmds[] = array('type' => 'function', 'value' => "module_install");
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
@@ -198,7 +211,7 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "install_wiki");
 
 $mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 
-// delete the wiki tables
+// delete all the wiki tables
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_acls");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_comments");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_links");
@@ -208,45 +221,65 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##w
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_users");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_images");
 
-// delete the user groups
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."02'");
+// delete the wiki config variables
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_root_page'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_wakka_name'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_navigation_links'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_logged_in_navigation_links'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_hide_comments'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_require_edit_note'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_anony_delete_own_comments'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_external_link_new_window'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_write_acl'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_read_acl'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_comment_acl'");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_wiki");
+// remove any reference to the wiki groups created at installation time by an other version
+$mod_uninstall_cmds[] = array('type' => 'function', 'value' => "module_uninstall");
 
 /*---------------------------------------------------+
 | function for special installations                 |
 +----------------------------------------------------*/
-if (!function_exists('install_wiki')) {
-	function install_wiki() {
+if (!function_exists('module_install')) {
+	function module_install() {
 		
-		global $db_prefix, $mod_admin_rights;
+		global $db_prefix;
 
-		// get the group_id of the Wiki Admins group
-		$admins = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'"));
-		
-		// add all webmasters to the wiki user table
-		$result = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_level = '103'");
-		while ($data = dbarray($result)) {
-			$result2 = dbquery("INSERT INTO ".$db_prefix."wiki_users (name, email, revisioncount, changescount, doubleclickedit, signuptime, show_comments) VALUES ('".$data['user_name']."', '".$data['user_email']."', 20, 50, 'Y', now(), 'N')");
-			// and update references to the webmaster
-			if ($data['user_id'] == 1) {
-				$result2 = dbquery("UPDATE ".$db_prefix."wiki_pages SET owner = '".$data['user_name']."' WHERE owner = '##WEBMASTER##'");
-				$result2 = dbquery("UPDATE ".$db_prefix."wiki_pages SET user = '".$data['user_name']."' WHERE user = '##WEBMASTER##'");
-			}
-			// add them to the Wiki Admins group
-			if (isset($admins['group_id'])) {
-				$user_groups = $data['user_groups'].".".$admins['group_id'];
-				$result2 = dbquery("UPDATE ".$db_prefix."users SET user_groups = '$user_groups' WHERE user_id = '".$data['user_id']."'");
-			}
-		}
 	}
 }
 /*---------------------------------------------------+
 | function for special de-installations              |
 +----------------------------------------------------*/
-if (!function_exists('uninstall_wiki')) {
-	function uninstall_wiki() {
+if (!function_exists('module_uninstall')) {
+	function module_uninstall() {
+		
+		global $db_prefix, $mod_admin_rights;
+
+		// check if the old wiki groups still exist. If so, remove them
+		
+		// get the group id of the Wiki Admin group
+		$result = dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'");
+		if ($data = dbarray($result)) {
+			// get all groups with membership of this group, and remove the membership
+
+			// get all users with membership of this group, and remove the membership
+
+			// delete the user group
+			$result = dbquery("DELETE FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'");
+		}
+
+
+		// get the group id of the Wiki Editors group
+		$result = dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."02'");
+		if ($data = dbarray($result)) {
+			// get all groups with membership of this group, and remove the membership
+
+			// get all users with membership of this group, and remove the membership
+
+			// delete the user group
+			$result = dbquery("DELETE FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."02'");
+		}
+
 	}
 }
 
@@ -258,7 +291,9 @@ if (!function_exists('module_upgrade')) {
 		global $db_prefix;
 
 		switch($current_version) {
-			case "1.1.6.3":
+			case "1.0.0":
+				// changes between this version and the next one
+
 				// create the wiki_images table
 				$result = dbquery("CREATE TABLE ".$db_prefix."wiki_images (
 				  image_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
@@ -267,6 +302,12 @@ if (!function_exists('module_upgrade')) {
 				  image_realname VARCHAR( 100 ) NOT NULL ,
 				PRIMARY KEY ( image_id )
 				) ENGINE=MyISAM;");			
+
+			case "1.0.1":
+				// changes between this version and the next one
+
+			default:
+				// commands to execute for every upgrade
 		}
 	}
 }

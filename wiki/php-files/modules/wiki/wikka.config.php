@@ -51,23 +51,23 @@ $wakkaConfig = array(
 	'meta_description' => ''
 );
 
+// get wiki config variables from the CMSconfig table. They override the default config
+$result = dbquery("SELECT * FROM ".$db_prefix."CMSconfig WHERE cfg_name LIKE 'wiki_%'");
+while ($data = dbarray($result)) {
+	// extract the wakkaConfig key from the cfg_name
+	$cfgkey = substr($data['cfg_name'],5);
+	// if the wakkaConfig key exists, overwrite the value
+	if (isset($wakkaConfig[$cfgkey])) {
+		$wakkaConfig[$cfgkey] = $data['cfg_value'];
+	}
+}
+
 // check if there is a stylesheet for the Wiki in the current theme
 // if not, take the Wiki module default
 if (file_exists(PATH_THEME."wikka.css")) {
 	$wakkaConfig['stylesheet'] = THEME.'wikka.css';
 } else {
 	$wakkaConfig['stylesheet'] = 'css/wikka.css';
-}
-
-// generate the admin users based on group membership
-$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Admins'");
-if ($data = dbarray($result)) {
-	$users = allusersingroup($data['group_id']);
-	$admins = "";
-	foreach ($users as $user) {
-		$admins .= ($admins == "" ? "" : "\n") . $user['user_name'];
-	}
-	if ($admins != "") $wakkaConfig['admin_users'] = $admins;
 }
 
 // generate the default write ACL based on group membership
