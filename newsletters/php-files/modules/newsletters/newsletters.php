@@ -155,7 +155,7 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 	$userlist = $_POST['users']=="" ? "" : explode(",", $_POST['users']);
 
 	// build the query on the user table based on the selection made
-	$query = "SELECT * FROM ".$db_prefix."users WHERE";
+	$query = "SELECT * FROM ".$db_prefix."users WHERE user_status = 0 AND ";
 	$where = "";
 	if ($send_to_myself) {
 		$where .= " user_id='".$userdata['user_id']."'";
@@ -180,8 +180,8 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 	if ($where) $query .= $where; else $query .= " 1";
 	$result2 = dbquery($query);
 
-	
-	$error = ""; $sc = 0;
+	// process the selected users
+	$error = ""; $sc = 0; $bad_email = 0;
 	if (dbrows($result2) == 0) {
 		$error = $locale['nl419'];
 	} else {
@@ -191,12 +191,20 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 		mailer_init();
 		$error = array();
 		while($data2 = dbarray($result2)) {
-			$subject = stripslashes($data['newsletter_subject']);
+
+			// check if this user has an invalid email address flag
+			if ($data2['user_bad_email'] != 0) {
+				// update the counter, and skip this user
+				$bad_email++;
+				continue;
+			}
+
 			// replace tags in the subject
+			$subject = stripslashes($data['newsletter_subject']);
 			$subject = str_replace("{:USER_NAME:}", $data2['user_name'], $subject);
 
-			$content = stripslashes($data['newsletter_content']);
 			// replace tags in the body
+			$content = stripslashes($data['newsletter_content']);
 			$content = str_replace("{:USER_ID:}", $data2['user_id'], $content);
 			$content = str_replace("{:USER_NAME:}", $data2['user_name'], $content);
 			$content = str_replace("{:USER_EMAIL:}", $data2['user_email'], $content);
@@ -282,7 +290,7 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 	}
 
 	// process the error messages
-	$variables['message'] = "<b>";
+	$variables['message'] = "";
 	if (is_array($error)) {
 		if ($send_to_myself) {
 			$variables['message'] .= $locale['nl424']."<br /><br />";
@@ -299,6 +307,9 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 		}
 	} else {
 		$variables['message'] .= $error;
+	}
+	if ($bad_email) {
+		$variables['message'] .= "<br /><br />".sprintf($locale['nl425'], $bad_email);
 	}
 	$variables['bold'] = true;
 	$template_panels[] = array('type' => 'body', 'title' => $locale['nl479'], 'name' => 'modules.newsletters.message', 'template' => '_message_table_panel.tpl');

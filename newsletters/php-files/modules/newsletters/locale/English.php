@@ -27,6 +27,7 @@ $locale['nl421'] = "Return to Newsletters Admin";
 $locale['nl422'] = "Return to Admin Index";
 $locale['nl423'] = "Newsletter Copied";
 $locale['nl424'] = "A preview of the newsletter has been sent successfully to your email address.";
+$locale['nl425'] = "%s newsletters could not be sent due to an invalid email address.";
 // Add/Edit Newsletter Form
 $locale['nl430'] = "Subject:";
 $locale['nl431'] = "Newsletter Content:";
