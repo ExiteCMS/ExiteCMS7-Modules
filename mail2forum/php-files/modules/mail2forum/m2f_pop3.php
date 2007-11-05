@@ -651,7 +651,7 @@ while (true) {
 				if (M2F_POP3_MESSAGE_DEBUG) dumpmessage($message, $post);
 
 				// find the user
-				$sender = dbarray(dbquery("SELECT * FROM ".$db_prefix."users WHERE LOWER(user_email) = '".strtolower($post['from']['email'])."'"));
+				$sender = dbarray(dbquery("SELECT * FROM ".$db_prefix."users WHERE LOWER(user_email) = '".strtolower($post['from']['email'])."' AND user_status = 0"));
 
 				// find the forum
 				$recipient = dbarray(dbquery("SELECT m.*, f.forum_name, f.forum_posting FROM ".$db_prefix."M2F_forums m, ".$db_prefix."forums f WHERE m2f_active = '1' AND m.m2f_forumid = f.forum_id AND LOWER(m2f_email) = '".strtolower($post['to']['email'])."'"));

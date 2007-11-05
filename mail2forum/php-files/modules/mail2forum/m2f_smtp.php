@@ -305,13 +305,13 @@ while (true) {
 				
 				// get all subscribed users for this forum
 				$result2 = dbquery("SELECT u.*, c.* FROM ".$db_prefix."users u, ".$db_prefix."M2F_subscriptions s, ".$db_prefix."M2F_config c 
-					WHERE s.m2f_forumid = '".$postrecord['forum_id']."' AND s.m2f_subscribed = '1' AND u.user_id = s.m2f_userid AND u.user_id = c.m2f_userid");
+					WHERE s.m2f_forumid = '".$postrecord['forum_id']."' AND s.m2f_subscribed = '1' AND u.user_status = 0 AND u.user_bad_email = 0 AND u.user_id = s.m2f_userid AND u.user_id = c.m2f_userid");
 				while ($recipient = dbarray($result2)) {
 					if (M2F_SMTP_DEBUG) logdebug('RECIPIENT', print_r($recipient, true));
 					
 					// get the senders profile (need the email address and the email-hidden flag)
 					if ($edit_post) {
-						// check of automatic or system posts
+						// check for automatic or system posts
 						if ($postrecord['post_edituser'] != 0) {
 							$poster = dbarray(dbquery("SELECT user_name, user_fullname, user_email, user_hide_email FROM ".$db_prefix."users WHERE user_id = '".$postrecord['post_edituser']."'"));
 						} else {
