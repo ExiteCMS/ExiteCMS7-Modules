@@ -22,11 +22,7 @@ $variables = array();
 $members = array();
 
 // load the locale for this panel
-if (file_exists(PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."last_seen_users_panel/locale/English.php";
-}
+locale_load("modules.last_seen_users_panel");
 
 // load the GeoIP functions
 require_once PATH_INCLUDES."geoip_include.php";

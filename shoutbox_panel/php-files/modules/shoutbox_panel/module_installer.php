@@ -15,7 +15,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-// no locales for this plugin
+locale_load("modules.shoutbox_panel");
 
 /*---------------------------------------------------+
 | Module identification                              |

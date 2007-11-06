@@ -17,11 +17,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-if (file_exists(PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."last_seen_users_panel/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."last_seen_users_panel/locale/English.php";
-}
+locale_load("modules.last_seen_users_panel");
 
 /*---------------------------------------------------+
 | Module identification                              |

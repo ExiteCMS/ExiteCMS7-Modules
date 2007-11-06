@@ -13,12 +13,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // load the locale for this module
-if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
-        $locale_file = PATH_MODULES."mail2forum/locale/".$settings['locale'].".php";
-} else {
-        $locale_file = PATH_MODULES."mail2forum/locale/English.php";
-}
-include $locale_file;
+locale_load("modules.mail2forum");
 
 // temp storage for template variables
 $variables = array();
@@ -100,7 +95,7 @@ while ($data = dbarray($result)) {
 }
 
 // define the admin body panel
-$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_subscriptions', 'template' => 'modules.mail2forum.subscriptions.tpl', 'locale' => $locale_file);
+$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_subscriptions', 'template' => 'modules.mail2forum.subscriptions.tpl', 'locale' => "modules.mail2forum");
 $template_variables['modules.m2f_subscriptions'] = $variables;
 
 // Call the theme code to generate the output for this webpage

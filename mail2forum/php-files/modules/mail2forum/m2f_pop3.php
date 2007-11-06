@@ -53,11 +53,7 @@ require_once "includes/POP3.php";
 require_once "includes/mimeDecode.php";
 	
 // include the proper language file
-if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."mail2forum/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."mail2forum/locale/English.php";
-}
+locale_load("modules.mail2forum");
 
 /*---------------------------------------------------+
 | local variables

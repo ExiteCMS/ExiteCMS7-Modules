@@ -15,11 +15,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."mail2forum/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."mail2forum/locale/English.php";
-}
+locale_load("modules.mail2forum");
 
 /*---------------------------------------------------+
 | Module identification                              |

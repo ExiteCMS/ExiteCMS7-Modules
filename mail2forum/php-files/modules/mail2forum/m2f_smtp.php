@@ -31,11 +31,7 @@ $_SERVER['HTTP_HOST'] = M2F_HOST;
 
 require_once $webroot."includes/core_functions.php";
 
-if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."mail2forum/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."mail2forum/locale/English.php";
-}
+locale_load("modules.mail2forum");
 
 /*---------------------------------------------------+
 | local variables

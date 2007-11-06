@@ -13,12 +13,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // load the locale for this module
-if (file_exists(PATH_MODULES."newsletters/locale/".$settings['locale'].".php")) {
-	$locale_include = PATH_MODULES."newsletters/locale/".$settings['locale'].".php";
-} else {
-	$locale_include = PATH_MODULES."newsletters/locale/English.php";
-}
-include $locale_include;
+locale_load("modules.newsletters");
 
 // temp storage for template variables
 $variables = array();
@@ -362,7 +357,7 @@ if (isset($_POST['send'])) {
 	$variables = array();
 
 	$variables['newsletter_id'] = $_POST['newsletter_id'];
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.newsletters.send', 'template' => 'modules.newsletters.send.tpl', 'locale' => $locale_include);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.newsletters.send', 'template' => 'modules.newsletters.send.tpl', 'locale' => "modules.newsletters");
 	$template_variables['modules.newsletters.send'] = $variables;
 	$variables = array();
 
@@ -378,7 +373,7 @@ if (isset($_POST['send'])) {
 	}
 	
 	// define the main newsletters body panel
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.newsletters', 'template' => 'modules.newsletters.tpl', 'locale' => $locale_include);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.newsletters', 'template' => 'modules.newsletters.tpl', 'locale' => "modules.newsletters");
 	$template_variables['modules.newsletters'] = $variables;
 
 	// prepare the preview/add/edit panel
@@ -454,7 +449,7 @@ if (isset($_POST['send'])) {
 
 	define('LOAD_TINYMCE', true);
 
-	$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.newsletters.editor', 'template' => 'modules.newsletters.editor.tpl', 'locale' => $locale_include);
+	$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.newsletters.editor', 'template' => 'modules.newsletters.editor.tpl', 'locale' => "modules.newsletters");
 	$template_variables['modules.newsletters.editor'] = $variables;
 	
 }

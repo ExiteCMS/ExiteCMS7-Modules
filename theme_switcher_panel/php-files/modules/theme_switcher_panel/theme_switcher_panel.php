@@ -18,12 +18,7 @@ if (iMEMBER && isset($_POST['theme_switcher_panel_theme'])) {
 }
 
 // load the locale for this module
-if (file_exists(PATH_MODULES."theme_switcher_panel/locale/".$settings['locale'].".php")) {
-	$localefile = PATH_MODULES."theme_switcher_panel/locale/".$settings['locale'].".php";
-} else {
-	$localefile = PATH_MODULES."theme_switcher_panel/locale/English.php";
-}
-include $localefile;
+locale_load("modules.theme_switcher_panel");
 
 // array's to store the variables for this panel
 $variables = array();

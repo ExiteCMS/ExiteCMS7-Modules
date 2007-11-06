@@ -13,12 +13,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // load the locale for this module
-if (file_exists(PATH_MODULES."mail2forum/locale/".$settings['locale'].".php")) {
-        $locale_file = PATH_MODULES."mail2forum/locale/".$settings['locale'].".php";
-} else {
-        $locale_file = PATH_MODULES."mail2forum/locale/English.php";
-}
-include $locale_file;
+locale_load("modules.mail2forum");
 
 // temp storage for template variables
 $variables = array();
@@ -160,7 +155,7 @@ if (isset($_POST['delete'])) {
 	$variables['m2f_id'] = $_POST['m2f_id'];
 	$variables['m2f_forumid'] = $_POST['m2f_forumid'];
 	// define the panel
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel.delete', 'template' => 'modules.mail2forum.admin_panel_delete.tpl', 'locale' => $locale_file);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel.delete', 'template' => 'modules.mail2forum.admin_panel_delete.tpl', 'locale' => "modules.mail2forum");
 	$template_variables['modules.m2f_admin_panel.delete'] = $variables;
 	$variables = array();
 } elseif (isset($_POST['config'])) {
@@ -211,7 +206,7 @@ if (isset($_POST['delete'])) {
 	$variables['m2f_type_text'] = $mailtypes[$_POST['m2f_type']];
 
 	// define the panel
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel.edit', 'template' => 'modules.mail2forum.admin_panel_edit.tpl', 'locale' => $locale_file);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel.edit', 'template' => 'modules.mail2forum.admin_panel_edit.tpl', 'locale' => "modules.mail2forum");
 	$template_variables['modules.m2f_admin_panel.edit'] = $variables;
 	$variables = array();
 
@@ -247,7 +242,7 @@ if (isset($_POST['delete'])) {
 	$variables['mailtypes'] = $mailtypes;
 
 	// define the admin body panel
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel', 'template' => 'modules.mail2forum.admin_panel.tpl', 'locale' => $locale_file);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel', 'template' => 'modules.mail2forum.admin_panel.tpl', 'locale' => "modules.mail2forum");
 	$template_variables['modules.m2f_admin_panel'] = $variables;
 }
 

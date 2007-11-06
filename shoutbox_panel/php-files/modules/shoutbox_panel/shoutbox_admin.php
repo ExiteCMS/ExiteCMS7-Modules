@@ -13,11 +13,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // load the locale for this module
-if (file_exists(PATH_MODULES."shoutbox_panel/locale/".$settings['locale'].".php")) {
-	include PATH_MODULES."shoutbox_panel/locale/".$settings['locale'].".php";
-} else {
-	include PATH_MODULES."shoutbox_panel/locale/English.php";
-}
+locale_load("modules.shoutbox_panel");
 
 define('ITEMS_PER_PAGE', 20);
 
@@ -97,7 +93,7 @@ if ($action == "deleteshouts") {
 }
 
 // define the admin body panel
-$template_panels[] = array('type' => 'body', 'name' => 'admin.shoutbox', 'template' => 'admin.shoutbox.tpl', 'locale' => PATH_LOCALE.LOCALESET."admin/shoutbox.php");
+$template_panels[] = array('type' => 'body', 'name' => 'admin.shoutbox', 'template' => 'admin.shoutbox.tpl', 'locale' => "modules.shoutbox_panel");
 $template_variables['admin.shoutbox'] = $variables;
 
 // Call the theme code to generate the output for this webpage
