@@ -13,12 +13,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 // load the locale for this panel
-if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
-        $locale_file = PATH_MODULES."advertising/locale/".$settings['locale'].".php";
-} else {
-        $locale_file = PATH_MODULES."advertising/locale/English.php";
-}
-include $locale_file;
+locale_load("modules.advertising");
 
 // temp storage for template variables
 $variables = array();
@@ -437,7 +432,7 @@ switch ($action) {
 			$variables['errormessage'] = $errormessage;
 			$variables['errortitle'] = $errortitle;
 		}
-		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.delclient', 'template' => 'modules.advertising.delclient.tpl', 'locale' => $locale_file);
+		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.delclient', 'template' => 'modules.advertising.delclient.tpl', 'locale' => "modules.advertising");
 		$template_variables['modules.advertising.delclient'] = $variables;
 		break;
 	case "add":
@@ -448,7 +443,7 @@ switch ($action) {
 			$variables['errormessage'] = $errormessage;
 			$variables['errortitle'] = $errortitle;
 		}
-		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.addclient', 'template' => 'modules.advertising.addclient.tpl', 'locale' => $locale_file);
+		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.addclient', 'template' => 'modules.advertising.addclient.tpl', 'locale' => "modules.advertising");
 		$template_variables['modules.advertising.addclient'] = $variables;
 		break;
 	case "addad":
@@ -531,7 +526,7 @@ switch ($action) {
 			$variables['errormessage'] = $errormessage;
 			$variables['errortitle'] = $errortitle;
 		}
-		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.edit', 'template' => 'modules.advertising.edit.tpl', 'locale' => $locale_file);
+		$template_panels[] = array('type' => 'body', 'title' => $title, 'name' => 'modules.advertising.edit', 'template' => 'modules.advertising.edit.tpl', 'locale' => "modules.advertising");
 		$template_variables['modules.advertising.edit'] = $variables;
 		break;
 	default:
@@ -553,7 +548,7 @@ if ($action == "images") {
 		$variables['errormessage'] = $errormessage;
 		$variables['errortitle'] = $errortitle;
 	}
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.images', 'template' => 'modules.advertising.images.tpl', 'locale' => $locale_file);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.images', 'template' => 'modules.advertising.images.tpl', 'locale' => "modules.advertising");
 	$template_variables['modules.advertising.images'] = $variables;
 }
 
@@ -565,7 +560,7 @@ if ($action == "list") {
 		$variables['errormessage'] = $errormessage;
 		$variables['errortitle'] = $errortitle;
 	}
-	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.admin', 'template' => 'modules.advertising.admin.tpl', 'locale' => $locale_file);
+	$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.admin', 'template' => 'modules.advertising.admin.tpl', 'locale' => "modules.advertising");
 	$template_variables['modules.advertising.admin'] = $variables;
 
 	// loop through all advertising clients
@@ -635,7 +630,7 @@ if ($action == "list") {
 		}
 		$variables['ads2'] = $ads2;
 		$c++;
-		$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.overview'.$c, 'template' => 'modules.advertising.overview.tpl', 'locale' => $locale_file);
+		$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising.overview'.$c, 'template' => 'modules.advertising.overview.tpl', 'locale' => "modules.advertising");
 		$template_variables['modules.advertising.overview'.$c] = $variables;
 	}
 }

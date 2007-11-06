@@ -16,12 +16,7 @@ require_once PATH_ROOT."/includes/theme_functions.php";
 $variables = array();
 
 // load the locale for this panel
-if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
-        $locale_file = PATH_MODULES."advertising/locale/".$settings['locale'].".php";
-} else {
-        $locale_file = PATH_MODULES."advertising/locale/English.php";
-}
-include $locale_file;
+locale_load("modules.advertising");
 
 // include the sendmail module
 include PATH_INCLUDES."sendmail_include.php";
@@ -262,7 +257,7 @@ $variables['is_updated'] = $is_updated;
 $variables['errormessage'] = $errormessage;
 
 // define the body panel variables
-$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising', 'template' => 'modules.advertising.tpl', 'locale' => $locale_file);
+$template_panels[] = array('type' => 'body', 'name' => 'modules.advertising', 'template' => 'modules.advertising.tpl', 'locale' => "modules.advertising");
 $template_variables['modules.advertising'] = $variables;
 
 // Call the theme code to generate the output for this webpage

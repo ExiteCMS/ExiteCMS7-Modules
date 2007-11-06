@@ -15,11 +15,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-if (file_exists(PATH_MODULES."advertising/locale/".$settings['locale'].".php")) {
-        include PATH_MODULES."advertising/locale/".$settings['locale'].".php";
-} else {
-        include PATH_MODULES."advertising/locale/English.php";
-}
+locale_load("modules.advertising");
 
 /*---------------------------------------------------+
 | Module identification                              |
