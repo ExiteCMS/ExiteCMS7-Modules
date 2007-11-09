@@ -37,8 +37,8 @@
 </script>
 	{/literal}
 	<br />
-	{if $settings.enable_registration}{$locale.065}<br /><br />{/if}
-	{$locale.066}
+	{if $settings.enable_registration}{$settings.siteurl|string_format:$locale.065}<br /><br />{/if}
+	{$settings.siteurl|string_format:$locale.066}
 	{include file="_closeside.tpl"}
 {/if}
 {***************************************************************************}
