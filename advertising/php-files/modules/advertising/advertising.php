@@ -18,6 +18,16 @@ $variables = array();
 // load the locale for this panel
 locale_load("modules.advertising");
 
+// advertisement location and type. 
+$ad_locations = array(0 => $locale['ads450'], 1 => $locale['ads451'], 2 => $locale['ads452'], 3 => $locale['ads453']);
+asort($ad_locations);	// sort the locations alphabetically
+
+// maximum dimensions for each advertisement location
+$ad_dimensions = array(0 => "160x65", 1 => "468x60", 2 => "468x60", 3 => "468x60");
+
+// contract information
+$contract_types = array(0 => $locale['ads430'], 1 => $locale['ads431'], 2 => $locale['ads432']);
+
 // include the sendmail module
 include PATH_INCLUDES."sendmail_include.php";
 
