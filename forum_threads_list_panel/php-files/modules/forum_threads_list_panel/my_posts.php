@@ -73,6 +73,7 @@ $variables['posts'] = $posts;
 // required template variables
 $variables['rows'] = $rows;
 $variables['rowstart'] = $rowstart;
+$variables['pagenav_url'] = FUSION_SELF."?id=".$id."&amp;";
 
 // define the search body panel variables
 $template_panels[] = array('type' => 'body', 'name' => 'my_posts', 'title' => $title, 'template' => 'modules.forum_threads_list_panel.my_posts.tpl');
