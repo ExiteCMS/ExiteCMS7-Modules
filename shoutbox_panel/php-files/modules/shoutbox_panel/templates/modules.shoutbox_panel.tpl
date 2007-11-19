@@ -16,7 +16,7 @@
 {***************************************************************************}
 {include file="_openside_x.tpl" name=$_name title=$locale.120 state=$_state style=$_style}
 {if $smarty.const.iMEMBER || $settings.guestposts == "1"}
-<form name='chatform' method='post' action='{$smarty.const.FUSION_SELF}{if $smarty.const.FUSION_QUERY|default:"" != ""}?{$smarty.const.FUSION_QUERY|replace:"&":"&amp;"}{/if}'>
+<form name='chatform' method='post' action='{$smarty.const.FUSION_SELF}{if $smarty.const.FUSION_QUERY|default:"" != ""}?{$smarty.const.FUSION_QUERY}{/if}'>
 	<table align='center' cellpadding='0' cellspacing='0'>
 		<tr>
 			<td colspan='2'>

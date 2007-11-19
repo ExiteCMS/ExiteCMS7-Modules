@@ -46,7 +46,7 @@ if (iMEMBER || $settings['guestposts'] == "1") {
 			}
 			if (!$flood) $result = dbquery("INSERT INTO ".$db_prefix."shoutbox (shout_name, shout_message, shout_datestamp, shout_ip) VALUES ('$shout_name', '$shout_message', '".time()."', '".USER_IP."')");
 		}
-		fallback(FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""));
+		fallback(FUSION_SELF.(FUSION_QUERY ? "?".str_replace("&amp;", "&", FUSION_QUERY) : ""));
 	}
 }
 $variables['allow_edit'] = (iADMIN && checkrights("S"));
