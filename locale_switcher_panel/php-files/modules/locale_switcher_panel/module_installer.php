@@ -15,7 +15,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Locale definition for this installation module     |
 +----------------------------------------------------*/
 
-locale_load("modules.locale_switcher_panel");
+// N/A
 
 /*---------------------------------------------------+
 | Module identification                              |

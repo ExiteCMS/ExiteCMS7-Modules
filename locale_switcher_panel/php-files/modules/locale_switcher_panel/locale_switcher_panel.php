@@ -22,9 +22,6 @@ if (iMEMBER && isset($_POST['locale_switcher_panel_locale'])) {
 	redirect(FUSION_REQUEST);
 }
 
-// load the locale for this module
-locale_load("modules.locale_switcher_panel");
-
 // array's to store the variables for this panel
 $variables = array();
 
