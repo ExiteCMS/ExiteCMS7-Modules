@@ -14,7 +14,7 @@
 {* This template generates the ExiteCMS side panel: theme_switcher         *}
 {*                                                                         *}
 {***************************************************************************}
-{include file="_openside_x.tpl" name=$_name title=$locale.400 state=$_state style=$_style}
+{include file="_openside_x.tpl" name=$_name title=$_title state=$_state style=$_style}
 	<form name='theme_switcher_form' method='post' action='{$smarty.const.FUSION_REQUEST|escape:"entities"}'>
 		<div style='text-align:center;'>
 			<select name='theme_switcher_panel_theme' class='textbox' style='width:150px;' onchange='document.theme_switcher_form.submit();'>

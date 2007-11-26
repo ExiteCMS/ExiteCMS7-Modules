@@ -17,9 +17,6 @@ if (iMEMBER && isset($_POST['theme_switcher_panel_theme'])) {
 	redirect(FUSION_REQUEST);
 }
 
-// load the locale for this module
-locale_load("modules.theme_switcher_panel");
-
 // array's to store the variables for this panel
 $variables = array();
 
