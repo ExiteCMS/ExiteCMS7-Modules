@@ -90,9 +90,9 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 
 	// save or copy a newsletter
 	if (isset($_POST['copy'])) unset($newsletter_id);
-	$subject = addslash(descript($_POST['subject']));
-	$content = addslash(descript($_POST['content']));
-	if (isset($newsletter_id)) {
+	$subject = addslash($_POST['subject']);
+	$content = addslash($_POST['content']);
+	if (isset($newsletter_id) && $newsletter_id) {
 		$result = dbquery("UPDATE ".$db_prefix."newsletters SET newsletter_subject='$subject', newsletter_content='$content', newsletter_format='".$_POST['format']."' WHERE newsletter_id='$newsletter_id'");
 		$variables['message'] = $locale['nl414'];
 		$title = $locale['nl410'];
@@ -380,9 +380,9 @@ if (isset($_POST['send'])) {
 	$variables = array();
 
 	if (isset($_POST['preview'])) {
-		$subject = stripslashes(descript($_POST['subject']));
+		$subject = stripslashes($_POST['subject']);
 		$subject = str_replace("{:USER_NAME:}", "<span style='font-family:monospace;color:red;font-size:12px'>".$userdata['user_name']."</span>", $subject);
-		$content = stripslashes(descript($_POST['content']));
+		$content = stripslashes($_POST['content']);
 		$content = str_replace("{:USER_NAME:}", "<span style='font-family:monospace;color:red;font-size:12px'>".$userdata['user_name']."</span>", $content);
 		$content = str_replace("{:USER_ID:}", "<span style='font-family:monospace;color:red;font-size:12px'>".$userdata['user_id']."</span>", $content);
 		$content = str_replace("{:USER_EMAIL:}", "<span style='font-family:monospace;color:red;font-size:12px'>".$userdata['user_email']."</span>", $content);
