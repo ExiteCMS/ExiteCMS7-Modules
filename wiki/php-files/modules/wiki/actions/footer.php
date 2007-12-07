@@ -33,24 +33,29 @@
 		}	
 	}
 
-	print "</td><td width='1%' align='right' style='white-space:nowrap;'>";
+	print "</td></tr><tr>";
 	echo $this->FormOpen("", "TextSearch", "get"); 
-?>
-Search: <input name="phrase" size="15" class="searchbox" />
-<?php
-echo $this->FormClose(); 
 ?>
 	</td>
 </tr>
 </table>
 <table width='100%'>
 <tr>
-	<td width='1%'>
+	<td width='1%' style='white-space:nowrap;'>
+
+Search: <input name="phrase" size="75" class="searchbox" />
+<?php
+echo $this->FormClose(); 
+?>
+	</td>
+	<td width='1%' align='right'>
 <?php 
 echo $this->GetPageTime() ? " <a href=\"".$this->href("revisions.xml")."\" title=\"Click to view recent page revisions in XML format.\"><img src=\"images/xml.png\" width=\"36\" height=\"14\" align=\"bottom\" style=\"border : 0px;\" alt=\"XML\" /></a>\n" : "&nbsp;";
 ?>
 	</td>
-	<td width='99%' align='right'>
+</tr>
+<tr>
+	<td colspan='2' width='99%' align='right'>
 		<div class="smallprint">
 		<?php echo $this->Link("http://validator.w3.org/check/referer", "", "Valid XHTML 1.0 Transitional") ?> |
 		<?php echo $this->Link("http://jigsaw.w3.org/css-validator/check/referer", "", "Valid CSS") ?> |

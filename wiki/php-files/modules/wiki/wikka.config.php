@@ -69,15 +69,6 @@ if (file_exists(PATH_THEME."wikka.css")) {
 } else {
 	$wakkaConfig['stylesheet'] = 'css/wikka.css';
 }
-
-// generate the default write ACL based on group membership
-/*$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_name = 'Wiki Editors'");
-if ($data = dbarray($result)) {
-	$users = allusersingroup($data['group_id']);
-	$acl = "";
-	foreach ($users as $user) {
-		$acl .= ($acl == "" ? "" : "\n") . $user['user_name'];
-	}
-	if ($acl != "") $wakkaConfig['default_write_acl'] = $acl;
-}*/
+// if the current user is an admin, add the username to the list of admins
+$wakkaConfig['admin_users'] = checkgroup($wakkaConfig['admin_group']) ? (iMEMBER ? $userdata['user_name'] : "*") : "";
 ?>

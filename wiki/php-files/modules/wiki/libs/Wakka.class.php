@@ -1235,43 +1235,15 @@ class Wakka
 			$tag_ACLs = $this->LoadAllACLs($tag);
 			$acl = $tag_ACLs[$privilege."_acl"];
 		}
-
 		// fine fine... now go through acl
 		foreach (explode("\n", $acl) as $line)
 		{
-			// check for inversion character "!"
-			if (preg_match("/^[!](.*)$/", $line, $matches))
-			{
-				$negate = 1;
-				$line = $matches[1];
-			}
-			else
-			{
-				$negate = 0;
-			}
-
-			// if there's still anything left... lines with just a "!" don't count!
-			if ($line)
-			{
-				switch ($line[0])
-				{
-				// comments
-				case "#":
-					break;
-				// everyone
-				case "*":
-					return !$negate;
-				// only registered users
-				case "+":
-					// return ($registered) ? !$negate : false;
-					return ($registered) ? !$negate : $negate;
-				// aha! a user entry.
-				default:
-					if ($line == $user)
-					{
-						return !$negate;
-					}
-				}
+			if ($line{0} == "G") {
+				// check group membership
+				if (checkgroup(substr($line,1))) return true;
+			} else {
+				// check userid for a match
+				if (iMEMBER && $userdata['user_id'] == $line) return true;
 			}
 		}
 
