@@ -15,7 +15,7 @@
 if (eregi("last_seen_users_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
 
 // number of users to show in the panel
-define('MAX_USERS', 15);
+if (!defined('MAX_USERS')) define('MAX_USERS', 15);
 
 // array's to store the variables for this panel
 $variables = array();
