@@ -28,7 +28,7 @@ if (!defined('SET_OWNER_CURRENT_LABEL')) define('SET_OWNER_CURRENT_LABEL', '(Cur
 if (!defined('SET_OWNER_PUBLIC_LABEL')) define('SET_OWNER_PUBLIC_LABEL','(Public)');
 if (!defined('SET_NO_OWNER_LABEL')) define('SET_NO_OWNER_LABEL', '(Nobody - Set free)');
 if (!defined('USERS_LABEL')) define('USERS_LABEL', 'Users:');
-if (!defined('SELECTED_LABEL')) define('SELECTED_LABEL', 'Selected:');
+if (!defined('SELECTED_LABEL')) define('SELECTED_LABEL', 'Give access to:');
 if (!defined('GROUPS_LABEL')) define('GROUPS_LABEL', 'Usergroups:');
 if (!defined('INSTRUCTION_LABEL')) define('INSTRUCTION_LABEL', 'Click on the user or groupname to move it in or out of the selected box');
 

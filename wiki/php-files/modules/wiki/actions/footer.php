@@ -12,25 +12,20 @@
 	// if this page exists
 	if ($this->page)
 	{
-		switch ($owner = $this->GetPageOwner()) {
-			case "(Public)":
-				print("Public page\n");
-				break;
-			case $this->UserIsOwner():
-				print("You own this page\n");
-				break;
-			case false;
-				print("Nobody".($this->GetUser() ? " (<a href=\"".$this->href("claim")."\">Take Ownership</a>)\n" : "\n"));
-			default:
-				if (iMEMBER) {
-					print("Owner: <a href='".BASEDIR."profile.php?lookup=$owner'>".$owner."</a>\n");
-				} else {
-					print("Owner: $owner\n");
-				}
+		$owner = $this->GetPageOwner();
+		if ($owner == "(Public)") {
+			print("Public page\n");
+		} elseif ($owner == false) {
+			print("Nobody".($this->GetUser() ? " (<a href=\"".$this->href("claim")."\">Take Ownership</a>)\n" : "\n"));
+		} elseif (iMEMBER && $GLOBALS['userdata']['user_name'] == $owner) {
+			print("You own this page\n");
+		} else {
+			if (iMEMBER) {
+				print("Owner: <a href='".BASEDIR."profile.php?lookup=$owner'>".$owner."</a>\n");
+			} else {
+				print("Owner: $owner\n");
+			}
 		}
-		if ($this->IsAdmin()) {
-			print("| <a href=\"".$this->href("acls")."\">Edit ACLs</a>\n");
-		}	
 	}
 
 	print "</td></tr><tr>";

@@ -1,6 +1,6 @@
 <?php
-// default config
 
+// default config
 $wakkaConfig = array(
 	'mysql_host' => $db_host,
 	'mysql_database' => $db_name,
@@ -33,7 +33,6 @@ $wakkaConfig = array(
 	'external_link_tail' => '<img src="'.THEME.'images/external_link.jpg" alt="" />',
 	'external_link_new_window' => 1,
 	'sql_debugging' => '0',
-	'admin_users' => '',
 	'admin_email' => $settings['siteemail'],
 	'upload_path' => IMAGES."wiki",
 	'mime_types' => 'mime_types.txt',
@@ -51,14 +50,13 @@ $wakkaConfig = array(
 	'meta_description' => ''
 );
 
-// get wiki config variables from the CMSconfig table. They override the default config
-$result = dbquery("SELECT * FROM ".$db_prefix."CMSconfig WHERE cfg_name LIKE 'wiki_%'");
-while ($data = dbarray($result)) {
-	// extract the wakkaConfig key from the cfg_name
-	$cfgkey = substr($data['cfg_name'],5);
-	// if the wakkaConfig key exists, overwrite the value
-	if (isset($wakkaConfig[$cfgkey])) {
-		$wakkaConfig[$cfgkey] = $data['cfg_value'];
+// get wiki config variables from the CMSconfig settings. They override the default config
+foreach($settings as $configkey => $configvalue) {
+	if (substr($configkey,0,5) == "wiki_") {
+		// extract the wakkaConfig key from the cfg_name
+		$cfgkey = substr($configkey,5);
+		// add the value to the wakkaconfig array
+		$wakkaConfig[$cfgkey] = $configvalue;
 	}
 }
 
@@ -69,6 +67,4 @@ if (file_exists(PATH_THEME."wikka.css")) {
 } else {
 	$wakkaConfig['stylesheet'] = 'css/wikka.css';
 }
-// if the current user is an admin, add the username to the list of admins
-$wakkaConfig['admin_users'] = checkgroup($wakkaConfig['admin_group']) ? (iMEMBER ? $userdata['user_name'] : "*") : "";
 ?>

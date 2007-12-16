@@ -1166,11 +1166,11 @@ class Wakka
 	}
 	//returns true if user is listed in configuration list as admin
 	function IsAdmin() {
-		$adminstring = $this->config["admin_users"];
-		$adminarray = explode(',' , $adminstring);
-
-		foreach ($adminarray as $admin) {
-			if (trim($admin) == $this->GetUserName()) return true;
+		$admingroup = $this->config["admin_group"];
+		if ($admingroup{0} == "G") {
+			return checkgroup(substr($admingroup,1));
+		} else {
+			return (iMEMBER && $admingroup == $GLOBALS['userdata']['user_id']);
 		}
 	}
 	function GetPageOwner($tag = "", $time = "") { if (!$tag = trim($tag)) $tag = $this->GetPageTag(); if ($page = $this->LoadPage($tag, $time)) return $page["owner"]; }
