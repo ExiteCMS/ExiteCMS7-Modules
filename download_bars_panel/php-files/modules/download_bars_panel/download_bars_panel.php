@@ -41,7 +41,6 @@ while ($data = dbarray($result)) {
 	}
 	// if the user has access, add this download to the bar panel
 	if ($access) {
-		$data['download_title'] = strtoupper(substr($data['download_title'],0,6));
 		$download[] = $data;
 		$total += $data['download_count'];
 	}

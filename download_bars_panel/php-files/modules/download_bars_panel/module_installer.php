@@ -12,17 +12,11 @@
 if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CMS_OK')) fallback(BASEDIR."index.php");
 
 /*---------------------------------------------------+
-| Locale definition for this installation module     |
-+----------------------------------------------------*/
-
-// no locales for this plugin
-
-/*---------------------------------------------------+
 | Module identification                              |
 +----------------------------------------------------*/
-$mod_title = "Top downloads panel";
-$mod_description = "Side panel to show top downloads";
-$mod_version = "1.0.0";
+$mod_title = "Download StatBars";
+$mod_description = "Side panel to show download counters in a horizontal bar graph";
+$mod_version = "1.0.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -33,7 +27,10 @@ $mod_type = "P";
 +----------------------------------------------------*/
 
 $mod_folder = "download_bars_panel";
-// no administration module for this plugin
+$mod_admin_image = "dl.gif";							// icon to be used for the admin panel
+$mod_admin_panel = "download_bars_admin.php";			// name of the admin panel for this module
+$mod_admin_rights = "D";								// admin rights code (we use the code for the Downloads admin module).
+$mod_admin_page = 4;									// admin page this panel has to be placed on
 
 /*---------------------------------------------------+
 | Version and revision control                       |
@@ -59,6 +56,30 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 $mod_site_links = array();
 
 /*---------------------------------------------------+
+| locale strings for this module                     |
++----------------------------------------------------*/
+
+$localestrings = array();
+
+// English locale strings
+$localestrings['en'] = array();
+$localestrings['en']['400'] = "Download Bars Panel Content";
+$localestrings['en']['401'] = "Bar Position";
+$localestrings['en']['402'] = "Save Bar Content";
+$localestrings['en']['403'] = "Download Bars Title";
+$localestrings['en']['404'] = "Download Bars Panel Content succesfully saved";
+$localestrings['en']['405'] = "There are no download items present to add to the download statistics panel";
+
+// Nederlandse locale strings
+$localestrings['nl'] = array();
+$localestrings['nl']['400'] = "Inhoud download balk-grafiek paneel";
+$localestrings['nl']['401'] = "Balk positie";
+$localestrings['nl']['402'] = "Inhoud bewaren";
+$localestrings['nl']['403'] = "Download balk titel";
+$localestrings['nl']['404'] = "Inhoud van het balk-grafiek paneel is opgeslagen";
+$localestrings['nl']['405'] = "Er zijn geen download items gevonden om aan het statistieken paneel toe te voegen";
+
+/*---------------------------------------------------+
 | commands to execute when installing this module    |
 +----------------------------------------------------*/
 
@@ -70,11 +91,38 @@ $mod_install_cmds = array();
 
 $mod_uninstall_cmds = array();
 
+/*----------------------------------------------------+
+| function for installation code                      |
++----------------------------------------------------*/
+if (!function_exists('install_module')) {
+	function install_module() {
+	}
+}
+/*---------------------------------------------------+
+| function for de-installation code                  |
++----------------------------------------------------*/
+if (!function_exists('uninstall_module')) {
+	function uninstall_module() {
+	}
+}
+
 /*---------------------------------------------------+
 | function to upgrade from a previous revision       |
 +----------------------------------------------------*/
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
+
+		switch ($current_version) {
+			case "1.0.0":	// things to do when the current version is 1.0.0
+
+				// commands here, NO break statement!
+
+			case "1.0.1":	// things to do when the current version is 1.0.1
+
+				// commands here, NO break statement!
+
+			default:
+		}
 	}
 }
 ?>

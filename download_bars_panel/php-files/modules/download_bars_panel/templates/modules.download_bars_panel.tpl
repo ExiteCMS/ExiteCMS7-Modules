@@ -29,7 +29,7 @@
 {/if}
 	<tr>
 		<td class='dbp_list'>
-			<a href='{$settings.siteurl}downloads.php?download_id={$barinfo[bar].download_id}'>{$barinfo[bar].download_title}</a>
+			<a href='{$settings.siteurl}downloads.php?download_id={$barinfo[bar].download_id}' title='{$barinfo[bar].download_title}'>{$barinfo[bar].download_title|truncate:8:".."}</a>
 		</td>
 		<td class='dbp_bar_cell'>
 			<div class='dbp_bar_bg' style='width:{$barwidth}'>
