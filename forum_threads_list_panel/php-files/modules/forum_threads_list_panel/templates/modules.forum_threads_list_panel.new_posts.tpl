@@ -57,7 +57,11 @@
 	<tr>
 		<td align='center' colspan='5' class='{cycle values='tbl1,tbl2'}'>
 			{if $rows == 1}
-			<b>{$locale.039a}</b>
+				{if $unread == 1}
+					<b>{$locale.039a}</b>
+				{else}
+					<b>{ssprintf format=$locale.039b var1=$unread}</b>
+				{/if}
 			{else}
 			<b>{ssprintf format=$locale.039 var1=$unread var2=$rows}</b>
 			{/if}
