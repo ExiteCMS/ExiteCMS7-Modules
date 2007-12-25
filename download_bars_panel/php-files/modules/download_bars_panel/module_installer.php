@@ -14,7 +14,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 /*---------------------------------------------------+
 | Module identification                              |
 +----------------------------------------------------*/
-$mod_title = "Download StatBars";
+$mod_title = "Download Bars Panel";
 $mod_description = "Side panel to show download counters in a horizontal bar graph";
 $mod_version = "1.0.1";
 $mod_developer = "WanWizard";
