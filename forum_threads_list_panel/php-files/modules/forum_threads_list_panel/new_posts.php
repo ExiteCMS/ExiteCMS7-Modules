@@ -24,28 +24,50 @@ define('ITEMS_PER_PAGE', 20);
 // only access for members, if not, fall back to the homepage
 if (!iMEMBER) fallback(BASEDIR."index.php");
 
-// make sure unread posts for other users are not marked
+// marked as read requested?, mark, and fallback to the homepage
 if (isset($markasread)) {
-    if ($markasread <> $userdata['user_id'])
-		redirect(BASEDIR."index.php");
-    else {
-		$result = dbquery("DELETE FROM ".$db_prefix."posts_unread WHERE user_id = ".$markasread);
-		redirect(BASEDIR."index.php");
-    }
+	$result = dbquery("
+		SELECT p.thread_id
+			FROM ".$db_prefix."posts p
+			LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+			WHERE tr.user_id = '".$userdata['user_id']."'
+				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
+				AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
+			GROUP BY p.thread_id
+		");
+	// update the last_read datestamp of all threads found
+	while ($data = dbarray($result)) {
+		$result2 = dbquery("UPDATE ".$db_prefix."threads_read SET thread_last_read = '".time()."' WHERE user_id = '".$userdata['user_id']."' AND thread_id = '".$data['thread_id']."'");
+	}
+	// done, fall back to the homepage
+	fallback(BASEDIR."index.php");
 }
 
 // load the forum functions include
 require_once PATH_INCLUDES."forum_functions_include.php";
 
 // check if there are any unread posts for this user
-$unread = dbcount("(post_id)", "posts_unread", "user_id='".$userdata['user_id']."'");
-$variables['unread'] = $unread;
+$result = dbquery("SELECT count(*) as unread, sum(tr.thread_page) AS pages FROM ".$db_prefix."posts p LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id WHERE tr.user_id = '".$userdata['user_id']."' AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].") AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)", false);
+$variables['unread'] = ($result ? mysql_result($result, 0) : 0);
 
 // and if so, get them
-if ($unread) {
-	// get the number of threads with unread posts
-	$result = dbquery("SELECT forum_id, thread_id, count( post_time ) AS unread FROM ".$db_prefix."posts_unread ".
-		"WHERE user_id ='".$userdata['user_id']."' GROUP BY forum_id, thread_id ORDER BY post_time DESC");
+if ($variables['unread']) {
+	// array to store the thread and post info
+	$variables['posts'] = array();
+	// get all threads with unread posts, and a count of the unread posts per thread
+	$result = dbquery("
+		SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
+			FROM ".$db_prefix."posts p
+			LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+			LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
+			LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+			WHERE tr.user_id = '".$userdata['user_id']."'
+				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
+				AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
+			GROUP BY p.thread_id
+		");
+
+	// get the number of unread threads
 	$rows = dbrows($result);
 	$variables['rows'] = $rows;
 
@@ -53,36 +75,12 @@ if ($unread) {
 	if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;
 	$variables['rowstart'] = $rowstart;
 
-	// get this page of unread posts
-	$result = dbquery("SELECT forum_id, thread_id, count( post_time ) AS unread 
-		FROM ".$db_prefix."posts_unread
-		WHERE user_id ='".$userdata['user_id']."' 
-		GROUP BY forum_id, thread_id 
-		ORDER BY post_time DESC
-		LIMIT $rowstart,".ITEMS_PER_PAGE);
-
-	$posts = array();
+	// add additional info to the data retrieved
 	while ($data = dbarray($result)) {
 		$data['poll'] = fpm_panels_poll_exists($data['forum_id'], $data['thread_id']);
-		// get the forum and thread info needed
-		$result2 = dbquery("SELECT f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost FROM ".$db_prefix."forums f, ".
-			$db_prefix."threads t, ".$db_prefix."posts p WHERE f.forum_id = '".$data['forum_id']."' AND t.thread_id = '".$data['thread_id'].
-			"' AND t.forum_id = f.forum_id");
-		$data2 = dbarray($result2);
-		$data['forum_name'] = $data2['forum_name'];
-		$data['forum_cat'] = $data2['forum_cat'];
-		$data['thread_subject'] = $data2['thread_subject'];
-		$data['thread_views'] = $data2['thread_views'];
-		$data['thread_lastpost'] = $data2['thread_lastpost'];
-		// get the first unread post_id for this user and thread
-		$result3 = dbquery("SELECT f.post_id, f.post_time, p.post_subject FROM ".$db_prefix."posts_unread f, ".$db_prefix."posts p WHERE f.user_id = '".$userdata['user_id']."' ".
-			"AND f.thread_id = '".$data['thread_id']."' AND f.post_id = p.post_id ORDER BY `post_time` ASC LIMIT 1");
-		$data3 = dbarray($result3);
-		$data['post_id'] = $data3['post_id'];
-
-		$posts[] = $data;
+		// store the data
+		$variables['posts'][] = $data;
 	}
-	$variables['posts'] = $posts;
 }
 
 // define the search body panel variables

@@ -51,13 +51,13 @@
 	<tr>
 		<td align='center' colspan='4' class='{cycle values='tbl1,tbl2'}'>
 			{if $rows == 1}
-				{if $unread == 1}
+				{if $threads == 1}
 					<b>{$locale.039a}</b>
 				{else}
-					<b>{ssprintf format=$locale.039b var1=$unread}</b>
+					<b>{ssprintf format=$locale.039b var1=$rows}</b>
 				{/if}
 			{else}
-			<b>{ssprintf format=$locale.039 var1=$unread var2=$rows}</b>
+			<b>{ssprintf format=$locale.039 var1=$rows var2=$threads}</b>
 			{/if}
 			<br /><br />
 			{buttonlink name=$locale.091 link=$smarty.const.FUSION_SELF|cat:"?markasread="|cat:$userdata.user_id}
