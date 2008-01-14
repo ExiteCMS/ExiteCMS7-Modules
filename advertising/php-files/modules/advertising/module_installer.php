@@ -71,7 +71,7 @@ $mod_install_cmds = array();							// commands to execute when installing this m
 // adverts: advertising table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##advertising (
   adverts_id smallint(5) NOT NULL auto_increment,
-  adverts_userid smallint(5) NOT NULL default '0',
+  adverts_userid mediumint(8) NOT NULL default '0',
   adverts_contract tinyint(1) NOT NULL default '0',
   adverts_contract_start int(10) unsigned NOT NULL default '0',
   adverts_contract_end int(10) unsigned NOT NULL default '0',
@@ -99,9 +99,9 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "install_function")
 
 $mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##adverts");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##advertising");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
+$mod_uninstall_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
 
 /*---------------------------------------------------+
 | function for special installations                 |
@@ -135,9 +135,16 @@ if (!function_exists('uninstall_function')) {
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
 
+		global $db_prefix, $locale;
+
 		switch($current_version) {
 			case "0.0.1":
 				// pre-release version, no database or other changes
+			case "1.0.0":
+				// upgrade the userid field from 16bit to 32bit
+				$result = dbquery("ALTER TABLE ".$db_prefix."advertising CHANGE adverts_userid adverts_userid MEDIUMINT(8) NOT NULL DEFAULT '0'");
+			default:
+				// do this at every upgrade
 		}
 
 	}
