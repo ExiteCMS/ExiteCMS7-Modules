@@ -28,7 +28,7 @@ locale_load("modules.last_seen_users_panel");
 require_once PATH_INCLUDES."geoip_include.php";
 
 // select the last logged in users from the users table
-$result = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_lastvisit>'0' AND user_id != 1 AND user_status='0' ORDER BY user_lastvisit DESC LIMIT 0,".MAX_USERS);
+$result = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_lastvisit>'0'".($settings['hide_webmaster']?" AND user_level != '103'":"")." AND user_status='0' ORDER BY user_lastvisit DESC LIMIT 0,".MAX_USERS);
 if (dbrows($result) == 0) {
 	$no_panel_displayed = true;
 } else {

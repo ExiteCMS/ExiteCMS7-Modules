@@ -88,6 +88,7 @@ while ($data = dbarray($result)) {
 	$data['poll'] = fpm_panels_poll_exists($data['forum_id'], $data['thread_id']);
 	$posts[] = $data;
 }
+
 $variables['posts'] = $posts;
 
 // define the search body panel variables

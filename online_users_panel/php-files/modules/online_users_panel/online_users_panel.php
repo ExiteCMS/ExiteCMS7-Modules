@@ -32,9 +32,10 @@ if ($settings['maintenance'] != "1") {
 	}
 	$result = dbquery("DELETE FROM ".$db_prefix."online WHERE online_lastactive<".(time()-60)."");
 }
+
 $result = dbquery(
 	"SELECT ton.*, tu.user_id,user_name FROM ".$db_prefix."online ton
-	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id WHERE ton.online_user != 1");
+	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level != '103'":""));
 $rows = dbrows($result);
 if ($rows > $settings['max_users']) {
 	$settings['max_users'] = $rows;
