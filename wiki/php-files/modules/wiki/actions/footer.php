@@ -1,4 +1,7 @@
 <div class="pagefooter">
+<?php
+echo $this->FormOpen("", "TextSearch", "get");
+?>
 <table width='100%'>
 	<tr>
 		<td>
@@ -27,9 +30,6 @@
 			}
 		}
 	}
-
-	print "</td></tr><tr>";
-	echo $this->FormOpen("", "TextSearch", "get"); 
 ?>
 	</td>
 </tr>
@@ -39,9 +39,6 @@
 	<td width='1%' style='white-space:nowrap;'>
 
 Search: <input name="phrase" size="75" class="searchbox" />
-<?php
-echo $this->FormClose(); 
-?>
 	</td>
 	<td width='1%' align='right'>
 <?php 
@@ -59,6 +56,9 @@ echo $this->GetPageTime() ? " <a href=\"".$this->href("revisions.xml")."\" title
 	</td>
 </tr>
 </table>
+<?php
+echo $this->FormClose(); 
+?>
 </div>
 <?php
 	if ($this->GetConfigValue("sql_debugging"))

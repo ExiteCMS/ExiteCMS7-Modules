@@ -1078,8 +1078,8 @@ class Wakka
 	function LoadUsers() { return $this->LoadAll("select * from ".$this->config['table_prefix']."users order by name"); }
 	function GetUserName() { if ($user = $this->GetUser()) $name = $user["name"]; else if (!$name = gethostbyaddr($_SERVER["REMOTE_ADDR"])) $name = $_SERVER["REMOTE_ADDR"]; return $name; }
 	function GetUser() { return (isset($_SESSION["user"])) ? $_SESSION["user"] : NULL; }
-	function SetUser($user) { $_SESSION["user"] = $user; $this->SetPersistentCookie("user_name", $user["name"]); $this->SetPersistentCookie("pass", $user["password"]); }
-	function LogoutUser() { $_SESSION["user"] = ""; $this->DeleteCookie("user_name"); $this->DeleteCookie("pass"); }
+	function SetUser($user) { $_SESSION["user"] = $user; }
+	function LogoutUser() { $_SESSION["user"] = ""; }
 	function UserWantsComments() { if (!$user = $this->GetUser()) return false; return ($user["show_comments"] == "Y"); }
 
 
@@ -1268,19 +1268,11 @@ class Wakka
 	// THE BIG EVIL NASTY ONE!
 	function Run($tag, $method = "")
 	{
+		global $userdata;
 		// do our stuff!
 		if (!$this->method = trim($method)) $this->method = "show";
 		if (!$this->tag = trim($tag)) $this->Redirect($this->Href("", $this->config["root_page"]));
-		if (!$this->GetUser() && ($user = $this->LoadUser($this->GetCookie('user_name'), $this->GetCookie('pass')))) $this->SetUser($user);
-		if ((!$this->GetUser() && isset($_COOKIE["wikka_user_name"])) && ($user = $this->LoadUser($_COOKIE["wikka_user_name"], $_COOKIE["wikka_pass"]))) 
-		{
-		 //Old cookies : delete them
-			SetCookie('wikka_user_name', "", 1, "/"); 
-			$_COOKIE['wikka_user_name'] = "";
-			SetCookie('wikka_pass', '', 1, '/');
-			$_COOKIE['wikka_pass'] = "";
-			$this->SetUser($user);
-		}
+		if (!$this->GetUser() && iMEMBER) $this->SetUser($userdata['user_name']);
 		#$this->SetPage($this->LoadPage($tag, (isset($_REQUEST["time"]) ? $_REQUEST["time"] :'')));
 		$this->SetPage($this->LoadPage($tag, (isset($_GET['time']) ? $_GET['time'] :''))); #312
 
