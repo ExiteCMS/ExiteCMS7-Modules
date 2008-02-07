@@ -253,18 +253,18 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##w
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##wiki_images");
 
 // delete the wiki config variables
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_root_page'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_wakka_name'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_navigation_links'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_logged_in_navigation_links'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_hide_comments'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_require_edit_note'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_anony_delete_own_comments'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_external_link_new_window'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_write_acl'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_read_acl'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_default_comment_acl'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##CMSconfig WHERE cfg_name = 'wiki_admin_group'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_root_page'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_wakka_name'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_navigation_links'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_logged_in_navigation_links'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_hide_comments'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_require_edit_note'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_anony_delete_own_comments'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_external_link_new_window'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_write_acl'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_read_acl'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_comment_acl'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_admin_group'");
 
 // delete the user groups
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
@@ -304,34 +304,34 @@ if (!function_exists('add_config_items')) {
 	function add_config_items() {
 		global $db_prefix, $mod_admin_rights;
 	
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_root_page', 'HomePage')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_wakka_name', 'ExiteCMS Wiki')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_logged_in_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented | [[UserSettings Change settings]]')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_hide_comments', '0')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_require_edit_note', '0')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_anony_delete_own_comments', '1')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_external_link_new_window', '1')");
-		$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_default_read_acl', 'G0');");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_root_page', 'HomePage')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_wakka_name', 'ExiteCMS Wiki')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_logged_in_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented | [[UserSettings Change settings]]')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_hide_comments', '0')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_require_edit_note', '0')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_anony_delete_own_comments', '1')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_external_link_new_window', '1')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_read_acl', 'G0');");
 		// get the group_id of the Wiki Editors group
 		$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G".$data['group_id']."')");
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G".$data['group_id']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G".$data['group_id']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G".$data['group_id']."')");
 		} else {
 			// can't find it? default to all members			
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G101')");
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G101')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G101')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G101')");
 		}
 		// get the group_id of the Wiki Admins group
 		$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."02'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G".$data['group_id']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G".$data['group_id']."')");
 		} else {
 			// can't find it? default to all members			
-			$result = dbquery("INSERT INTO ".$db_prefix."CMSconfig( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G103')");
+			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G103')");
 		}
 	}
 }
@@ -358,7 +358,7 @@ if (!function_exists('module_upgrade')) {
 				// no specific changes between this version and the new one
 
 			case "1.0.1":
-				// add the defaults to the CMSconfig table
+				// add the defaults to the configuration table
 				add_config_items();
 				// migrate the wiki_acls
 				$result = dbquery("SELECT * FROM ".$db_prefix."wiki_acls");

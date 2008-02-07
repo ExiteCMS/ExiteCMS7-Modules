@@ -50,7 +50,7 @@ $wakkaConfig = array(
 	'meta_description' => ''
 );
 
-// get wiki config variables from the CMSconfig settings. They override the default config
+// get wiki config variables from the configuration settings. They override the default config
 foreach($settings as $configkey => $configvalue) {
 	if (substr($configkey,0,5) == "wiki_") {
 		// extract the wakkaConfig key from the cfg_name

@@ -39,9 +39,9 @@ $result = dbquery(
 $rows = dbrows($result);
 if ($rows > $settings['max_users']) {
 	$settings['max_users'] = $rows;
-	$result2 = dbquery("UPDATE ".$db_prefix."CMSconfig SET cfg_value = '".$rows."' WHERE cfg_name = 'max_users'");
+	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$rows."' WHERE cfg_name = 'max_users'");
 	$settings['max_users_datestamp'] = time();
-	$result2 = dbquery("UPDATE ".$db_prefix."CMSconfig SET cfg_value = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users_datestamp'");
+	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users_datestamp'");
 }
 // get who's online
 $variables['guests'] = 0;
