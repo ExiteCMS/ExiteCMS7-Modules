@@ -73,8 +73,8 @@ function mailer_init() {
 
 	if (M2F_SMTP_DEBUG) $mail->SMTPDebug = 2;
 
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer-locale'].".php")) {
-		$mail->SetLanguage($settings['phpmailer-locale'], PATH_INCLUDES."language/");
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
+		$mail->SetLanguage($settings['phpmailer_locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}

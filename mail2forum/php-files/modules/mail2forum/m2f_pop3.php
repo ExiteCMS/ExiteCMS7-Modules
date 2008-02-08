@@ -466,8 +466,8 @@ $pop3->_debug = M2F_POP3_DEBUG;
 if (M2F_SEND_NDR) {
 	require_once PATH_INCLUDES."phpmailer_include.php";
 	$mail = new PHPMailer();
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer-locale'].".php")) {
-		$mail->SetLanguage($settings['phpmailer-locale'], PATH_INCLUDES."language/");
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
+		$mail->SetLanguage($settings['phpmailer_locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}
