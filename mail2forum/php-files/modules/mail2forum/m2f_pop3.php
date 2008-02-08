@@ -253,19 +253,6 @@ function  addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	// update the m2f received counter
 	$result = dbquery("UPDATE ".$db_prefix."M2F_forums SET m2f_received=m2f_received+1 WHERE m2f_forumid='".$forum_id."'");
 	
-	// mark the post as unread for all forum members except for the poster
-	$result = dbquery("SELECT forum_access from ".$db_prefix."forums WHERE forum_id = ".$forum_id);
-	$data = dbarray($result);
-	$group_id = $data['forum_access'];
-	// select all users that are a member of this forum access group    
-	$result = dbquery("SELECT user_id, user_groups, user_level from ".$db_prefix."users WHERE user_id != '".$sender['user_id']."'");
-	while ($data = dbarray($result)) {
-		// if the group is public, or it is a builtin group and user has higher-or-equal system rights, or the user is a member of the group ...
-		if ($group_id == 0 or ($group_id > 100 and $data['user_level'] >= $group_id) or preg_match("(^\.{$group_id}|\.{$group_id}\.|\.{$group_id}$)", $data['user_groups'])) {
-			$result2 = dbquery("INSERT IGNORE into ".$db_prefix."posts_unread (user_id, forum_id, thread_id, post_id, post_time) VALUES('".$data['user_id']."', '".$forum_id."', '".$thread_id."', '".$post_id."', '".$posttime."')", false);
-		}
-	} 
-
 	// check if there are attachments. If so, save them, and link them to the post
 	$error = 0;
 	if (isset($post['attachment']) and is_array($post['attachment'])) {
@@ -396,9 +383,9 @@ function processmessageparts($messagepart) {
 					// Remove any HTML tags remaining, but leave their content
 					$post['body'] = preg_replace('#<(.*?)>#si', '', $post['body']);
 					// convert charactersets if needed
-					if (function_exists('iconv') && $message->ctype_parameters['charset'] != $locale['charset']) {
+					if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $locale['charset']) {
 						// convert body text
-						$post['body'] = iconv($message->ctype_parameters['charset'], $locale['charset'], $post['body']);
+						$post['body'] = iconv($messagepart->ctype_parameters['charset'], $locale['charset'], $post['body']);
 					}
 					break;
 				default:

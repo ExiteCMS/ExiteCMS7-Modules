@@ -76,7 +76,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
 
 // M2F_config: user configuration table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_config (
-  m2f_userid smallint(5) unsigned NOT NULL default '0',
+  m2f_userid mediumint(8) unsigned NOT NULL default '0',
   m2f_html tinyint(1) unsigned NOT NULL default '0',
   m2f_attach tinyint(1) unsigned NOT NULL default '0',
   m2f_inline tinyint(1) unsigned NOT NULL default '0',
@@ -105,7 +105,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_subscriptions (
   m2f_subid smallint(5) unsigned NOT NULL auto_increment,
   m2f_forumid smallint(5) unsigned NOT NULL default '0',
-  m2f_userid smallint(5) unsigned NOT NULL default '0',
+  m2f_userid mediumint(8) unsigned NOT NULL default '0',
   m2f_subscribed tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (m2f_subid)
 ) ENGINE=MyISAM;");
@@ -146,9 +146,16 @@ if (!function_exists('uninstall_function')) {
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
 
+		global $db_prefix;
+
 		switch($current_version) {
 			case "0.1.1":
 				// pre-release version, no database or other changes
+			case "xxx":
+				$result = dbquery("ALTER TABLE ".$db_prefix."M2F_config CHANGE m2f_userid m2f_userid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0'");
+				$result = dbquery("ALTER TABLE ".$db_prefix."M2F_subscriptions CHANGE m2f_userid m2f_userid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0'");
+			default:
+				// to execute at every upgrade
 		}
 
 	}
