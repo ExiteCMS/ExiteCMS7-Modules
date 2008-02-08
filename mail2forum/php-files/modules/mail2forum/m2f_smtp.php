@@ -73,8 +73,8 @@ function mailer_init() {
 
 	if (M2F_SMTP_DEBUG) $mail->SMTPDebug = 2;
 
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$locale['phpmailer'].".php")) {
-		$mail->SetLanguage($locale['phpmailer'], PATH_INCLUDES."language/");
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer-locale'].".php")) {
+		$mail->SetLanguage($settings['phpmailer-locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}
@@ -93,7 +93,7 @@ function mailer_init() {
 		}
 	}
 	$mail->Timeout = 30;
-	$mail->CharSet = $locale['charset'];
+	$mail->CharSet = $settings['charset'];
 }
 
 /*---------------------------------------------------+
