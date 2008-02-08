@@ -326,7 +326,7 @@ function  addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 // process a single MIME-multipart (could be recursive!)
 function processmessageparts($messagepart) {
 
-	global $locale, $post, $striphtml;
+	global $locale, $settings, $post, $striphtml;
 
 	switch (strtolower($messagepart->ctype_primary)) {
 		case "multipart":
@@ -345,9 +345,9 @@ function processmessageparts($messagepart) {
 					if (!isset($post['body'])) {
 						$post['body'] = $messagepart->body;
 						// convert charactersets if needed
-						if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $locale['charset']) {
+						if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $settings['charset']) {
 							// convert body text
-							$post['body'] = iconv($messagepart->ctype_parameters['charset'], $locale['charset'], $post['body']);
+							$post['body'] = iconv($messagepart->ctype_parameters['charset'], $settings['charset'], $post['body']);
 						}
 					}
 					break;
@@ -383,9 +383,9 @@ function processmessageparts($messagepart) {
 					// Remove any HTML tags remaining, but leave their content
 					$post['body'] = preg_replace('#<(.*?)>#si', '', $post['body']);
 					// convert charactersets if needed
-					if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $locale['charset']) {
+					if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $settings['charset']) {
 						// convert body text
-						$post['body'] = iconv($messagepart->ctype_parameters['charset'], $locale['charset'], $post['body']);
+						$post['body'] = iconv($messagepart->ctype_parameters['charset'], $settings['charset'], $post['body']);
 					}
 					break;
 				default:
@@ -466,8 +466,8 @@ $pop3->_debug = M2F_POP3_DEBUG;
 if (M2F_SEND_NDR) {
 	require_once PATH_INCLUDES."phpmailer_include.php";
 	$mail = new PHPMailer();
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$locale['phpmailer'].".php")) {
-		$mail->SetLanguage($locale['phpmailer'], PATH_INCLUDES."language/");
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer-locale'].".php")) {
+		$mail->SetLanguage($settings['phpmailer-locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}
@@ -484,7 +484,7 @@ if (M2F_SEND_NDR) {
 			$mail->SMTPAuth = false;
 		}
 	}
-	$mail->CharSet = $locale['charset'];
+	$mail->CharSet = $settings['charset'];
 	$mail->IsHTML(false);
 }
 
