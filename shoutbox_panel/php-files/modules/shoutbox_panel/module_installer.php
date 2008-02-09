@@ -14,7 +14,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 /*---------------------------------------------------+
 | Module identification                              |
 +----------------------------------------------------*/
-$mod_title = "Shoutbox side panel";
+$mod_title = "Shoutbox";
 $mod_description = "Shoutbox side panel";
 $mod_version = "1.1.0";
 $mod_developer = "WanWizard";
