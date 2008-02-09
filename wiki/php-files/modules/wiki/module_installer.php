@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.0.2";									// module version number
+$mod_version = "1.1.0";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -44,8 +44,8 @@ if (str_replace(".", "", $settings['version']) < 700) {
 	$mod_errors .= sprintf($locale['mod001'], '7.00');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 700) {
-	$mod_errors .= sprintf($locale['mod002'], '7.00');
+if (str_replace(".", "", $settings['version']) > 710) {
+	$mod_errors .= sprintf($locale['mod002'], '7.10');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
@@ -403,6 +403,10 @@ if (!function_exists('module_upgrade')) {
 					// update the wiki_acl
 					$result = dbquery("UPDATE ".$db_prefix."wiki_acls SET read_acl = '".$fieldarray['read_acl']."', write_acl = '".$fieldarray['write_acl']."', comment_acl = '".$fieldarray['comment_acl']."' WHERE page_tag = '".$data['page_tag']."'");
 				}
+			case "1.0.2":
+				// no specific changes between this version and the new one
+
+			case "1.1.0":
 
 			default:
 				// commands to execute for every upgrade

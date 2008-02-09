@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Bars Panel";
 $mod_description = "Side panel to show download counters in a horizontal bar graph";
-$mod_version = "1.0.1";
+$mod_version = "1.1.0";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -41,8 +41,8 @@ if (str_replace(".", "", $settings['version']) < 700) {
 	$mod_errors .= sprintf($locale['mod001'], '7.00');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 700) {
-	$mod_errors .= sprintf($locale['mod002'], '7.00');
+if (str_replace(".", "", $settings['version']) > 710) {
+	$mod_errors .= sprintf($locale['mod002'], '7.10');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
@@ -112,16 +112,17 @@ if (!function_exists('uninstall_module')) {
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
 
-		switch ($current_version) {
-			case "1.0.0":	// things to do when the current version is 1.0.0
+		global $db_prefix, $locale;
 
-				// commands here, NO break statement!
-
-			case "1.0.1":	// things to do when the current version is 1.0.1
-
-				// commands here, NO break statement!
-
+		switch($current_version) {
+			case "0.0.1":
+				// pre-release version, no database or other changes
+			case "1.0.0":
+				// ExiteCMS v7.0. no upgrade actions for this release
+			case "1.1.0":
+				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
 			default:
+				// do this at every upgrade
 		}
 	}
 }
