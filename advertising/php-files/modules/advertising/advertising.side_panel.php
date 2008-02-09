@@ -35,7 +35,7 @@ if (isset($_GET['aid'])) {
 
 		$variables = array();
 		$variables['advertisement'] = $ad;
-		$template_variables['modules.ad_side_panel'] = $variables;
+		$template_variables['modules.advertising.side_panel'] = $variables;
 
 	}
 }
