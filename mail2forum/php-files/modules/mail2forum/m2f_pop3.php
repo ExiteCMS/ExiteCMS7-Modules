@@ -144,7 +144,7 @@ function send_reply($forum, $poster, $message) {
 	$mail->ClearAttachments();
 }
 
-// convert Mail quote identifiers to phpfusion quotes
+// convert Mail quote identifiers to bbcode quotes
 function quoteit($text) {
 
 	$lines = explode("\n", $text);
@@ -184,8 +184,41 @@ function quoteit($text) {
 	return $new;
 }
 
+// characterset conversion
+function charsetconv($text, $fromcharset) {
+
+	global $settings;
+
+	// validate the input. if not a string, just return unaltered
+	if (empty($text) || !is_string($text)) return $text;
+
+	// validate the original charset. if not a string, just return unaltered
+	if (empty($fromcharset) || !is_string($fromcharset)) return $text;
+
+	// do we need to convert anything? If not, just return unaltered
+	if ($fromcharset == $settings['charset']) return $text;
+
+	// do we have mbstring? 
+
+	# not supported yet
+	
+	// do we have iconv? 
+	if (function_exists('iconv')) {
+		if (M2F_POP3_DEBUG) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".$settings['charset']);
+		// attempt to convert
+		$iconvresult = iconv(strtoupper($fromcharset), $settings['charset'], $text);
+		if ($iconresult) {
+			return $iconresult;
+		}
+		if (M2F_POP3_DEBUG) logdebug("iconv", "conversion failed!");
+	}
+	
+	// something went wrong, and we couldn't convert. Return unaltered
+	return $text;
+}
+
 // add the new message as a post record to the forum
-function  addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
+function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	global $imagetypes, $settings, $locale, $db_prefix;
 	
@@ -343,12 +376,8 @@ function processmessageparts($messagepart) {
 				case "plain":
 					// don't overwrite a body from a previous body part
 					if (!isset($post['body'])) {
-						$post['body'] = $messagepart->body;
-						// convert charactersets if needed
-						if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $settings['charset']) {
-							// convert body text
-							$post['body'] = iconv($messagepart->ctype_parameters['charset'], $settings['charset'], $post['body']);
-						}
+						// convert charactersets
+						$post['body'] = charsetconv($messagepart->body, $messagepart->ctype_parameters['charset']);
 					}
 					break;
 				case "html":
@@ -383,10 +412,7 @@ function processmessageparts($messagepart) {
 					// Remove any HTML tags remaining, but leave their content
 					$post['body'] = preg_replace('#<(.*?)>#si', '', $post['body']);
 					// convert charactersets if needed
-					if (function_exists('iconv') && $messagepart->ctype_parameters['charset'] != $settings['charset']) {
-						// convert body text
-						$post['body'] = iconv($messagepart->ctype_parameters['charset'], $settings['charset'], $post['body']);
-					}
+					$post['body'] = charsetconv($post['body'], $messagepart->ctype_parameters['charset']);
 					break;
 				default:
 					if (M2F_PROCESS_LOG) logentry('PARSE', sprintf($locale['m2f913'], $messagepart->ctype_secondary));
@@ -599,18 +625,12 @@ while (true) {
 					if (M2F_POP3_DEBUG) echo "Message: ".$message->ctype_primary."\n";
 					if (strtolower($message->ctype_primary) == 'text') {
 						// if it's a plain-text message, just grab the body
-						$post['body'] = $message->body;
-						// convert charactersets if needed
-						if (function_exists('iconv') && $message->ctype_parameters['charset'] != $locale['charset']) {
-							// convert body text
-							$post['body'] = iconv($message->ctype_parameters['charset'], $locale['charset'], $post['body']);
-							// convert subject
-							if (isset($post['subject'])) {
-								if (is_array($post['subject'])) {
-									$post['subject']['subject'] = iconv($message->ctype_parameters['charset'], $locale['charset'], $post['subject']['subject']);
-								} else {
-									$post['subject'] = iconv($message->ctype_parameters['charset'], $locale['charset'], $post['subject']);
-								}
+						$post['body'] = charsetconv($message->body, $messagepart->ctype_parameters['charset']);
+						if (isset($post['subject'])) {
+							if (is_array($post['subject'])) {
+								$post['subject']['subject'] = charsetconv($post['subject']['subject'], $messagepart->ctype_parameters['charset']);
+							} else {
+								$post['subject'] = charsetconv($post['subject'], $messagepart->ctype_parameters['charset']);
 							}
 						}
 					} elseif (strtolower($message->ctype_primary) == 'multipart') {
