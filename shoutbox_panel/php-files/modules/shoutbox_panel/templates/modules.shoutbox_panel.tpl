@@ -19,7 +19,7 @@
 <form name='chatform' method='post' action='{$smarty.const.FUSION_SELF}{if $smarty.const.FUSION_QUERY|default:"" != ""}?{$smarty.const.FUSION_QUERY}{/if}'>
 	<table align='center' cellpadding='0' cellspacing='0'>
 		<tr>
-			<td colspan='2'>
+			<td>
 				{if $smarty.const.iGUEST}
 					{$locale.121}
 					<br />
@@ -32,11 +32,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td align='right'>
 				<input type='submit' name='post_shout' value='{$locale.123}' class='button' />
-			</td>
-			<td align='right' class='small'>
-				<a href='{$smarty.const.MODULES}shoutbox_panel/shoutboxhelp.php' class='side'>{$locale.124}</a>
 			</td>
 		</tr>
 	</table>
