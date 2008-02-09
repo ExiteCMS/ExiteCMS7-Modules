@@ -19,7 +19,7 @@
 	<table align='center' width='600' cellspacing='1' cellpadding='0' class='tbl-border'>
 		<tr>
 			<td align='center' colspan='2' class='tbl2' style='white-space:nowrap'>
-				{$locale.nl461}
+				<b>{$locale.nl461}</b>
 				<br />
 			</td>
 		</tr>
@@ -44,8 +44,8 @@
 			<td align='left' width='1%' class='tbl1' style='white-space:nowrap'>
 				{$locale.nl475}
 			</td>
-			<td align='left' class='tbl1' style='white-space:nowrap'>
-				<input type='text' name='users' value='' maxlength='255' class='textbox' style='width:400px;' />
+			<td align='left' class='tbl1' style=''>
+				<input type='text' name='users' value='' maxlength='255' class='textbox' style='width:300px;' />
 				<br />
 				<span class='small'>{$locale.nl476}</span>
 			</td>
