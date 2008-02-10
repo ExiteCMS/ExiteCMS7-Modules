@@ -67,6 +67,51 @@ if (isset($step) && $step == "subscribers") {
 	}
 }
 
+// save the M2F config
+if (isset($_POST['saveconfig'])) {
+	// validate the input
+	$m2f_host = stripinput($_POST['m2f_host']);
+	$m2f_interval = isNum($_POST['m2f_interval']) ? $_POST['m2f_interval'] : 300;
+	$m2f_poll_threshold = isNum($_POST['m2f_poll_threshold']) ? $_POST['m2f_poll_threshold'] : 604800;
+	$m2f_max_attachments = isNum($_POST['m2f_max_attachments']) ? $_POST['m2f_max_attachments'] : 1;
+	$m2f_max_attach_size = isNum($_POST['m2f_max_attach_size']) ? $_POST['m2f_max_attach_size'] : 5242880;
+	$m2f_use_forum_email = (isNum($_POST['m2f_use_forum_email']) && ($_POST['m2f_use_forum_email'] == "0" || $_POST['m2f_use_forum_email'] == "1")) ? $_POST['m2f_use_forum_email'] : "1";
+	$m2f_follow_thread = (isNum($_POST['m2f_follow_thread']) && ($_POST['m2f_follow_thread'] == "0" || $_POST['m2f_follow_thread'] == "1")) ? $_POST['m2f_follow_thread'] : "0";
+	$m2f_subscribe_required = (isNum($_POST['m2f_subscribe_required']) && ($_POST['m2f_subscribe_required'] == "0" || $_POST['m2f_subscribe_required'] == "1")) ? $_POST['m2f_subscribe_required'] : "0";
+	$m2f_send_ndr = (isNum($_POST['m2f_send_ndr']) && ($_POST['m2f_send_ndr'] == "0" || $_POST['m2f_send_ndr'] == "1")) ? $_POST['m2f_send_ndr'] : "1";
+	$m2f_pop3_server = stripinput($_POST['m2f_pop3_server']);
+	$m2f_pop3_port = (isNum($_POST['m2f_pop3_port']) && $_POST['m2f_pop3_port'] > 0 && $_POST['m2f_pop3_port'] < 65536) ? $_POST['m2f_pop3_port'] : 110;
+	$m2f_pop3_timeout = (isNum($_POST['m2f_pop3_timeout']) && $_POST['m2f_pop3_timeout'] > 1 && $_POST['m2f_pop3_timeout'] < 26) ? $_POST['m2f_pop3_timeout'] : 25;
+	$m2f_logfile = stripinput($_POST['m2f_logfile']);
+	$m2f_process_log = (isNum($_POST['m2f_process_log']) && ($_POST['m2f_process_log'] == "0" || $_POST['m2f_process_log'] == "1")) ? $_POST['m2f_process_log'] : "1";
+	$m2f_smtp_log = (isNum($_POST['m2f_smtp_log']) && ($_POST['m2f_smtp_log'] == "0" || $_POST['m2f_smtp_log'] == "1")) ? $_POST['m2f_smtp_log'] : "0";
+	$m2f_pop3_debug = (isNum($_POST['m2f_pop3_debug']) && ($_POST['m2f_pop3_debug'] == "0" || $_POST['m2f_pop3_debug'] == "1")) ? $_POST['m2f_pop3_debug'] : "0";
+	$m2f_pop3_message_debug = (isNum($_POST['m2f_pop3_message_debug']) && ($_POST['m2f_pop3_message_debug'] == "0" || $_POST['m2f_pop3_message_debug'] == "1")) ? $_POST['m2f_pop3_message_debug'] : "0";
+	$m2f_smtp_debug = (isNum($_POST['m2f_smtp_debug']) && ($_POST['m2f_smtp_debug'] == "0" || $_POST['m2f_smtp_debug'] == "1")) ? $_POST['m2f_smtp_debug'] : "0";
+	// save
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_host."' WHERE cfg_name = 'm2f_host'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_interval."' WHERE cfg_name = 'm2f_interval'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_poll_threshold."' WHERE cfg_name = 'm2f_poll_threshold'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_max_attachments."' WHERE cfg_name = 'm2f_max_attachments'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_max_attach_size."' WHERE cfg_name = 'm2f_max_attach_size'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_use_forum_email."' WHERE cfg_name = 'm2f_use_forum_email'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_follow_thread."' WHERE cfg_name = 'm2f_follow_thread'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_subscribe_required."' WHERE cfg_name = 'm2f_subscribe_required'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_send_ndr."' WHERE cfg_name = 'm2f_send_ndr'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_pop3_server."' WHERE cfg_name = 'm2f_pop3_server'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_pop3_port."' WHERE cfg_name = 'm2f_pop3_port'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_pop3_timeout."' WHERE cfg_name = 'm2f_pop3_timeout'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_logfile."' WHERE cfg_name = 'm2f_logfile'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_process_log."' WHERE cfg_name = 'm2f_process_log'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_smtp_log."' WHERE cfg_name = 'm2f_smtp_log'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_pop3_debug."' WHERE cfg_name = 'm2f_pop3_debug'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_pop3_message_debug."' WHERE cfg_name = 'm2f_pop3_message_debug'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$m2f_smtp_debug."' WHERE cfg_name = 'm2f_smtp_debug'");
+	// reload the page to update the site configuration
+	redirect(FUSION_SELF.$aidlink);
+}
+
+// save M2F forum settings
 if (isset($_POST['savesettings'])) {
 	$m2f_id = isset($_POST['m2f_id'])?$_POST['m2f_id']:0;
 	$m2f_type = isset($_POST['m2f_type'])?$_POST['m2f_type']:0;
@@ -159,7 +204,11 @@ if (isset($_POST['delete'])) {
 	$template_variables['modules.m2f_admin_panel.delete'] = $variables;
 	$variables = array();
 } elseif (isset($_POST['config'])) {
-	$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = '".$_POST['m2f_forumid']."'");
+	// what are we going to configure?
+	$idx = key($_POST['config']);
+	$m2f_forumid = $_POST['m2f_forumid'][$idx];
+	$m2f_type = $_POST['m2f_type'][$idx];
+	$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = '".$m2f_forumid."'");
 	if (dbrows($result) == 0)
 		fallback(FUSION_SELF.$aidlink);
 	$data = dbarray($result);
@@ -174,7 +223,7 @@ if (isset($_POST['delete'])) {
 		$m2f['m2f_subscribe'] = $m2f_subscribe;
 		$m2f['m2f_posting'] = $m2f_posting;
 	} else {
-		$result = dbquery("SELECT * FROM ".$db_prefix."M2F_forums WHERE M2F_forumid = '".$_POST['m2f_forumid']."'");
+		$result = dbquery("SELECT * FROM ".$db_prefix."M2F_forums WHERE M2F_forumid = '".$m2f_forumid."'");
 		if (dbrows($result) == 0) {
 			$m2f = array();
 			$m2f['m2f_id'] = 0;
@@ -201,9 +250,10 @@ if (isset($_POST['delete'])) {
 	$variables['posting_opts'] = $posting_opts;
 	$variables['error'] = isset($error) ? $error : "";
 	$variables['forum_id'] = $data['forum_id'];
+	$variables['forum_name'] = $data['forum_name'];
 	$variables['forum_posting'] = $data['forum_posting'];
-	$variables['m2f_type'] = $_POST['m2f_type'];
-	$variables['m2f_type_text'] = $mailtypes[$_POST['m2f_type']];
+	$variables['m2f_type'] = $m2f_type;
+	$variables['m2f_type_text'] = $mailtypes[$m2f_type];
 
 	// define the panel
 	$template_panels[] = array('type' => 'body', 'name' => 'modules.m2f_admin_panel.edit', 'template' => 'modules.mail2forum.admin_panel_edit.tpl', 'locale' => "modules.mail2forum");

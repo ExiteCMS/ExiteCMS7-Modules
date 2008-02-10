@@ -14,7 +14,7 @@
 {* Template for the module mail2forum - m2f_admin_panel, add/edit settings *}
 {*                                                                         *}
 {***************************************************************************}
-{include file="_opentable.tpl" name=$locale.m2f100|cat:" - "|cat:$locale.m2f300|cat:" '"|cat:$forum_name|cat:"'" state=$_state style=$_style}
+{include file="_opentable.tpl" name=$_name title=$locale.m2f100|cat:" - "|cat:$locale.m2f300|cat:" '"|cat:$forum_name|cat:"'" state=$_state style=$_style}
 {if $error != ""}
 <center>
 <br />
@@ -96,13 +96,13 @@
 				</select>
 			</td>
 		</tr>
-{elseif $m2f_type_text == $locale.m2f231}		{* SMTP/IMAP *}
-{elseif $m2f_type_text == $locale.m2f232}		{* GMail via HTTPS *}
-{elseif $m2f_type_text == $locale.m2f233}		{* Majordomo listserver *}
+{* {elseif $m2f_type_text == $locale.m2f231}		{* SMTP/IMAP *}
+{* {elseif $m2f_type_text == $locale.m2f232}		{* GMail via HTTPS *}
+{* {elseif $m2f_type_text == $locale.m2f233}		{* Majordomo listserver *}
 {else}
 		<tr>
 			<td width='50%' class='tbl' colspan='2' align='center'>
-				The '{$m2f_type_text}' method is not supported by this version of M2F!
+				The '{$m2f_type_text}' method is not yet supported by this version of M2F!
 			</td>
 		</tr>
 {/if}

@@ -63,6 +63,7 @@ $mod_site_links[] = array('name' => "Subscriptions", 'url' => 'm2f_subscriptions
 $localestrings = array();
 
 $localestrings['en'] = array();
+$localestrings['en']['m2f100'] = "Mail2Forum";
 // installation error
 $localestrings['en']['m2f110'] = "The Mail2Forum module is not installed. You have to do this before starting a M2F processor";
 // Admin panel - forum list
@@ -127,6 +128,46 @@ $localestrings['en']['m2f461'] = "As files";
 $localestrings['en']['m2f462'] = "Receive thumbnailed images if available:";
 $localestrings['en']['m2f463'] = "Thumbnails";
 $localestrings['en']['m2f464'] = "Full size";
+// Mail2forum configuration
+$localestrings['en']['m2f500'] = "Mail2Forum - Configuration";
+$localestrings['en']['m2f501'] = "Save configuration";
+$localestrings['en']['m2f502'] = "Forum host name:";
+$localestrings['en']['m2f502a'] = "This hostname is used in the footer of email sent out, to link back to your website";
+$localestrings['en']['m2f503'] = "Polling interval (seconds):";
+$localestrings['en']['m2f503a'] = "Polling interval for the cron processors. Note that this is not the wait time. If set to 5 minutes, and a cycle takes 1 minute and 20 seconds, the processor sleeps for 3 minutes and 40 seconds. If the processors needs more time to process than the interval specified here, a warning will be written to the logfile.";
+$localestrings['en']['m2f504'] = "Poll threshold value:";
+$localestrings['en']['m2f504a'] = "If the last poll happened more than this number of seconds ago, the processors (that use this value) refuse to run, and die with an error message. This is to prevent sending out thousands of emails after undetected downtime of the processor. Press 'Reset' before restarting the processors";
+$localestrings['en']['m2f505'] = "Reset poll timer";
+$localestrings['en']['m2f506'] = "Maximum number of attachments:";
+$localestrings['en']['m2f506a'] = "If a message contains more attachments, the remainder are skipped and not imported into the forum. If 'SEND_NDR' is set to 'Yes', the sender will be notified";
+$localestrings['en']['m2f507'] = "Attachment maximum size:";
+$localestrings['en']['m2f507a'] = "Attachments bigger that the size defined here will never be send out via email, only a link will be included to the attachment in the forum";
+$localestrings['en']['m2f508'] = "Use mailing list address:";
+$localestrings['en']['m2f508a'] = "With this switch you control the from address of outgoing email. The default behaviour is to use the email address from the poster, as defined in the members profile. If the member has elected to hide his email address from other member (the 'hide email' option set to 'Yes'), the from is composed of the Nick of the the poster, and the forum email address as defined in Mail2Forum. When you set this switch to true, email always goes out using the forum email address, regardless of the member setting. This can make it easier for users to define mail filters in their client software";
+$localestrings['en']['m2f509'] = "Follow moved thread:";
+$localestrings['en']['m2f509a'] = "Allow Mail2Forum posts to a thread, even if it has moved to another forum. This makes sure replies to a thread will be processed, even if the thread has been moved to a different forum by a moderator or administrator. CAUTION: activating this could be a risk, as it allows posting to forums the poster doesn't have access to!";
+$localestrings['en']['m2f510'] = "Subscribers only:";
+$localestrings['en']['m2f510a'] = "Allow every member that has post access to the forum, also post by email. If this switch is set to 'Yes', only members that have a subscription on this forum will be allowed to post/ new messages using email";
+$localestrings['en']['m2f511'] = "Send non-deliveries back:";
+$localestrings['en']['m2f511a'] = "Send a non-delivery report back to the poster in case an incomming message can not be processed. NDR's are only send to verified email accounts, email from unknown accounts (SPAM) will be deleted";
+$localestrings['en']['m2f512'] = "POP3 server:";
+$localestrings['en']['m2f512a'] = "Address of the POP3 mailserver you are going to use to receive email. For performance reasons, specify an IP address, and not a hostname.";
+$localestrings['en']['m2f513'] = "POP3 server port:";
+$localestrings['en']['m2f513a'] = "TCP port number the POP3 server listens on. Default is 110 (the standard POP3 port)";
+$localestrings['en']['m2f514'] = "POP3 server timeout:";
+$localestrings['en']['m2f514a'] = "Timeout used for socket communications. Specify any value between 2 and 25 seconds. Default is 25 seconds";
+$localestrings['en']['m2f515'] = "Logfile location:";
+$localestrings['en']['m2f515a'] = "Default, logfiles will be stored in the directory 'logs' which is a subdirectory of the mail2forum module directory. All logfiles start with 'M2F_', the exact filename depends on the processor and the type of log. Note: Do NOT add a trailing slash to the pathname!!";
+$localestrings['en']['m2f516'] = "Activate processor logging:";
+$localestrings['en']['m2f516a'] = "When set to 'Yes', a process log file will be used by all Mail2Forum processor modules, so the state and activity can be tracked";
+$localestrings['en']['m2f517'] = "Activate SMTP processor logging:";
+$localestrings['en']['m2f517a'] = "When set to 'Yes', additional SMTP logging will be performed by the SMTP processor, so the interaction with the SMTP server can be monitored closely. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
+$localestrings['en']['m2f518'] = "Activate POP3 processor logging:";
+$localestrings['en']['m2f518a'] = "When set to 'Yes', additional POP3 logging will be performed by the POP3 processor, so the internal POP3 data structures can be monitored closely. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
+$localestrings['en']['m2f519'] = "Activate POP3 message logging:";
+$localestrings['en']['m2f519a'] = "When set to 'Yes', debugging of POP3 message processing is activated. This logs the raw information from MimeDecode, and the extracted message. This makes it easier to debug MIME decoding errors. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
+$localestrings['en']['m2f520'] = "Activate SMTP processor debugging:";
+$localestrings['en']['m2f520a'] = "When set to 'Yes', additional STMP debugging will be activated, so the internal SMTP data structures can be monitored closely. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
 // M2F_SMTP processor: internal
 $localestrings['en']['m2f800'] = "First startup of the %s processor";
 $localestrings['en']['m2f801'] = "Time interval to large. Check the infusion admin module for instructions.";
@@ -178,6 +219,7 @@ $localestrings['en']['m2f996'] = "Some attachments in your message have not been
 $localestrings['en']['m2f999'] = "Mail2Forum detected a problem. The error message is:";
 
 $localestrings['nl'] = array();
+$localestrings['nl']['m2f100'] = "Mail2Forum";
 // installation error
 $localestrings['nl']['m2f110'] = "De Mail2Forum module is niet geinstalleerd. Dit moet gebeuren voordat een M2F processor wordt gestart!";
 // Admin panel - forum list
@@ -204,7 +246,7 @@ $localestrings['nl']['m2f232'] = "Gmail";
 $localestrings['nl']['m2f233'] = "Majordomo";
 // Admin panel - Edit screen
 $localestrings['nl']['m2f300'] = "configuratie voor forum";
-$localestrings['nl']['m2f301'] = "Forum email adres:";
+$localestrings['nl']['m2f301'] = "Adres verzendlijst:";
 $localestrings['nl']['m2f302'] = "Mailbox gebruiker:";
 $localestrings['nl']['m2f303'] = "Mailbox wachtwoord:";
 $localestrings['nl']['m2f304'] = "Configuratie bewaren";
@@ -242,6 +284,46 @@ $localestrings['nl']['m2f461'] = "Als bestanden";
 $localestrings['nl']['m2f462'] = "Ontvang verkleinde plaatjes indien beschikbaar:";
 $localestrings['nl']['m2f463'] = "Verkleind";
 $localestrings['nl']['m2f464'] = "Volle grootte";
+// Mail2forum configuration
+$localestrings['nl']['m2f500'] = "Mail2Forum - Configuratie";
+$localestrings['nl']['m2f501'] = "Configuration opslaan";
+$localestrings['nl']['m2f502'] = "Forum hostnaam:";
+$localestrings['nl']['m2f502a'] = "Deze naam wordt gebruikt in de voettekst van de email, om terug naar de website te linken";
+$localestrings['nl']['m2f503'] = "Polling interval (seconden):";
+$localestrings['nl']['m2f503a'] = "Polling interval voor de cron processors. Dit is niet de wachttijd. Indien ingesteld op 5 minuten, en een cyclus duurt 1 mimuut en 20 seconden, zal de processor slapen voor 3 minuten en 40 seconden. Als de processor meer tijd nodig heeft voor de verwerking dat dit interval, zal er een melding naar de log worden geschreven.";
+$localestrings['nl']['m2f504'] = "Poll threshold waarde:";
+$localestrings['nl']['m2f504a'] = "Indien de laatste poll meer dat dit aantal seconden geleden is gebeurd, zullen de processors weigeren te starten, en stoppen met een foutmelding. Dit is om er voor te zorgen dat er geen duizenden email worden verstuurd na lange downtijd van de processor. Druk op 'Reset' voor het herstarten van de processors";
+$localestrings['nl']['m2f505'] = "Reset poll timer";
+$localestrings['nl']['m2f506'] = "Maximum aantal bijlagen:";
+$localestrings['nl']['m2f506a'] = "Indien een inkomend bericht meer bijlagen bevat, zullen de resterende worden overgeslagen. Indien 'non-delivery' op 'Ja' staat, zal de verzender worden geinformeerd";
+$localestrings['nl']['m2f507'] = "Maximale bijlage grootte:";
+$localestrings['nl']['m2f507a'] = "Bijlagen die groter zijn dat deze waarde zullen nooit via email worden uitgestuurd, maar er zal een link in het bericht geplaatst worden naar de bijlage in het forum";
+$localestrings['nl']['m2f508'] = "Gebruik verzendlijst adres:";
+$localestrings['nl']['m2f508a'] = "Hiermee kunt u het adres voor uitgaande email instellen. Standaard wordt het eigen email adres van de auteur van het bericht gebruikt. Als de gebruiker in zijn profiel gekozen heeft voor 'email adres verbergen', zal als afzender van de email het verzendlijst adres worden gebruikt. Als u deze optie op 'Ja' zet, zal dit altijd het geval zijn, en wordt de gebruikersinstelling genegeerd. Dit kan handig zijn om forum email te kunnen filteren in een email client";
+$localestrings['nl']['m2f509'] = "Volg verplaatst topic:";
+$localestrings['nl']['m2f509a'] = "Hiermee kunt u Mail2Forum toestaan om een inkomende mail te accepteren als deze is verplaatst naar een ander forum. Hierdoor komen antwoorden altijd aan, ook na verplaatsing. LET OP: dit kan een risico in houden, omdat een abonee hiemee berichten kan plaatsen in een forum waartoe deze geen toegang heeft!";
+$localestrings['nl']['m2f510'] = "Alleen voor abonees:";
+$localestrings['nl']['m2f510a'] = "Standaard hebben alle leden met toegang tot een forum ook het recht berichten naar de verzendlijst te sturen. Als u dit op 'Ja' zet is men verplicht zich te abonneren.";
+$localestrings['nl']['m2f511'] = "Stuur non-deliveries terug:";
+$localestrings['nl']['m2f511a'] = "Stuur een non-delivery rapport terug naar de verzender indien een ingekomen email niet kan worden verwerkt. Deze rapporten zullen alleen worden verstuurd naar gekende email adressen, email van onbekende adressen (SPAM?) zal worden verwijderd zonder antwoord";
+$localestrings['nl']['m2f512'] = "POP3 server:";
+$localestrings['nl']['m2f512a'] = "Adres van de POP3 mail server die gebruikt gaat worden voor het ontvangen van email van de verzendlijst. Voor performance redenen, speficieer een IP adres, en geen hostname.";
+$localestrings['nl']['m2f513'] = "POP3 server poort:";
+$localestrings['nl']['m2f513a'] = "TCP poort nummer waarop de POP3 server luistert. Standaard is dit poort 110 (de standaard POP3 poort)";
+$localestrings['nl']['m2f514'] = "POP3 server timeout:";
+$localestrings['nl']['m2f514a'] = "Timeout voor TCP socket communicatie. Specifeer een waarde tussen 2 en 25 seconden. De standaard waarde is 25 seconden";
+$localestrings['nl']['m2f515'] = "Logfile locatie:";
+$localestrings['nl']['m2f515a'] = "Standaard worden de logfiles opgeslagen in de directory 'logs', een subdirectory van de mail2forum module directory. Alle logfiles beginnen met 'M2F_', de exacte bestandsnaam hangt af van de processor en het type van log . Opm: Geen slash toevoegen aan het einde van de padnaam!!";
+$localestrings['nl']['m2f516'] = "Activeer processor logging:";
+$localestrings['nl']['m2f516a'] = "Indien geactiveerd zal er een proces log file worden gebruikt door alle Mail2Forum processor modules, zodat de status en activiteit kan worden gemonitord";
+$localestrings['nl']['m2f517'] = "Activeer SMTP processor logging:";
+$localestrings['nl']['m2f517a'] = "Indien geactiveerd zal er additionele logging worden aangemaakt door de SMTP processor, waardoor de interactie met de SMTP server kan worden gemonitored. Opm, dit kan zorgen voor een GROTE logfile op een druk systeem, gebruik dit alleen voor debugging";
+$localestrings['nl']['m2f518'] = "Activeer POP3 processor logging:";
+$localestrings['nl']['m2f518a'] = "Indien geactiveerd zal er additionele logging worden aangemaakt door de POP3 processor, waardoor de interactie met de POP3 server kan worden gemonitored. Opm, dit kan zorgen voor een GROTE logfile op een druk systeem, gebruik dit alleen voor debugging";
+$localestrings['nl']['m2f519'] = "Activeer POP3 message logging:";
+$localestrings['nl']['m2f519a'] = "Indien geactiveerd zal er additionele loggin worden aangemaakt van het POP3 berichtenverwerkingsproces. In een logfile per bericht kunnen de details van de MimeDecode en het resultaat van de verwerking worden bekeken. Opm, dit kan zorgen voor veel logfiles op een druk systeem, gebruik dit alleen voor debugging";
+$localestrings['nl']['m2f520'] = "Activeer SMTP processor debugging:";
+$localestrings['nl']['m2f520a'] = "Indien geactiveerd zal er additionele loggin worden aangemaakt van het SMTP berichtenverwerkingsproces. Opm, dit kan zorgen voor een GROTE logfile op een druk systeem, gebruik dit alleen voor debugging";
 // M2F_SMTP processor: internal
 $localestrings['nl']['m2f800'] = "First startup of the %s processor";
 $localestrings['nl']['m2f801'] = "Time interval to large. Check the infusion admin module for instructions.";
@@ -384,12 +466,35 @@ if (!function_exists('module_upgrade')) {
 			case "1.0.0":
 				// ExiteCMS v7.0. no upgrade actions for this release
 			case "1.0.1":
+				// larger index pointers
 				$result = dbquery("ALTER TABLE ".$db_prefix."M2F_config CHANGE m2f_userid m2f_userid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0'");
 				$result = dbquery("ALTER TABLE ".$db_prefix."M2F_subscriptions CHANGE m2f_userid m2f_userid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0'");
+				// update the admin link
 				global $mod_title, $mod_folder, $mod_admin_panel;
 				$result = dbquery("UPDATE ".$db_prefix."admin SET admin_link = '".(MODULES.$mod_folder."/".$mod_admin_panel)."' WHERE admin_title = '".$mod_title."'");
+				// import the config file, and (try to) delete it
+				@require PATH_MODULES.$mod_folder."/m2f_config.php";
+				if (defined("M2F_HOST")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_host', '".M2F_HOST."')");
+				if (defined("M2F_INTERVAL")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_interval', '".M2F_INTERVAL."')");
+				if (defined("M2F_POLL_THRESHOLD")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_poll_threshold', '".M2F_POLL_THRESHOLD."')");
+				if (defined("M2F_MAX_ATTACHMENTS")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_max_attachments', '".M2F_MAX_ATTACHMENTS."')");
+				if (defined("M2F_MAX_ATTACH_SIZE")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_max_attach_size', '".M2F_MAX_ATTACH_SIZE."')");
+				if (defined("M2F_USE_FORUM_EMAIL")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_use_forum_email', '".(M2F_USE_FORUM_EMAIL?"1":"0")."')");
+				if (defined("M2F_FOLLOW_THREAD")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_follow_thread', '".(M2F_FOLLOW_THREAD?"1":"0")."')");
+				if (defined("M2F_SUBSCRIBE_REQUIRED")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_subscribe_required', '".(M2F_SUBSCRIBE_REQUIRED?"1":"0")."')");
+				if (defined("M2F_SEND_NDR")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_send_ndr', '".(M2F_SEND_NDR?"1":"0")."')");
+				if (defined("M2F_POP3_SERVER")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_server', '".M2F_POP3_SERVER."')");
+				if (defined("M2F_POP3_PORT")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_port', '".M2F_POP3_PORT."')");
+				if (defined("M2F_POP3_TIMEOUT")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_timeout', '".M2F_POP3_TIMEOUT."')");
+				if (defined("M2F_LOGFILE")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_logfile', '".M2F_LOGFILE."')");
+				if (defined("M2F_PROCESS_LOG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_process_log', '".(M2F_PROCESS_LOG?"1":"0")."')");
+				if (defined("M2F_SMTP_LOG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_smtp_log', '".(M2F_SMTP_LOG?"1":"0")."')");
+				if (defined("M2F_POP3_DEBUG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_debug', '".(M2F_POP3_DEBUG?"1":"0")."')");
+				if (defined("M2F_POP3_MESSAGE_DEBUG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_message_debug', '".(M2F_POP3_MESSAGE_DEBUG?"1":"0")."')");
+				if (defined("M2F_SMTP_DEBUG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_smtp_debug', '".(M2F_SMTP_DEBUG?"1":"0")."')");
+				@unlink(PATH_MODULES.$mod_folder."/m2f_config.php");
 			case "1.1.0":
-				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+				// upgrade to ExiteCMS v7.1. - current version
 			default:
 				// do this at every upgrade
 		}

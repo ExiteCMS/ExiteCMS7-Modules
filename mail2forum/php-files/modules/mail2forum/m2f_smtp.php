@@ -13,23 +13,16 @@ if (isset($_SERVER['SERVER_SOFTWARE'])) {
 	die("This is a batch program that needs to run from cron!");
 }
 
-/*---------------------------------------------------+
-| Read the user configuration
-+----------------------------------------------------*/
-
-require "m2f_config.php";
-
 // find the webroot, so we can load the core functions
 $webroot = "";
 while(!file_exists($webroot."includes/core_functions.php")) { 
 	$webroot .= '../'; 
 	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
+require_once $webroot."includes/core_functions.php";
 
 // make sure the host is known
-$_SERVER['HTTP_HOST'] = M2F_HOST;
-
-require_once $webroot."includes/core_functions.php";
+$_SERVER['HTTP_HOST'] = $settings['m2f_host'];
 
 locale_load("modules.mail2forum");
 
@@ -48,9 +41,9 @@ $processor = strtoupper(basename($argv[0],'.php'));
 // write an entry to the process log, and optionally abort the program
 function logentry($task="", $message="", $abort=false, $exitcode=0) {
 
-	global $processor;
+	global $processor, $settings;
 	
-	$handle = fopen(M2F_LOGFILE.'/M2F_process.log', 'a');
+	$handle = fopen($settings['m2f_logfile'].'/M2F_process.log', 'a');
 	fwrite($handle, date("Ymd").";".date("His").";".$processor.";".$task.";".$message.chr(10));
 	fclose($handle);
 	
@@ -60,9 +53,9 @@ function logentry($task="", $message="", $abort=false, $exitcode=0) {
 // debug function - write an entry to the debug log
 function logdebug($task="", $message="") {
 
-	global $processor;
+	global $processor, $settings;
 	
-	$handle = fopen(M2F_LOGFILE.'/'.$processor.'.debug.log', 'a');
+	$handle = fopen($settings['m2f_logfile'].'/'.$processor.'.debug.log', 'a');
 	fwrite($handle, date("Ymd").";".date("His").";".$task.";".$message.chr(10));
 	fclose($handle);
 }
@@ -71,7 +64,7 @@ function logdebug($task="", $message="") {
 function mailer_init() {
 	global $mail, $locale, $settings;
 
-	if (M2F_SMTP_DEBUG) $mail->SMTPDebug = 2;
+	if ($settings['m2f_smtp_debug']) $mail->SMTPDebug = 2;
 
 	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
 		$mail->SetLanguage($settings['phpmailer_locale'], PATH_INCLUDES."language/");
@@ -104,19 +97,20 @@ ini_set('memory_limit', '32M');
 ini_set('max_execution_time', '0');
 
 // log the start
-if (M2F_PROCESS_LOG) logentry('INIT', 'Program start');
+if ($settings['m2f_process_log']) logentry('INIT', 'Program start');
 
 // get the last modified timestamp of this module
 $module_lastmod = filemtime('m2f_smtp.php');
 
-// get the last modified timestamp of the config file
-$config_lastmod = filemtime('m2f_config.php');
+// get the last modified timestamp of the config
+$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+$config_lastmod = $data['lastmod'];
 
 // check if the Mail2Forum module is installed
 $result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
 if (dbrows($result) == 0) {
-	if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' '.$locale['m2f110'], true, 1);
-	die('Mail2Forum is not infused');
+	if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' NOT_INSTALLED', true, 1);
+	die($locale['m2f110']);
 }
 
 // initialize PHP-Mailer
@@ -130,21 +124,21 @@ if (dbrows($result) == 0) {
 	// the first time we start. Forget all old posts for now
 	$lastpoll = time();
 	$result = dbquery("INSERT INTO ".$db_prefix."M2F_status (m2f_lastpoll) VALUES ('".$lastpoll."')");
-	if (M2F_PROCESS_LOG) logentry("INIT", sprintf($locale['m2f800'], $processor));
+	if ($settings['m2f_process_log']) logentry("INIT", sprintf($locale['m2f800'], $processor));
 } else {
 	if ($data = dbarray($result)) {
 		if ($data['m2f_lastpoll'] == 0) {
 			// 0 is used as an invalid polltime. This can be reset via the admin module
 			die($processor.': LastPoll time is invalid. Use the admin module to correct this');
 		}
-		if ((time() - $data['m2f_lastpoll']) > M2F_POLL_THRESHOLD) {
+		if ((time() - $data['m2f_lastpoll']) > $settings['m2f_poll_threshold']) {
 			$result = dbquery("UPDATE ".$db_prefix."M2F_status SET m2f_lastpoll = 0");
-			if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' '.$locale['m2f801'], true, 1);
-			die($processor.': More than a week has passed since the last run! Use the admin module to correct this');
+			if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' '.$locale['m2f801'], true, 1);
+			die($processor.': More time has passed since the last run then the threshold allows! Use the admin module to correct this');
 		}
 		$lastpoll = $data['m2f_lastpoll']+1;
 	} else {
-		if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
+		if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
 		die('This should never happen');
 	}
 }
@@ -270,7 +264,7 @@ while (true) {
 	
 	// Insert a marker in the log every hour to show we're still alive
 	if (isset($marker) && $marker <> date("H"))
-		if (M2F_PROCESS_LOG) logentry("MARKER", "---");
+		if ($settings['m2f_process_log']) logentry("MARKER", "---");
 	$marker = date("H");
 
 	// check for messages posted since the last poll
@@ -279,12 +273,12 @@ while (true) {
 
 		// get all posts in the selected interval
 		while($postrecord = dbarray($result)) {
-			if (M2F_SMTP_DEBUG) logdebug('POSTRECORD', print_r($postrecord, true));
+			if ($settings['m2f_smtp_debug']) logdebug('POSTRECORD', print_r($postrecord, true));
 
 			$new_post = ($postrecord['post_datestamp'] >= $lastpoll && $postrecord['post_datestamp'] <= $polltime);
 			$edit_post = ($postrecord['post_edittime'] >= $lastpoll && $postrecord['post_edittime'] <= $polltime);
 
-			if (M2F_SMTP_DEBUG) logdebug('POST_STATE', ($new_post?"ADD":"").($new_post&&$edit_post?"-":"").($edit_post?"EDIT":""));
+			if ($settings['m2f_smtp_debug']) logdebug('POST_STATE', ($new_post?"ADD":"").($new_post&&$edit_post?"-":"").($edit_post?"EDIT":""));
 
 			// if a new post was edited within one poll cycle, don't mark it as edited
 			if ($new_post) $edit_post = false;
@@ -292,18 +286,18 @@ while (true) {
 			// get the forum mailing list info
 			$result2 = dbquery("SELECT m.m2f_email, f.forum_name FROM ".$db_prefix."M2F_forums m, ".$db_prefix."forums f WHERE m.m2f_active = '1' AND m.m2f_forumid = '".$postrecord['forum_id']."' AND m.m2f_forumid = f.forum_id");
 			if (!$result2) {
-				if (M2F_PROCESS_LOG) logentry('ERROR', $locale['m2f999'].' '.$locale['m2f803'].$postrecord['forum_id'], true, 1);
+				if ($settings['m2f_process_log']) logentry('ERROR', $locale['m2f999'].' '.$locale['m2f803'].$postrecord['forum_id'], true, 1);
 				die($locale['m2f803']);
 			} else {
 				// get sender information			
 				$sender = dbarray($result2);
-				if (M2F_SMTP_DEBUG) logdebug('SENDER', print_r($sender, true));
+				if ($settings['m2f_smtp_debug']) logdebug('SENDER', print_r($sender, true));
 				
 				// get all subscribed users for this forum
 				$result2 = dbquery("SELECT u.*, c.* FROM ".$db_prefix."users u, ".$db_prefix."M2F_subscriptions s, ".$db_prefix."M2F_config c 
 					WHERE s.m2f_forumid = '".$postrecord['forum_id']."' AND s.m2f_subscribed = '1' AND u.user_status = 0 AND u.user_bad_email = 0 AND u.user_id = s.m2f_userid AND u.user_id = c.m2f_userid");
 				while ($recipient = dbarray($result2)) {
-					if (M2F_SMTP_DEBUG) logdebug('RECIPIENT', print_r($recipient, true));
+					if ($settings['m2f_smtp_debug']) logdebug('RECIPIENT', print_r($recipient, true));
 					
 					// get the senders profile (need the email address and the email-hidden flag)
 					if ($edit_post) {
@@ -321,10 +315,10 @@ while (true) {
 							$poster = array('user_name' => $locale['sysusr'], 'user_fullname'  => $locale['sysusr'], 'user_email' => "", 'user_hide_email' => true);
 						}
 					}
-					if (M2F_SMTP_DEBUG) logdebug('POSTER', print_r($poster, true));
+					if ($settings['m2f_smtp_debug']) logdebug('POSTER', print_r($poster, true));
 					
 					// check if the poster wants his email address hidden. If so, use the forum address as sender
-					if (M2F_USE_FORUM_EMAIL || $poster['user_hide_email'])
+					if ($settings['m2f_use_forum_email'] || $poster['user_hide_email'])
 						$poster['user_email'] = $sender['m2f_email'];
 
 					// basics, as from who, to whom, and use the site email as sender					
@@ -358,7 +352,7 @@ while (true) {
 						if (dbrows($res_att) != 0) {
 							// although PHP-Fusion does not support multiple attachments, we do... ;-)
 							while ($attachment = dbarray($res_att)) {
-								if (M2F_SMTP_DEBUG) logdebug('ATTACHMENT', print_r($attachment, true));
+								if ($settings['m2f_smtp_debug']) logdebug('ATTACHMENT', print_r($attachment, true));
 								$attachURL = $settings['siteurl']."getfile.php?type=a&file_id=".$attachment['attach_id'];
 								if ($recipient['m2f_html'] == 1) {
 									// If the attachment is an image and the config is 'show inline'
@@ -384,7 +378,7 @@ while (true) {
 												break;
 											case 1:
 												// check the size of the attachments, don't send it out if it's to big
-												if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < M2F_MAX_ATTACH_SIZE) {
+												if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < $settings['m2f_max_attach_size']) {
 													// attach the attachments to the email
 													$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
 													break;
@@ -404,7 +398,7 @@ while (true) {
 											break;
 										case 1:
 											// check the size of the attachments, don't send it out if it's to big
-											if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < M2F_MAX_ATTACH_SIZE) {
+											if (filesize(PATH_ATTACHMENTS.$attachment['attach_name']) < $settings['m2f_max_attach_size']) {
 												// attach the attachments to the email
 												$mail->AddAttachment(PATH_ATTACHMENTS.$attachment['attach_name']);
 												break;
@@ -442,13 +436,13 @@ while (true) {
 					
 					// send the post to the user
 					if(!$mail->Send()) {
-						if (M2F_PROCESS_LOG) logentry('SEND', 'ERROR! From:'.$poster['user_email'].' To:'.$recipient['user_email'].' -> '.$mail->ErrorInfo);
+						if ($settings['m2f_process_log']) logentry('SEND', 'ERROR! From:'.$poster['user_email'].' To:'.$recipient['user_email'].' -> '.$mail->ErrorInfo);
 						unset($mail);
 						$mail = new PHPMailer();
 						mailer_init();
 					} else {
 						$result4 = dbquery("UPDATE ".$db_prefix."M2F_forums SET m2f_sent = m2f_sent + 1 WHERE m2f_forumid = '".$postrecord['forum_id']."' ");
-						if (M2F_PROCESS_LOG) logentry('SEND', 'From:'.$poster['user_email'].' To:'.$recipient['user_email'].' -> '.$subject);
+						if ($settings['m2f_process_log']) logentry('SEND', 'From:'.$poster['user_email'].' To:'.$recipient['user_email'].' -> '.$subject);
 					}
 
 					// make sure all traces of the mail are wiped out
@@ -465,7 +459,7 @@ while (true) {
 			}
 		}
 	} else {
-		if (M2F_PROCESS_LOG) logentry('POLL', 'no new posts');
+		if ($settings['m2f_process_log']) logentry('POLL', 'no new posts');
 	}
 
 	// update the status table
@@ -474,19 +468,20 @@ while (true) {
 	// if the module has been modified, exit so it can be restarted
 	clearstatcache();
 	if (filemtime('m2f_smtp.php') != $module_lastmod) {
-		if (M2F_PROCESS_LOG) logentry('EXIT', 'Restart due to module code update');
+		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to module code update');
 		exit(99);
 	}
-	// if the config has been modified, exit so it can be reloaded
-	if (filemtime('m2f_config.php') != $config_lastmod) {
-		if (M2F_PROCESS_LOG) logentry('EXIT', 'Restart due to configuration change');
+	// get the last modified timestamp of the config
+	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+	if ($data['lastmod'] != $config_lastmod) {
+		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to a configuration change');
 		exit(99);
 	}
 
 	// calculate the next interval. Log a warning if we can't process quick enough
-	$interval = $polltime + M2F_INTERVAL - time();
+	$interval = $polltime + $settings['m2f_interval'] - time();
 	if ($interval < 0) {
-		if (M2F_PROCESS_LOG) logentry('SLEEP', $locale['m2f999'].' '.$locale['m2f804']);
+		if ($settings['m2f_process_log']) logentry('SLEEP', $locale['m2f999'].' '.$locale['m2f804']);
 	} else {
 		sleep($interval);
 	}
@@ -495,12 +490,12 @@ while (true) {
 	$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
 	if ($data = dbarray($result)) {
 		if ($data['m2f_abort'] == 1) {
-			if (M2F_PROCESS_LOG) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f805'], true, 1);
+			if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f805'], true, 1);
 			die($locale['m2f805']);
 		}
 		$lastpoll = $data['m2f_lastpoll']+1;
 	} else {
-		if (M2F_PROCESS_LOG) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
+		if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
 		die($locale['m2f802']);
 	}
 }

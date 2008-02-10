@@ -19,11 +19,6 @@ if (isset($_SERVER['SERVER_SOFTWARE'])) {
 	die("This is a batch program that needs to run from cron!");
 }
 
-/*---------------------------------------------------+
-| Read the user configuration
-+----------------------------------------------------*/
-require_once "m2f_config.php";
-
 // make sure there is no interference from already installed PEAR modules
 ini_set('include_path', '.');
 // give this module some memory and execution time
@@ -36,11 +31,10 @@ while(!file_exists($webroot."includes/core_functions.php")) {
 	$webroot .= '../'; 
 	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
+require_once $webroot."includes/core_functions.php";
 
 // make sure the host is known
-$_SERVER['HTTP_HOST'] = M2F_HOST;
-
-require_once $webroot."includes/core_functions.php";
+$_SERVER['HTTP_HOST'] = $settings['m2f_host'];
 
 // include for attachment manipulation functions
 require_once PATH_INCLUDES."forum_functions_include.php";
@@ -64,7 +58,7 @@ $processor = strtoupper(basename($argv[0],'.php'));
 $striphtml = array('head', 'script');
 $stripsubject = array('re:', 'fw:', 'betr:');
 
-define('NET_POP3_DEBUG_LOGFILE', M2F_LOGFILE.'/'.$processor.'.debug.log');
+define('NET_POP3_DEBUG_LOGFILE', $settings['m2f_logfile'].'/'.$processor.'.debug.log');
 
 /*---------------------------------------------------+
 | local functions
@@ -73,9 +67,9 @@ define('NET_POP3_DEBUG_LOGFILE', M2F_LOGFILE.'/'.$processor.'.debug.log');
 // debug function - write an entry to the process log, and optionally abort the program
 function logentry($task="", $message="", $abort=false, $exitcode=0) {
 
-	global $processor;
+	global $processor, $settings;
 	
-	$handle = fopen(M2F_LOGFILE.'/M2F_process.log', 'a');
+	$handle = fopen($settings['m2f_logfile'].'/M2F_process.log', 'a');
 	fwrite($handle, date("Ymd").";".date("His").";".$processor.";".$task.";".$message.chr(10));
 	fclose($handle);
 	
@@ -98,7 +92,7 @@ function dumpmessage($message, $post) {
 	global $processor;
 	
 	$i=1;
-	$log = M2F_LOGFILE.'/'.$processor.'.message.';
+	$log = $settings['m2f_logfile'].'/'.$processor.'.message.';
 	while(file_exists($log.sprintf('%06u', $i))) {
 		$i++; 
 		if ($i>1000000) return false;
@@ -136,7 +130,7 @@ function send_reply($forum, $poster, $message) {
 	$mail->Subject = $locale['m2f991'];
 
 	if(!$mail->Send()) {
-		if (M2F_PROCESS_LOG) logentry('SEND', sprintf($locale['m2f906'], $poster['user_email'], $forum['m2f_email'], $mail->ErrorInfo));
+		if ($settings['m2f_process_log']) logentry('SEND', sprintf($locale['m2f906'], $poster['user_email'], $forum['m2f_email'], $mail->ErrorInfo));
 	}
 
 	$mail->ClearAllRecipients();
@@ -204,13 +198,13 @@ function charsetconv($text, $fromcharset) {
 	
 	// do we have iconv? 
 	if (function_exists('iconv')) {
-		if (M2F_POP3_DEBUG) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".$settings['charset']);
+		if ($settings['m2f_pop3_debug']) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".$settings['charset']);
 		// attempt to convert
 		$iconvresult = iconv(strtoupper($fromcharset), $settings['charset'], $text);
 		if ($iconresult) {
 			return $iconresult;
 		}
-		if (M2F_POP3_DEBUG) logdebug("iconv", "conversion failed!");
+		if ($settings['m2f_pop3_debug']) logdebug("iconv", "conversion failed!");
 	}
 	
 	// something went wrong, and we couldn't convert. Return unaltered
@@ -237,8 +231,8 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	$sql = "UPDATE ".$db_prefix."forums SET forum_lastpost='$posttime', forum_lastuser='".$sender['user_id']."' WHERE forum_id='".$recipient['m2f_forumid']."'";
 	$result = dbquery($sql);
 	if (!$result) {
-		if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'forums'));
-		if (M2F_PROCESS_LOG) logentry('SQL: ',  $sql);
+		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'forums'));
+		if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 		return false;
 	}
 	// is this a new thread?
@@ -247,8 +241,8 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 					VALUES('$forum_id', '$subject', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
 		$result = dbquery($sql);
 		if (!$result) {
-			if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT', $db_prefix.'threads'));
-			if (M2F_PROCESS_LOG) logentry('SQL: ',  $sql);
+			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT', $db_prefix.'threads'));
+			if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 			return false;
 		}
 		$thread_id = mysql_insert_id();
@@ -257,8 +251,8 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 		$sql = "UPDATE ".$db_prefix."threads SET thread_lastpost='$posttime', thread_lastuser='".$sender['user_id']."' WHERE thread_id='".$thread_id."'";
 		$result = dbquery($sql);
 		if (!$result) {
-			if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'threads'));
-			if (M2F_PROCESS_LOG) logentry('SQL: ',  $sql);
+			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'threads'));
+			if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 			return false;
 		}
 	}
@@ -268,8 +262,8 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 		VALUES ('$forum_id', '$thread_id', '$subject', '".$post['body']."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
-		if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT (new post)', $db_prefix.'posts'));
-		if (M2F_PROCESS_LOG) logentry('SQL: ',  $sql);
+		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT (new post)', $db_prefix.'posts'));
+		if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 		return false;
 	}
 	$post_id = mysql_insert_id();
@@ -278,8 +272,8 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	$sql = "UPDATE ".$db_prefix."users SET user_posts=user_posts+1 WHERE user_id='".$sender['user_id']."'";
 	$result = dbquery($sql);
 	if (!$result) {
-		if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'users'));
-		if (M2F_PROCESS_LOG) logentry('SQL: ',  $sql);
+		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'UPDATE', $db_prefix.'users'));
+		if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 		return false;
 	}
 
@@ -293,9 +287,9 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 		foreach ($post['attachment'] as $attachment) {
 			$attach_count++;
 			// check if we're reached the max number of attachments allowed
-			if ($attach_count > M2F_MAX_ATTACHMENTS) {
-				if (M2F_PROCESS_LOG) logentry('ADDPOST', $locale['m2f908']);
-				if (M2F_SEND_NDR) send_reply($recipient, $sender, $locale['m2f996'].M2F_MAX_ATTACHMENTS);
+			if ($attach_count > $settings['m2f_max_attachments']) {
+				if ($settings['m2f_process_log']) logentry('ADDPOST', $locale['m2f908']);
+				if ($settings['m2f_send_ndr']) send_reply($recipient, $sender, $locale['m2f996'].$settings['m2f_max_attachments']);
 				break;
 			}
 			$attachname = substr($attachment['name'], 0, strrpos($attachment['name'], "."));
@@ -326,7 +320,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 						}
 						if (!$error) {
 							$result = dbquery("INSERT INTO ".$db_prefix."forum_attachments (thread_id, post_id, attach_name, attach_ext, attach_size) VALUES ('$thread_id', '$post_id', '$attachname', '$attachext', '".$attach['size']."')");
-							if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f909'], PATH_ATTACHMENTS.$attachname, $post_id));
+							if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f909'], PATH_ATTACHMENTS.$attachname, $post_id));
 						}
 					}
 				} else {
@@ -341,13 +335,13 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	}
 	switch ($error) {
 		case 1:
-			if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f910'], PATH_ATTACHMENTS.$attachname));
+			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f910'], PATH_ATTACHMENTS.$attachname));
 			return false;
 		case 2:
-			if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f911'], PATH_ATTACHMENTS.$attachname));
+			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f911'], PATH_ATTACHMENTS.$attachname));
 			return false;
 		case 3:
-			if (M2F_PROCESS_LOG) logentry('ADDPOST', sprintf($locale['m2f911'], PATH_ATTACHMENTS.$attachname));
+			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f911'], PATH_ATTACHMENTS.$attachname));
 			return false;
 		default:
 			break;
@@ -364,14 +358,14 @@ function processmessageparts($messagepart) {
 	switch (strtolower($messagepart->ctype_primary)) {
 		case "multipart":
 			// it's another multipart message. Process the parts
-			if (M2F_PROCESS_LOG) logentry('PARSE', 'MULTIPART-MIME messsage');
+			if ($settings['m2f_process_log']) logentry('PARSE', 'MULTIPART-MIME messsage');
 			foreach($messagepart->parts as $partnr => $msgpart) {
-				if (M2F_PROCESS_LOG) logentry('PARSE', 'MULTIPART-MIME PART: '.$msgpart->headers['content-type']);
+				if ($settings['m2f_process_log']) logentry('PARSE', 'MULTIPART-MIME PART: '.$msgpart->headers['content-type']);
 				processmessageparts($msgpart);
 			}
 			break;
 		case "text":
-			if (M2F_PROCESS_LOG) logentry('PARSE', 'MULTIPART-MIME text messsage');
+			if ($settings['m2f_process_log']) logentry('PARSE', 'MULTIPART-MIME text messsage');
 			switch (strtolower($messagepart->ctype_secondary)) {
 				case "plain":
 					// don't overwrite a body from a previous body part
@@ -415,7 +409,7 @@ function processmessageparts($messagepart) {
 					$post['body'] = charsetconv($post['body'], $messagepart->ctype_parameters['charset']);
 					break;
 				default:
-					if (M2F_PROCESS_LOG) logentry('PARSE', sprintf($locale['m2f913'], $messagepart->ctype_secondary));
+					if ($settings['m2f_process_log']) logentry('PARSE', sprintf($locale['m2f913'], $messagepart->ctype_secondary));
 					return false;
 			}
 			break;
@@ -423,7 +417,7 @@ function processmessageparts($messagepart) {
 		case "application":
 		case "video":
 		case "audio":
-			if (M2F_PROCESS_LOG) logentry('PARSE', 'MULTIPART-MIME binary attachment');
+			if ($settings['m2f_process_log']) logentry('PARSE', 'MULTIPART-MIME binary attachment');
 			if (!isset($post['attachment']) or !is_array($post['attachment'])) $post['attachment'] = array();
 			$attachment = array();
 			$attachment['type'] = $messagepart->ctype_primary;
@@ -435,7 +429,7 @@ function processmessageparts($messagepart) {
 			unset($attachment);
 			break;
 		default:
-			if (M2F_PROCESS_LOG) logentry('PARSE', sprintf($locale['m2f914'], $messagepart->ctype_primary));
+			if ($settings['m2f_process_log']) logentry('PARSE', sprintf($locale['m2f914'], $messagepart->ctype_primary));
 			return false;
 	}
 	return true;
@@ -469,27 +463,28 @@ function can_post($usergroups, $forumgroup) {
 +----------------------------------------------------*/
 
 // log the start
-if (M2F_PROCESS_LOG) logentry('INIT', 'Program start');
+if ($settings['m2f_process_log']) logentry('INIT', 'Program start');
 
 // get the last modified timestamp of this module
 $module_lastmod = filemtime('m2f_pop3.php');
 
-// get the last modified timestamp of the config file
-$config_lastmod = filemtime('m2f_config.php');
+// get the last modified timestamp of the config
+$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+$config_lastmod = $data['lastmod'];
 
 // check if the Mail2Forum module is installed
 $result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
 if (dbrows($result) == 0) {
-	if (M2F_PROCESS_LOG) logentry('INIT', $locale['m2f999'].' NOT_INFUSED', true, 1);
+	if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' NOT_INSTALLED', true, 1);
 	die($locale['m2f110']);
 }
 
 // initialize POP3-client
 $pop3 =& new Net_POP3();
-$pop3->_debug = M2F_POP3_DEBUG;
+$pop3->_debug = $settings['m2f_pop3_debug'];
 
 // initialize the SMTP mailer if required
-if (M2F_SEND_NDR) {
+if ($settings['m2f_send_ndr']) {
 	require_once PATH_INCLUDES."phpmailer_include.php";
 	$mail = new PHPMailer();
 	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
@@ -525,7 +520,7 @@ while (true) {
 
 	// Insert a "we're still alive" marker in the log every hour
 	if (isset($marker) && $marker <> date("H"))
-		if (M2F_PROCESS_LOG) logentry("MARKER", "---");
+		if ($settings['m2f_process_log']) logentry("MARKER", "---");
 	$marker = date("H");
 
 	// check for messages received since the last poll
@@ -533,21 +528,21 @@ while (true) {
 	while ($forum = dbarray($m2f_active)) {
 		// Get the incoming mail for this forum
 		$pop3connect = false;
-		if (M2F_POP3_DEBUG) logdebug('LOGIN', 'before the POP3 connect');
-		if($pop3->connect(M2F_POP3_SERVER, M2F_POP3_PORT)) {
-			if (M2F_POP3_DEBUG) logdebug('LOGIN', 'before the POP3 login');
+		if ($settings['m2f_pop3_debug']) logdebug('LOGIN', 'before the POP3 connect');
+		if($pop3->connect($settings['m2f_pop3_server'], $settings['m2f_pop3_port'])) {
+			if ($settings['m2f_pop3_debug']) logdebug('LOGIN', 'before the POP3 login');
 			if($pop3->login($forum['m2f_userid'], $forum['m2f_password'])) {
-				if (M2F_POP3_DEBUG) logdebug('LOGIN', 'before getting the new message counter');
+				if ($settings['m2f_pop3_debug']) logdebug('LOGIN', 'before getting the new message counter');
 				$newmsg = $pop3->numMsg();
 				if ($newmsg !== false) {
-					if ($newmsg && M2F_PROCESS_LOG) logentry('RETR', 'Mailbox '.$forum['m2f_email'].' - '.$newmsg.' new messages');
+					if ($newmsg && $settings['m2f_process_log']) logentry('RETR', 'Mailbox '.$forum['m2f_email'].' - '.$newmsg.' new messages');
 					$pop3connect = true;
 				}
 			}
 		}
 		// if the connect failed, log the error. Otherwise start processing the message(s)
 		if (!$pop3connect) {
-			if (M2F_PROCESS_LOG) logentry('CONNECT', $locale['m2f999'].'No connection to the POP3 server');
+			if ($settings['m2f_process_log']) logentry('CONNECT', $locale['m2f999'].'No connection to the POP3 server');
 		} else {
 			// retrieve and process the new messages
 			for($i=1;$i<=$newmsg;$i++) {
@@ -560,7 +555,7 @@ while (true) {
 				$decoder = new Mail_mimeDecode($pop3->getMsg($i));
 				$message = $decoder->decode($params);
 				if ($message === false) {
-					if (M2F_PROCESS_LOG) logentry('PARSE',  $decoder->_error);
+					if ($settings['m2f_process_log']) logentry('PARSE',  $decoder->_error);
 				} else {
 					// parse the header of the message
 					$post = array();
@@ -584,7 +579,7 @@ while (true) {
 					// if there were multiple mail hops, use the first one in the chain (the one that delivered the message)
 					$receivedheader = $message->headers['received'];
 					if (is_array($receivedheader)) $receivedheader = $receivedheader[0];
-					if (M2F_POP3_DEBUG) echo "Header: ".$receivedheader."\n";
+					if ($settings['m2f_pop3_debug']) echo "Header: ".$receivedheader."\n";
 					// get some information of the sending system
 					if (preg_match("#from (.*)\((.*)\[(.*)\]\)(.*)\; (.*)#i", $receivedheader, $matches)) {
 						$post['received'] = array();
@@ -622,7 +617,7 @@ while (true) {
 						$post['to']['email'] = $message->headers['to'];
 					}
  					// process the body (or the body parts)
-					if (M2F_POP3_DEBUG) echo "Message: ".$message->ctype_primary."\n";
+					if ($settings['m2f_pop3_debug']) echo "Message: ".$message->ctype_primary."\n";
 					if (strtolower($message->ctype_primary) == 'text') {
 						// if it's a plain-text message, just grab the body
 						$post['body'] = charsetconv($message->body, $messagepart->ctype_parameters['charset']);
@@ -635,23 +630,23 @@ while (true) {
 						}
 					} elseif (strtolower($message->ctype_primary) == 'multipart') {
 						// in debug mode, skip this message if the mime decoding failed
-						if (!processmessageparts($message) && M2F_POP3_DEBUG)
+						if (!processmessageparts($message) && $settings['m2f_pop3_debug'])
 							continue;
 					} else {
 						// unknown primary type
-						if (M2F_PROCESS_LOG) logentry('PARSE',  "Message has an unsupported primary content-type:".$msgpart->ctype_primary."!");
+						if ($settings['m2f_process_log']) logentry('PARSE',  "Message has an unsupported primary content-type:".$msgpart->ctype_primary."!");
 					}
 				}
 				// validate the parsed information
-				if (!isset($post['subject']) && M2F_PROCESS_LOG) logentry('PARSE', "Missing 'Subject' information!");
+				if (!isset($post['subject']) && $settings['m2f_process_log']) logentry('PARSE', "Missing 'Subject' information!");
 				if (!isset($post['received'])) {
 					$post['received'] = array('ip' => '0.0.0.0');
-					if (M2F_PROCESS_LOG) logentry('PARSE', "Missing 'Received' information!");
+					if ($settings['m2f_process_log']) logentry('PARSE', "Missing 'Received' information!");
 				}
-				if (!isset($post['from']) && M2F_PROCESS_LOG) logentry('PARSE', "Missing 'From' information!");
-				if (!isset($post['to']) && M2F_PROCESS_LOG) logentry('PARSE', "Missing 'To' information!");
+				if (!isset($post['from']) && $settings['m2f_process_log']) logentry('PARSE', "Missing 'From' information!");
+				if (!isset($post['to']) && $settings['m2f_process_log']) logentry('PARSE', "Missing 'To' information!");
 				
-				if (M2F_POP3_MESSAGE_DEBUG) dumpmessage($message, $post);
+				if ($settings['m2f_pop3_message_debug']) dumpmessage($message, $post);
 
 				// find the user
 				$sender = dbarray(dbquery("SELECT * FROM ".$db_prefix."users WHERE LOWER(user_email) = '".strtolower($post['from']['email'])."' AND user_status = 0"));
@@ -670,7 +665,7 @@ while (true) {
 						if ($recipient['m2f_posting'] == 0) {
 							$send_allowed = true;
 						} else {
-							if (M2F_SUBSCRIBE_REQUIRED) {
+							if ($settings['m2f_subscribe_required']) {
 								$send_allowed = dbrows(dbquery("SELECT m2f_subid FROM ".$db_prefix."M2F_subscriptions WHERE m2f_subscribed = '1' AND m2f_userid = '".$sender['user_id']."' AND m2f_forumid = '".$recipient['m2f_forumid']."'"));
 							} else {
 								$send_allowed = can_post($sender['user_groups'], $recipient['m2f_posting']);
@@ -680,7 +675,7 @@ while (true) {
 							// poster is allowed to post. Do we have a thread_id identified?
 							if (is_array($post['subject']) && isset($post['subject']['thread_id'])) {
 								// see if we can locate this thread
-								if (M2F_FOLLOW_THREAD) {
+								if ($settings['m2f_follow_thread']) {
 									$thread = dbarray(dbquery("SELECT * FROM ".$db_prefix."threads WHERE thread_id = '".$post['subject']['thread_id']."'"));
 								} else {
 									$thread = dbarray(dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$recipient['m2f_forumid']."' AND thread_id = '".$post['subject']['thread_id']."'"));
@@ -688,15 +683,15 @@ while (true) {
 								if (is_array($thread)) {
 									// found the tread. Post the new message
 									if (addnewpost($thread['forum_id'], $thread['thread_id'], $sender, $recipient, $post))
-										if (M2F_PROCESS_LOG) logentry('POST', "Post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
+										if ($settings['m2f_process_log']) logentry('POST', "Post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
 									else
-										if (M2F_PROCESS_LOG) logentry('POST', "Failed to add post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
+										if ($settings['m2f_process_log']) logentry('POST', "Failed to add post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
 									$processed = true;
 								} else {
 									// Forum/Thread mismatch (or thread does not exist)
-									if (M2F_PROCESS_LOG) logentry('VERIFY', "Thread: ".$post['subject']['thread_id']." does not belong to forum ".$post['to']['email']);
+									if ($settings['m2f_process_log']) logentry('VERIFY', "Thread: ".$post['subject']['thread_id']." does not belong to forum ".$post['to']['email']);
 									$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
-									if (M2F_SEND_NDR) send_reply($recipient, $sender, sprintf($locale['m2f992'], $subject));
+									if ($settings['m2f_send_ndr']) send_reply($recipient, $sender, sprintf($locale['m2f992'], $subject));
 									$processed = true;
 								}
 							} else {
@@ -712,28 +707,28 @@ while (true) {
 									case 0:
 										// subject not found. Must be a new post
 										if (addnewpost($recipient['m2f_forumid'], -1, $sender, $recipient, $post))
-											if (M2F_PROCESS_LOG) logentry('POST', "New thread from ".$post['from']['email']);
+											if ($settings['m2f_process_log']) logentry('POST', "New thread from ".$post['from']['email']);
 										else
-											if (M2F_PROCESS_LOG) logentry('POST', "Failed to add new thread from ".$post['from']['email']);
+											if ($settings['m2f_process_log']) logentry('POST', "Failed to add new thread from ".$post['from']['email']);
 										$processed = true;
 										break;
 									case 1:
 										// found the tread by matching the subject of the email
 										$thread = dbarray($result);
 										if (addnewpost($recipient['m2f_forumid'], $thread['thread_id'], $sender, $recipient, $post))
-											if (M2F_PROCESS_LOG) logentry('POST', "Post reply from ".$post['from']['email']." to thread ".$thread['thread_id']);
+											if ($settings['m2f_process_log']) logentry('POST', "Post reply from ".$post['from']['email']." to thread ".$thread['thread_id']);
 										else
-											if (M2F_PROCESS_LOG) logentry('POST', "Failed to add post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
+											if ($settings['m2f_process_log']) logentry('POST', "Failed to add post reply from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
 										$processed = true;
 										break;
 									default:
 										// multiple subjects matched the query. How now brown cow? 
-										if (M2F_PROCESS_LOG) logentry('VERIFY', "Multiple subject match: ".$post['from']['email']." => ".$post['to']['email']);
+										if ($settings['m2f_process_log']) logentry('VERIFY', "Multiple subject match: ".$post['from']['email']." => ".$post['to']['email']);
 										// For now, assume a new post
 										if (addnewpost($recipient['m2f_forumid'], -1, $sender, $recipient, $post))
-											if (M2F_PROCESS_LOG) logentry('POST', "New post from ".$post['from']['email']." to thread ".$thread['thread_id']);
+											if ($settings['m2f_process_log']) logentry('POST', "New post from ".$post['from']['email']." to thread ".$thread['thread_id']);
 										else
-											if (M2F_PROCESS_LOG) logentry('POST', "Failed to add new post from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
+											if ($settings['m2f_process_log']) logentry('POST', "Failed to add new post from ".$post['from']['email']." to thread ".$post['subject']['thread_id']);
 										$processed = true;
 										break;
 								}
@@ -741,25 +736,25 @@ while (true) {
 						} else {
 							// sender is not subscribed to the forum
 							// Output some debug info for now and send an NDR
-							if (M2F_PROCESS_LOG) logentry('VERIFY', "Member: ".$post['from']['email']." is not subscribed to ".$post['to']['email']);
+							if ($settings['m2f_process_log']) logentry('VERIFY', "Member: ".$post['from']['email']." is not subscribed to ".$post['to']['email']);
 							$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
-							if (M2F_SEND_NDR) send_reply($recipient, $sender, sprintf($locale['m2f993'], $subject));
+							if ($settings['m2f_send_ndr']) send_reply($recipient, $sender, sprintf($locale['m2f993'], $subject));
 							$processed = true;
 						}
 					} else {
 						// no match on recipient, shouldn't be possible, means a mismatch between smtp envelope and message header. 
 						// Output some debug info for now and send an NDR
-						if (M2F_PROCESS_LOG) logentry('VERIFY', "No such forum: ".$post['to']['email']);
+						if ($settings['m2f_process_log']) logentry('VERIFY', "No such forum: ".$post['to']['email']);
 						$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
-						if (M2F_SEND_NDR) send_reply($recipient, $sender, sprintf($locale['m2f994'], $subject));
+						if ($settings['m2f_send_ndr']) send_reply($recipient, $sender, sprintf($locale['m2f994'], $subject));
 						$processed = true;
 					}
 				} else {
 					// no match on sender
 					// Output some debug info for now and send an NDR
-				if (M2F_PROCESS_LOG) logentry('VERIFY', "No such member: ".$post['from']['email']);
+				if ($settings['m2f_process_log']) logentry('VERIFY', "No such member: ".$post['from']['email']);
 					$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
-					if (M2F_SEND_NDR) send_reply($recipient, $sender, sprintf($locale['m2f995'], $subject, $post['from']['email']));
+					if ($settings['m2f_send_ndr']) send_reply($recipient, $sender, sprintf($locale['m2f995'], $subject, $post['from']['email']));
 					$processed = true;
 				}
 				// finished processing this message. Delete it from the server
@@ -774,29 +769,31 @@ while (true) {
 	$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
 	if ($data = dbarray($result)) {
 		if ($data['m2f_abort'] == 1) {
-			if (M2F_PROCESS_LOG) logentry('WAKE-UP', $locale['m2f999'].' ABORT_BY_USER', true, 1);
+			if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' ABORT_BY_USER', true, 1);
 			die('aborted by user');
 		}
 	} else {
-		if (M2F_PROCESS_LOG) logentry('WAKE-UP', $locale['m2f999'].' STATUS_RECORD_GONE', true, 1);
+		if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' STATUS_RECORD_GONE', true, 1);
 		die('status record missing');
 	}
 
 	// if the module has been modified, exit so it can be restarted
 	clearstatcache();
 	if (filemtime('m2f_pop3.php') != $module_lastmod) {
-		if (M2F_PROCESS_LOG) logentry('EXIT', 'Restart due to module code update');
+		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to module code update');
 		exit(99);
 	}
-	if (filemtime('m2f_config.php') != $config_lastmod) {
-		if (M2F_PROCESS_LOG) logentry('EXIT', 'Restart due to a configuration change');
+	// get the last modified timestamp of the config
+	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+	if ($data['lastmod'] != $config_lastmod) {
+		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to a configuration change');
 		exit(99);
 	}
 
 	// calculate the next interval. Log a warning if we can't process quick enough
-	$interval = $polltime + M2F_INTERVAL - time();
+	$interval = $polltime + $settings['m2f_interval'] - time();
 	if ($interval < 0) {
-		if (M2F_PROCESS_LOG) logentry('SLEEP', $locale['m2f999'].' INTERVAL_TO_SHORT_TO_PROCESS_ALL_POP3_MAIL');
+		if ($settings['m2f_process_log']) logentry('SLEEP', $locale['m2f999'].' INTERVAL_TO_SHORT_TO_PROCESS_ALL_POP3_MAIL');
 	} else {
 		sleep($interval);
 	}
