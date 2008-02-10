@@ -15,6 +15,10 @@
 require_once dirname(__FILE__)."../../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
+// make sure the page isn't cached
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+
 // temp storage for template variables
 $variables = array();
 
