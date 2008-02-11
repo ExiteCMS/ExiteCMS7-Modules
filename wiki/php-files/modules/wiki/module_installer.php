@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.0";									// module version number
+$mod_version = "1.1.1";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -265,6 +265,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_read_acl'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_comment_acl'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_admin_group'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_forum_links'");
 
 // delete the user groups
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
@@ -333,6 +334,7 @@ if (!function_exists('add_config_items')) {
 			// can't find it? default to all members			
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G103')");
 		}
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
 	}
 }
 
@@ -407,6 +409,9 @@ if (!function_exists('module_upgrade')) {
 				// no specific changes between this version and the new one
 
 			case "1.1.0":
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
+
+			case "1.1.1":
 
 			default:
 				// commands to execute for every upgrade
