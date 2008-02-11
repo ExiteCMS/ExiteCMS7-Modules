@@ -144,6 +144,18 @@
 			</td>
 		</tr>
 		<tr>
+			<td width='50%' class='tbl'>
+				Generate wiki links in forum posts
+			</td>
+			<td width='50%' class='tbl'>
+				<select name='forum_links' class='textbox'>
+					<option value='0'{if $settings2.wiki_forum_links == "0"} selected="selected"{/if}>{$locale.414}</option>
+					<option value='1'{if $settings2.wiki_forum_links == "1"} selected="selected"{/if}>{$locale.413}</option>
+				</select>
+				<span class='small'>Only for known keywords. You can use the [wiki] bbcode to manually make a link</span>
+			</td>
+		</tr>
+		<tr>
 			<td align='center' colspan='2' class='tbl'>
 				<br />
 				<input type='submit' name='savesettings' value='{$locale.419}' class='button' />

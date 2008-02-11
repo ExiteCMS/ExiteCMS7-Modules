@@ -38,6 +38,7 @@ if (isset($_POST['savesettings'])) {
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['default_read_acl'])."' WHERE cfg_name = 'wiki_default_read_acl'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['default_comment_acl'])."' WHERE cfg_name = 'wiki_default_comment_acl'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['admin_group'])."' WHERE cfg_name = 'wiki_admin_group'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['forum_links'])."' WHERE cfg_name = 'wiki_forum_links'");
 	// if the name of the homepage has changed, update the wiki record
 	if ($settings['wiki_root_page'] != stripinput($_POST['root_page'])) {
 		$result = dbquery("UPDATE ".$db_prefix."wiki_pages SET tag = '".mysql_escape_string(stripinput($_POST['root_page']))."' WHERE tag = '".mysql_escape_string($settings['wiki_root_page'])."'");
