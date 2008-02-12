@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.1";									// module version number
+$mod_version = "1.1.2";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -84,6 +84,8 @@ $localestrings['en']['415'] = "Disabled";
 $localestrings['en']['416'] = "Optional";
 $localestrings['en']['419'] = "Save Settings";
 $localestrings['en']['420'] = "(only if IP address matches)";
+$localestrings['en']['421'] = "Generate dynamic wiki links in forum posts:";
+$localestrings['en']['422'] = "(for manual links use [wiki] bbcode)";
 
 $localestrings['nl'] = array();
 $localestrings['nl']['400'] = "Wiki configuratie";
@@ -105,6 +107,8 @@ $localestrings['nl']['415'] = "Uitgeschakeld";
 $localestrings['nl']['416'] = "Optioneel";
 $localestrings['nl']['419'] = "Bewaren";
 $localestrings['nl']['420'] = "(alleen vanaf hun eigen IP adres)";
+$localestrings['nl']['421'] = "Genereer dynamische wiki links in forum berichten:";
+$localestrings['nl']['422'] = "(voor handmatige links gebruik [wiki] bbcode)";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
@@ -412,6 +416,9 @@ if (!function_exists('module_upgrade')) {
 				$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
 
 			case "1.1.1":
+				// no specific changes between this version and the new one
+
+			case "1.1.2":
 
 			default:
 				// commands to execute for every upgrade
