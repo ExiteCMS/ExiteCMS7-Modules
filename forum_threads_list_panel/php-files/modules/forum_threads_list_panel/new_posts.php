@@ -51,7 +51,11 @@ if (isset($markasread)) {
 require_once PATH_INCLUDES."forum_functions_include.php";
 
 // check if there are any unread posts for this user
-$result = dbquery("SELECT count(*) as unread, sum(tr.thread_page) AS pages FROM ".$db_prefix."posts p LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id WHERE tr.user_id = '".$userdata['user_id']."' AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].") AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)", false);
+if ($userdata['user_posts_unread']) {
+	$result = dbquery("SELECT count(*) as unread, sum(tr.thread_page) AS pages FROM ".$db_prefix."posts p LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id WHERE tr.user_id = '".$userdata['user_id']."' AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].") AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)", false);
+} else {
+	$result = dbquery("SELECT count(*) as unread, sum(tr.thread_page) AS pages FROM ".$db_prefix."posts p LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id WHERE tr.user_id = '".$userdata['user_id']."' AND p.post_author != '".$userdata['user_id']."' AND p.post_edituser != '".$userdata['user_id']."' AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].") AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)", false);
+}
 $variables['unread'] = ($result ? mysql_result($result, 0) : 0);
 
 // and if so, get them
@@ -59,18 +63,33 @@ if ($variables['unread']) {
 	// array to store the thread and post info
 	$variables['posts'] = array();
 	// get all threads with unread posts, and a count of the unread posts per thread
-	$result = dbquery("
-		SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
-			FROM ".$db_prefix."posts p
-			LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
-			LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
-			LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
-			WHERE tr.user_id = '".$userdata['user_id']."'
-				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
-				AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
-			GROUP BY p.thread_id
-		");
-
+	if ($userdata['user_posts_unread']) {
+		$result = dbquery("
+			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
+				FROM ".$db_prefix."posts p
+				LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
+				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+				WHERE tr.user_id = '".$userdata['user_id']."'
+					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
+					AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
+				GROUP BY p.thread_id
+			");
+	} else {
+		$result = dbquery("
+			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
+				FROM ".$db_prefix."posts p
+				LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
+				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+				WHERE tr.user_id = '".$userdata['user_id']."'
+					AND p.post_author != '".$userdata['user_id']."'
+					AND p.post_edituser != '".$userdata['user_id']."'
+					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
+					AND (p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
+				GROUP BY p.thread_id
+			");
+	}
 	// get the number of unread threads
 	$rows = dbrows($result);
 	$variables['rows'] = $rows;
