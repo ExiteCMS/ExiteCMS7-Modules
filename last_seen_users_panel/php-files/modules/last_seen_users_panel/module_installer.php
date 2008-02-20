@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Last Seen Users Panel";
 $mod_description = "Side panel to display the last active website users";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -60,57 +60,21 @@ $mod_site_links = array();								// site_links definitions. Multiple can be def
 $localestrings = array();
 $localestrings['en'] = array();
 $localestrings['en']['lsup000'] = "Last Seen Users";
-$localestrings['en']['lsup001'] = "Online";
-$localestrings['en']['lsup002'] = "< 5 mins";
-$localestrings['en']['lsup003'] = "week";
-$localestrings['en']['lsup004'] = "weeks";
-$localestrings['en']['lsup005'] = "day";
-$localestrings['en']['lsup006'] = "days";
 
 $localestrings['nl'] = array();
 $localestrings['nl']['lsup000'] = "Laatste gebruikers";
-$localestrings['nl']['lsup001'] = "Online";
-$localestrings['nl']['lsup002'] = "< 5 mins";
-$localestrings['nl']['lsup003'] = "week";
-$localestrings['nl']['lsup004'] = "weken";
-$localestrings['nl']['lsup005'] = "dag";
-$localestrings['nl']['lsup006'] = "dagen";
 
 $localestrings['de'] = array();
 $localestrings['de']['lsup000'] = "letzte User";
-$localestrings['de']['lsup001'] = "Jetzt Online";
-$localestrings['de']['lsup002'] = "< 5 min";
-$localestrings['de']['lsup003'] = "Woche";
-$localestrings['de']['lsup004'] = "Wochen";
-$localestrings['de']['lsup005'] = "Tag";
-$localestrings['de']['lsup006'] = "Tage";
 
 $localestrings['da'] = array();
 $localestrings['da']['lsup000'] = "Sidste Brugere Online";
-$localestrings['da']['lsup001'] = "Online Nu";
-$localestrings['da']['lsup002'] = "< 5 minutter";
-$localestrings['da']['lsup003'] = "uge";
-$localestrings['da']['lsup004'] = "uger";
-$localestrings['da']['lsup005'] = "dag";
-$localestrings['da']['lsup006'] = "dage";
 
 $localestrings['sv'] = array();
 $localestrings['sv']['lsup000'] = "Senast inloggade användare";
-$localestrings['sv']['lsup001'] = "Inloggad nu";
-$localestrings['sv']['lsup002'] = "< 5 minuter";
-$localestrings['sv']['lsup003'] = "vecka";
-$localestrings['sv']['lsup004'] = "veckor";
-$localestrings['sv']['lsup005'] = "dag";
-$localestrings['sv']['lsup006'] = "dagar";
 
 $localestrings['ro'] = array();
 $localestrings['ro']['lsup000'] = "Ultimii utilizatori v&#259;zu&#355;i";
-$localestrings['ro']['lsup001'] = "Online";
-$localestrings['ro']['lsup002'] = "< 5 min";
-$localestrings['ro']['lsup003'] = "s&#259;pt";
-$localestrings['ro']['lsup004'] = "s&#259;pt";
-$localestrings['ro']['lsup005'] = "zi";
-$localestrings['ro']['lsup006'] = "zile";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
