@@ -34,24 +34,13 @@ if (dbrows($result) == 0) {
 } else {
 	while ($data = dbarray($result)) {
 		// calculated 'lastseen'
-		$lastseen = time() - $data['user_lastvisit'];
-		$iW=sprintf("%2d",floor($lastseen/604800));
-		$iD=sprintf("%2d",floor($lastseen/(60*60*24)));
-		$iH=sprintf("%02d",floor((($lastseen%604800)%86400)/3600));
-		$iM=sprintf("%02d",floor(((($lastseen%604800)%86400)%3600)/60));
-		$iS=sprintf("%02d",floor((((($lastseen%604800)%86400)%3600)%60)));
-		if ($lastseen < 60){
-			$lastseen= $locale['lsup001'];
-		} elseif ($lastseen < 360){
-			$lastseen= $locale['lsup002'];
-		} elseif ($iW > 0){
-			if ($iW == 1) { $text = $locale['lsup003']; } else { $text = $locale['lsup004']; }
-			$lastseen = $iW." ".$text;
-		} elseif ($iD > 0){
-			if ($iD == 1) { $text = $locale['lsup005']; } else { $text = $locale['lsup006']; }
-			$lastseen = $iD." ".$text;
-		} else {
-			$lastseen = $iH.":".$iM.":".$iS;
+		$lastseen = datediff($data['user_lastvisit'], time());
+		if (isNum($lastseen)) {
+			// online
+			$lastseen= $locale['070'];
+		} elseif ($lastseen < "00:05:00") {
+			// less than 5 minutes
+			$lastseen= $locale['071'];
 		}
 		// get the country code flag from the user's last known IP address
 		if ($settings['forum_flags'] == 0) {
