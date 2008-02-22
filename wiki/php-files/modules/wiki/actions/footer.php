@@ -30,7 +30,7 @@ echo $this->FormOpen("", "TextSearch", "get");
 			}
 		}
 		if ($this->IsAdmin()) {
-			echo "| <a href=\"".$this->href("acls")."\">Access</a>\n";
+			echo "| <a href=\"".$this->href("acls")."\">ACLs</a>\n";
 		}
 	}
 ?>
