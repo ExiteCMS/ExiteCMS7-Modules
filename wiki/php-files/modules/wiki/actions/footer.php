@@ -29,6 +29,9 @@ echo $this->FormOpen("", "TextSearch", "get");
 				print("Owner: $owner\n");
 			}
 		}
+		if ($this->IsAdmin()) {
+			echo "| <a href=\"".$this->href("acls")."\">Access</a>\n";
+		}
 	}
 ?>
 	</td>
