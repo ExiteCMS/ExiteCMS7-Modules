@@ -50,8 +50,8 @@
 	{/section}
 	<tr>
 		<td align='center' colspan='4' class='{cycle values='tbl1,tbl2'}'>
-			{if $rows == 1}
-				{if $threads == 1}
+			{if $threads == 1}
+				{if $rows == 1}
 					<b>{$locale.039a}</b>
 				{else}
 					<b>{ssprintf format=$locale.039b var1=$rows}</b>

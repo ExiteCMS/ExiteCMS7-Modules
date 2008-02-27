@@ -52,15 +52,18 @@ $result = dbquery(
 	WHERE ".groupaccess('forum_access')." AND post_author='".$id."'"
 );
 $rows = dbrows($result);
+$variables['rows'] = $rows;
 
 // make sure rowstart has a valid value
 if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;
+$variables['rowstart'] = $rowstart;
 
 $result = dbquery(
 	"SELECT tp.*, tf.* FROM ".$db_prefix."posts tp
 	INNER JOIN ".$db_prefix."forums tf USING(forum_id)
 	WHERE ".groupaccess('forum_access')." AND post_author='".$id."'
-	ORDER BY post_datestamp DESC LIMIT $rowstart,".ITEMS_PER_PAGE
+	ORDER BY post_datestamp DESC 
+	LIMIT $rowstart,".ITEMS_PER_PAGE
 );
 
 $posts = array();
@@ -71,8 +74,6 @@ while ($data = dbarray($result)) {
 $variables['posts'] = $posts;
 
 // required template variables
-$variables['rows'] = $rows;
-$variables['rowstart'] = $rowstart;
 $variables['pagenav_url'] = FUSION_SELF."?id=".$id."&amp;";
 
 // define the search body panel variables

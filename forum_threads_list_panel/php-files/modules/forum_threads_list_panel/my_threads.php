@@ -35,9 +35,11 @@ $result = dbquery(
 	WHERE ".groupaccess('forum_access')." AND thread_author='".$userdata['user_id']."'"
 );
 $rows = dbrows($result);
+$variables['rows'] = $rows;
 
 // make sure rowstart has a valid value
 if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;
+$variables['rowstart'] = $rowstart;
 
 // get the threads for this page
 $result = dbquery(
@@ -45,7 +47,8 @@ $result = dbquery(
 	INNER JOIN ".$db_prefix."forums tf USING(forum_id)
 	INNER JOIN ".$db_prefix."users tu ON tt.thread_lastuser=tu.user_id
 	WHERE ".groupaccess('forum_access')." AND thread_author='".$userdata['user_id']."'
-	ORDER BY thread_lastpost DESC LIMIT $rowstart,".ITEMS_PER_PAGE
+	ORDER BY thread_lastpost DESC 
+	LIMIT $rowstart,".ITEMS_PER_PAGE
 );
 
 $threads = array();
@@ -55,10 +58,6 @@ while ($data = dbarray($result)) {
 	$threads[] = $data;
 }
 $variables['threads'] = $threads;
-
-// required template variables
-$variables['rows'] = $rows;
-$variables['rowstart'] = $rowstart;
 
 // define the search body panel variables
 $template_panels[] = array('type' => 'body', 'name' => 'my_threads', 'template' => 'modules.forum_threads_list_panel.my_threads.tpl');
