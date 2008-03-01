@@ -56,14 +56,14 @@
 	{/section}
 	<tr>
 		<td align='center' colspan='5' class='{cycle values='tbl1,tbl2'}'>
-			{if $rows == 1}
+			{if $threads == 1}
 				{if $unread == 1}
 					<b>{$locale.039a}</b>
 				{else}
 					<b>{ssprintf format=$locale.039b var1=$unread}</b>
 				{/if}
 			{else}
-			<b>{ssprintf format=$locale.039 var1=$unread var2=$rows}</b>
+			<b>{ssprintf format=$locale.039 var1=$unread var2=$threads}</b>
 			{/if}
 			<br /><br />
 			{buttonlink name=$locale.091 link=$smarty.const.FUSION_SELF|cat:"?markasread="|cat:$userdata.user_id}
@@ -78,8 +78,8 @@
 </center>
 {/if}
 {include file="_closetable.tpl"}
-{if $rows > $smarty.const.ITEMS_PER_PAGE}
-	{makepagenav start=$rowstart count=$smarty.const.ITEMS_PER_PAGE total=$rows range=3 link=$pagenav_url}
+{if $threads > $smarty.const.ITEMS_PER_PAGE}
+	{makepagenav start=$rowstart count=$smarty.const.ITEMS_PER_PAGE total=$threads range=3 link=$pagenav_url}
 {/if}
 {***************************************************************************}
 {* End of template                                                         *}
