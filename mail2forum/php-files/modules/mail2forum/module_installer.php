@@ -472,8 +472,29 @@ if (!function_exists('module_upgrade')) {
 				// update the admin link
 				global $mod_title, $mod_folder, $mod_admin_panel;
 				$result = dbquery("UPDATE ".$db_prefix."admin SET admin_link = '".(MODULES.$mod_folder."/".$mod_admin_panel)."' WHERE admin_title = '".$mod_title."'");
-				// import the config file, and (try to) delete it
-				@require PATH_MODULES.$mod_folder."/m2f_config.php";
+				// import the config file, and (try to) delete it. if it doesn't exist, use default values
+				if (file_exists(PATH_MODULES.$mod_folder."/m2f_config.php")) {
+					require PATH_MODULES.$mod_folder."/m2f_config.php";
+				} else {
+					define('M2F_HOST', "www.example.com");
+					define('M2F_INTERVAL', 5*60);	// 5 minutes
+					define('M2F_POLL_THRESHOLD', 7*24*60*60);	// one week
+					define('M2F_MAX_ATTACHMENTS', 1);
+					define('M2F_MAX_ATTACH_SIZE', 5242880);
+					define('M2F_USE_FORUM_EMAIL', true);
+					define('M2F_FOLLOW_THREAD', false);
+					define('M2F_SUBSCRIBE_REQUIRED', false);
+					define('M2F_SEND_NDR', true);
+					define('M2F_POP3_SERVER', '127.0.0.1');
+					define('M2F_POP3_PORT', 110);
+					define('M2F_POP3_TIMEOUT', 25);
+					define('M2F_LOGFILE', "logs");
+					define('M2F_PROCESS_LOG', true);
+					define('M2F_SMTP_LOG', false);
+					define('M2F_POP3_DEBUG', false);
+					define('M2F_POP3_MESSAGE_DEBUG', false);
+					define('M2F_SMTP_DEBUG', false);
+				}
 				if (defined("M2F_HOST")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_host', '".M2F_HOST."')");
 				if (defined("M2F_INTERVAL")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_interval', '".M2F_INTERVAL."')");
 				if (defined("M2F_POLL_THRESHOLD")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_poll_threshold', '".M2F_POLL_THRESHOLD."')");
