@@ -13,6 +13,9 @@ if (isset($_SERVER['SERVER_SOFTWARE'])) {
 	die("This is a batch program that needs to run from cron!");
 }
 
+// fake a host to avoid an error in core_functions
+$_SERVER['HTTP_HOST'] = "/";
+
 // find the webroot, so we can load the core functions
 $webroot = "";
 while(!file_exists($webroot."includes/core_functions.php")) { 
@@ -21,8 +24,8 @@ while(!file_exists($webroot."includes/core_functions.php")) {
 }
 require_once $webroot."includes/core_functions.php";
 
-// make sure the host is known
-$_SERVER['HTTP_HOST'] = $settings['m2f_host'];
+// create a siteurl link from the m2f host settings
+$settings['siteurl'] = (substr($settings['m2f_host'],0,4)=="http" ? "" : "http://").$settings['m2f_host']."/";
 
 locale_load("modules.mail2forum");
 

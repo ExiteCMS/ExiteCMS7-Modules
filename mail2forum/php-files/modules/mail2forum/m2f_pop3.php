@@ -89,7 +89,7 @@ function logdebug($task="", $message="") {
 // debug function - dump the received message and the extracted parameters
 function dumpmessage($message, $post) {
 
-	global $processor;
+	global $processor, $settings;
 	
 	$i=1;
 	$log = $settings['m2f_logfile'].'/'.$processor.'.message.';
@@ -201,8 +201,8 @@ function charsetconv($text, $fromcharset) {
 		if ($settings['m2f_pop3_debug']) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".$settings['charset']);
 		// attempt to convert
 		$iconvresult = iconv(strtoupper($fromcharset), $settings['charset'], $text);
-		if ($iconresult) {
-			return $iconresult;
+		if ($iconvresult) {
+			return $iconvresult;
 		}
 		if ($settings['m2f_pop3_debug']) logdebug("iconv", "conversion failed!");
 	}
@@ -447,15 +447,20 @@ function can_post($usergroups, $forumgroup) {
 	// create a new user_group field with all inherited groups, and
 	// get the inherited group rights and add them to the user own rights
 	// everyone is always member of group 0 (public)
-	$usergroups = ".0";
+	$usergroups = "0";
 	foreach ($groups as $group) {
 		$usergroups .= ".".$group;
-		$result = dbarray(dbquery("SELECT group_rights FROM ".$db_prefix."user_groups WHERE group_id = '".$group."'"));
-		if (isset($result['group_rights']) && $result['group_rights'] != "") {
-			$usergroups .= ($usergroups==""?"":".").$result['group_rights'];
+		$result = dbarray(dbquery("SELECT group_groups FROM ".$db_prefix."user_groups WHERE group_id = '".$group."'"));
+		if (isset($result['group_groups']) && $result['group_groups'] != "") {
+			$usergroups .= ($usergroups==""?"":".").$result['group_groups'];
 		}
 	}
-	return in_array($forumgroup, explode(".", substr($usergroups,1)));
+
+	if (in_array($forumgroup, explode(".", $usergroups))) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /*---------------------------------------------------+
