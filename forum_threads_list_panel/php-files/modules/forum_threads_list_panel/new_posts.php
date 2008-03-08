@@ -125,7 +125,7 @@ if ($variables['unread']) {
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
 				GROUP BY p.thread_id
-				ORDER BY t.thread_lastpost ASC
+				ORDER BY t.thread_lastpost DESC
 				LIMIT ".$rowstart.", ".ITEMS_PER_PAGE
 			);
 	} else {
@@ -142,7 +142,7 @@ if ($variables['unread']) {
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
 				GROUP BY p.thread_id
-				ORDER BY t.thread_lastpost ASC
+				ORDER BY t.thread_lastpost DESC
 				LIMIT ".$rowstart.", ".ITEMS_PER_PAGE
 			);
 	} 
