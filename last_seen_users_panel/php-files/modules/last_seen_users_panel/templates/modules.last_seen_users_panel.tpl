@@ -21,11 +21,11 @@
 	<tr>
 		<td class='small' align='left'>
 			<div style='width:{$smarty.const.SIDE_WIDTH-75}px;white-space:nowrap;overflow:hidden;'>
-			{if $members[entry].cc_flag == ""}
-				<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />&nbsp;
-			{else}
-				{$members[entry].cc_flag}
-			{/if}
+				{if $members[entry].cc_flag == ""}
+					<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />&nbsp;
+				{else}
+					{$members[entry].cc_flag}
+				{/if}
 				{if $smarty.const.iMEMBER}
 					<a href='{$smarty.const.BASEDIR}profile.php?lookup={$members[entry].user_id}' title='{$members[entry].user_name}' class='side'>{$members[entry].user_name}</a>
 				{else}
@@ -33,7 +33,7 @@
 				{/if}
 			</div>
 		</td>
-		<td class='small' align='right'>
+		<td class='small' align='right'style='width:55px;white-space:nowrap;overflow:hidden;'>
 			{$members[entry].lastseen}
 		</td>
 	</tr>
