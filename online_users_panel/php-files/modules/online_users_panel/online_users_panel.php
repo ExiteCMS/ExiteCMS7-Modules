@@ -27,7 +27,7 @@ if ($settings['maintenance'] != "1") {
 	if (dbrows($result) != 0) {
 		$result = dbquery("UPDATE ".$db_prefix."online SET online_lastactive='".time()."' WHERE online_user=".$cond."");
 	} else {
-		$name = ($userdata['user_level'] != 0 ? $userdata['user_id'] : "0");
+		$name = (iMEMBER ? $userdata['user_id'] : "0");
 		$result = dbquery("INSERT INTO ".$db_prefix."online (online_user, online_ip, online_lastactive) VALUES ('$name', '".USER_IP."', '".time()."')");
 	}
 	$result = dbquery("DELETE FROM ".$db_prefix."online WHERE online_lastactive<".(time()-60)."");
@@ -35,7 +35,7 @@ if ($settings['maintenance'] != "1") {
 
 $result = dbquery(
 	"SELECT ton.*, tu.user_id,user_name FROM ".$db_prefix."online ton
-	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level != '103'":""));
+	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level IS NULL OR tu.user_level != '103'":""));
 $rows = dbrows($result);
 if ($rows > $settings['max_users']) {
 	$settings['max_users'] = $rows;
