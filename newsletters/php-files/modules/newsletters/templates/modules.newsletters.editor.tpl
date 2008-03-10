@@ -16,7 +16,7 @@
 {***************************************************************************}
 {include file="_opentable.tpl" name=$_name title=$_title state=$_state style=$_style}
 {if $settings.tinymce_enabled == 1}<script language='javascript' type='text/javascript'>advanced();</script>{/if}
-<form name='inputform' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;newsletter_id={$newsletter_id}' onSubmit='return ValidateForm(this)'>
+<form name='inputform' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;newsletter_id={$newsletter_id}' onsubmit='return ValidateForm(this)'>
 	<table align='center' cellspacing='0' cellpadding='0' width='90%' class='tbl'>
 		<tr>
 			<td align='center'>
