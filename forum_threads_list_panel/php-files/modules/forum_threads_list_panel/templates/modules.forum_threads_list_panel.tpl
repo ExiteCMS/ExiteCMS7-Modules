@@ -45,6 +45,7 @@
 </table>
 {if $smarty.const.iMEMBER}
 <div style='text-align:center;'>
+	{buttonlink name=$locale.027a link=$smarty.const.BASEDIR|cat:"forum/viewposts.php"}
 	{buttonlink name=$locale.026 link=$smarty.const.MODULES|cat:"forum_threads_list_panel/my_threads.php"}&nbsp;
 	{buttonlink name=$locale.027 link=$smarty.const.MODULES|cat:"forum_threads_list_panel/my_posts.php"}&nbsp;
 	{buttonlink name=$locale.028|cat:" ("|cat:$locale.031|cat:")" link=$smarty.const.MODULES|cat:"forum_threads_list_panel/new_posts.php"}&nbsp;

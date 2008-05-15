@@ -29,7 +29,7 @@
 			<b>{$locale.032}</b>
 		</td>
 		<td align='center' class='tbl2' width='1%' style='white-space:nowrap'>
-			<b>{$locale.089}</b>
+			<b>{$locale.090}</b>
 		</td>
 		<td align='center' class='tbl2' width='1%' style='white-space:nowrap'>
 			<b>{$locale.034}</b>
