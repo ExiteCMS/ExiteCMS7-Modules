@@ -22,9 +22,7 @@ $variables = array();
 define('ITEMS_PER_PAGE', 20);
 
 // check howmany shouts we have
-$result = dbquery("SELECT count(shout_id) FROM ".$db_prefix."shoutbox");
-$rows = dbresult($result, 0);
-$variables['rows'] = $rows;
+$variables['rows'] = dbfunction("COUNT(shout_id)","shoutbox");
 
 // make sure rowstart has a valid value
 if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;

@@ -50,8 +50,7 @@ if (iMEMBER || $settings['guestposts'] == "1") {
 	}
 }
 $variables['allow_edit'] = (iADMIN && checkrights("S"));
-$result = dbquery("SELECT count(shout_id) FROM ".$db_prefix."shoutbox");
-$numrows = dbresult($result, 0);
+$numrows = dbfunction("COUNT(shout_id)", "shoutbox");
 $result = dbquery(
 	"SELECT * FROM ".$db_prefix."shoutbox LEFT JOIN ".$db_prefix."users
 	ON ".$db_prefix."shoutbox.shout_name=".$db_prefix."users.user_id
