@@ -63,6 +63,14 @@
 		</tr>
 		<tr>
 			<td width='50%' class='tbl'>
+				{$locale.417}
+			</td>
+			<td width='50%' class='tbl'>
+				<textarea name='page_template' rows='6' cols='80' class='textbox' style='width:250px;overflow-y:scroll;'>{$settings2.wiki_page_template}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td width='50%' class='tbl'>
 				{$locale.408}
 			</td>
 			<td width='50%' class='tbl'>

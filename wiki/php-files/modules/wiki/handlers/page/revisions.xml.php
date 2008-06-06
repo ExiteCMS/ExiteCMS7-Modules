@@ -16,13 +16,13 @@
  * @uses		Wakka::Href()
  * @uses		Wakka::htmlspecialchars_ent()
  */
-global $locale;
+global $settings, $locale;
 
 /**
  * Defaults
  */
 if (!defined('I18N_LANG')) define('I18N_LANG', 'en-US');
-if (!defined('I18N_ENCODING_UTF8')) define('I18N_ENCODING_UTF8', $locale['charset']);
+if (!defined('I18N_ENCODING_UTF8')) define('I18N_ENCODING_UTF8', $settings['charset']);
 if (!defined('RSS_REVISIONS_VERSION')) define('RSS_REVISIONS_VERSION','2.0');
 if (!defined('RSS_RECENTCHANGES_VERSION')) define('RSS_RECENTCHANGES_VERSION','0.92');
 if (!defined('REVISIONS_EDITED_BY')) define('REVISIONS_EDITED_BY','Edited by %s');

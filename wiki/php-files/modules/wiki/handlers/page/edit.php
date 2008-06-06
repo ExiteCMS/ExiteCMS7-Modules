@@ -153,6 +153,13 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 	$previous = $this->page['id'];
 	if (isset($_POST['previous'])) $previous = $_POST['previous'];
 	if (!isset($body)) $body = $this->page['body'];
+	// ** WanWizard ** added the default template for new/empty pages
+	if (empty($body)) {
+		global $settings;
+		$body = $settings['wiki_page_template'];
+	}
+	// ** WanWizard **
+	
 	$body = preg_replace("/\n[ ]{4}/", "\n\t", $body);	// @@@ FIXME: misses first line and multiple sets of four spaces - JW 2005-01-16
 
 

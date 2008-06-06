@@ -16,7 +16,7 @@
  * @uses	Wakka::htmlspecialchars_ent()
  * @uses	Wakka::LoadRecentlyChanged()
  */
-global $locale;
+global $settings,$locale;
 
 // i18n strings
 define('WIKKA_REV_WHEN_BY_WHO', '%1$s by %2$s');
@@ -26,7 +26,7 @@ if (!defined('I18N_LANG')) define('I18N_LANG', 'en-us');
 
 header("Content-type: text/xml");
 
-$xml = "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+$xml = "<?xml version=\"1.0\" encoding=\"".$settings['charset']."\"?>\n";
 $xml .= '<?xml-stylesheet href="' . $this->GetConfigValue("base_url") .'/css/xml.css" type="text/css"?' .">\n";
 $xml .= "<rss version=\"0.92\">\n";
 $xml .= "<channel>\n";

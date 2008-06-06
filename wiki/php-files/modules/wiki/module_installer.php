@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.2";									// module version number
+$mod_version = "1.1.4";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -82,6 +82,7 @@ $localestrings['en']['413'] = "Yes";
 $localestrings['en']['414'] = "No";
 $localestrings['en']['415'] = "Disabled";
 $localestrings['en']['416'] = "Optional";
+$localestrings['en']['417'] = "Template for new WikiPages:";
 $localestrings['en']['419'] = "Save Settings";
 $localestrings['en']['420'] = "(only if IP address matches)";
 $localestrings['en']['421'] = "Generate dynamic wiki links in forum posts:";
@@ -105,6 +106,7 @@ $localestrings['nl']['413'] = "Ja";
 $localestrings['nl']['414'] = "Nee";
 $localestrings['nl']['415'] = "Uitgeschakeld";
 $localestrings['nl']['416'] = "Optioneel";
+$localestrings['nl']['417'] = "Sjabloon voor een nieuwe pagina:";
 $localestrings['nl']['419'] = "Bewaren";
 $localestrings['nl']['420'] = "(alleen vanaf hun eigen IP adres)";
 $localestrings['nl']['421'] = "Genereer dynamische wiki links in forum berichten:";
@@ -269,6 +271,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_default_comment_acl'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_admin_group'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_forum_links'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_page_template'");
 
 // delete the user groups
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
@@ -338,6 +341,7 @@ if (!function_exists('add_config_items')) {
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G103')");
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_page_template', '')");
 	}
 }
 
@@ -418,6 +422,14 @@ if (!function_exists('module_upgrade')) {
 				// no specific changes between this version and the new one
 
 			case "1.1.2":
+				// new configuration item for the wiki page template
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_page_template', '')");
+
+			case "1.1.3":
+				// no specific changes between this version and the new one
+
+			case "1.1.4":
+				// current version
 
 			default:
 				// commands to execute for every upgrade
