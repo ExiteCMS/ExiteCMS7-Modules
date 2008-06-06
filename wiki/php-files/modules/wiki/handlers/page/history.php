@@ -53,10 +53,10 @@ if ($this->HasAccess("read")) {
       if (strlen($pageA['note']) == 0) $note = ''; else $note = '['.$this->htmlspecialchars_ent($pageA['note']).']';
 
 						if ($c == 2) {
-							$output .= '<strong>'.sprintf(MOST_RECENT_EDIT, '<a href="'.$this->Href('', '', 'time='.urlencode($pageA['time'])).'">'.$pageA['time'].'</a>', $EditedByUser).'</strong> <span class="pagenote smaller">'.$note."</span><br />\n";
+							$output .= '<strong>'.sprintf(MOST_RECENT_EDIT, '<a href="'.$this->Href('', '', 'time='.urlencode($pageA['time'])).'">'.$pageA['time'].'</a>', $EditedByUser).'</strong> '.($note==""?'':('<span class="pagenote smaller">'.$note.'</span>'))."<br />\n";
 						}
 						else {
-							$output .= '<strong>'.sprintf(EDITED_ON,        '<a href="'.$this->Href('', '', 'time='.urlencode($pageA['time'])).'">'.$pageA['time'].'</a>', $EditedByUser).'</strong> <span class="pagenote smaller">'.$note."</span><br />\n";
+							$output .= '<strong>'.sprintf(EDITED_ON,        '<a href="'.$this->Href('', '', 'time='.urlencode($pageA['time'])).'">'.$pageA['time'].'</a>', $EditedByUser).'</strong> '.($note==""?'':('<span class="pagenote smaller">'.$note.'</span>'))."<br />\n";
 						}
 
 						if ($added)
@@ -86,7 +86,7 @@ if ($this->HasAccess("read")) {
 				$EditedByUser = $this->Format($page["user"]);
 			}
 		}
-  $output .= '<strong>'.sprintf(OLDEST_VERSION_EDITED_ON_BY, '<a href="'.$this->href('', '', 'time='.urlencode($pageB['time'])).'">'.$pageB['time'].'</a>', $EditedByUser).'</strong> <span class="pagenote smaller">['.$this->htmlspecialchars_ent($page['note'])."]</span></strong><br />\n";
+		$output .= '<strong>'.sprintf(OLDEST_VERSION_EDITED_ON_BY, '<a href="'.$this->href('', '', 'time='.urlencode($pageB['time'])).'">'.$pageB['time'].'</a>', $EditedByUser).'</strong> <span class="pagenote smaller">['.$this->htmlspecialchars_ent($page['note'])."]</span><br />\n";
 		$output .= '<div class="revisioninfo">'.HISTORY_PAGE_VIEW.'</div>'.$this->Format(implode("\n", $bodyB));
 		print($output);
 	}

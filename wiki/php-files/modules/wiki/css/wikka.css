@@ -5,121 +5,41 @@ Wikka Default Stylesheet (screen)
 
 /* global styling */
 
-p, td, li, input, select, textarea {
-	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
-	line-height: 20px;
-	font-size: 13px;
-}
-
-form, h1, h2, h3, h4, h5 {
-	margin: 0px;
+.searchbox {
+	border: 1px solid #CCCCAA;
 	padding: 0px;
+	margin: 0px;
 }
 
-/* page layout */
+input.grabcode {
+	float: right;
+	margin-right: 20px;
+	margin-top: 0px;
+	font-size: 90%;
+}
 
-body {
-	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;	font-size: 13px;
-/*	text-align: justify; */			/* comment out this line if you really need justified text */
-	line-height: 20px;
-	color: #000000;
-	background-color: #F8F8F8;
+input.highlight {
+	font-weight: normal;
+	background-color: #FCC;
+	color: #000;
 }
 
 .header {
-	padding: 10px;
+	margin-left: 5px;
+	padding: 5px 10px;
 	padding-top: 0px;
 }
 
-.page {
-	color: #000;
-	font-size: 13px;
-	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
-	background-color: white;
-	padding: 15px;
-	border: 1px inset;
-	border-bottom: none;
-	height: 100%;
-}
-
-.footer {
-	clear: both;
-	background-color: #DDDDDD;
-	padding: 5px 10px;
-	border: 1px inset;
-	border-top: none;
-	border-top: 1px solid #CCCCCC;
-}
-
-/* comments */
-
-.commentsheader {
-	clear: both;
-	background-color: #DDDDDD;
-	padding: 2px 10px;
-	border-left: 1px inset;
-	border-right: 1px inset;
-	border-top: 1px solid #CCCCCC;
-}
-
-.comment {
-	background-color: #EEEEEE;
-	padding: 10px;
-	border-left: 1px inset;
-	border-right: 1px inset;
-	border-top: 1px solid #CCCCCC;
-	border-bottom: 1px solid #EEEEEE;
-}
-
-.commentinfo {
-	color: #AAAAAA;
-}
-
-.commentform {
-	background-color: #EEEEEE;
-	padding: 10px;
-	border-left: 1px inset;
-	border-right: 1px inset;
-	border-top: 1px solid #CCCCCC;
-}
-
-/* links */
-
-a {
-	color: #333399;
-	text-decoration: none;
-}
-
-a:visited {
-	text-decoration: none;
-}
-
-a:hover {
-	color: #993333;
-}
-
-a:active {
-	text-decoration: none;
-}
-
-a.ext {
-	color: #333399;
-}
-
-a.ext:hover {
-	color: #993333;
-}
-
-.exttail {
-	color: #999;
-	position: relative;
-	bottom: 0.5ex;
-}
-
 .header a:hover {
-	color: #993333;
 	background: transparent;
 	border-bottom: 0px;
+}
+.page {
+	color: #000;
+	background-color: #eee;
+	padding: 10px;
+	border: 1px #bbb solid;
+	height: 100%;
 }
 
 .page a {
@@ -131,28 +51,36 @@ a.ext:hover {
 	text-decoration: underline;
 }
 
-/* lists */
-
-ul, ol {
-	margin-top: 0px;
-	margin-bottom: 0px;
-	padding-top: 0px;
-	padding-bottom: 0px;
+.pagefooter {
+	clear: both;
+	padding: 5px 10px;
 }
 
-ul.thread {
-	list-style-type: none;
-	border-left: 2px #666 solid;
-	padding-left: 10px;
-	margin: 5px 0px;
+.commentsheader {
+	clear: both;
+	background-color: #ddd;
+	padding: 2px 10px;
+	border: 1px solid #bbb;
+	border-top: none;
 }
 
-ul.thread li {
-	color: #333;
-	font-size: 11px;
+.comment {
+	background-color: #eee;
+	padding: 10px;
+	border: 1px solid #bbb;
+	border-top: none;
 }
 
-/* images */
+.commentinfo {
+	color: #AAAAAA;
+}
+
+.commentform {
+	background-color: #ddd;
+	padding: 10px;
+	border: 1px solid #bbb;
+	border-top: none;
+}
 
 img {
 	border: 0px;
@@ -180,6 +108,190 @@ img.right {
 	float: right;
 }
 
+/* Action-related styling */
+
+/* Table action */
+
+table.wikka {
+	border: 2px solid #CCC;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+table.wikka td {
+	border: 1px solid #CCC;
+	padding: .1em .25em;
+}
+
+/* Lastedit action */
+.lastedit {
+	border:dotted 1px;
+	padding:3pt;
+	margin:8pt; color:#888;
+	font-size:8pt;
+	width:30%;
+}
+
+.lastedit_notes {
+	color: #888800;
+}
+
+/* TextSearch & TextSearchExpanded Actions*/
+.tse_keywords {
+	font-weight: bold;
+	color: green;
+	background-color: white;
+}
+
+/* Calendar Action */
+
+/* general styling */
+table.calendar {
+	color: #000000;
+	background-color: #CCCCCC;				/* comment out to have space between cells same color as page background */
+	/*border-collapse: collapse;*/			/* would make single-width borders, ignoring cell-spacing */
+}
+table.calendar caption {
+	background-color: #CCCCCC;
+	font-weight: bold;
+	line-height: 1.6em;
+}
+table.calendar thead {
+	background-color: #CCCCCC;
+}
+table.calendar tbody.face {
+	background-color: #CCCCCC;
+}
+table.calendar tbody.calnav {
+	background-color: #CCCCCC;
+}
+/* styling for some specific elements */
+table.calendar thead th {
+	/*border: 1px solid #000000;*/			/* uncomment to have border around day name headers (will be page background if table background is undefined) */
+	padding: 1px;
+	text-align: center;
+	font-size: 85%;
+	width: 26px;
+}
+table.calendar tbody.face td {
+	border: 1px solid #000000;
+	text-align: right;
+}
+table.calendar td.currentday {
+	color: #993333;
+	background-color: #AAAAAA;
+	font-weight: bold;
+}
+/* styling of calendar navigation */
+table.calendar tbody.calnav {
+	font-weight: bold;
+}
+table.calendar td.prevmonth {
+	text-align: left;
+	font-size: 85%;
+}
+table.calendar td.curmonth {
+	text-align: center;
+}
+table.calendar td.nextmonth {
+	text-align: right;
+	font-size: 85%;
+}
+table.calendar a:link {
+	color: #993333;
+	text-decoration: none;
+}
+table.calendar a:visited {
+	color: #993333;
+	text-decoration: none;
+}
+table.calendar a:hover {
+	color: #993333;
+}
+table.calendar a:active {
+	color: #993333;
+	text-decoration: none;
+}
+
+/* Usersettings action */
+table.usersettings {
+}
+
+/* Handler-related styling */
+
+/* Acls handler */
+table.acls {
+}
+
+/* system information */
+
+.missingpage {
+	/* background: #ccffff; */
+	text-decoration: none;
+	border-bottom-width: 1px;
+	border-bottom-color: #933;
+	border-bottom-style: dashed;
+}
+
+em.error {
+	color: #AA3333; 
+	font-style: normal;
+	font-weight: bold;
+	font-size: 95%;
+}
+
+em.success {
+	color: #33AA33; 
+	font-style: normal;
+	font-weight: bold;
+	font-size: 95%;
+}
+
+.comments {display: none;}
+
+.revisioninfo {
+	color: #AAAAAA;
+	padding-bottom: 20px;
+}
+
+.copyright {
+	font-size: 11px;
+	color: #AAAAAA;
+	text-align: right;
+}
+
+.copyright a {
+	color: #AAAAAA;
+}
+
+.previewhead {
+	margin: auto;
+	z-index:20;
+	position:fixed;
+	top: 40px;
+	left: 10px;
+	color: red;
+	font-size: xx-large;
+	font-weight: bold;
+	padding: 5px;
+}
+
+.additions {background-color: #ccffcc;}
+
+.deletions {background-color: #EFA4A4;}
+
+.recentchanges { }
+
+.pagenote {color: #888;}
+
+.smaller {font-size: smaller;}
+
+.smallprint {font-size: 0.9em; color: #777; }
+
+.smallprint a {
+	color: #987;
+}
+
 /* floats */
 
 .floatl {
@@ -188,8 +300,8 @@ img.right {
 	width: 46%;
 	margin-right: 15px;
 	padding: 4px;
-	background: #EEE;
-	border: 1px solid #CCC; 		
+	background: #ddd;
+	border: 1px solid #bbb; 		
 }
 
 .floatr {
@@ -198,8 +310,8 @@ img.right {
 	width: 46%;
 	margin-left: 15px;
 	padding: 4px;
-	background: #EEE;
-	border: 1px solid #CCC; 		
+	background: #ddd;
+	border: 1px solid #bbb; 		
 }
 
 .clear {clear:both;}
@@ -207,22 +319,27 @@ img.right {
 /* text formatting */
 
 h5 {
+	margin-top: 2px;
 	font-size: 10pt;
 }
 
 h4 {
+	margin-top: 2px;
 	font-size: 12pt;
 }
 
 h3 {
+	margin-top: 2px;
 	font-size: 14pt;
 }
 
 h2 {
+	margin-top: 2px;
 	font-size: 16pt;
 }
 
 h1 {
+	margin-top: 2px;
 	font-size: 18pt;
 }
 
@@ -321,236 +438,6 @@ blockquote {
 	font-family: "Lucida Console", Monaco, monospace;
 }
 
-/* form elements */
-
-input[type=submit], input[type=button] {
-	font-family: Arial, Helvetica, sans-serif;
-	padding: 0px 1px;
-	width: auto;
-	font-size: 9pt;
-	color:#fff;
-	font-weight: bold;
-	background-color: #33A;
-	border-right: 2px solid #336;
-	border-bottom: 2px solid #336;
-}
-
-input[type=submit]:hover, input[type=button]:hover {
-	background-color: #66C;
-	border-right: 2px solid #668;
-	border-bottom: 2px solid #668;
-}
-
-textarea#body{
-	width: 100%;
-	height: 500px;
-	padding: 2px;
-}
-
-.searchbox {
-	/* border: none; */
-	border: 1px solid #CCCCAA;
-	padding: 0px;
-	margin: 0px;
-}
-
-input.grabcode {
-	float: right;
-	margin-right: 20px;
-	margin-top: 0px;
-	font-size: 90%;
-}
-
-input.highlight {
-	font-weight: normal;
-	background-color: #FCC;
-	color: #000;
-}
-
-/* system information */
-
-.missingpage {
-	/* background: #ccffff; */
-	text-decoration: none;
-	border-bottom-width: 1px;
-	border-bottom-color: #933;
-	border-bottom-style: dashed;
-}
-
-em.error {
-	color: #AA3333; 
-	font-style: normal;
-	font-weight: bold;
-	font-size: 95%;
-}
-
-em.success {
-	color: #33AA33; 
-	font-style: normal;
-	font-weight: bold;
-	font-size: 95%;
-}
-
-.comments {display: none;}
-
-.revisioninfo {
-	color: #AAAAAA;
-	padding-bottom: 20px;
-}
-
-.copyright {
-	font-size: 11px;
-	color: #AAAAAA;
-	text-align: right;
-}
-
-.copyright a {
-	color: #AAAAAA;
-}
-
-.previewhead {
-	margin: auto;
-	z-index:20;
-	position:fixed;
-	top: 40px;
-	left: 10px;
-	color: red;
-	font-size: xx-large;
-	font-weight: bold;
-	padding: 5px;
-}
-
-.additions {background-color: #ccffcc;}
-
-.deletions {color: #876; background-color: #FFCC99;}
-
-.recentchanges {font-size: 0.9em;}
-
-.pagenote {color: #888;}
-
-.smaller {font-size: smaller;}
-
-.smallprint {font-size: 0.8em; color: #777; padding-right: 0.5%; text-align: right;}
-
-.smallprint a {
-	color: #987;
-}
-
-/* Action-related styling */
-
-/* Table action */
-
-table.wikka {
-	border: 2px solid #CCC;
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-table.wikka td {
-	border: 1px solid #CCC;
-	padding: .1em .25em;
-}
-
-/* Lastedit action */
-.lastedit {
-	border:dotted 1px;
-	padding:3pt;
-	margin:8pt; color:#888;
-	font-size:8pt;
-	width:30%;
-}
-
-.lastedit_notes {
-	color: #888800;
-}
-
-/* TextSearch & TextSearchExpanded Actions*/
-.tse_keywords {
-	font-weight: bold;
-	color: green;
-	background-color: antiquewhite;
-}
-
-/* Calendar Action */
-
-/* general styling */
-table.calendar {
-	color: #000000;
-	background-color: #CCCCCC;				/* comment out to have space between cells same color as page background */
-	/*border-collapse: collapse;*/			/* would make single-width borders, ignoring cell-spacing */
-}
-table.calendar caption {
-	background-color: #CCCCCC;
-	font-weight: bold;
-	line-height: 1.6em;
-}
-table.calendar thead {
-	background-color: #CCCCCC;
-}
-table.calendar tbody.face {
-	background-color: #CCCCCC;
-}
-table.calendar tbody.calnav {
-	background-color: #CCCCCC;
-}
-/* styling for some specific elements */
-table.calendar thead th {
-	/*border: 1px solid #000000;*/			/* uncomment to have border around day name headers (will be page background if table background is undefined) */
-	padding: 1px;
-	text-align: center;
-	font-size: 85%;
-	width: 26px;
-}
-table.calendar tbody.face td {
-	border: 1px solid #000000;
-	text-align: right;
-}
-table.calendar td.currentday {
-	color: #993333;
-	background-color: #AAAAAA;
-	font-weight: bold;
-}
-/* styling of calendar navigation */
-table.calendar tbody.calnav {
-	font-weight: bold;
-}
-table.calendar td.prevmonth {
-	text-align: left;
-	font-size: 85%;
-}
-table.calendar td.curmonth {
-	text-align: center;
-}
-table.calendar td.nextmonth {
-	text-align: right;
-	font-size: 85%;
-}
-table.calendar a:link {
-	color: #993333;
-	text-decoration: none;
-}
-table.calendar a:visited {
-	color: #993333;
-	text-decoration: none;
-}
-table.calendar a:hover {
-	color: #993333;
-}
-table.calendar a:active {
-	color: #993333;
-	text-decoration: none;
-}
-
-/* Usersettings action */
-table.usersettings {
-}
-
-/* Handler-related styling */
-
-/* Acls handler */
-table.acls {
-}
-
 /* 3rdparty-code related styling */
 
 /* syntax highlighting code - GeSHi */
@@ -601,3 +488,168 @@ table.acls {
 .toolbar .btn-pressed { border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow; }
 .toolbar .btn-pressed { background: ButtonHighlight; }
 .editornamecss { background-color:#CCCCFF; font-size: 18px; padding: 0 10px; }
+
+form, h1, h2, h3, h4, h5 {
+	margin: 0px;
+	padding: 0px;
+}
+
+a.ext {
+	color: #333399;
+}
+
+a.ext:hover {
+	color: #993333;
+}
+
+.exttail {
+	color: #999;
+	position: relative;
+	bottom: 0.5ex;
+}
+
+ul, ol {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+ul.thread {
+	list-style-type: none;
+	border-left: 2px #666 solid;
+	padding-left: 10px;
+	margin: 5px 0px;
+}
+
+ul.thread li {
+	color: #333;
+	font-size: 11px;
+}
+
+/*
+input[type=submit], input[type=button] {
+	font-family: Arial, Helvetica, sans-serif;
+	padding: 0px 1px;
+	width: auto;
+	font-size: 9pt;
+	color:#fff;
+	font-weight: bold;
+	background-color: #33A;
+	border-right: 2px solid #336;
+	border-bottom: 2px solid #336;
+}
+*/
+input[type=submit]:hover, input[type=button]:hover {
+	background-color: #66C;
+	border-right: 2px solid #668;
+	border-bottom: 2px solid #668;
+}
+
+textarea#body{
+	width: 100%;
+	height: 500px;
+	padding: 2px;
+}
+
+/* sidenote.css */
+/* Contains css for tip, note and warn actions. */
+
+/* postit note-style information box */
+#note {
+		clear: both;
+		font-size: 10pt;
+		float: left;
+		width: 200px;
+		border: 1px solid #AAAAAA;
+		margin: 15px 10px 0px 0px;
+		padding: 0px;
+		background-color: #FFF900;
+		text-align: justify;
+		vertical-align: top;
+}
+
+#note hr {
+		height: 1px;
+		border: 1px solid #AAAAAA;
+		width: 100%;
+}
+
+#note .title {
+		text-align: center;
+		font-weight: bold;
+		background-color: #EEE800;
+		border-bottom: 1px solid #AAAAAA;
+		color: #000000;
+}
+
+#note #text {
+		padding: 4px;
+		color: #000000;
+}
+
+/* tip information box */
+#tip {
+		clear: both;
+		font-size: 10pt;
+		float: left;
+		width: 200px;
+		border: 1px solid #AAAAAA;
+		margin: 15px 10px 0px 0px;
+		padding: 0px;
+		background-color: #FFFFFF;
+		text-align: justify;
+		vertical-align: top;
+}
+
+#tip hr {
+		height: 1px;
+		border: 1px solid #AAAAAA;
+		width: 100%;
+}
+
+#tip .title {
+		text-align: center;
+		font-weight: bold;
+		background-color: #EFEFEF;
+		border-bottom: 1px solid #AAAAAA;
+		color: #000000;
+}
+
+#tip #text {
+		padding: 4px;
+		color: #000000;
+}
+
+/* warning information box */
+#warn {
+		clear: both;
+		font-size: 10pt;
+		float: left;
+		width: 200px;
+		border: 1px solid #AAAAAA;
+		margin: 15px 10px 0px 0px;
+		padding: 0px;
+		background-color: #FFAAAA;
+		text-align: justify;
+		vertical-align: top;
+}
+
+#warn hr {
+		height: 1px;
+		border: 1px solid #AAAAAA;
+		width: 100%;
+}
+
+#warn .title {
+		color: #FFFFFF;
+		text-align: center;
+		font-weight: bold;
+		background-color: #FF0000;
+		border-bottom: 1px solid #AAAAAA;
+}
+
+#warn #text {
+		padding: 4px;
+		color: #000000;
+}

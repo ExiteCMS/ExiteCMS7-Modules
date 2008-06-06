@@ -605,7 +605,7 @@ class Wakka
 		return($data);
 	}
 	function FullCategoryTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(body) against('".mysql_real_escape_string($phrase)."' IN BOOLEAN MODE)"); }
-	function SavePage($tag, $body, $note)
+	function SavePage($tag, $body, $note, $pagehits=0)
 	{
 		// get current user
 		$user = $this->GetUserName();
@@ -635,6 +635,7 @@ class Wakka
   				"owner = '".mysql_real_escape_string($owner)."', ".
  				"user = '".mysql_real_escape_string($user)."', ".
 				"note = '".mysql_real_escape_string($note)."', ".
+				"hits = '".mysql_real_escape_string($pagehits)."', ".
  				"latest = 'Y', ".
  				"body = '".mysql_real_escape_string($body)."'");
 
@@ -800,10 +801,10 @@ class Wakka
 		if ((eregi('IIS', $_SERVER["SERVER_SOFTWARE"])) && ($this->cookies_sent))
 		{
 			@ob_end_clean();
-			die('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>Redirected to '.$this->Href($url).'</title>'.
-'<meta http-equiv="refresh" content="0; url=\''.$url.'\'" /></head><body><div><script type="text/javascript">window.location.href="'.$url.'";</script>'.
-'</div><noscript>If your browser does not redirect you, please follow <a href="'.$this->Href($url).'">this link</a></noscript></body></html>');
+			die('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.
+					'<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>Redirected to '.$this->Href($url).'</title>'.
+					'<meta http-equiv="refresh" content="0; url=\''.$url.'\'" /></head><body><div><script type="text/javascript">window.location.href="'.$url.'";</script>'.
+					'</div><noscript>If your browser does not redirect you, please follow <a href="'.$this->Href($url).'">this link</a></noscript></body></html>');
 		} 
 		else 
 		{
@@ -839,13 +840,15 @@ class Wakka
 	 * @return string
 	 */
 	function Link($tag, $method='', $text='', $track=TRUE, $escapeText=TRUE, $title='') {
+		global $settings;
+		
 		if (!$text) $text = $tag;
 		// escape text?
 		if ($escapeText) $text = $this->htmlspecialchars_ent($text);
 		$tag = $this->htmlspecialchars_ent($tag); #142 & #148
 		$method = $this->htmlspecialchars_ent($method);
 		$title_attr = $title ? ' title="'.$this->htmlspecialchars_ent($title).'"' : '';
-		$url = '';
+		$url = ''; $external = true;
 
 		// is this an interwiki link?
 		if (preg_match("/^([A-ZÄÖÜ][A-Za-zÄÖÜßäöü]+)[:](\S*)$/", $tag, $matches))	# before the : should be a WikiName; anything after can be (nearly) anything that's allowed in a URL
@@ -867,7 +870,9 @@ class Wakka
 			// check for protocol-less URLs
 			else if (!preg_match("/:/", $tag))
 			{
-				$url = "http://".$tag;
+				// assume these are inter-website links
+				$external = false;
+				$url = $tag;
 			}
 		}
 		else
@@ -876,10 +881,15 @@ class Wakka
 			if ($_SESSION["linktracking"] && $track) $this->TrackLinkTo($tag);
 			$linkedPage = $this->LoadPage($tag);
 			// return ($linkedPage ? "<a href=\"".$this->Href($method, $linkedPage['tag'])."\">".$text."</a>" : "<span class=\"missingpage\">".$text."</span><a href=\"".$this->Href("edit", $tag)."\" title=\"Create this page\">?</a>");
-			return ($linkedPage ? "<a href=\"".$this->Href($method, $linkedPage['tag'])."\"$title_attr>".$text."</a>" : "<a class=\"missingpage\" href=\"".$this->Href("edit", $tag)."\" title=\"Create this page\">".$text."</a>");
+			return ($linkedPage ? "<a href=\"".$this->Href($method, $linkedPage['tag'])."\"$title_attr>".$text."</a>" : "<a class=\"missingpage\" href=\"".$this->Href("show", $tag)."\" title=\"Create this page\">".$text."</a>");
 		}
 		$external_link_tail = $this->GetConfigValue("external_link_tail");
-		return $url ? "<a class=\"ext\" href=\"$url\">$text</a>$external_link_tail" : $text;
+		if ($this->GetConfigValue("external_link_new_window") && $external)
+		{
+			return $url ? "<a class=\"ext\" target=\"_blank\" href=\"$url\">$text</a>$external_link_tail" : $text;
+		} else {
+			return $url ? "<a class=\"ext\" href=\"$url\">$text</a>" : $text;
+		}
 	}
 
 	// function PregPageLink($matches) { return $this->Link($matches[1]); }
@@ -1068,8 +1078,8 @@ class Wakka
 	function LoadUsers() { return $this->LoadAll("select * from ".$this->config['table_prefix']."users order by name"); }
 	function GetUserName() { if ($user = $this->GetUser()) $name = $user["name"]; else if (!$name = gethostbyaddr($_SERVER["REMOTE_ADDR"])) $name = $_SERVER["REMOTE_ADDR"]; return $name; }
 	function GetUser() { return (isset($_SESSION["user"])) ? $_SESSION["user"] : NULL; }
-	function SetUser($user) { $_SESSION["user"] = $user; $this->SetPersistentCookie("user_name", $user["name"]); $this->SetPersistentCookie("pass", $user["password"]); }
-	function LogoutUser() { $_SESSION["user"] = ""; $this->DeleteCookie("user_name"); $this->DeleteCookie("pass"); }
+	function SetUser($user) { $_SESSION["user"] = $user; }
+	function LogoutUser() { $_SESSION["user"] = ""; }
 	function UserWantsComments() { if (!$user = $this->GetUser()) return false; return ($user["show_comments"] == "Y"); }
 
 
@@ -1156,11 +1166,11 @@ class Wakka
 	}
 	//returns true if user is listed in configuration list as admin
 	function IsAdmin() {
-		$adminstring = $this->config["admin_users"];
-		$adminarray = explode(',' , $adminstring);
-
-		foreach ($adminarray as $admin) {
-			if (trim($admin) == $this->GetUserName()) return true;
+		$admingroup = $this->config["admin_group"];
+		if ($admingroup{0} == "G") {
+			return checkgroup(substr($admingroup,1));
+		} else {
+			return (iMEMBER && $admingroup == $GLOBALS['userdata']['user_id']);
 		}
 	}
 	function GetPageOwner($tag = "", $time = "") { if (!$tag = trim($tag)) $tag = $this->GetPageTag(); if ($page = $this->LoadPage($tag, $time)) return $page["owner"]; }
@@ -1194,6 +1204,9 @@ class Wakka
 		if ($this->LoadACL($tag, $privilege, 0)) $this->Query("UPDATE ".$this->config["table_prefix"]."acls SET ".mysql_real_escape_string($privilege)."_acl = '".mysql_real_escape_string(trim(str_replace("\r", "", $list)))."' WHERE page_tag = '".mysql_real_escape_string($tag)."' LIMIT 1");
 		else $this->Query("INSERT INTO ".$this->config["table_prefix"]."acls SET page_tag = '".mysql_real_escape_string($tag)."', ".mysql_real_escape_string($privilege)."_acl = '".mysql_real_escape_string(trim(str_replace("\r", "", $list)))."'");
 	}
+	function DeleteACL($tag) {
+		$this->Query("DELETE FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysql_real_escape_string($tag)."'");
+	}
 	function TrimACLs($list) {
 		foreach (explode("\n", $list) as $line)
 		{
@@ -1225,43 +1238,15 @@ class Wakka
 			$tag_ACLs = $this->LoadAllACLs($tag);
 			$acl = $tag_ACLs[$privilege."_acl"];
 		}
-
 		// fine fine... now go through acl
 		foreach (explode("\n", $acl) as $line)
 		{
-			// check for inversion character "!"
-			if (preg_match("/^[!](.*)$/", $line, $matches))
-			{
-				$negate = 1;
-				$line = $matches[1];
-			}
-			else
-			{
-				$negate = 0;
-			}
-
-			// if there's still anything left... lines with just a "!" don't count!
-			if ($line)
-			{
-				switch ($line[0])
-				{
-				// comments
-				case "#":
-					break;
-				// everyone
-				case "*":
-					return !$negate;
-				// only registered users
-				case "+":
-					// return ($registered) ? !$negate : false;
-					return ($registered) ? !$negate : $negate;
-				// aha! a user entry.
-				default:
-					if ($line == $user)
-					{
-						return !$negate;
-					}
-				}
+			if ($line{0} == "G") {
+				// check group membership
+				if (checkgroup(substr($line,1))) return true;
+			} else {
+				// check userid for a match
+				if (iMEMBER && $userdata['user_id'] == $line) return true;
 			}
 		}
 
@@ -1286,19 +1271,11 @@ class Wakka
 	// THE BIG EVIL NASTY ONE!
 	function Run($tag, $method = "")
 	{
+		global $userdata;
 		// do our stuff!
 		if (!$this->method = trim($method)) $this->method = "show";
 		if (!$this->tag = trim($tag)) $this->Redirect($this->Href("", $this->config["root_page"]));
-		if (!$this->GetUser() && ($user = $this->LoadUser($this->GetCookie('user_name'), $this->GetCookie('pass')))) $this->SetUser($user);
-		if ((!$this->GetUser() && isset($_COOKIE["wikka_user_name"])) && ($user = $this->LoadUser($_COOKIE["wikka_user_name"], $_COOKIE["wikka_pass"]))) 
-		{
-		 //Old cookies : delete them
-			SetCookie('wikka_user_name', "", 1, "/"); 
-			$_COOKIE['wikka_user_name'] = "";
-			SetCookie('wikka_pass', '', 1, '/');
-			$_COOKIE['wikka_pass'] = "";
-			$this->SetUser($user);
-		}
+		if (!$this->GetUser() && iMEMBER) $this->SetUser($userdata['user_name']);
 		#$this->SetPage($this->LoadPage($tag, (isset($_REQUEST["time"]) ? $_REQUEST["time"] :'')));
 		$this->SetPage($this->LoadPage($tag, (isset($_GET['time']) ? $_GET['time'] :''))); #312
 

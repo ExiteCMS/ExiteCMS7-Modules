@@ -130,7 +130,7 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 				if ($body != $this->page['body']) {
 
 					// add page (revisions)
-					$this->SavePage($this->tag, $body, $note);
+					$this->SavePage($this->tag, $body, $note, $this->page['hits']);
 
 					// now we render it internally so we can write the updated link table.
 					$this->ClearLinkTable();
@@ -153,6 +153,13 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 	$previous = $this->page['id'];
 	if (isset($_POST['previous'])) $previous = $_POST['previous'];
 	if (!isset($body)) $body = $this->page['body'];
+	// ** WanWizard ** added the default template for new/empty pages
+	if (empty($body)) {
+		global $settings;
+		$body = $settings['wiki_page_template'];
+	}
+	// ** WanWizard **
+	
 	$body = preg_replace("/\n[ ]{4}/", "\n\t", $body);	// @@@ FIXME: misses first line and multiple sets of four spaces - JW 2005-01-16
 
 
@@ -175,9 +182,9 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 		{
 			$preview_buttons .= '<input size="'.MAX_EDIT_NOTE_LENGTH.'" type="text" name="note" value="'.$this->hsc_secure($note).'" '.$highlight_note.'/>'.LABEL_EDIT_NOTE.'<br />'."\n";
 		}
-		$preview_buttons .= '<input name="submit" type="submit" value="'.INPUT_SUBMIT_STORE.'" accesskey="'.ACCESSKEY_STORE.'" />'."\n".
-			'<input name="submit" type="submit" value="'.INPUT_SUBMIT_REEDIT.'" accesskey="'.ACCESSKEY_REEDIT.'" id="reedit_id" />'."\n".
-			'<input type="button" value="'.INPUT_BUTTON_CANCEL.'" onclick="document.location=\''.$this->href('').'\';" />'."\n";
+		$preview_buttons .= '<input name="submit" class="button" type="submit" value="'.INPUT_SUBMIT_STORE.'" accesskey="'.ACCESSKEY_STORE.'" />'."\n".
+			'<input name="submit" class="button" type="submit" value="'.INPUT_SUBMIT_REEDIT.'" accesskey="'.ACCESSKEY_REEDIT.'" id="reedit_id" />'."\n".
+			'<input type="button" class="button" value="'.INPUT_BUTTON_CANCEL.'" onclick="document.location=\''.$this->href('').'\';" />'."\n";
 
 		$output .= '<div class="previewhead">'.PREVIEW_HEADER.'</div>'."\n";
 
@@ -228,7 +235,7 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 			// We need to escape ALL entity refs before display so we display them _as_ entities instead of interpreting them
 			// hence hsc_secure() instead of htmlspecialchars_ent() which UNescapes entities!
 			// JW/2007-02-20: why is this? wouldn't it be  easier for the person editing to show actual characters instead of entities?  
-			'<textarea id="body" name="body">'.$this->hsc_secure($body).'</textarea><br />'."\n";	#427
+			'<textarea id="body" name="body" style="height:400px;width:100%;">'.$this->hsc_secure($body).'</textarea><br />'."\n";	#427
 		// add Edit note
 		// We need to escape ALL entity refs before display so we display them _as_ entities instead of interpreting them
 		// so we use htmlspecialchars on the edit note (as on the body)
@@ -237,14 +244,16 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 			$output .= '<input size="'.MAX_EDIT_NOTE_LENGTH.'" type="text" name="note" value="'.$this->hsc_secure($note).'" '.$highlight_note.'/> '.LABEL_EDIT_NOTE.'<br />'."\n";
 		}
 		//finish
-		$output .=	'<input name="submit" type="submit" value="'.INPUT_SUBMIT_STORE.'" accesskey="'.ACCESSKEY_STORE.'" /> <input name="submit" type="submit" value="'.INPUT_SUBMIT_PREVIEW.'" accesskey="'.ACCESSKEY_PREVIEW.'" /> <input type="button" value="'.INPUT_BUTTON_CANCEL.'" onclick="document.location=\''.$this->Href('').'\';" />'."\n".
+		$output .=	'<input name="submit" class="button" type="submit" value="'.INPUT_SUBMIT_STORE.'" accesskey="'.ACCESSKEY_STORE.'" /> 
+					<input name="submit" class="button" type="submit" value="'.INPUT_SUBMIT_PREVIEW.'" accesskey="'.ACCESSKEY_PREVIEW.'" /> 
+					<input type="button" class="button" value="'.INPUT_BUTTON_CANCEL.'" onclick="document.location=\''.$this->Href('').'\';" />'."\n".
 			$this->FormClose();
 
 		if ($this->config['gui_editor'] == 1) 
 		{
-			$output .= '<script type="text/javascript" src="3rdparty/plugins/wikiedit/protoedit.js"></script>'."\n".
-					   '<script type="text/javascript" src="3rdparty/plugins/wikiedit/wikiedit2.js"></script>'."\n";
-			$output .= '<script type="text/javascript">'."  wE = new WikiEdit(); wE.init('body','WikiEdit','editornamecss');".'</script>'."\n";
+			$output .= '<script type="text/javascript" src="'.MODULES.'wiki/3rdparty/plugins/wikiedit/protoedit.js"></script>'."\n".
+					   '<script type="text/javascript" src="'.MODULES.'wiki/3rdparty/plugins/wikiedit/wikiedit2.js"></script>'."\n";
+			$output .= '<script type="text/javascript">'."  var wE = new WikiEdit(); wE.init('body','WikiEdit','editornamecss');".'</script>'."\n";
 		}
 	}
 

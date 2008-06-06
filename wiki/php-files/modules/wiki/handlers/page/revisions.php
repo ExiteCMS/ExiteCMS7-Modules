@@ -15,7 +15,7 @@ if ($this->HasAccess("read")) {
 		$output .= $this->FormOpen("diff", "", "get");
 		$output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 		$output .= "<tr>\n";
-		$output .= '<td><input type="submit" value="'.BUTTON_SHOW_DIFFERENCES.'" /></td>';
+		$output .= '<td><input class="button" type="submit" value="'.BUTTON_SHOW_DIFFERENCES.'" /></td>';
 		$output .= '<td><input value="1" type="checkbox" checked="checked" name="fastdiff" id="fastdiff" />'."\n".'<label for="fastdiff">'.SIMPLE_DIFF.'</label></td>';
 		$output .= "</tr>\n";
 		$output .= "</table>\n";
@@ -44,7 +44,7 @@ if ($this->HasAccess("read")) {
 			}
 		}
 		$output .= "</table><br />\n";
-		$output .= '<input type="button" value="'.BUTTON_RETURN_TO_NODE.'" onclick="document.location=\''.$this->Href('').'\';" />'."\n";
+		$output .= '<input class="button" type="button" value="'.BUTTON_RETURN_TO_NODE.'" onclick="document.location=\''.$this->Href('').'\';" />'."\n";
 		$output .= $this->FormClose()."\n";
 	}
 	print($output);

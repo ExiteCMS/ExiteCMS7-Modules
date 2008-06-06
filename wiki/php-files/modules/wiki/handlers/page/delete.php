@@ -27,11 +27,15 @@ if ($this->IsAdmin())
         <?php echo $this->FormOpen("delete") ?>
         <table border="0" cellspacing="0" cellpadding="0">
             <tr>
-                <td>Completely delete this page, including all comments?</td>
+                <td>
+					Completely delete this page, including all comments?<br /><br />
+				</td>
             </tr>
             <tr>
-                <td> <!-- nonsense input so form submission works with rewrite mode --><input type="hidden" value="" name="null"><input type="submit" value="Delete Page"  style="width: 120px"   />
-                <input type="button" value="Cancel" onclick="history.back();" style="width: 120px" /></td>
+                <td> <!-- nonsense input so form submission works with rewrite mode -->
+				<input type="hidden" value="" name="null">
+				<input type="submit" class="button" value="Delete Page"  style="width: 120px"   />
+                <input type="button" class="button" value="Cancel" onclick="history.back();" style="width: 120px" /></td>
             </tr>
         </table>
         <?php

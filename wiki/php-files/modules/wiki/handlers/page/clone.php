@@ -135,7 +135,7 @@ if (!$this->ExistsPage($from))
 			'<td></td>'."\n".
 			'<td>'."\n".
 			'<input type="checkbox" name="editoption" '.$editoption.' id="editoption" /><label for="editoption">'.LABEL_EDIT_OPTION.'</label>'."\n".
-			'<input type="submit" name="create" value="'.LABEL_CLONE.'" />'."\n".
+			'<input type="submit" class="button" name="create" value="'.LABEL_CLONE.'" />'."\n".
 			'</td>'."\n".
 			'</tr>'."\n".
 			'</table>'."\n";

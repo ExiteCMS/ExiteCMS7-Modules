@@ -16,12 +16,13 @@
  * @uses		Wakka::Href()
  * @uses		Wakka::htmlspecialchars_ent()
  */
+global $settings, $locale;
 
 /**
  * Defaults
  */
 if (!defined('I18N_LANG')) define('I18N_LANG', 'en-US');
-if (!defined('I18N_ENCODING_UTF8')) define('I18N_ENCODING_UTF8', 'UTF-8');
+if (!defined('I18N_ENCODING_UTF8')) define('I18N_ENCODING_UTF8', $settings['charset']);
 if (!defined('RSS_REVISIONS_VERSION')) define('RSS_REVISIONS_VERSION','2.0');
 if (!defined('RSS_RECENTCHANGES_VERSION')) define('RSS_RECENTCHANGES_VERSION','0.92');
 if (!defined('REVISIONS_EDITED_BY')) define('REVISIONS_EDITED_BY','Edited by %s');
@@ -36,6 +37,7 @@ define('HISTORY_REVISIONS_OF', 'History/revisions of %s');
 header("Content-type: text/xml");
 
 $xml = '<?xml version="1.0" encoding="'.I18N_ENCODING_UTF8.'"?>'."\n";
+$xml .= '<?xml-stylesheet type="text/css" href="css/xml.css"?>'."\n";
 $xml .= '<rss version="'.RSS_REVISIONS_VERSION.'">'."\n";
 $xml .= "<channel>\n";
 $xml .= "<title>".$this->GetConfigValue("wakka_name")." - ".$this->tag."</title>\n";

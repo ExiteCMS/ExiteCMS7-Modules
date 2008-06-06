@@ -14,7 +14,7 @@
 
 //defaults
 if(!defined('REVISION_DATE_FORMAT')) define('REVISION_DATE_FORMAT', 'D, d M Y');
-if(!defined('REVISION_TIME_FORMAT')) define('REVISION_TIME_FORMAT', 'H:i T');
+if(!defined('REVISION_TIME_FORMAT')) define('REVISION_TIME_FORMAT', 'H:i');
 if (!defined('PAGE_EDITOR_DIVIDER')) define ('PAGE_EDITOR_DIVIDER', '&#8594;');
 if (!defined('MAX_REVISION_NUMBER')) define ('MAX_REVISION_NUMBER', '50');
 
@@ -66,7 +66,7 @@ if ($pages = $this->LoadRecentlyChanged())
 				$curday = $day;
 			}
 
-			$timeformatted = date(REVISION_TIME_FORMAT, strtotime($page["time"]));
+			$timeformatted = date(REVISION_TIME_FORMAT, time_system2local(strtotime($page["time"])));
 			$page_edited_by = $page['user'];	
 			if (!$this->LoadUser($page_edited_by)) $page_edited_by .= ' ('.UNREGISTERED_USER.')';
 

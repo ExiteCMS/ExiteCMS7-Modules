@@ -36,7 +36,7 @@
  */
 
 echo "\n".'<!--starting page content-->'."\n";
-echo '<div class="page"';
+echo '<div class="page" ';
 echo (($user = $this->GetUser()) && ($user['doubleclickedit'] == 'N') || !$this->HasAccess('write')) ? '' : 'ondblclick="document.location=\''.$this->Href('edit').'\';" '; #268
 echo '>'."\n"; //TODO: move to templating class
 
@@ -49,8 +49,8 @@ else
 {
 	if (!$this->page)
 	{
-		echo '<p>This page doesn\'t exist yet. Maybe you want to <a href="'.$this->Href('edit').'">create</a> it?</p></div>';
-		echo '</div><!--closing page content-->'."\n"; //TODO: move to templating class
+		echo $this->Format("{{stub}}", 'wakka');
+		echo '</div>'."\n";
 	}
 	else
 	{
@@ -73,7 +73,7 @@ else
  				<?php echo $this->FormOpen('edit') ?>
  				<input type="hidden" name="previous" value="<?php echo $latest['id'] ?>" />
  				<input type="hidden" name="body" value="<?php echo $this->htmlspecialchars_ent($this->page['body']) ?>" />
- 				<input type="submit" value="Re-edit this old revision" />
+ 				<input class="button" type="submit" value="Re-edit this old revision" />
  				<?php echo $this->FormClose(); ?>
 <?php
 			}
@@ -128,7 +128,7 @@ else
 							echo $this->FormOpen("delcomment");
 ?>
    <input type="hidden" name="comment_id" value="<?php echo $comment['id'] ?>" />
-   <input type="submit" value="Delete Comment" />
+   <input class="button" type="submit" value="Delete Comment" />
 <?php 
 							echo $this->FormClose();
 						}
@@ -143,7 +143,7 @@ else
 		    			<?php echo $this->FormOpen('addcomment'); ?>
 					<label for="commentbox">Add a comment to this page:<br />
 					<textarea id="commentbox" name="body" rows="6" cols="78"></textarea><br />
-					<input type="submit" value="Add Comment" accesskey="s" />
+					<input class="button" type="submit" value="Add Comment" accesskey="s" />
             			</label>
 					<?php echo $this->FormClose(); ?>
 				<?php
