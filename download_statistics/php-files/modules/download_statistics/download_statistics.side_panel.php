@@ -50,6 +50,7 @@ while ($data = dbarray($result)) {
 	// store this counter
 	$variables['counters'][] = $data;
 }
+$variables['total'] = $total;
 
 // calculate the percentages of the grand total of all the entries listed (in $total)
 
@@ -72,7 +73,6 @@ foreach ($variables['counters'] as $key => $value) {
 	$variables['counters'][$key]['blue'] = $variables['counters'][$key]['width']+100;
 }
 
-$variables['title'] = "Downloads (".$total.")";
 $variables['barinfo'] = $download;
 $variables['barwidth'] = $barwidth;
 

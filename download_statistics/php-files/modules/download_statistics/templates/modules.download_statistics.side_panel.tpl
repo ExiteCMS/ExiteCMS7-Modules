@@ -1,6 +1,6 @@
 {***************************************************************************}
 {*                                                                         *}
-{* PLi-Fusion CMS template: download_bars_panel.tpl                        *}
+{* ExiteCMS template: download_statiscs.side_panel.tpl                     *}
 {*                                                                         *}
 {***************************************************************************}
 {*                                                                         *}
@@ -11,13 +11,13 @@
 {*                                                                         *}
 {***************************************************************************}
 {*                                                                         *}
-{* This template generates the PLi-Fusion infusion panel:                  *}
-{* download_bars_panel                                                     *}
+{* This template generates a side panel with a bar graph depicting the     *}
+{* number of files downloaded as percentage of the total                   *}
 {*                                                                         *}
 {***************************************************************************}
 {section name=bar loop=$counters}
 {if $smarty.section.bar.first}
-{include file="_openside_x.tpl" name=$_name title=$title state=$_state style=$_style}
+{include file="_openside_x.tpl" name=$_name title=$_title|cat:" ("|cat:$total|cat:")" state=$_state style=$_style}
 <table cellpadding='0' cellspacing='0'>
 {/if}
 	<tr>
