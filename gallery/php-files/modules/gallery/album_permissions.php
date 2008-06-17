@@ -50,12 +50,15 @@ $perms = array(
 foreach ($gallery->userDB->getUidList() as $uid) {
 	$tmpUser = $gallery->userDB->getUserByUid($uid);
 	$uname = $tmpUser->getUsername();
-	if ($tmpUser->isPseudo()) {
-	    $uname = "*$uname*";
+	if ($uid > 0) {
+		$uAll[$uid] = $uname;
+		$uUsers[$uid] = $uname;
+	} else {
+		$uAll[$uid] = "*".$uname;
 	}
-	$uAll[$uid] = $uname;
 }
 
+asort($uUsers);
 asort($uAll);
 
 $changed = 0;
@@ -122,7 +125,7 @@ echo makeFormIntro("album_permissions.php", array("name" =>
 			"albumperms_form"), array("type" => "popup"));
 
 if ($gallery->user->isAdmin) {
-    echo gTranslate('core', "Owner:") . drawSelect("ownerUid", $uAll, $ownerUid, 1, array(), true);
+    echo gTranslate('core', "Owner:") . drawSelect("ownerUid", $uUsers, $ownerUid, 1, array(), true);
 }
 ?>
 

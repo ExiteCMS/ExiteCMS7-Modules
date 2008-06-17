@@ -200,22 +200,24 @@ if ($gallery->user->canCreateAlbums() && !$gallery->session->offline) {
 }
 
 if ($gallery->user->isLoggedIn() && !$gallery->session->offline) {
-/*    if ($gallery->user->isAdmin()) {
+    if ($gallery->user->isAdmin()) {
 
-        $iconText = getIconText('unsortedList.gif', gTranslate('core', "Administer startpage"));
+/*        $iconText = getIconText('unsortedList.gif', gTranslate('core', "Administer startpage"));
         $linkurl = makeGalleryUrl('administer_startpage.php', array('type' => 'popup'));
         $iconElements[] = popup_link($iconText, $linkurl, true);
-
+*/
         $iconText = getIconText('kdf.gif', gTranslate('core', "Admin page"));
         $iconElements[] = '<a href="'. makeGalleryUrl('admin-page.php') .'">'. $iconText .'</a> ';
 
         $docsUrl = galleryDocs('admin');
-        if ($docsUrl) {
-            $iconText = getIconText('info.gif', gTranslate('core', "Documentation"));
-            $iconElements[] = "<a href=\"$docsUrl\">". $iconText .'</a>';
+        if ($docsUrl && file_exists("docs/index.html")) {
+	        $iconText = getIconText('info.gif', gTranslate('core', "Documentation"));
+    	    $linkurl = makeGalleryUrl($docsUrl, array());
+//        	$iconElements[] = popup_link($iconText, $linkurl, true);
+		    $iconElements[] = '<a href="' . doCommand("", array(), "docs/index.html") .'" target="_blank">'. $iconText .'</a>';
         }
     }
-*/
+
     if ($gallery->userDB->canModifyUser()) {
         $iconText = getIconText('yast_sysadmin.gif', gTranslate('core', "Preferences"));
         $iconElements[] = popup_link($iconText, "user_preferences.php", false, true, 500, 500);
@@ -326,7 +328,7 @@ for ($i = $start; $i <= $end; $i++) {
   <tr>
   <!-- Begin Image Cell -->
   <td align="center" valign="top">
-
+	<hr />
 <?php
       $gallery->html_wrap['borderColor'] = $borderColor;
       $gallery->html_wrap['borderWidth'] = 1;
@@ -348,7 +350,15 @@ for ($i = $start; $i <= $end; $i++) {
   <!-- End Image Cell -->
   <!-- Begin Text Cell -->
   <td align="<?php echo langLeft() ?>" valign="top" class="albumdesc">
-    <table cellpadding="0" cellspacing="0" width="100%" border="0" align="center" class="mod_title">
+    <table cellpadding="0" cellspacing="0" width="100%" border="0" align="center">
+	  <tr valign="top">
+        <td class="" style='white-space:nowrap;text-align:right;' colspan='2'>
+		  <hr />
+          <?php
+			include(dirname(__FILE__) . '/layout/adminAlbumCommands.inc');
+          ?>
+		</td>
+	  </tr>
       <tr valign="middle">
         <td class="leftspacer"></td>
         <td>
@@ -358,11 +368,6 @@ for ($i = $start; $i <= $end; $i++) {
               <td class="title">
                 <?php
 			echo editField($gallery->album, "title", $albumURL),"&nbsp;";
-		?>
-              </td>
-              <td class="" style='white-space:nowrap;text-align:right;'>
-                <?php
-			include(dirname(__FILE__) . '/layout/adminAlbumCommands.inc');
 		?>
               </td>
               <td class="mod_title_right"></td>
@@ -387,23 +392,55 @@ for ($i = $start; $i <= $end; $i++) {
 		echo "\n\t$description";
 		echo "\n</div>";
 	}
-
 	/*
 	* Owner
 	*/
 	if (strcmp($gallery->app->showOwners, "no")) {
-		echo "\n<div class=\"desc\">";
+		echo "\n<hr /><div class=\"desc\">";
 		echo sprintf(gTranslate('core', "Owner: %s"),showOwner($owner));
 		echo '</div>';
 	}
 
 	/*
+	* Comment Indicator
+	*/
+	if($gallery->app->comments_enabled == 'yes') {
+		// if comments_indication are "albums" or "both"
+		switch ($gallery->app->comments_indication) {
+			case "albums":
+			case "both":
+			$lastCommentDate = $gallery->album->lastCommentDate($gallery->app->comments_indication_verbose);
+			print lastCommentString($lastCommentDate, $displayCommentLegend);
+		} // end switch
+	}
+
+	// End Album Infos
+
+?> </tr>
+  <tr>
+ <?php
+
+ // Start tree
+ 	$_tree = false;
+    if (isset($gallery->app->albumTreeDepth) && $gallery->app->albumTreeDepth > 0)
+	if (isset($gallery->app->microTree) && $gallery->app->microTree == 'yes') { 
+		$_tree = true;
+	?>
+  <td colspan='2'><div style="width: 100%;">
+  <?php echo printMicroChildren2(createTreeArray($gallery->album->fields["name"],$depth = 0)); ?>
+  </div>
+<?php } else { ?>
+  <td valign="top" class="albumdesc" colspan='2'>
+<?php echo "<hr />";printChildren(createTreeArray($gallery->album->fields["name"],$depth = 0)); ?>
+<?php } ?>
+		<?php
+	/*
 	* Url (only for admins and owner)
 	*/
 	if ($gallery->user->isAdmin() || $gallery->user->isOwnerOfAlbum($gallery->album)) {
-		echo "<br>",gTranslate('core', "URL:") . ' <a href="'. $albumURL . '">';
+		echo "<hr />" . gTranslate('core', "URL:") . ' <a href="'. $albumURL . '">';
 		if (!$gallery->session->offline) {
-			echo breakString(urldecode($albumURL), 60, '&', 5);
+			echo breakString(urldecode($albumURL), 80, '&', 5);
 		} else {
 			echo $tmpAlbumName;
 		}
@@ -411,7 +448,7 @@ for ($i = $start; $i <= $end; $i++) {
 
 		if (ereg("album[[:digit:]]+$", $albumURL)) {
 			if (!$gallery->session->offline) {
-				echo '<br><span class="error">'.
+				echo '<br /><span class="error">'.
 				gTranslate('core', "Hey!") .
 				sprintf(gTranslate('core', "%s so that the URL is not so generic!"),
 				popup_link(gTranslate('core', "Rename this album"), "rename_album.php?set_albumName={$tmpAlbumName}&index=$i",0,0,500,500,"error"));
@@ -421,7 +458,7 @@ for ($i = $start; $i <= $end; $i++) {
 
 	}
 
-	echo "\n<br><br><span class=\"fineprint\">";
+	echo "\n<hr /><span class=\"fineprint\">";
 
 	/*
 	* Created / Last Changed
@@ -460,34 +497,10 @@ for ($i = $start; $i <= $end; $i++) {
 		echo " ".popup_link("[" . gTranslate('core', "reset counter") ."]", doCommand("reset-album-clicks", array("set_albumName" => $albumName), "albums.php"), 1);
 	}
 
-	/*
-	* Comment Indicator
-	*/
-	if($gallery->app->comments_enabled == 'yes') {
-		// if comments_indication are "albums" or "both"
-		switch ($gallery->app->comments_indication) {
-			case "albums":
-			case "both":
-			$lastCommentDate = $gallery->album->lastCommentDate($gallery->app->comments_indication_verbose);
-			print lastCommentString($lastCommentDate, $displayCommentLegend);
-		} // end switch
-	}
-
 	echo "\n</span>";
 
-	// End Album Infos
-
- // Start tree
-    if ( isset($gallery->app->albumTreeDepth) && $gallery->app->albumTreeDepth > 0)
-	if (isset($gallery->app->microTree) && $gallery->app->microTree == 'yes') { ?>
-  <div style="width: 100%;">
-  <?php echo printMicroChildren2(createTreeArray($albumName,$depth = 0)); ?>
-  </div>
-<?php } else { ?>
-  <td valign="top" class="albumdesc">
-<?php printChildren(createTreeArray($albumName,$depth = 0)); ?>
-  </td>
-<?php } ?>
+		?>
+	</td>
   </tr>
   <!-- End Text Cell -->
   <!-- End Album Column Block -->

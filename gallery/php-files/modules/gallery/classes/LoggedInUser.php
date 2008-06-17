@@ -22,12 +22,15 @@
 ?>
 <?php
 class LoggedinUser extends Abstract_User {
+
 	function LoggedinUser() {
-		$this->username = "LOGGEDIN";
-		$this->fullname = _("Anonymous User") ;
+		global $locale;
+
+		$this->username = $locale['user1'];
+		$this->fullname = $locale['user1'];
 		$this->setIsAdmin(false);
 		$this->setCanCreateAlbums(false);
-		$this->uid = "loggedin";
+		$this->uid = -101;
 	}
 
 	function isLoggedIn() {

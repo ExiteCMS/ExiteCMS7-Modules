@@ -40,25 +40,35 @@ class ExiteCMS_UserDB extends Abstract_UserDB {
 	}
 
 	function getUidList() {
-		global $db_prefix;
+		global $db_prefix, $locale;
+
 		$uidList = array();
 		$db = $this->db;
 
 		$result = dbquery("select user_id from ".$db_prefix."users");
-
 		while ($row = dbarray($result)) {
 			array_push($uidList, $row['user_id']);
 		}
 
-		array_push($uidList, $this->nobody->getUid());
-		array_push($uidList, $this->everybody->getUid());
-		array_push($uidList, $this->loggedIn->getUid());
+		// add the system groups
+		array_push($uidList, -0);
+		array_push($uidList, -100);
+		array_push($uidList, -101);
+		array_push($uidList, -102);
+		array_push($uidList, -103);
+
+		// get all other groups
+		$result = dbquery("select group_id from ".$db_prefix."user_groups");
+		while ($row = dbarray($result)) {
+			array_push($uidList, -$row['group_id']);
+		}
 
 		sort($uidList);
 		return $uidList;
 	}
 
 	function getUserByUsername($username, $level=0) {
+
 		if (!strcmp($username, $this->nobody->getUsername())) {
 			return $this->nobody;
 		} else if (!strcmp($username, $this->everybody->getUsername())) {
@@ -74,19 +84,15 @@ class ExiteCMS_UserDB extends Abstract_UserDB {
 
 	function getUserByUid($uid) {
 		global $gallery;
+
 		$userDir = $gallery->app->userDir;
 
-		if (!$uid || !strcmp($uid, $this->nobody->getUid())) {
-			return $this->nobody;
-		} else if (!strcmp($uid, $this->everybody->getUid())) {
-			return $this->everybody;
-		} else if (!strcmp($uid, $this->loggedIn->getUid())) {
-			return $this->loggedIn;
-		} 
+		if ($uid === false) return $this->nobody;
 
 		$user = new ExiteCMS_User();
 		$user->loadByUid($uid);
 		return $user;
+
 	}
 }
 

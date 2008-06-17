@@ -107,7 +107,7 @@ function getBrowserLanguage() {
     else {
         $browserLang = false;
     }
-
+die($browserLang);
     return $browserLang;
 }
 
@@ -136,7 +136,7 @@ function getEnvLang() {
     global $board_config;                       /* Needed for phpBB2    		*/
     global $_CONF;                              /* Needed for GeekLog   		*/
     global $mosConfig_locale, $mosConfig_lang;  /* Needed for Mambo / Joomla!	*/
-    global $currentlang;                        /* Needed for CPGNuke		*/
+    global $currentlang;                        /* Needed for CPGNuke			*/
 
     $envLang = NULL;
 
@@ -204,16 +204,15 @@ function getEnvLang() {
  * @return string $defaultLanguage;
  */
 function getDefaultLanguage() {
-    global $gallery;
+    global $gallery, $settings;
 
-    if(isset($gallery->app->default_language)
-    && $gallery->app->default_language != 'browser') {
-        $defaultLanguage = $gallery->app->default_language;
-    }
-    else {
+	// Gallery Language = ExiteCMS language
+	$defaultLanguage = explode("|",$settings['locales']);
+	$defaultLanguage = $defaultLanguage[0];
+	$gallery->app->default_language = $defaultLanguage;
+    if(empty($gallery->app->default_language)) {
         $defaultLanguage = getBrowserLanguage();
     }
-
     return $defaultLanguage;
 }
 

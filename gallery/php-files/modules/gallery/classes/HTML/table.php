@@ -133,7 +133,6 @@ class galleryTable {
 	}
 
 	$buf .= "\n$ind</table>\n$ind";
-
 	return $buf;
     }
 }   

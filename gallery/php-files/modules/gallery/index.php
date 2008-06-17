@@ -37,10 +37,6 @@ $mop = isset($_REQUEST['mop']) ? $_REQUEST['mop'] : null;
 $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : null;
 $include = isset($_REQUEST['include']) ? $_REQUEST['include'] : null;
 
-// tell Gallery we're embedding in ExiteCMS
-$GALLERY_EMBEDDED_INSIDE = 'ExiteCMS';
-$GALLERY_EMBEDDED_INSIDE_TYPE = 'ExiteCMS';
-
 // default Gallery entry point
 if (empty($include)) {
 	$include = "albums.php";

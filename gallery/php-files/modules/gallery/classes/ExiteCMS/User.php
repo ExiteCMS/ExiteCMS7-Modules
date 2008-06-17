@@ -37,20 +37,65 @@ class ExiteCMS_User extends Abstract_User {
 	}
 
 	function loadByUid($uid) {
-		global $db_prefix;
-		if ($row = dbarray(dbquery("SELECT user_name, user_fullname, user_email FROM ".$db_prefix."users WHERE user_id='$uid'"))) {
-			$this->username = $row['user_name'];
-			$this->fullname = $row['user_fullname'];
-			$this->email = $row['user_email'];
-			$this->uid = $uid;
-		
-			// WANWIZARD => Needs to be a group membership check
-			if (iSUPERADMIN) {
-				$this->isAdmin = 1;
-				$this->canCreateAlbums = 1;
+		global $db_prefix, $locale;
+
+		if ($uid > 0) {
+			if ($row = dbarray(dbquery("SELECT user_name, user_fullname, user_email FROM ".$db_prefix."users WHERE user_id='$uid'"))) {
+				$this->username = $row['user_name'];
+				$this->fullname = $row['user_fullname'];
+				$this->email = $row['user_email'];
+				$this->uid = $uid;
+				// WANWIZARD => Needs to be a group membership check
+				$this->isAdmin = iSUPERADMIN ? 1 : 0;
+				$this->canCreateAlbums = iSUPERADMIN ? 1 : 0;
+			} else {
+				$this->uid = -1;
 			}
 		} else {
-			$this->uid = -1;
+			switch ($uid) {
+				case 0:
+					$this->username = $locale['user0'];
+					$this->fullname = $locale['user0'];
+					$this->email = "";
+					$this->uid = $uid;
+					break;
+				case -100:
+					$this->username = $locale['usera'];
+					$this->fullname = $locale['usera'];
+					$this->email = "";
+					$this->uid = $uid;
+					break;
+				case -101:
+					$this->username = $locale['user1'];
+					$this->fullname = $locale['user1'];
+					$this->email = "";
+					$this->uid = $uid;
+					break;
+				case -102:
+					$this->username = $locale['user2'];
+					$this->fullname = $locale['user2'];
+					$this->email = "";
+					$this->uid = $uid;
+					break;
+				case -103:
+					$this->username = $locale['user3'];
+					$this->fullname = $locale['user3'];
+					$this->email = "";
+					$this->uid = $uid;
+					break;
+				default:
+					if ($row = dbarray(dbquery("SELECT group_name FROM ".$db_prefix."user_groups WHERE group_id='".abs($uid)."'"))) {
+					$this->username = $row['group_name'];
+					$this->fullname = $row['group_name'];
+					$this->email = "";
+					$this->uid = $uid;
+					// WANWIZARD => Needs to be a group membership check
+					$this->isAdmin = iSUPERADMIN ? 1 : 0;
+					$this->canCreateAlbums = iSUPERADMIN ? 1 : 0;
+				} else {
+					$this->uid = -1;
+				}
+		}
 		}
 	}
 
@@ -63,10 +108,8 @@ class ExiteCMS_User extends Abstract_User {
 			$this->username = $uname;
 		
 			// WANWIZARD => Needs to be a group membership check
-			if (iSUPERADMIN) {
-				$this->isAdmin = 1;
-				$this->canCreateAlbums = 1;
-			}
+			$this->isAdmin = iSUPERADMIN ? 1 : 0;
+			$this->canCreateAlbums = iSUPERADMIN ? 1 : 0;
 		} else {
 			$this->uid = -1;
 		}

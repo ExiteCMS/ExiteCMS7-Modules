@@ -374,7 +374,7 @@ function printChildren($tree, $depth = 0) {
 
 function printMicroChildren2($tree, $depth = 0) {
 	if ($depth == 0 && !empty($tree)) {
-		echo '<div style="font-weight: bold; margin-bottom: 3px">'. gTranslate('common', "Sub-albums:") ."</div>\n";
+		echo '<hr /><div style="font-weight: bold; margin-bottom: 3px">'. gTranslate('common', "Sub-albums:") ."</div>\n";
 	}
 
 	foreach($tree as $nr => $content) {
@@ -979,7 +979,7 @@ function lastCommentString($lastCommentDate, &$displayCommentLegend) {
 		return  '';
 	}
 	if ($gallery->app->comments_indication_verbose == 'yes') {
-		$ret = "<br>".
+		$ret = "<hr />".
 		sprintf(gTranslate('common', "Last comment %s."), strftime($gallery->app->dateString, $lastCommentDate));
 	}
 	else {

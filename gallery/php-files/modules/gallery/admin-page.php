@@ -92,7 +92,7 @@ includeLayout('breadcrumb.inc');
 includeLayout('navtableend.inc');
 
 if(!empty($adminOptions)) {
-	echo "\n" .'<table style="width:80%; margin:10px; margin-bottom:50px">';
+	echo "\n" .'<table style="width:100%; margin:10px; margin-bottom:50px">';
 	foreach ($adminOptions as $option) {
 
 		echo "\n<tr>";
@@ -101,7 +101,7 @@ if(!empty($adminOptions)) {
 		} else {
 			$link = popup_link($option['text'], $option['popupFile'], false, true, 500, 500, 'admin');
 		}
-		echo "\n<td class=\"adm_options\">$link</td>";
+		echo "\n<td class=\"adm_options\" style=\"white-space:nowrap;\">$link</td>";
 		echo "\n<td class=\"adm_options\">". $option['longtext'] ."</td>";
 		echo "\n</tr>";
 	}

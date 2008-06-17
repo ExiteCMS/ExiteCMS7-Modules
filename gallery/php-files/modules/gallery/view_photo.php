@@ -566,7 +566,7 @@ if(sizeof($albumItemOptions) > 2 && $useIcons) {
     includeLayout('navtablemiddle.inc');
     $albumItemOptionElements = array();
     $itemActionTable = new galleryTable();
-    $itemActionTable->setColumnCount(10);
+    $itemActionTable->setColumnCount(0);
     $itemActionTable->setAttrs(array('align' => langLeft()));
     foreach ($albumItemOptions as $trash => $option) {
         if(!empty($option['value'])) {

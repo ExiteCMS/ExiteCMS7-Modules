@@ -23,7 +23,7 @@
 <?php
 
 $gallery->version = '1.5.7';
-$gallery->config_version = 96;
+$gallery->config_version = 1;
 $gallery->album_version = 37;
 $gallery->user_version = 6;
 $gallery->url = "http://gallery.sourceforge.net";

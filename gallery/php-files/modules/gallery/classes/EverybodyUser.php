@@ -22,12 +22,15 @@
 ?>
 <?php
 class EverybodyUser extends Abstract_User {
+
 	function EverybodyUser() {
-		$this->username = "EVERYBODY" ;
-		$this->fullname = _("Anonymous User");
+		global $locale;
+		
+		$this->username = $locale['user0'];
+		$this->fullname = $locale['user0'];
 		$this->setIsAdmin(false);
 		$this->setCanCreateAlbums(false);
-		$this->uid = "everybody";
+		$this->uid = 0;
 	}
 
 	function isLoggedIn() {

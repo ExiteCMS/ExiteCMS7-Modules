@@ -1,0 +1,42 @@
+<?php
+// $Id: wrapper.footer.default 16803 2007-08-01 20:49:39Z jenst $
+// This footer file detects whether Gallery is embedded in any
+// known PHP applications and then decorates Gallery appropriately.
+
+global $GALLERY_EMBEDDED_INSIDE_TYPE;
+
+includeTemplate('footer.tpl');
+
+if (isDebugging()) {
+	$infoText = sprintf(gTranslate('core', "Debug ON! Level %s"), $gallery->app->debuglevel) . '<br>';
+	if (empty($GALLERY_EMBEDDED_INSIDE_TYPE)) {
+		$infoText .= 'Standalone';
+	}
+	else {
+		$infoText .= 'Embedded in: '. $GALLERY_EMBEDDED_INSIDE_TYPE;
+	}
+
+    echo infoLine($infoText, 'error');
+}
+
+// get the captured content
+$content =  ob_get_contents();
+
+// make sure the content is not cached
+// header("Cache-Control: no-cache");
+
+// clear the output buffer
+ob_end_clean();
+
+// create the panel
+$variables = array();
+$variables['html'] = $content;
+
+global $template_panels, $template_variables, $userdata, $db_prefix, $settings;
+
+$template_panels[] = array('type' => 'body', 'title' => 'Gallery', 'name' => 'gallery', 'template' => '_custom_html.tpl');
+$template_variables['gallery'] = $variables;
+
+// and call the template engine to generate the page
+require_once PATH_THEME."/theme.php";
+?>

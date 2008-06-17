@@ -60,7 +60,7 @@
 
 .customFieldsTable {
      border: none;
-     font-size:36px;
+     font-size:12px;
      margin-bottom: 0px;
      padding: 0px;
 }
@@ -155,7 +155,7 @@ a.error:hover {
 
 .nav                            /* used in navigation bars */
 	{
-	  font-size: 1.4em; color: #0c386f; font-weight:bold;
+	  font-size: 1.1em; color: #0c386f; font-weight:bold;
 	}
 .navtableborderbegin
 	{

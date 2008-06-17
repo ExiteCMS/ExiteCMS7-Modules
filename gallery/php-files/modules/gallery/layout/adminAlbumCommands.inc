@@ -6,11 +6,12 @@
 ?>
 <!-- Begin adminAlbumCommands -->
 <?php
-
+$has_commands=false;
 /* User is allowed to delete the album */
 if ($gallery->user->canDeleteAlbum($gallery->album)) {
     $iconText = getIconText('page_delete.gif', gTranslate('core',"Delete album"), 'yes');
 	echo "\n\t". popup_link($iconText, "delete_album.php?set_albumName={$tmpAlbumName}");
+	$has_commands = true;
 }
 
 /* User is allowed to change the album */
@@ -21,6 +22,7 @@ if ($gallery->user->canWriteToAlbum($gallery->album)) {
 	echo "\n\t". popup_link($iconText, "move_album.php?set_albumName={$tmpAlbumName}&index=$i&reorder=1");
     $iconText = getIconText('page_save.gif', gTranslate('core',"Rename album"), 'yes');
 	echo "\n\t". popup_link($iconText, "rename_album.php?set_albumName={$tmpAlbumName}&index=$i");
+	$has_commands = true;
 }
 
 /* User ist allowed to change album captions */
@@ -28,6 +30,7 @@ if ($gallery->user->canWriteToAlbum($gallery->album)) {
 if ($gallery->user->canChangeTextOfAlbum($gallery->album) && !$gallery->session->offline) {
 	echo "\n\t". '<a href="'. makeGalleryUrl("captionator.php", array("set_albumName" => $tmpAlbumName)) . '">' . 
 		getIconText('picture_edit.gif', gTranslate('core',"Edit captions"), 'yes') . '</a>';
+	$has_commands = true;
 }
 
 /* User is Admin or Owner */
@@ -52,12 +55,15 @@ if ($gallery->user->isAdmin() || $gallery->user->isOwnerOfAlbum($gallery->album)
 	    $iconText = getIconText('image_edit.gif', gTranslate('core',"Watermark&nbsp;album"), 'yes');
 		echo "\n\t". popup_link($iconText, "watermark_album.php?set_albumName={$tmpAlbumName}");
 	}
+	$has_commands = true;
 }
 
 /* user can download this album */
 if ($gallery->user->canDownloadAlbum($gallery->album) && $gallery->album->numPhotos(1)) {
     $iconText = getIconText('compress.gif', gTranslate('core', "Download entire album as archive"), 'yes');
     echo "\n\t". popup_link($iconText, "download.php?set_albumName=$tmpAlbumName",false,false,500,500);
+	$has_commands = true;
 }
+if ($has_commands) echo "<hr />";
 ?>
 <!-- End adminAlbumCommands -->

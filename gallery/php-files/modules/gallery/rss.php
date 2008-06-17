@@ -270,7 +270,7 @@ header("Content-Type: application/xml");
 
 $xml_header = 'xml version="1.0"';
 
-echo '<' . '?xml version="1.0" encoding="' . $GLOBALS['locale']['charset'] . '"?' . '>';
+echo '<' . '?xml version="1.0" encoding="' . $GLOBALS['settings']['charset'] . '"?' . '>';
 
 ?>
 

@@ -21,16 +21,6 @@
 */
 ?>
 <?php
-
-// Hack Prevention
-$sensitiveList = array('gallery', 'GALLERY_EMBEDDED_INSIDE', 'GALLERY_EMBEDDED_INSIDE_TYPE', 'GLOBALS');
-foreach ($sensitiveList as $sensitive) {
-    if (!empty($_REQUEST[$sensitive])) {
-        echo "Security violation! Override attempt.\n";
-        exit;
-    }
-}
-
 /*---------------------------------------------------+
 | ExiteCMS Content Management System                 |
 +----------------------------------------------------+
@@ -40,15 +30,21 @@ foreach ($sensitiveList as $sensitive) {
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
+// Hack Prevention
+$sensitiveList = array('gallery', 'GALLERY_EMBEDDED_INSIDE', 'GALLERY_EMBEDDED_INSIDE_TYPE', 'GLOBALS');
+foreach ($sensitiveList as $sensitive) {
+    if (!empty($_REQUEST[$sensitive])) {
+        terminate("Security violation! Override attempt.");
+    }
+}
+
+// check if this module is installed
+if (!isset($settings['gallery_albumdir'])) {
+	terminate('The Gallery module for ExiteCMS is not installed. Please do so before trying to use it.');
+}
+
 // start capturing all output
 ob_start();
-
-/*
-* Turn down the error reporting to just critical errors for now.
-* In v1.2, we know that we'll have lots and lots of warnings if
-* error reporting is turned all the way up.  We'll fix this in v2.0
-*/
-error_reporting(E_ALL & ~E_NOTICE);
 
 /*
 *  Seed the randomization pool once, instead of doing it every place
@@ -104,37 +100,9 @@ if (file_exists(dirname(__FILE__) . "/lib/devel.php")) {
     require_once(dirname(__FILE__) . "/lib/devel.php");
 }
 
-/*
- * Now we can catch if were are in GeekLog and if yes, include the common lib file.
- *
- * If the old example path is still set, remove it.
-*/
-if (!empty($gallery->app->geeklog_dir) && $gallery->app->geeklog_dir == "/path/to/geeklog/public_html") {
-    $gallery->app->geeklog_dir = '';
-}
-
-// Verify that the geeklog_dir isn't overwritten with a remote exploit
-if (!empty($gallery->app->geeklog_dir) && !realpath($gallery->app->geeklog_dir)) {
-    print _("Security violation. Geeklog Dir is invalid.") ."\n";
-    exit;
-}
-elseif (!empty($gallery->app->geeklog_dir)) {
-    $GALLERY_EMBEDDED_INSIDE='GeekLog';
-    $GALLERY_EMBEDDED_INSIDE_TYPE = 'GeekLog';
-
-    if (! defined ("GEEKLOG_DIR")) {
-        define ("GEEKLOG_DIR",$gallery->app->geeklog_dir);
-    }
-
-    require_once(GEEKLOG_DIR . '/lib-common.php');
-}
-
 if (isset($gallery->app->devMode) && $gallery->app->devMode == 'yes') {
     ini_set("display_errors", "1");
     error_reporting(E_ALL);
-}
-else {
-    error_reporting(E_ALL & ~E_NOTICE);
 }
 
 /*
@@ -206,6 +174,7 @@ if ($gallerySanity != NULL) {
 
 // ExiteCMS embedding
 $GALLERY_EMBEDDED_INSIDE = 'ExiteCMS';
+$GALLERY_EMBEDDED_INSIDE_TYPE = 'ExiteCMS';
 
 include_once(dirname(__FILE__) . "/classes/Database.php");
 include_once(dirname(__FILE__) . "/classes/database/mysql/Database.php");
@@ -218,15 +187,15 @@ $dbpasswd = $GLOBALS['user_db_pass'];
 $dbname = $GLOBALS['user_db_name'];
 
 $gallery->database{"ExiteCMS"} = new MySQL_Database($dbhost, $dbuser, $dbpasswd, $dbname);
-
 $gallery->database{"prefix"} = $GLOBALS['user_db_prefix'];
+
 /* Load our user database (and user object) */
 $gallery->userDB = new ExiteCMS_UserDB;
-if (isset($GLOBALS['userdata']) && isset($GLOBALS['userdata']['user_name'])) {
+if (iMEMBER) {
 	$gallery->session->username = $GLOBALS['userdata']['user_name'];
-	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
-} elseif (isset($gallery->session->username) && $gallery->session->username) {
-	$gallery->user = $gallery->userDB->getUserByUsername($gallery->session->username);
+	$gallery->user = $gallery->userDB->getUserByUid($GLOBALS['userdata']['user_id']);
+} else {
+	$gallery->user = $gallery->userDB->getEverybody();
 }
 
 /* If there's no specific user, they are the special Everybody user */
@@ -238,26 +207,8 @@ if (!isset($gallery->user) || empty($gallery->user)) {
     $gallery->session->username = "";
 }
 
-/*
- * 18.12.2006
- * In previous Versions we did a second language init after the user init.
- * But i do'nt see a reason a reason. So i commented it out.
- if (!empty($gallery->user)) {
-     $userlanguage = $gallery->user->getDefaultLanguage();
- 
-     if($userlanguage != $gallery->language) {
-         initLanguage(true, $userlanguage);
-     }
- }
-*/
-
 if (!isset($gallery->session->offline)) {
     $gallery->session->offline = FALSE;
-}
-
-if ($gallery->userDB->versionOutOfDate()) {
-    include_once(dirname(__FILE__) . "/upgrade_users.php");
-    exit;
 }
 
 /* Load the correct album object */
