@@ -45,6 +45,16 @@
 	{section name=ad loop=$ads1}
 		{include file="_opentable.tpl" name=$_name title=$locale.ads402 state=$_state style=$_style}
 		{if $smarty.section.ad.first}
+			{if $smarty.const.THEME_WIDTH|regex_replace:"/[0-9]/":"" == "%" || $smarty.const.THEME_WIDTH < 1000}
+		<table align='center' cellpadding='0' cellspacing='1' width='610' class='tbl-border'>
+			<tr>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads460}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads461}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads462}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads501}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads463}</b></td>
+			</tr>
+			{else}
 		<table align='center' cellpadding='0' cellspacing='1' width='790' class='tbl-border'>
 			<tr>
 				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads460}</b></td>
@@ -56,21 +66,33 @@
 				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads464}</b></td>
 				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads465}</b></td>
 			</tr>
+			{/if}
 		{/if}
+			{if $smarty.const.THEME_WIDTH|regex_replace:"/[0-9]/":"" == "%" || $smarty.const.THEME_WIDTH < 1000}
+				<tr>
+					<td rowspan='4' align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_id}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].user_name}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].ad_location}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_priority}/5</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].contract_type}</td>
+				</tr>
+			{else}
+				<tr>
+					<td rowspan='2' align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_id}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].user_name}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].ad_location}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_priority}/5</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].contract_type}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_shown}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_clicks}</td>
+					<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].percentage}%</td>
+				</tr>
+			{/if}
 			<tr>
-				<td rowspan='2' align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_id}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].user_name}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].ad_location}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_priority}/5</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].contract_type}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_shown}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_clicks}</td>
-				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].percentage}%</td>
-			</tr>
-			<tr>
-				<td colspan='4' align='left' class='tbl1'>
+				<td colspan='4' align='left' class='tbl2'>
 					<a href='{$ads1[ad].adverts_url}'><img src='{$smarty.const.IMAGES_ADS}{$ads1[ad].adverts_image}' border='0' /></a>
 				</td>
+				{if $smarty.const.THEME_WIDTH|regex_replace:"/[0-9]/":"" != "%" && $smarty.const.THEME_WIDTH > 999}
 				<td colspan='3' align='center' class='tbl1'>
 					<form name='edit_advert' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id={$ads1[ad].adverts_id}'>
 						<input class='textbox' type='text' name='adverts_url' size='40' maxlength='200' value='{$ads1[ad].adverts_url}'>
@@ -79,7 +101,28 @@
 						<input type='submit' name='email' value='{$locale.ads445}' class='button' />
 					</form>
 				</td>
+				{/if}
 			</tr>
+			{if $smarty.const.THEME_WIDTH|regex_replace:"/[0-9]/":"" == "%" || $smarty.const.THEME_WIDTH < 1000}
+			<tr>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads479}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads464}</b></td>
+				<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><b>{$locale.ads465}</b></td>
+				<td rowspan='2' align='center' width='1%' class='tbl2' style='white-space:nowrap'>
+					<form name='edit_advert' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id={$ads1[ad].adverts_id}'>
+						<input class='textbox' type='text' name='adverts_url' size='40' maxlength='200' value='{$ads1[ad].adverts_url}'>
+						<br /><br />
+						<input type='submit' name='change' value='{$locale.ads444}' class='button' />&nbsp;
+						<input type='submit' name='email' value='{$locale.ads445}' class='button' />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_shown}</td>
+				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_clicks}</td>
+				<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].percentage}%</td>
+			</tr>
+			{/if}
 		</table>
 		<br />
 		<form name='email_all' method='post' action='{$smarty.const.FUSION_SELF}?action=update&amp;id=all'>
