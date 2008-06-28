@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Advertisements";							// title or name of this module
 $mod_description = "Advertisement image management";	// short description of it's purpose
-$mod_version = "1.1.0";									// module version number
+$mod_version = "1.1.1";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -106,9 +106,11 @@ $localestrings['en']['ads448'] = "Advert image management";
 $localestrings['en']['ads449'] = "Upload image";
 // advertisement location and type. 
 $localestrings['en']['ads450'] = "Logo - left side panel";			// location = 0
-$localestrings['en']['ads451'] = "Banner - Discussion Forum";		// location = 1
+$localestrings['en']['ads451'] = "Banner - Forum, on top";			// location = 1
 $localestrings['en']['ads452'] = "Banner - Forum index only";		// location = 2
 $localestrings['en']['ads453'] = "Banner - Thread index only";		// location = 3
+$localestrings['en']['ads454'] = "Banner - Forum, at the bottom";	// location = 4
+$localestrings['en']['ads455'] = "Banner - Forum, top and bottom";	// location = 5
 // current - finished advertisement
 $localestrings['en']['ads460'] = "ID";
 $localestrings['en']['ads461'] = "Client name";
@@ -230,9 +232,11 @@ $localestrings['nl']['ads448'] = "Advertentie beheer";
 $localestrings['nl']['ads449'] = "Plaatje uploaden";
 // advertisement location and type. 
 $localestrings['nl']['ads450'] = "Logo - zijpaneel";				// location = 0
-$localestrings['nl']['ads451'] = "Banner - Discussie Forum";		// location = 1
+$localestrings['nl']['ads451'] = "Banner - Forum, bovenaan";		// location = 1
 $localestrings['nl']['ads452'] = "Banner - Alleen forum index";		// location = 2
 $localestrings['nl']['ads453'] = "Banner - Alleen topic index";		// location = 3
+$localestrings['nl']['ads454'] = "Banner - Forum, onderaan";		// location = 4
+$localestrings['nl']['ads455'] = "Banner - Forum, boven en onder";	// location = 5
 // current - finished advertisement
 $localestrings['nl']['ads460'] = "ID";
 $localestrings['nl']['ads461'] = "Adverteerder";

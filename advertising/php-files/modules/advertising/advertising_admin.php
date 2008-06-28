@@ -16,8 +16,8 @@ require_once PATH_ROOT."/includes/theme_functions.php";
 locale_load("modules.advertising");
 
 //
-$ad_locations = array($locale['ads450'], $locale['ads451'], $locale['ads452'], $locale['ads453']);
-$ad_dimensions = array("160x65", "468x60", "468x60", "468x60");
+$ad_locations = array($locale['ads450'], $locale['ads451'], $locale['ads452'], $locale['ads453'], $locale['ads454'], $locale['ads455']);
+$ad_dimensions = array("160x65", "468x60", "468x60", "468x60", "468x60", "468x60");
 $contract_types = array($locale['ads430'], $locale['ads431'], $locale['ads432']);
 
 // temp storage for template variables
