@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs, and provides detailed statistics, including a Google Map with downloaders per country";
-$mod_version = "0.1.0";
+$mod_version = "0.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -78,6 +78,8 @@ $localestrings['en']['dls507'] = "Yes";
 $localestrings['en']['dls508'] = "Update download counters:";
 $localestrings['en']['dls509'] = "If No, only downloads from the download pages are counted. If Yes, the batch program 'get_statistics.php' will update the counters";
 $localestrings['en']['dls510'] = "Access to download statistics for:";
+$localestrings['en']['dls511'] = "Google Maps API key:";
+$localestrings['en']['dls512'] = "Click <a href='http://code.google.com/apis/maps/signup.html' target='_blank'>here</a> to sign up for a key.";
 // Statistics Bar panel
 $localestrings['en']['dls600'] = "Download Statistics Panel";
 $localestrings['en']['dls601'] = "Short Name";
@@ -132,14 +134,18 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##co
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_geomap_regex', '/software\.ver$/i')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_logs', 'modules/download_statistics/batch/logs')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_remote', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_google_api_key', '')");
 
 // Geomap information table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_ips (
   dlsi_id int(10) unsigned NOT NULL auto_increment,
   dlsi_ip char(15) NOT NULL default '0.0.0.0',
   dlsi_ccode char(2) NOT NULL default '',
+  dlsi_onmap tinyint(1) unsigned NOT NULL default 0,
   dlsi_counter int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (dlsi_id),
+  UNIQUE KEY dlsi_ip_cc(dlsi_ip, dlsi_ccode),
+  KEY dlsi_onmap (dlsi_ccode, dlsi_onmap),
   KEY dlsi_ccode (dlsi_ccode)
 ) ENGINE=MyISAM");
 
@@ -147,6 +153,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_files (
   dlsf_id smallint(5) unsigned NOT NULL auto_increment,
   dlsf_file varchar(255) NOT NULL default '',
+  dlsf_success tinyint(1) unsigned NOT NULL default 0,
   dlsf_counter int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (dlsf_id),
   UNIQUE KEY dlsf_file (dlsf_file)
@@ -162,6 +169,14 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsc_order SMALLINT(5) UNSIGNED NOT NULL default 0,
   PRIMARY KEY (dlsc_id)
 ) ENGINE = MYISAM");
+
+// statistics file cache table (to detect retries)
+$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_fcache (
+  dlsfc_ip char(15) NOT NULL default '0.0.0.0',
+  dlsfc_file varchar(255) NOT NULL default '',
+  dlsfc_timeout int(10) unsigned NOT NULL default 0,
+  UNIQUE KEY dlsfc_file (dlsfc_ip, dlsfc_file)
+) ENGINE=MyISAM");
 
 // Statistics reports table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_reports (
@@ -187,6 +202,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_geomap_where'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_logs'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_remote'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_google_api_key'");
 
 // delete the tables
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_geomap");

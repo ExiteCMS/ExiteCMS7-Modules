@@ -16,7 +16,7 @@
 {*                                                                         *}
 {***************************************************************************}
 {include file="_opentable.tpl" name=$_name title=$locale.dls400 state=$_state style=$_style}
-{if $google_key|default:"" == ""}
+{if $settings.dlstats_google_api_key|default:"" == ""}
 	{$settings.siteurl|string_format:$locale.dls900}
 {else}
 <table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>

@@ -19,35 +19,10 @@ locale_load("modules.download_statistics");
 // temp storage for template variables
 $variables = array();
 
-// Google Maps API key's for our sites
-switch ($settings['siteurl']) {
-	case "http://exitecms.dev.vnvadvies.nl:8000/":
-		// ExiteCMS local development site
-		$google_key = "ABQIAAAAFzkUNDqkbip9qSbDE2RcWRSXQGLIdtTLehhHLW0JbrxivZQfgBR8fvbYN3UnypTlRSyBw4N7olGo5g";
-		break;
-	case "http://pli-images.dev.vnvadvies.nl:8000/":
-		// webmasters' local development site
-		$google_key = "ABQIAAAAFzkUNDqkbip9qSbDE2RcWRSc_F8CWdLgmGQOjkmL3LhdsJYsGBTgEbgNIOVJEFSdTRGsrJuDly_cww";
-		break;
-	case "http://pli-new.homelinux.org:8000/":
-		// webmasters' alternate development site
-		$google_key = "ABQIAAAAFzkUNDqkbip9qSbDE2RcWRST71raTwcWQC8XtglbytRBQQawaBTpJ0oj66Ziwvc-Ec4Zq3JObm1ubA";
-		break;
-	case "http://dev.pli-images.org/":
-		// official development site
-		$google_key = "ABQIAAAAFzkUNDqkbip9qSbDE2RcWRSfMaYbIpzkuyJo11yMlT3DW5bJbRQVIXK_m2e9KLf1HeVGtHUyCJ_HcA";
-		break;
-	case "http://www.pli-images.org/":
-		// production site
-		$google_key = "ABQIAAAAFzkUNDqkbip9qSbDE2RcWRT4ekYYALPlSY1Y_MUwiCAitmkQ4hRzQsuNfqp0XrVNt0bEESkKOJtZOA";
-		break;
-	default:
-		$google_key = "";
-}
-$variables['google_key'] = $google_key;
-if ($google_key != "") {
+// Google Maps API key's for our site
+if (!empty($settings['dlstats_google_api_key'])) {
 	if (!isset($_headparms)) $_headparms = "";
-	$_headparms .= "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$google_key."' type='text/javascript'></script>\n";
+	$_headparms .= "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$settings['dlstats_google_api_key']."' type='text/javascript'></script>\n";
 	if (!isset($_bodyparms)) $_bodyparms = "";
 	$_bodyparms .= "onload='Gload()' onunload='GUnload()'";
 }
@@ -300,10 +275,10 @@ $countries['??'] = array('0.0000', '0.0000', 0);
 $icons = array('yellow', 'orange', 'red', 'cyan', 'blue', 'purple', 'green');
 
 // we need a valid Google Maps key to continue
-if ($google_key != "") {
+if (!empty($settings['dlstats_google_api_key'])) {
 
 	// consolidate the IP statistics per country
-	$result = dbquery("SELECT dlsi_ccode, COUNT(*) as count FROM ".$db_prefix."dlstats_ips GROUP BY dlsi_ccode");
+	$result = dbquery("SELECT dlsi_ccode, COUNT(*) as count FROM ".$db_prefix."dlstats_ips WHERE dlsi_onmap = 1 GROUP BY dlsi_ccode");
 	// and add them to the country table
 	while ($data = dbarray($result)) {
 		if (isset($countries[$data['dlsi_ccode']])) {

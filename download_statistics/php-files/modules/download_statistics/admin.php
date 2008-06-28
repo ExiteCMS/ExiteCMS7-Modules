@@ -137,6 +137,7 @@ switch ($action) {
 				}
 			}
 			$remote = IsNum($_POST['dlstats_remote']) ? $_POST['dlstats_remote'] : 0;
+			$google_key = stripinput($_POST['dlstats_google_api_key']);
 			// if no errors were detected...
 			if ($variables['message'] == "") {
 				// save the new settings
@@ -144,6 +145,7 @@ switch ($action) {
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$regex."' WHERE cfg_name = 'dlstats_geomap_regex'");
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$logpath."' WHERE cfg_name = 'dlstats_logs'");
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$remote."' WHERE cfg_name = 'dlstats_remote'");
+				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$google_key."' WHERE cfg_name = 'dlstats_google_api_key'");
 				redirect(FUSION_SELF.$aidlink."&status=cs");
 				exit;
 			} else {
@@ -157,6 +159,7 @@ switch ($action) {
 			$settings2['dlstats_geomap_regex'] = $regex;
 			$settings2['dlstats_logs'] = $logpath;
 			$settings2['dlstats_remote'] = $remote;
+			$settings2['dlstats_google_api_key'] = $google_key;
 		}
 		// reset the action switch to return to the default action
 		$action = "";
@@ -244,15 +247,10 @@ if ($action == "add" || $action == "edit") {
 
 	// create the list of available download files
 	$variables['files'] = array(); 
-	$result = dbquery("SELECT dlsf_file FROM ".$db_prefix."dlstats_files ORDER BY dlsf_file");
-	$i=0;
+	$result = dbquery("SELECT dlsf_file FROM ".$db_prefix."dlstats_files WHERE dlsf_success = 1 ORDER BY dlsf_file");
 	if (dbrows($result) != 0) {
 		while ($data = dbarray($result)) {
-			// make sure the filename is valid before including it. The statistics can contain rubbish!
-			$file = @parse_url($data['dlsf_file']);
-			if (isset($file['path']) && substr($file['path'],-1) != "/" && preg_replace("/[^0-9a-z\/\%\.\_\-]/i", "", $file['path']) == $file['path']) {
-				$variables['files'][] = $file['path'];
-			}
+			$variables['files'][] = $file['path'];
 		}
 	}
 }

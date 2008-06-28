@@ -121,6 +121,16 @@
 			</tr>
 			<tr>
 				<td class='tbl' style='vertical-align:top;width:250px;'>
+					{$locale.dls511}
+				</td>
+				<td class='tbl'>
+					<input type='text' name='dlstats_google_api_key' value='{$settings2.dlstats_google_api_key}' maxlength='90' class='textbox' style='width:300px;' />
+					<br />
+					<span class='small2'>{$locale.dls512}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class='tbl' style='vertical-align:top;width:250px;'>
 					{$locale.dls503}
 				</td>
 				<td class='tbl'>

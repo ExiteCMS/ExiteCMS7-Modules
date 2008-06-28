@@ -1,166 +1,210 @@
-<?php
+<?php 
 /*---------------------------------------------------+
 | ExiteCMS Content Management System                 |
 +----------------------------------------------------+
 | Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
 | for support, please visit http://exitecms.exite.eu |
 +----------------------------------------------------+
-| Some portions copyright 2002 - 2006 Nick Jones     |
-| http://www.php-fusion.co.uk/                       |
-+----------------------------------------------------+
 | Released under the terms & conditions of v2 of the |
 | GNU General Public License. For details refer to   |
 | the included gpl.txt file or visit http://gnu.org  |
-+----------------------------------------------------+
-| downloadstats.php
-| fetch and process the downloads of the PLi download
-| sites
 +----------------------------------------------------*/
+require_once dirname(__FILE__)."/../../../includes/core_functions.php";
 
-define('LOGGING', true);
-define('INCLUDE_HOST', false);
-
-// make sure we're running in CLI mode
-if (isset($_SERVER['SERVER_SOFTWARE']))
-	die("This is a batch program that needs to run from cron!");
-
-// activate all error reporting
-error_reporting(E_ALL);
-
-// make sure there is no interference from already installed PEAR modules
-ini_set('include_path', '.');
-
-/*---------------------------------------------------+
-| Local functions
-+----------------------------------------------------*/
-
-// debug function - write an entry to the debug log
-function writelog($key, $message="") {
-
-	$handle = fopen('logs/dls_'.$key.'.log', 'a');
-	fwrite($handle, date("Ymd").";".date("His").";".$message."\n");
-	fclose($handle);
-}
-
-/*---------------------------------------------------+
-| Read the user configuration
-+----------------------------------------------------*/
-
-// find the core modules
-$webroot = "";
-while(!file_exists($webroot."includes/core_functions.php")) { 
-	$webroot .= '../'; 
-	if (strlen($webroot)>100) die('Unable to find the ExiteCMS core modules!'); 
-}
-require_once $webroot."includes/core_functions.php";
-require_once PATH_INCLUDES."geoip_include.php";
+// check for the proper admin access rights
+if (!CMS_CLI && (!checkrights("T") || !defined("iAUTH") || $aid == iAUTH)) fallback(ADMIN."index.php");
 
 /*---------------------------------------------------+
 | local variables
 +----------------------------------------------------*/
 
+// TODO - need to move these values to an admin interface and configuration table!!
 
-$localkey = md5("server50096.uk2net.com"."*"."83.170.99.141");
-$remotekey = md5("server50096.uk2net.com"."*"."83.170.97.97");
+$localkey = md5("server50096.uk2net.com"."*"."83.170.99.141");	// internal IP address
+$remotekey = md5("server50096.uk2net.com"."*"."83.170.97.97");	// external IP address
 
-$logfile = "/logs/downloads.log";
-
-// TODO - need to move this to an admin interface and config table!!
 $stats_urls = array();
-$stats_urls['Exite'] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
-$stats_urls['NedLinux'] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;	// NedLinux
-$stats_urls['Graver'] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
-//$stats_urls['Snoopy'] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
+$stats_urls[1] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
+$stats_urls[2] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;		// NedLinux
+$stats_urls[3] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
+$stats_urls[4] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
+
+define("RETRY_TIMEOUT", time() - (60 * 10) );	// 10 minutes
 
 /*---------------------------------------------------+
-| main 
+| local functions                                    |
 +----------------------------------------------------*/
-echo "\n--------------------------------\n".date("Y-m-d H:i:s T")."\n--------------------------------\n";
+function display($text="") {
+
+	global $messages;
+
+	if (CMS_CLI) {
+		// just output the message
+		echo $text,"\n";
+	} else {
+		// replace leading spaces by &nbsp; to keep indentations
+		$t = ltrim($text);
+		$l = strlen($text) - strlen($t);
+		$messages[] = str_repeat("&nbsp;", $l).$t;
+	}
+}
+
+/*---------------------------------------------------+
+| main code                                          |
++----------------------------------------------------*/
+
+// give this module some memory and execution time
+ini_set('memory_limit', '32M');
+ini_set('max_execution_time', '0');
+
+// make sure there is no interference from already installed PEAR modules
+ini_set('include_path', '.');
+
+// activate all error reporting
+error_reporting(E_ALL);
+
+// load the GeoIP functions
+require_once PATH_INCLUDES."geoip_include.php";
+
+// load the theme functions when not in CLI mode
+if (!CMS_CLI) {
+	require_once PATH_INCLUDES."theme_functions.php";
+} else {
+	while (@ob_end_flush());
+}
+
+// save the debug log setting, then disable it
+$db_log = $_db_log;
+$_db_log = false;
+
+// define the array to store our progress messages in
+$messages = array();
+
+// delete expired records from the file cache table
+$result = dbquery("DELETE FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_timeout < ".RETRY_TIMEOUT);
+
+// replace numeric entities
+$settings['dlstats_geomap_regex'] = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $settings['dlstats_geomap_regex']);
+$settings['dlstats_geomap_regex'] = preg_replace('~&#([0-9]+);~e', 'chr("\\1")', $settings['dlstats_geomap_regex']);
+// replace other HTML entities
+$settings['dlstats_geomap_regex'] = html_entity_decode($settings['dlstats_geomap_regex'], ENT_QUOTES);
+
+// global variable initialisation
+$oldfile = "";
+$loghandle = false;
 
 // loop through the defined stats url's 
 
 foreach($stats_urls as $key => $url) {
-	echo "Processing ".$url."...\n";
-	// retrieve the download statistics from this URL
-	$handle = @fopen($url."&act=get", "r");
+	display("Processing ".$url."...");
+	$counter = 0;
+	// retrieve the download statistics from this file or URL
+	if (isURL($url)) {
+		$handle = @fopen($url."&act=get", "r");
+	} else {
+		$handle = @fopen($url, "r");
+	}
 	if ($handle) {
 		while(!feof($handle)) {
+			// get a line
 			$buffer = fgets($handle, 4096);
-			// ignore empty lines
-//			if ($buffer == "" || $buffer = chr(10) || $buffer=chr(13) || $buffer=(chr(10).chr(13)))
-//				continue;
-			if (LOGGING) writelog($key, $buffer);
-			$record = explode("|", $buffer);
-			if(preg_match("@^(?:http://)?([^/]+)(.*)@si", $record[3], $urlparts)) {
-//				print_r($urlparts);
-			} else {
-				echo "failed to detect a proper formatted URL: '".$record[3]."'\n";
-				echo "-> ".$buffer."\n";
-				continue;
-			}
-			// check if this is a retry (within 10 minutes)
-			$result = dbquery("SELECT * FROM ".$db_prefix."dls_statistics WHERE ds_ip = '".$record[1]."' AND ds_file = '".trim(urldecode($urlparts[2]))."' AND ds_timestamp > '".(time()-60*10)."' LIMIT 1");
-			if (dbrows($result)) {
-				// retry, update the download timestamp, and ignore the retry
-				echo "=> Updating (".$record[1].")  : ".trim(urldecode($urlparts[2]))."\n";
-				$data = dbarray($result);
-				$result = dbquery("UPDATE ".$db_prefix."dls_statistics SET ds_timestamp = '".$record[0]."' WHERE ds_id = '".$data['ds_ip']."'");
-			} else {
-				// new download, insert a statistics record
-				echo "=> Inserting (".$record[1].") : ".trim(urldecode($urlparts[2]))."\n";
-				$cc = GeoIP_IP2Code($record[1]);
-				if (!$cc) $cc = '';
-				$result = dbquery("INSERT INTO ".$db_prefix."dls_statistics (ds_success, ds_ip, ds_timestamp, ds_url, ds_file, ds_mirror, ds_cc) VALUES (
-					'".$record[2]."', '".$record[1]."', '".$record[0]."', '".trim(urldecode($record[3]))."', '".trim(urldecode($urlparts[2]))."', '".($key+1)."', '".$cc."')");
+			// split it into variables
+			//
+			// Example: 1213868404|123.45.67.89|1|http://www.example.org/this/is/a/downloaded/file.tar.gz
+			//
+			$record = explode("|", trim($buffer));
+			// verify and validate the log record
+			if (isNum($record[0])) {
+				if (isIP($record[1], true)) {
+					if (isNum($record[2])) {
+						if (isURL(trim($record[3]))) {
+							// record has a valid format, check if it's in the retry cache
+							$download = parse_url($record[3]);
+							// add the other record info we might need later on
+							$download['mirror'] = $key;
+							$download['timestamp'] = $record[0];
+							$download['date'] = date("Ymd", $record[0]);
+							$download['time'] = date("His", $record[0]);
+							$download['ip'] = $record[1];
+							$download['cc'] = GeoIP_IP2Code($download['ip']);
+							$download['on_map'] = preg_match($settings['dlstats_geomap_regex'], trim($download['path']));
+							$download['success'] = $record[2];
+							// check if the file it's in the retry cache
+							$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$download['ip']."' AND dlsfc_file = '".mysql_escape_string($download['path'])."'");
+							// not in the cache...
+							if (dbrows($result) == 0) {
+								// update the IP statistics
+								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$download['ip']."', '".$download['cc']."', '".$download['on_map']."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($download['on_map'] == 1 ? ", dlsi_onmap = 1" : ""));
+								// update fhe File statistics
+								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$download['path']."', '".$download['success']."', 1) ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + 1");
+							}
+							// add the record to the file cache (or update the existing record if it was already in the cache
+							$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$download['ip']."', '".mysql_escape_string($download['path'])."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
+							// generate the new filename
+							$newfile = ($settings['dlstats_logs']{0} == "/" ? "" : PATH_ROOT) . $settings['dlstats_logs']."/".date("Y-", $download['timestamp']).substr('00'.date("W", $download['timestamp']), -2).".download.log";
+							// different from the old? close the old file, open the new file
+							if ($oldfile != $newfile) {
+								if ($loghandle) fclose($loghandle);
+								$loghandle = @fopen($newfile, "wt");	// overwrite if exists!
+								if (!$handle) {
+									display("     ERROR! Can not open logfile: ".$newfile);	
+									break;
+								}
+								// store the filename to check if we need to change logsfiles at the next cycle
+								$oldfile = $newfile;
+							}
+							// create a log record
+							//
+							// Layout -> 1|20070719;131502;1184846124|212.152.84.41|1|/helenite/plugins/inadyn_plugin_1.1.0.tar.gz
+							//
+							$line  = $download['mirror']."|";
+							$line .= $download['date'].";".$download['time'].";".$download['timestamp']."|";
+							$line .= $download['ip']."|";
+							$line .= $download['success']."|";
+							$line .= $download['path'];
+							$line .= "\n";
+							// write the logfile line
+							fwrite($loghandle, $line);
+							// increase the counter
+							$counter++;
+						}
+					}
+				}
 			}
 		}
 		fclose($handle);
-		// wipe the processed logfile
-		$handle = fopen($url."&act=wipe", "r");
-		if ($handle) fclose($handle);
-	} else {
-   		echo "Unable to fetch URL: ".$url."\n";
-	}
-}
-// process the new statistics, and update the counters of fusion_downloads
-$result = dbquery("SELECT * FROM ".$db_prefix."downloads");
-if (dbrows($result) != 0) {
-	while ($data = dbarray($result)) {
-//		echo "processing ".$data['download_url']."...\n";
-		if (INCLUDE_HOST) {
-			$data2 = dbarray(dbquery("SELECT count(*) as count FROM ".$db_prefix."dls_statistics WHERE ds_url = '".trim(urldecode($data['download_url']))."'"));
-		} else {
-			if ($data['download_url'] == "") {
-				echo "URL not defined";
-				// empty URL, skip it
-			} else {
-				if(preg_match("@^(?:http://)?([^/]+)(.*)@si", $data['download_url'], $urlparts)) {
-//					print_r($urlparts);
-				} else {
-					echo "failed to detect a proper formatted URL: ".$data['download_url']."\n";
-					continue;
-				}
-				// check if there are aliasses defined for this ds_file
-				$where = "";
-				$result2 = dbquery("SELECT * FROM ".$db_prefix."dls_mapping WHERE ds_file_to = '".trim(urldecode($urlparts[2]))."'");
-				while ($data2 = dbarray($result2)) {
-					$where .= "OR ds_file = '".urldecode($data2['ds_file_from'])."' ";
-				}
-				$data2 = dbarray(dbquery("SELECT count(*) as count FROM ".$db_prefix."dls_statistics WHERE (ds_file = '".trim(urldecode($urlparts[2]))."' ".$where.") AND ds_processed = '0'"));
-			}
-		}
-		if (!$data2) {
-			// no downloads of this file detected
-		} else {
-			$result2 = dbquery("UPDATE ".$db_prefix."downloads SET download_count = download_count + '".$data2['count']."' WHERE download_id = '".$data['download_id']."'");
+		if (isURL($url)) {
+			// wipe the processed logfile
+			$handle = fopen($url."&act=wipe", "r");
+			if ($handle) fclose($handle);
 		}
 	}
+	display($counter." download records processed");
+	display();
 }
-// set the ds_onmap marker
-$result = dbquery("UPDATE ".$db_prefix."dls_statistics SET ds_onmap = '1' WHERE ds_processed = '0' AND ds_file LIKE '%software.ver'");
+// close the logfile if still open
+if ($loghandle) fclose($loghandle);
 
-// mark all newly imported statistics records as processed
-$result = dbquery("UPDATE ".$db_prefix."dls_statistics SET ds_processed = '1' WHERE ds_processed = '0'");
+display("Log processing finished!");
 
-echo "\n";
+// restore the debug log status
+$_db_log = $db_log;
+
+// if not in CLI mode, prepare the template for display
+if (!CMS_CLI) {
+	// used to store template variables
+	$variables = array();
+	// create the html output
+	$variables['html'] = "";
+	foreach($messages as $message) {
+		$variables['html'] .= $message."<br />"; 
+	}
+	
+	// define the body panel variables
+	$template_panels[] = array('type' => 'body', 'name' => 'admin.tools.output', 'title' => "Download Log Parser", 'template' => '_custom_html.tpl');
+	$template_variables['admin.tools.output'] = $variables;
+	
+	// Call the theme code to generate the output for this webpage
+	require_once PATH_THEME."/theme.php";
+}
 ?>

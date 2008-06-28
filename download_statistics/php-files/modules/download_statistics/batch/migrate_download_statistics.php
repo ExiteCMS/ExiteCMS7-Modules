@@ -75,28 +75,28 @@ foreach($tables as $table) {
 		display("Start migration of the old statistics table '".$table."'!");
 
 		// Fill the ip's table from the old statistics table
-		display("Populating the Geomap table:");
-		$result = mysql_query("SELECT ds_ip, ds_cc, count(*) as ds_count FROM ".$db_prefix.$table." WHERE ds_url LIKE '%software.ver' GROUP BY ds_ip, ds_cc");
+		display("Populating the IP table:");
+		$result = mysql_query("SELECT ds_ip, ds_cc, count(*) as ds_count, max(ds_onmap) as on_map FROM ".$db_prefix.$table." GROUP BY ds_ip, ds_cc");
 		display("-> migrating ".dbrows($result)." records!");
 		$data = mysql_fetch_assoc($result);
 		while ($data !== false) {
-			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_counter) VALUES ('".$data['ds_ip']."', '".$data['ds_cc']."', '".$data['ds_count']."')");
+			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$data['ds_ip']."', '".$data['ds_cc']."', '".$data['on_map']."', '".$data['ds_count']."')");
 			$data = mysql_fetch_assoc($result);
 		}
 
 		// fill the files table from the old statistics table
 		display("Populating the Files table:");	
-		$result = mysql_query("SELECT ds_file, COUNT(*) as count FROM ".$db_prefix.$table." GROUP BY ds_file");
+		$result = mysql_query("SELECT ds_file, MAX(ds_success) as success, COUNT(*) as count FROM ".$db_prefix.$table." GROUP BY ds_file");
 		display("-> migrating ".dbrows($result)." unique file records!");	
 		$data = mysql_fetch_assoc($result);
 		while ($data !== false) {
 			$urlinfo = parse_url("http://www.example.com".$data['ds_file']);
 			$data['ds_file'] = $urlinfo['path'];
-			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
+			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['success']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
 			$data = mysql_fetch_assoc($result);
 		}
 		// create the logfiles
-		display("Creating the new download logfiles:");	
+/*		display("Creating the new download logfiles:");	
 		$result = mysql_query("SELECT * FROM ".$db_prefix.$table." ORDER BY ds_timestamp");
 		display("-> creating ".dbrows($result)." log records!");	
 		$oldfile = "";
@@ -132,7 +132,7 @@ foreach($tables as $table) {
 		}
 		// make sure the file handle is closed
 		if ($handle) fclose($handle);
-	
+*/	
 	} else {
 
 		display("Old statistics table '".$table."' does not exist!");
