@@ -33,7 +33,7 @@ if (isset($markasread)) {
 	$result = dbquery("
 		SELECT p.thread_id
 			FROM ".$db_prefix."posts p
-			LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+			INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 			WHERE tr.user_id = '".$userdata['user_id']."'
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 				AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
@@ -56,7 +56,7 @@ if ($userdata['user_posts_unread']) {
 	$result = dbquery("
 		SELECT count(*) as unread 
 			FROM ".$db_prefix."posts p 
-				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
 			WHERE tr.user_id = '".$userdata['user_id']."' 
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 				AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
@@ -66,7 +66,7 @@ if ($userdata['user_posts_unread']) {
 	$result = dbquery("
 		SELECT count(*) as unread 
 			FROM ".$db_prefix."posts p 
-				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
 			WHERE tr.user_id = '".$userdata['user_id']."' 
 				AND p.post_author != '".$userdata['user_id']."'
 				AND p.post_edituser != '".$userdata['user_id']."'
@@ -88,7 +88,7 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT count(*) as unread, tr.thread_id
 				FROM ".$db_prefix."posts p 
-					LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
 				WHERE tr.user_id = '".$userdata['user_id']."' 
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
@@ -99,7 +99,7 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT count(*) as unread, tr.thread_id 
 				FROM ".$db_prefix."posts p 
-					LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
 				WHERE tr.user_id = '".$userdata['user_id']."' 
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
@@ -117,9 +117,9 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
 				FROM ".$db_prefix."posts p 
-				LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
-				LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
-				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE tr.user_id = '".$userdata['user_id']."' 
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
@@ -132,9 +132,9 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
 				FROM ".$db_prefix."posts p 
-				LEFT JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
-				LEFT JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
-				LEFT JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE tr.user_id = '".$userdata['user_id']."' 
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
