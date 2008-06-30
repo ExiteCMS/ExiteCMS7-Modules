@@ -69,7 +69,7 @@ function Gload() {
 		</tr>
 	<tr>
 		<td class='tbl2' align='center'>
-			<b>{$mapped|string_format:$locale.dls901} {$unknown|string_format:$locale.dls904}</b>
+			<b>{$mapped|string_format:$locale.dls901} {if $unknown==1}{$unknown|string_format:$locale.dls904}{else}{$unknown|string_format:$locale.dls905}{/if}</b>
 		</td>
 	</tr>
 	<tr>

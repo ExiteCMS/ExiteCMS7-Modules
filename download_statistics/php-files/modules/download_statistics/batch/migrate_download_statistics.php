@@ -60,6 +60,7 @@ display(" ");
 
 $result = mysql_query("TRUNCATE ".$db_prefix."dlstats_ips");
 $result = mysql_query("TRUNCATE ".$db_prefix."dlstats_files");
+$result = mysql_query("TRUNCATE ".$db_prefix."dlstats_file_ips");
 
 display("Migrating the old download statistics...");
 display(" ");
@@ -95,14 +96,26 @@ foreach($tables as $table) {
 			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['success']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
 			$data = mysql_fetch_assoc($result);
 		}
-		// create the logfiles
-/*		display("Creating the new download logfiles:");	
+		// fill the file_ipss table from the old statistics table and create the logfiles
+		display("Creating the new download logfiles:");	
 		$result = mysql_query("SELECT * FROM ".$db_prefix.$table." ORDER BY ds_timestamp");
 		display("-> creating ".dbrows($result)." log records!");	
 		$oldfile = "";
 		$handle = false;
 		$data = mysql_fetch_assoc($result);
 		while ($data !== false) {
+			// get the dlsi_id for this IP
+			$result2 = mysql_query("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$data['ds_ip']."' LIMIT 1");
+			if (dbrows($result2)) {
+				$data2 = mysql_fetch_assoc($result2);
+				// get the dlsf_id for this file
+				$urlinfo = parse_url("http://www.example.com".$data['ds_file']);
+				$result3 = mysql_query("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$urlinfo['path']."' LIMIT 1");
+				if (dbrows($result3)) {
+					$data3 = mysql_fetch_assoc($result3);
+					$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$data['ds_timestamp']."')");
+				}
+			}
 			// generate the new filename
 			$newfile = ($settings['dlstats_logs']{0} == "/" ? "" : PATH_ROOT) . $settings['dlstats_logs']."/".date("Y-", $data['ds_timestamp']).substr('00'.date("W", $data['ds_timestamp']), -2).".download.log";
 			// different from the old? close the old file, open the new file
@@ -132,7 +145,6 @@ foreach($tables as $table) {
 		}
 		// make sure the file handle is closed
 		if ($handle) fclose($handle);
-*/	
 	} else {
 
 		display("Old statistics table '".$table."' does not exist!");

@@ -15,8 +15,8 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Module identification                              |
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
-$mod_description = "Gather and display download statistics from download mirror logs, and provides detailed statistics, including a Google Map with downloaders per country";
-$mod_version = "0.1.1";
+$mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
+$mod_version = "1.0.0";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -55,7 +55,6 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 
 $mod_site_links = array();
 $mod_site_links[] = array('name' => 'GeoMap', 'url' => 'geomap.php', 'panel' => '', 'visibility' => 101);
-$mod_site_links[] = array('name' => 'Download Statistics', 'url' => 'reports.php', 'panel' => '', 'visibility' => 102);
 
 /*---------------------------------------------------+
 | locale strings for this module                     |
@@ -80,7 +79,7 @@ $localestrings['en']['dls509'] = "If No, only downloads from the download pages 
 $localestrings['en']['dls510'] = "Access to download statistics for:";
 $localestrings['en']['dls511'] = "Google Maps API key:";
 $localestrings['en']['dls512'] = "Click <a href='http://code.google.com/apis/maps/signup.html' target='_blank'>here</a> to sign up for a key.";
-// Statistics Bar panel
+// Statistics counter panel
 $localestrings['en']['dls600'] = "Download Statistics Panel";
 $localestrings['en']['dls601'] = "Short Name";
 $localestrings['en']['dls602'] = "Order";
@@ -98,13 +97,13 @@ $localestrings['en']['dls613'] = "Use the counters from these download files:";
 $localestrings['en']['dls614'] = "Save";
 $localestrings['en']['dls615'] = "These are the files currently downloaded. Click on a filename to add it to the list:";
 $localestrings['en']['dls616'] = "Download Statistics Counter";
-
 // Messages: geomap
 $localestrings['en']['dls900'] = "<center>No valid Google Maps key found for the URL: %s!</center>";
 $localestrings['en']['dls901'] = "A total of %u users could be mapped.";
 $localestrings['en']['dls902'] = "To see more detailed information about a specific country, move your mouse over the marker";
 $localestrings['en']['dls903'] = "Sorry, the Google Maps API is not compatible with this browser";
-$localestrings['en']['dls904'] = "For %u users, no location could be determined";
+$localestrings['en']['dls904'] = "For %u user, no location could be determined";
+$localestrings['en']['dls905'] = "For %u users, no location could be determined";
 // Messages: admin
 $localestrings['en']['dls910'] = "Group selection is invalid.";
 $localestrings['en']['dls911'] = "Regular expression is invalid. Error is: ";
@@ -151,12 +150,21 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
 
 // statistics per file table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_files (
-  dlsf_id smallint(5) unsigned NOT NULL auto_increment,
+  dlsf_id int(10) unsigned NOT NULL auto_increment,
   dlsf_file varchar(255) NOT NULL default '',
   dlsf_success tinyint(1) unsigned NOT NULL default 0,
   dlsf_counter int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (dlsf_id),
   UNIQUE KEY dlsf_file (dlsf_file)
+) ENGINE=MyISAM");
+
+// statistics per ip per file table
+$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_file_ips (
+  dlsf_id int(10) unsigned NOT NULL default 0,
+  dlsi_id int(10) unsigned NOT NULL default 0,
+  dlsfi_timestamp int(10) unsigned NOT NULL default 0,
+  KEY dlsf_id (dlsf_id),
+  KEY dlsi_id (dlsi_id)
 ) ENGINE=MyISAM");
 
 // Statistics counters table
@@ -178,18 +186,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   UNIQUE KEY dlsfc_file (dlsfc_ip, dlsfc_file)
 ) ENGINE=MyISAM");
 
-// Statistics reports table
-$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_reports (
-  dlsr_id SMALLINT(5) UNSIGNED NOT NULL auto_increment,
-  dlsr_title VARCHAR(50) NOT NULL,
-  dlsr_query TEXT,
-  PRIMARY KEY (dlsr_id)
-) ENGINE = MYISAM");
-
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_dlstats");
-
-// TEMP: to avoid creating tables
-//$mod_install_cmds = array();							// commands to execute when installing this module
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
@@ -205,15 +202,13 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_google_api_key'");
 
 // delete the tables
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_geomap");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_ips");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_files");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_file_ips");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_counters");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_reports");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_fcache");
 
 $mod_uninstall_cmds[] = array('type' => 'function', 'value' => "uninstall_dlstats");
-
-// TEMP: to avoid deleting tables
-//$mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 
 /*---------------------------------------------------+
 | function for special installations                 |
@@ -238,7 +233,7 @@ if (!function_exists('module_upgrade')) {
 		global $db_prefix;
 			
 		switch ($current_version) {
-			case "0.0.1":
+			case "1.0.0":			// current release version
 		}
 	}
 }

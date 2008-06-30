@@ -24,10 +24,11 @@ $localkey = md5("server50096.uk2net.com"."*"."83.170.99.141");	// internal IP ad
 $remotekey = md5("server50096.uk2net.com"."*"."83.170.97.97");	// external IP address
 
 $stats_urls = array();
+//$stats_urls[0] = "testfile.log";		// test file
 $stats_urls[1] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
 $stats_urls[2] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;		// NedLinux
 $stats_urls[3] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
-$stats_urls[4] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
+//$stats_urls[4] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
 
 define("RETRY_TIMEOUT", time() - (60 * 10) );	// 10 minutes
 
@@ -108,16 +109,19 @@ foreach($stats_urls as $key => $url) {
 		while(!feof($handle)) {
 			// get a line
 			$buffer = fgets($handle, 4096);
+			// get rid of whitespace
+			$buffer = trim($buffer);
 			// split it into variables
 			//
 			// Example: 1213868404|123.45.67.89|1|http://www.example.org/this/is/a/downloaded/file.tar.gz
 			//
-			$record = explode("|", trim($buffer));
+			$record = explode("|", $buffer);
 			// verify and validate the log record
 			if (isNum($record[0])) {
 				if (isIP($record[1], true)) {
 					if (isNum($record[2])) {
 						if (isURL(trim($record[3]))) {
+							if (CMS_CLI) display($buffer);
 							// record has a valid format, check if it's in the retry cache
 							$download = parse_url($record[3]);
 							// add the other record info we might need later on
@@ -133,10 +137,24 @@ foreach($stats_urls as $key => $url) {
 							$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$download['ip']."' AND dlsfc_file = '".mysql_escape_string($download['path'])."'");
 							// not in the cache...
 							if (dbrows($result) == 0) {
+								if (CMS_CLI) display("-> not in the file cache");
 								// update the IP statistics
 								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$download['ip']."', '".$download['cc']."', '".$download['on_map']."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($download['on_map'] == 1 ? ", dlsi_onmap = 1" : ""));
 								// update fhe File statistics
 								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$download['path']."', '".$download['success']."', 1) ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + 1");
+								// now update the download details for this record
+								// get the dlsi_id for this IP
+								$result2 = mysql_query("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$download['ip']."' LIMIT 1");
+								if (dbrows($result2)) {
+									$data2 = mysql_fetch_assoc($result2);
+									// get the dlsf_id for this file
+									$result3 = mysql_query("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$download['path']."' LIMIT 1");
+									if (dbrows($result3)) {
+										$data3 = mysql_fetch_assoc($result3);
+										$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$download['timestamp']."')");
+										if (CMS_CLI) display("-> added to the download logs");
+									}
+								}
 							}
 							// add the record to the file cache (or update the existing record if it was already in the cache
 							$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$download['ip']."', '".mysql_escape_string($download['path'])."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
