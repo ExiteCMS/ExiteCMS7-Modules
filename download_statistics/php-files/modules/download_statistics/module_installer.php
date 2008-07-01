@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.0.0";
+$mod_version = "1.0.8";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -55,6 +55,20 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 
 $mod_site_links = array();
 $mod_site_links[] = array('name' => 'GeoMap', 'url' => 'geomap.php', 'panel' => '', 'visibility' => 101);
+
+/*---------------------------------------------------+
+| Report entries for this module                     |
++----------------------------------------------------*/
+
+$mod_report_links = array();
+$mod_report_links[] = array('name' => "topfiles", 'title' => "dls800", 'version' => "1.0.0", 'visibility' => 102);
+
+/*---------------------------------------------------+
+| Search entries for this module                     |
++----------------------------------------------------*/
+
+$mod_search_links = array();
+$mod_search_links[] = array('name' => "files", 'title' => "dls850", 'version' => "1.0.0", 'visibility' => 102);
 
 /*---------------------------------------------------+
 | locale strings for this module                     |
@@ -97,6 +111,21 @@ $localestrings['en']['dls613'] = "Use the counters from these download files:";
 $localestrings['en']['dls614'] = "Save";
 $localestrings['en']['dls615'] = "These are the files currently downloaded. Click on a filename to add it to the list:";
 $localestrings['en']['dls616'] = "Download Statistics Counter";
+// Messages: reports
+$localestrings['en']['dls800'] = "Top files downloaded";
+$localestrings['en']['dls801'] = "Filenames filter";
+$localestrings['en']['dls802'] = "This filter is a regex";
+$localestrings['en']['dls803'] = "Show me";
+$localestrings['en']['dls804'] = "the top";
+$localestrings['en']['dls805'] = "All";
+$localestrings['en']['dls806'] = "results in the report, and sort it";
+$localestrings['en']['dls807'] = "Ascending";
+$localestrings['en']['dls808'] = "Descending";
+$localestrings['en']['dls809'] = "Error in regex:";
+$localestrings['en']['dls810'] = "Filename";
+$localestrings['en']['dls811'] = "Download Count";
+// Messages: searches
+$localestrings['en']['dls850'] = "Downloaded files";
 // Messages: geomap
 $localestrings['en']['dls900'] = "<center>No valid Google Maps key found for the URL: %s!</center>";
 $localestrings['en']['dls901'] = "A total of %u users could be mapped.";
@@ -120,7 +149,6 @@ $localestrings['en']['dls926'] = "You have to supply a short name for this stati
 $localestrings['en']['dls927'] = "You have to supply a description for this statistics counter";
 $localestrings['en']['dls928'] = "You have to select either a download item or enter filename(s), or both";
 $localestrings['en']['dls929'] = "Are you sure you want to delete this statistics counter?";
-
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
