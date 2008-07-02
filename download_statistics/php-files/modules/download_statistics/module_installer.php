@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.0.8";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -93,6 +93,8 @@ $localestrings['en']['dls509'] = "If No, only downloads from the download pages 
 $localestrings['en']['dls510'] = "Access to download statistics for:";
 $localestrings['en']['dls511'] = "Google Maps API key:";
 $localestrings['en']['dls512'] = "Click <a href='http://code.google.com/apis/maps/signup.html' target='_blank'>here</a> to sign up for a key.";
+$localestrings['en']['dls513'] = "Download Statistics Panel Title";
+$localestrings['en']['dls514'] = "Used as title of the statistics panel. You can use %s as a placeholder for the total download count";
 // Statistics counter panel
 $localestrings['en']['dls600'] = "Download Statistics Panel";
 $localestrings['en']['dls601'] = "Short Name";
@@ -162,6 +164,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##co
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_logs', 'modules/download_statistics/batch/logs')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_remote', '0')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_google_api_key', '')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('dlstats_title', '')");
 
 // Geomap information table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_ips (
@@ -228,6 +231,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_logs'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_remote'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_google_api_key'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_title'");
 
 // delete the tables
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_ips");
@@ -261,7 +265,11 @@ if (!function_exists('module_upgrade')) {
 		global $db_prefix;
 			
 		switch ($current_version) {
-			case "1.0.0":			// current release version
+			case "1.1.0":
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('dlstats_title', '')");
+
+			case "1.1.1":			// current release version
+
 		}
 	}
 }

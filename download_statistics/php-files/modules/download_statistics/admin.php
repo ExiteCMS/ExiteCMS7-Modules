@@ -136,6 +136,7 @@ switch ($action) {
 					$logpath = stripinput($_POST['dlstats_logs']);
 				}
 			}
+			$title = stripinput($_POST['dlstats_title']);
 			$remote = IsNum($_POST['dlstats_remote']) ? $_POST['dlstats_remote'] : 0;
 			$google_key = stripinput($_POST['dlstats_google_api_key']);
 			// if no errors were detected...
@@ -146,6 +147,7 @@ switch ($action) {
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$logpath."' WHERE cfg_name = 'dlstats_logs'");
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$remote."' WHERE cfg_name = 'dlstats_remote'");
 				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$google_key."' WHERE cfg_name = 'dlstats_google_api_key'");
+				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$title."' WHERE cfg_name = 'dlstats_title'");
 				redirect(FUSION_SELF.$aidlink."&status=cs");
 				exit;
 			} else {
@@ -160,6 +162,7 @@ switch ($action) {
 			$settings2['dlstats_logs'] = $logpath;
 			$settings2['dlstats_remote'] = $remote;
 			$settings2['dlstats_google_api_key'] = $google_key;
+			$settings2['dlstats_title'] = $title;
 		}
 		// reset the action switch to return to the default action
 		$action = "";

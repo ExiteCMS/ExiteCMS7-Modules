@@ -17,7 +17,7 @@
 {***************************************************************************}
 {section name=bar loop=$counters}
 {if $smarty.section.bar.first}
-{include file="_openside_x.tpl" name=$_name title=$_title|cat:" ("|cat:$total|cat:")" state=$_state style=$_style}
+{include file="_openside_x.tpl" name=$_name title=$_title state=$_state style=$_style}
 <table cellpadding='0' cellspacing='0'>
 {/if}
 	<tr>
@@ -35,6 +35,11 @@
 		</td>
 	</tr>
 {if $smarty.section.bar.last}
+	{if $settings.dlstats_title != "" || true}
+		<td colspan='2' align='center'>
+			{ssprintf format=$settings.dlstats_title|replace:"|":"<br />" var1=$total}
+		</td>
+	{/if}
 </table>
 {include file="_closeside_x.tpl"}
 {/if}

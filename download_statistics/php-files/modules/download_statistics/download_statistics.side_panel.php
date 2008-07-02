@@ -29,11 +29,14 @@ while ($data = dbarray($result)) {
 	$data['count'] = 0;
 	// check if we need to get a local download counter
 	if ($data['dlsc_download_id']) {
-		$result2 = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_id = '".$data['dlsc_download_id']."'");
+		$result2 = dbquery("SELECT d.*, c.download_cat_access FROM ".$db_prefix."downloads d LEFT JOIN ".$db_prefix."download_cats c ON d.download_cat = c.download_cat_id WHERE d.download_id = '".$data['dlsc_download_id']."'");
 		if ($data2 = dbarray($result2)) {
-			// get the counter and the download category (needed to create a link)
-			$data['download_cat'] = $data2['download_cat'];
-			$data['count'] = $data2['download_count'];
+			// check if the user has access to it
+			if (checkgroup($data2['download_cat_access'])) {
+				// get the counter and the download category (needed to create a link)
+				$data['download_cat'] = $data2['download_cat'];
+				$data['count'] = $data2['download_count'];
+			}
 		}
 	}
 	// check if we need to file file counters

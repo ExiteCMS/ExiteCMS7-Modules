@@ -140,6 +140,16 @@
 				</td>
 			</tr>
 			<tr>
+				<td class='tbl' valign='top'>
+					{$locale.dls513}
+				</td>
+				<td class='tbl'>
+					<input type='text' name='dlstats_title' value='{$settings2.dlstats_title}' maxlength='50' class='textbox' style='width:300px;' />
+					<br />
+					<span class='small2'>{$locale.dls514}</span>
+				</td>
+			</tr>
+			<tr>
 				<td class='tbl' style='vertical-align:top;width:250px;'>
 					{$locale.dls508}
 				</td>
