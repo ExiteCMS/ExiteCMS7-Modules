@@ -23,7 +23,7 @@
 	<tr>
 		<td style='padding-right: 4px; height: 16px;'>
 			{if $counters[bar].dlsc_download_id && $counters[bar].download_cat}
-			<a href='{$settings.siteurl}downloads.php?cat_id={$counters[bar].download_cat}&amp;download_id={$counters[bar].dlsc_download_id}' title='{$counters[bar].description}'>{$counters[bar].dlsc_name}</a>
+			<a href='{$settings.siteurl}downloads.php?cat_id={$counters[bar].download_cat}&amp;download_id={$counters[bar].dlsc_download_id}' class='side' title='{$counters[bar].description}'>{$counters[bar].dlsc_name}</a>
 			{else}
 				{$counters[bar].dlsc_name}
 			{/if}
