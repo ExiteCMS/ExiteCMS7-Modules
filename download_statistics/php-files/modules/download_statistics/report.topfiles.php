@@ -79,26 +79,29 @@ if (isset($action)) {
 			}
 
 			// check how many rows this would output
-			$rptresult = dbquery($sql.($top ? (" LIMIT 0,".$top) : ""));
-			// store some row counter for the pager
-			$variables['rows'] = dbrows($rptresult);
-			$variables['rowstart'] = $rowstart;
+			$rptresult = mysql_query($sql);
+			if ($rptresult) {
+				// store some row counter for the pager
+				$variables['rows'] = dbrows($rptresult);
+				$variables['rowstart'] = $rowstart;
 
-			// now add a query limit, make sure not to overshoot the limit requested
-			if ($top > 0 && $rowstart+$settings['numofthreads'] > $top) {
-				$rowstart = max(0, $limit - $settings['numofthreads']);
+				// now add a query limit, make sure not to overshoot the limit requested
+				if ($top > 0 && $rowstart+$settings['numofthreads'] > $top) {
+					$rowstart = max(0, $limit - $settings['numofthreads']);
+				} else {
+					// technically, this is never going to be the limit ;-)
+					$top = 99999999999999;
+				}
+				$rptresult = dbquery($sql." LIMIT ".$rowstart.",".min($rowstart+$top, $settings['numofthreads']));
+
+				// get the results
+				$reportvars['output'] = array();
+				while ($rptdata = dbarray($rptresult)) {
+					$reportvars['output'][] = $rptdata;
+				}
 			} else {
-				// technically, this is never going to be the limit ;-)
-				$top = 99999999999999;
+				$variables['message'] = $locale['dls950']." ".mysql_error();
 			}
-			$rptresult = dbquery($sql." LIMIT ".$rowstart.",".min($rowstart+$top, $settings['numofthreads']));
-
-			// get the results
-			$reportvars['output'] = array();
-			while ($rptdata = dbarray($rptresult)) {
-				$reportvars['output'][] = $rptdata;
-			}
-
 		}
 	}
 }

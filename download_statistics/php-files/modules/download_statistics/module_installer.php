@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.1";
+$mod_version = "1.1.2";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -116,14 +116,14 @@ $localestrings['en']['dls616'] = "Download Statistics Counter";
 // Messages: reports
 $localestrings['en']['dls800'] = "Top files downloaded";
 $localestrings['en']['dls801'] = "Filenames filter";
-$localestrings['en']['dls802'] = "This filter is a regex";
+$localestrings['en']['dls802'] = "This filter is a regexp";
 $localestrings['en']['dls803'] = "Show me";
 $localestrings['en']['dls804'] = "the top";
 $localestrings['en']['dls805'] = "All";
 $localestrings['en']['dls806'] = "results in the report, and sort it";
 $localestrings['en']['dls807'] = "Ascending";
 $localestrings['en']['dls808'] = "Descending";
-$localestrings['en']['dls809'] = "Error in regex:";
+$localestrings['en']['dls809'] = "Error in regexp:";
 $localestrings['en']['dls810'] = "Filename";
 $localestrings['en']['dls811'] = "Download Count";
 // Messages: searches
@@ -151,6 +151,8 @@ $localestrings['en']['dls926'] = "You have to supply a short name for this stati
 $localestrings['en']['dls927'] = "You have to supply a description for this statistics counter";
 $localestrings['en']['dls928'] = "You have to select either a download item or enter filename(s), or both";
 $localestrings['en']['dls929'] = "Are you sure you want to delete this statistics counter?";
+// Messages: Reports
+$localestrings['en']['dls950'] = "The report could not be generated:";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |

@@ -29,7 +29,7 @@
 			{/if}
 		</td>
 		<td style='border-left: 1px solid #cccccc;'>
-			<div style='width:background-color: #f6f6f6;{$barwidth}'>
+			<div style='background-color: #f6f6f6;width:{$barwidth}px'>
 				<div style='height:12px;width:{$counters[bar].width}px;background-color:rgb({$counters[bar].red},{$counters[bar].green},{$counters[bar].blue});' title='{$counters[bar].description}'></div>
 			</div>
 		</td>
