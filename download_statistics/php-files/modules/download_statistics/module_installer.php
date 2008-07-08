@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.2";
+$mod_version = "1.1.0";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -88,8 +88,8 @@ $localestrings['en']['dls504'] = "Path is relative to the docroot. Start with a 
 $localestrings['en']['dls505'] = "Save";
 $localestrings['en']['dls506'] = "No";
 $localestrings['en']['dls507'] = "Yes";
-$localestrings['en']['dls508'] = "Update download counters:";
-$localestrings['en']['dls509'] = "If No, only downloads from the download pages are counted. If Yes, the batch program 'get_statistics.php' will update the counters";
+$localestrings['en']['dls508'] = "External download counter updates:";
+$localestrings['en']['dls509'] = "If No, downloads are counted by the download section, when the user clicks on a link. If Yes, the batch program like 'get_statistics.php' has to update the counters";
 $localestrings['en']['dls510'] = "Access to download statistics for:";
 $localestrings['en']['dls511'] = "Google Maps API key:";
 $localestrings['en']['dls512'] = "Click <a href='http://code.google.com/apis/maps/signup.html' target='_blank'>here</a> to sign up for a key.";
@@ -153,6 +153,85 @@ $localestrings['en']['dls928'] = "You have to select either a download item or e
 $localestrings['en']['dls929'] = "Are you sure you want to delete this statistics counter?";
 // Messages: Reports
 $localestrings['en']['dls950'] = "The report could not be generated:";
+
+$localestrings['nl'] = array();
+$localestrings['nl']['dls110'] = "De Download Statistics module is niet geinstalleerd. Dit moet gebeuren voordat deze processor gebruikt kan worden.";
+// Geo Mapping using Google Maps panel
+$localestrings['nl']['dls400'] = "Geografische verdeling van de gebruikers";
+// Admin panel
+$localestrings['nl']['dls500'] = "Download statistieken configuratie";
+$localestrings['nl']['dls501'] = "GeoMap bestandsnaam regex:";
+$localestrings['nl']['dls502'] = "IP addressen van gedownloade bestanden die voldoen aan deze reguliere expressie zullen aan de GeoMap worden toegevoegd. Blanco betekent ALLE bestanden!";
+$localestrings['nl']['dls503'] = "Locatie van de log bestanden:";
+$localestrings['nl']['dls504'] = "Pad is relatief ten opzichte van de webroot. Start met een / om een absoluut pad te gebruiken";
+$localestrings['nl']['dls505'] = "Bewaren";
+$localestrings['nl']['dls506'] = "Nee";
+$localestrings['nl']['dls507'] = "Ja";
+$localestrings['nl']['dls508'] = "Download teller extern bijwerken:";
+$localestrings['nl']['dls509'] = "Bij Nee worden downloads geteld als de gebruiker klikt op een link in de download sectie. Bij Ja moet er een extern programma als 'get_statistics.php' gebruikt worden.";
+$localestrings['nl']['dls510'] = "Toegang tot de statistieken voor:";
+$localestrings['nl']['dls511'] = "Google Maps API key:";
+$localestrings['nl']['dls512'] = "Klik <a href='http://code.google.com/apis/maps/signup.html' target='_blank'>hier</a> om u in te schrijven bij Google Maps.";
+$localestrings['nl']['dls513'] = "Titel download statistieken";
+$localestrings['nl']['dls514'] = "Gebruikt als titel voor het statistieken paneel. U kunt %s gebruiken om het totaal aantal downloads in te voegen.";
+// Statistics counter panel
+$localestrings['nl']['dls600'] = "Download statistieken";
+$localestrings['nl']['dls601'] = "Korte naam";
+$localestrings['nl']['dls602'] = "Volgorde";
+$localestrings['nl']['dls603'] = "Opties";
+$localestrings['nl']['dls604'] = "Er zijn geen statistiek tellers gedefinieerd op dit moment";
+$localestrings['nl']['dls605'] = "Toevoegen";
+$localestrings['nl']['dls606'] = "Verplaats deze regel naar boven";
+$localestrings['nl']['dls607'] = "Verplaats deze regel naar beneden";
+$localestrings['nl']['dls608'] = "Wijzig deze definitie";
+$localestrings['nl']['dls609'] = "Verwijder deze definitie";
+$localestrings['nl']['dls610'] = "Naam:";
+$localestrings['nl']['dls611'] = "Omschrijving:";
+$localestrings['nl']['dls612'] = "Gebruik de teller van dit download item:";
+$localestrings['nl']['dls613'] = "Gebruik de tellers van deze gedownloade bestanden:";
+$localestrings['nl']['dls614'] = "Bewaren";
+$localestrings['nl']['dls615'] = "Dit zijn de bestanden die tot op heden gedownload zijn. Klik op een bestandsnaam om deze aan de lijst toe te voegen:";
+$localestrings['nl']['dls616'] = "Download statistieken teller";
+// Messages: reports
+$localestrings['nl']['dls800'] = "Top gedownloade bestanden";
+$localestrings['nl']['dls801'] = "Bestandsnaam filter";
+$localestrings['nl']['dls802'] = "Dit is een reguliere expressie";
+$localestrings['nl']['dls803'] = "Toon mij";
+$localestrings['nl']['dls804'] = "de top";
+$localestrings['nl']['dls805'] = "alle";
+$localestrings['nl']['dls806'] = "resultaten in het rapport, en sorteer het";
+$localestrings['nl']['dls807'] = "Oplopend";
+$localestrings['nl']['dls808'] = "Aflopend";
+$localestrings['nl']['dls809'] = "Fout in reguliere expressie:";
+$localestrings['nl']['dls810'] = "Bestandsnaam";
+$localestrings['nl']['dls811'] = "Download teller";
+// Messages: searches
+$localestrings['nl']['dls850'] = "Gedownloade bestanden";
+// Messages: geomap
+$localestrings['nl']['dls900'] = "<center>Geen valide Google Maps key gevonden voor de URL: %s!</center>";
+$localestrings['nl']['dls901'] = "In totaal konden %u gebruikers worden gemapt.";
+$localestrings['nl']['dls902'] = "Plaats uw muis op een markering om meer informatie te zien over een bepaald land";
+$localestrings['nl']['dls903'] = "Sorry, de Google Maps API is niet compatibel met uw browser";
+$localestrings['nl']['dls904'] = "Voor %u gebruiker kon geen locatie worden bepaald";
+$localestrings['nl']['dls905'] = "Voor %u gebruikers kon geen locatie worden bepaald";
+// Messages: admin
+$localestrings['nl']['dls910'] = "Groep selectie is niet correct.";
+$localestrings['nl']['dls911'] = "Reguliere expressie is foutief. De fout is: ";
+$localestrings['nl']['dls912'] = "Opgegeven log pad naam bestaat niet.";
+$localestrings['nl']['dls913'] = "Geen schrijftoegang tot het opgegeven pad.";
+// Messages: Statistics counter panel
+$localestrings['nl']['dls920'] = "Statistiek definitie is verwijderd.";
+$localestrings['nl']['dls921'] = "Statistiek definitie is bewaard.";
+$localestrings['nl']['dls922'] = "Het gevraagde statistiek ID bestaat niet.";
+$localestrings['nl']['dls923'] = "Resultaat:";
+$localestrings['nl']['dls924'] = "Statistiek definitie succesvol toegevoegd.";
+$localestrings['nl']['dls925'] = "Statistiek definitie succesvol bijgewerkt.";
+$localestrings['nl']['dls926'] = "U dient een korte naam in te geven voor deze definitie";
+$localestrings['nl']['dls927'] = "U dient een omschrijving in te geven voor deze definitie";
+$localestrings['nl']['dls928'] = "U moet of een download item, of bestandsnamen selecteren. Of beide.";
+$localestrings['nl']['dls929'] = "Weet u zeker dat u deze definitie wilt verwijderen?";
+// Messages: Reports
+$localestrings['nl']['dls950'] = "Het rapport kon niet worden aangemaakt:";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
@@ -267,10 +346,7 @@ if (!function_exists('module_upgrade')) {
 		global $db_prefix;
 			
 		switch ($current_version) {
-			case "1.1.0":
-				$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('dlstats_title', '')");
-
-			case "1.1.1":			// current release version
+			case "1.1.0":			// current release version
 
 		}
 	}

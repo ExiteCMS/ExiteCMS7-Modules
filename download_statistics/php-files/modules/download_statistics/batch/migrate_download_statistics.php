@@ -96,7 +96,8 @@ foreach($tables as $table) {
 			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['success']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
 			$data = mysql_fetch_assoc($result);
 		}
-		// fill the file_ipss table from the old statistics table and create the logfiles
+
+		// fill the file_ips table from the old statistics table and create the logfiles
 		display("Creating the new download logfiles:");	
 		$result = mysql_query("SELECT * FROM ".$db_prefix.$table." ORDER BY ds_timestamp");
 		display("-> creating ".dbrows($result)." log records!");	
@@ -150,6 +151,23 @@ foreach($tables as $table) {
 		display("Old statistics table '".$table."' does not exist!");
 
 	}
+}
+
+display("Update counters of the items in the download section");
+$result = mysql_query("SELECT * FROM ".$db_prefix."downloads WHERE download_external = 1")
+display("-> updating ".dbrows($result)." download records!");
+$data = mysql_fetch_assoc($result);
+while ($data !== false) {
+	// get the filename from the URL
+	$url = parse_url($data['download_url']);
+	// do we have a counter for it?
+	$result2 = mysql_query("SELECT * FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$url['path']."' LIMIT 1");
+	if ($result2) {
+		// update the counter
+		$data2 = mysql_fetch_assoc($result2);
+		$result2 = mysql_query("UPDATE ".$db_prefix."downloads SET download_counter = '".$data2['dlsf_counter']."' WHERE download_id = '".$data['download_id']."'");
+	}
+	$data = mysql_fetch_assoc($result);
 }
 
 display(" ");

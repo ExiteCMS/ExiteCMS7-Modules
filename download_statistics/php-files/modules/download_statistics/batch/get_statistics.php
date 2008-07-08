@@ -171,6 +171,19 @@ foreach($stats_urls as $key => $url) {
 								// store the filename to check if we need to change logsfiles at the next cycle
 								$oldfile = $newfile;
 							}
+							// update download counters if need be
+							if ($settings['dlstats_remote']) {
+								// do we have a download record for this URL?
+								$result2 = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_url LIKE '%".$download['path']."' AND download_external = 1");
+								while ($data2 = dbarray($result2)) {
+									// check if this is a full URL match
+									$data2['url'] = parse_url($data2['download_url']);
+									if ($download['path'] == $data2['url']['path']) {
+										// match found, update the counter
+										$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_counter=download_counter+1 WHERE download_id = '".$data2['download_id']."'");
+									}
+								}
+							}
 							// create a log record
 							//
 							// Layout -> 1|20070719;131502;1184846124|212.152.84.41|1|/helenite/plugins/inadyn_plugin_1.1.0.tar.gz
