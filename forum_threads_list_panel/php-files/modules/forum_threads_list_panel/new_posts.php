@@ -56,8 +56,10 @@ if ($userdata['user_posts_unread']) {
 	$result = dbquery("
 		SELECT count(*) as unread 
 			FROM ".$db_prefix."posts p 
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
-			WHERE tr.user_id = '".$userdata['user_id']."' 
+			WHERE ".groupaccess('f.forum_access')."
+				AND  tr.user_id = '".$userdata['user_id']."' 
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 				AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 					OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))"
@@ -66,8 +68,10 @@ if ($userdata['user_posts_unread']) {
 	$result = dbquery("
 		SELECT count(*) as unread 
 			FROM ".$db_prefix."posts p 
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
-			WHERE tr.user_id = '".$userdata['user_id']."' 
+			WHERE ".groupaccess('f.forum_access')."
+				AND tr.user_id = '".$userdata['user_id']."' 
 				AND p.post_author != '".$userdata['user_id']."'
 				AND p.post_edituser != '".$userdata['user_id']."'
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
@@ -88,8 +92,10 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT count(*) as unread, tr.thread_id
 				FROM ".$db_prefix."posts p 
+					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
 					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
-				WHERE tr.user_id = '".$userdata['user_id']."' 
+				WHERE ".groupaccess('f.forum_access')."
+					AND tr.user_id = '".$userdata['user_id']."' 
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
@@ -99,8 +105,10 @@ if ($variables['unread']) {
 		$result = dbquery("
 			SELECT count(*) as unread, tr.thread_id 
 				FROM ".$db_prefix."posts p 
+					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
 					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
-				WHERE tr.user_id = '".$userdata['user_id']."' 
+				WHERE ".groupaccess('f.forum_access')."
+					AND tr.user_id = '".$userdata['user_id']."' 
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
@@ -120,7 +128,8 @@ if ($variables['unread']) {
 				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
 				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
-				WHERE tr.user_id = '".$userdata['user_id']."' 
+				WHERE ".groupaccess('f.forum_access')."
+					AND tr.user_id = '".$userdata['user_id']."' 
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
@@ -135,7 +144,8 @@ if ($variables['unread']) {
 				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
 				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
-				WHERE tr.user_id = '".$userdata['user_id']."' 
+				WHERE ".groupaccess('f.forum_access')."
+					AND tr.user_id = '".$userdata['user_id']."' 
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
