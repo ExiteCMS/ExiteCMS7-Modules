@@ -68,12 +68,6 @@ if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
 $mod_site_links = array();
 
 /*---------------------------------------------------+
-| locale strings for this module                     |
-+----------------------------------------------------*/
-
-$localestrings = array();
-
-/*---------------------------------------------------+
 | commands to execute when installing this module    |
 +----------------------------------------------------*/
 
