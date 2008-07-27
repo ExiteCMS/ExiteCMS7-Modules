@@ -88,7 +88,7 @@
 			{
                 $str .= "\t\t<td class='tbl2' align=\"right\">".$i."</td>\n";
 			}
-            $str .= "\t\t<td class='tbl1'>".$this->Format($pag)."</td>\n";
+            $str .= "\t\t<td class='tbl1'>".$this->Link($pag)."</td>\n";
             if ($show_owner)
 			{
             	$arr['owner'] = ($arr['owner'] == "") ? "<span class='small'>not owned</span>" : $arr['owner'];
