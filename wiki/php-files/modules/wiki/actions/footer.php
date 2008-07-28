@@ -42,18 +42,17 @@ echo $this->FormOpen("", "TextSearch", "get");
 </table>
 <table width='100%'>
 <tr>
-	<td width='1%' style='white-space:nowrap;'>
-
-Search: <input name="phrase" size="75" class="searchbox" />
+	<td width='100%' style='white-space:nowrap;'>
+		Search: <input name="phrase" style='width:90%;' class="searchbox" />
 	</td>
-	<td width='1%' align='right'>
+	<td width='25' align='right'>
 <?php 
 echo $this->GetPageTime() ? " <a href=\"".$this->href("revisions.xml")."\" title=\"Click to view recent page revisions in XML format.\"><img src=\"images/xml.png\" width=\"36\" height=\"14\" align=\"bottom\" style=\"border : 0px;\" alt=\"XML\" /></a>\n" : "&nbsp;";
 ?>
 	</td>
 </tr>
 <tr>
-	<td colspan='2' width='99%' align='right'>
+	<td colspan='2' width='100%' align='right'>
 		<div class="smallprint">
 		<?php echo $this->Link("http://validator.w3.org/check/referer", "", "Valid XHTML 1.0 Transitional") ?> |
 		<?php echo $this->Link("http://jigsaw.w3.org/css-validator/check/referer", "", "Valid CSS") ?> |
@@ -78,19 +77,13 @@ echo $this->FormClose();
 	}
 
 	// page hit counter code
-
 	$thispage=$this->GetPageTag();
-	// Get hit count
-	$result2 = mysql_query( "SELECT hits FROM ".$this->config["table_prefix"]."pages WHERE tag='$thispage' AND latest='Y'" );
-	$row2 = mysql_fetch_array($result2);
-	$hit_count1 = $row2[hits];
-	// Count is incremented if not your own page
-	if ($this->GetUserName() != $this->GetPageOwner($tag))
+
+	// Hot count is incremented if not your own page and we think it's a user
+	if (!CMS_IS_BOT && $this->GetUserName() != $this->GetPageOwner($tag))
 	{
-		// End Get hit Count   Start adding hits
-		$hit_count2 = $hit_count1 + 1;
-		// End adding hits   Start Update Hit
-		$sql = "UPDATE `".$this->config["table_prefix"]."pages` SET `hits` = '$hit_count2' WHERE tag='$thispage' AND latest='Y'";
+		// Update Hit counter
+		$sql = "UPDATE `".$this->config["table_prefix"]."pages` SET `hits` = `hits`+1 WHERE tag='$thispage' AND latest='Y'";
 		// $sql .= " WHERE `ref` = $ref";
 		mysql_query($sql) or die("Unable to process query: " . mysql_error());
 	}
