@@ -20,19 +20,6 @@ require_once PATH_INCLUDES."geoip_include.php";
 // array's to store the variables for this panel
 $variables = array();
 
-// update the last users online information
-if ($settings['maintenance'] != "1") {
-	$cond = ($userdata['user_level'] != 0 ? "'".$userdata['user_id']."'" : "'0' AND online_ip='".USER_IP."'");
-	$result = dbquery("SELECT * FROM ".$db_prefix."online WHERE online_user=".$cond."");
-	if (dbrows($result) != 0) {
-		$result = dbquery("UPDATE ".$db_prefix."online SET online_lastactive='".time()."' WHERE online_user=".$cond."");
-	} else {
-		$name = (iMEMBER ? $userdata['user_id'] : "0");
-		$result = dbquery("INSERT INTO ".$db_prefix."online (online_user, online_ip, online_lastactive) VALUES ('$name', '".USER_IP."', '".time()."')");
-	}
-	$result = dbquery("DELETE FROM ".$db_prefix."online WHERE online_lastactive<".(time()-60)."");
-}
-
 $result = dbquery(
 	"SELECT ton.*, tu.user_id,user_name FROM ".$db_prefix."online ton
 	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level IS NULL OR tu.user_level != '103'":""));
