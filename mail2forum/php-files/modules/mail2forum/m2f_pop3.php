@@ -439,7 +439,7 @@ function processmessageparts($messagepart) {
 
 // returns true if this user is allowed to post in this forum
 function can_post($usergroups, $forumgroup) {
-	global $db_prefix;
+	global $db_prefix, $groups;
 	
 	$groups = explode(".", substr($usergroups, 1));
 	foreach ($groups as $group) {
@@ -449,7 +449,7 @@ function can_post($usergroups, $forumgroup) {
 	// create a new user_group field with all inherited groups, and
 	// get the inherited group rights and add them to the user own rights
 	// everyone is always member of group 0 (public)
-	$usergroups = "0";
+	$usergroups = ".0";
 	foreach ($groups as $group) {
 		$usergroups .= ".".$group;
 		$result = dbarray(dbquery("SELECT group_groups FROM ".$db_prefix."user_groups WHERE group_id = '".$group."'"));
@@ -458,7 +458,7 @@ function can_post($usergroups, $forumgroup) {
 		}
 	}
 
-	if (in_array($forumgroup, explode(".", $usergroups))) {
+	if (in_array($forumgroup, explode(".", substr($usergroups,1)))) {
 		return true;
 	} else {
 		return false;
@@ -540,10 +540,10 @@ while (true) {
 			if ($settings['m2f_pop3_debug']) logdebug('LOGIN', 'before the POP3 login');
 			if($pop3->login($forum['m2f_userid'], $forum['m2f_password'])) {
 				if ($settings['m2f_pop3_debug']) logdebug('LOGIN', 'before getting the new message counter');
+				$pop3connect = true;
 				$newmsg = $pop3->numMsg();
 				if ($newmsg !== false) {
 					if ($newmsg && $settings['m2f_process_log']) logentry('RETR', 'Mailbox '.$forum['m2f_email'].' - '.$newmsg.' new messages');
-					$pop3connect = true;
 				}
 			}
 		}

@@ -96,7 +96,7 @@ function mailer_init() {
 | initialisation code
 +----------------------------------------------------*/
 
-ini_set('memory_limit', '32M');
+ini_set('memory_limit', '64M');
 ini_set('max_execution_time', '0');
 
 // log the start
@@ -332,7 +332,7 @@ while (true) {
 					$mail->AddReplyTo($sender['m2f_email'], $sender['forum_name']);
 
 					// identify this email as one from us
-					$mail->AddCustomHeader("X-M2F-version: PHP-Fusion Mail2Forum v".$locale['m2fver']);
+					$mail->AddCustomHeader("X-M2F-version: ExiteCMS Mail2Forum v1.1.0");
 					$mail->AddCustomHeader("X-M2F-host: ".utf8_decode($settings['sitename']));
 					$mail->AddCustomHeader("X-M2F-forum: ".$sender['forum_name']);
 
