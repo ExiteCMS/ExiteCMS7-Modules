@@ -50,7 +50,7 @@ switch ($action) {
 				$variables['message'] = $locale['dls928'];
 			} else { 
 				// add the new counter
-				$result = dbquery("INSERT INTO ".$db_prefix."dlstats_counters (dlsc_name, dlsc_description, dlsc_download_id, dlsc_files, dlsc_order) VALUES ('".$variables['dlsc_name']."', '".$variables['dlsc_description']."', '".$variables['dlsc_download_id']."', '".$variables['dlsc_files']."', '".$variables['dlsc_order']."')");
+				$result = dbquery("INSERT INTO ".$db_prefix."dlstats_counters (dlsc_name, dlsc_description, dlsc_download_id, dlsc_count_id, dlsc_files, dlsc_order) VALUES ('".$variables['dlsc_name']."', '".$variables['dlsc_description']."', '".$variables['dlsc_download_id']."', '".$variables['dlsc_count_id']."', '".$variables['dlsc_files']."', '".$variables['dlsc_order']."')");
 				// return to the main panel with a success message
 				$variables['message'] = $locale['dls924'];
 				$action = "";
@@ -85,7 +85,7 @@ switch ($action) {
 				$variables['message'] = $locale['dls928'];
 			} else { 
 				// update the counter
-				$result = dbquery("UPDATE ".$db_prefix."dlstats_counters SET dlsc_name = '".$variables['dlsc_name']."', dlsc_description = '".$variables['dlsc_description']."', dlsc_download_id = '".$variables['dlsc_download_id']."', dlsc_files = '".$variables['dlsc_files']."' WHERE dlsc_id = '".$variables['dlsc_id']."'");
+				$result = dbquery("UPDATE ".$db_prefix."dlstats_counters SET dlsc_name = '".$variables['dlsc_name']."', dlsc_description = '".$variables['dlsc_description']."', dlsc_download_id = '".$variables['dlsc_download_id']."', dlsc_count_id = '".$variables['dlsc_count_id']."', dlsc_files = '".$variables['dlsc_files']."' WHERE dlsc_id = '".$variables['dlsc_id']."'");
 				// return to the main panel with a success message
 				$variables['message'] = $locale['dls925'];
 				$action = "";
