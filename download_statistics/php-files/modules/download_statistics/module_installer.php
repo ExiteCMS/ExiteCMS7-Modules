@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.0";
+$mod_version = "1.1.2";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -108,15 +108,16 @@ $localestrings['en']['dls608'] = "Edit this statistics entry";
 $localestrings['en']['dls609'] = "Delete this statistics entry";
 $localestrings['en']['dls610'] = "Name:";
 $localestrings['en']['dls611'] = "Description:";
-$localestrings['en']['dls612'] = "Get the count from this download item:";
+$localestrings['en']['dls612'] = "Link to this download item:";
 $localestrings['en']['dls613'] = "Use the counters from these download files:";
 $localestrings['en']['dls614'] = "Save";
 $localestrings['en']['dls615'] = "These are the files currently downloaded. Click on a filename to add it to the list:";
 $localestrings['en']['dls616'] = "Download Statistics Counter";
+$localestrings['en']['dls617'] = "Include the counter of this item in the count:";
 // Messages: reports
 $localestrings['en']['dls800'] = "Top files downloaded";
 $localestrings['en']['dls801'] = "Filenames filter";
-$localestrings['en']['dls802'] = "This filter is a regexp";
+$localestrings['en']['dls802'] = "This filter is a <a href='http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55582' target='_blank'>regexp</a>";
 $localestrings['en']['dls803'] = "Show me";
 $localestrings['en']['dls804'] = "the top";
 $localestrings['en']['dls805'] = "All";
@@ -187,15 +188,16 @@ $localestrings['nl']['dls608'] = "Wijzig deze definitie";
 $localestrings['nl']['dls609'] = "Verwijder deze definitie";
 $localestrings['nl']['dls610'] = "Naam:";
 $localestrings['nl']['dls611'] = "Omschrijving:";
-$localestrings['nl']['dls612'] = "Gebruik de teller van dit download item:";
+$localestrings['nl']['dls612'] = "Verbind met dit download item:";
 $localestrings['nl']['dls613'] = "Gebruik de tellers van deze gedownloade bestanden:";
 $localestrings['nl']['dls614'] = "Bewaren";
 $localestrings['nl']['dls615'] = "Dit zijn de bestanden die tot op heden gedownload zijn. Klik op een bestandsnaam om deze aan de lijst toe te voegen:";
 $localestrings['nl']['dls616'] = "Download statistieken teller";
+$localestrings['nl']['dls617'] = "De teller van dit item meetellen in het totaal:";
 // Messages: reports
 $localestrings['nl']['dls800'] = "Top gedownloade bestanden";
 $localestrings['nl']['dls801'] = "Bestandsnaam filter";
-$localestrings['nl']['dls802'] = "Dit is een reguliere expressie";
+$localestrings['nl']['dls802'] = "Dit is een <a href='http://www.google.com/support/googleanalytics/bin/answer.py?hl=nl&answer=55582' target='_blank'>reguliere expressie</a>";
 $localestrings['nl']['dls803'] = "Toon mij";
 $localestrings['nl']['dls804'] = "de top";
 $localestrings['nl']['dls805'] = "alle";
@@ -285,6 +287,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsc_name VARCHAR(10) NOT NULL default '',
   dlsc_description VARCHAR(100) NOT NULL default '',
   dlsc_download_id SMALLINT(5) UNSIGNED NOT NULL default 0,
+  dlsc_count_id TINYINT(1) UNSIGNED NOT NULL default 1,
   dlsc_files MEDIUMTEXT NOT NULL,
   dlsc_order SMALLINT(5) UNSIGNED NOT NULL default 0,
   PRIMARY KEY (dlsc_id)
@@ -346,8 +349,13 @@ if (!function_exists('module_upgrade')) {
 		global $db_prefix;
 			
 		switch ($current_version) {
-			case "1.1.0":			// current release version
-
+			case "1.1.0":
+			case "1.1.1":
+			case "1.1.2":			// current release version
+				$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
+				break;
+			default:
+				terminate("invalid current version number passed to module_upgrade()!");
 		}
 	}
 }

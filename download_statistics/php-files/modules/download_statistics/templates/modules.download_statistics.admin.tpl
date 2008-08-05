@@ -49,6 +49,17 @@
 			</tr>
 			<tr>
 				<td class='tbl' valign='top'>
+					{$locale.dls617}
+				</td>
+				<td class='tbl'>
+					<select name='dlsc_count_id' class='textbox'>
+						<option value='0'{if $dlsc_count_id == 0} selected="selected"{/if}>{$locale.dls506}</option>
+						<option value='1'{if $dlsc_count_id == 1} selected="selected"{/if}>{$locale.dls507}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class='tbl' valign='top'>
 					{$locale.dls613}
 				</td>
 				<td class='tbl'>

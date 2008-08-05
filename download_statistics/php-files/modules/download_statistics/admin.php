@@ -38,6 +38,7 @@ switch ($action) {
 			$variables['dlsc_name'] = stripinput($_POST['dlsc_name']);;
 			$variables['dlsc_description'] = stripinput($_POST['dlsc_description']);;
 			$variables['dlsc_download_id'] = isNum($_POST['dlsc_download_id']) ? $_POST['dlsc_download_id'] : 0;
+			$variables['dlsc_count_id'] = isNum($_POST['dlsc_count_id']) ? $_POST['dlsc_count_id'] : 1;
 			$variables['dlsc_files'] = stripinput($_POST['dlsc_files']);
 			$variables['dlsc_order'] = dbfunction("MAX(dlsc_order)","dlstats_counters","")+1;
 			// validate the input
@@ -59,6 +60,7 @@ switch ($action) {
 			$variables['dlsc_name'] = "";
 			$variables['dlsc_description'] = "";
 			$variables['dlsc_download_id'] = 0;
+			$variables['dlsc_count_id'] = 0;
 			$variables['dlsc_files'] = "";
 			$variables['dlsc_order'] = 0;
 		}
@@ -72,6 +74,7 @@ switch ($action) {
 			$variables['dlsc_name'] = stripinput($_POST['dlsc_name']);;
 			$variables['dlsc_description'] = stripinput($_POST['dlsc_description']);;
 			$variables['dlsc_download_id'] = IsNum($_POST['dlsc_download_id']) ? $_POST['dlsc_download_id'] : 0;
+			$variables['dlsc_count_id'] = IsNum($_POST['dlsc_count_id']) ? $_POST['dlsc_count_id'] : 1;
 			$variables['dlsc_files'] = stripinput($_POST['dlsc_files']);
 			$variables['dlsc_order'] = IsNum($_POST['dlsc_order']) ? $_POST['dlsc_order'] : 0;
 			if (empty($variables['dlsc_name'])) {
@@ -94,6 +97,7 @@ switch ($action) {
 				$variables['dlsc_name'] = $data['dlsc_name'];
 				$variables['dlsc_description'] = $data['dlsc_description'];
 				$variables['dlsc_download_id'] = $data['dlsc_download_id'];
+				$variables['dlsc_count_id'] = $data['dlsc_count_id'];
 				$variables['dlsc_files'] = $data['dlsc_files'];
 				$variables['dlsc_order'] = $data['dlsc_order'];
 			} else {

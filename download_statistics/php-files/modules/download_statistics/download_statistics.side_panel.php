@@ -28,7 +28,7 @@ while ($data = dbarray($result)) {
 	// start with a count of zero
 	$data['count'] = 0;
 	// check if we need to get a local download counter
-	if ($data['dlsc_download_id']) {
+	if ($data['dlsc_download_id'] && $data['dlsc_count_id']) {
 		$result2 = dbquery("SELECT d.*, c.download_cat_access FROM ".$db_prefix."downloads d LEFT JOIN ".$db_prefix."download_cats c ON d.download_cat = c.download_cat_id WHERE d.download_id = '".$data['dlsc_download_id']."'");
 		if ($data2 = dbarray($result2)) {
 			// check if the user has access to it

@@ -23,6 +23,8 @@ if (!CMS_CLI && (!checkrights("T") || !defined("iAUTH") || $aid == iAUTH)) fallb
 $localkey = md5("server50096.uk2net.com"."*"."83.170.99.141");	// internal IP address
 $remotekey = md5("server50096.uk2net.com"."*"."83.170.97.97");	// external IP address
 
+$logfile = "/logs/downloads.log";
+
 $stats_urls = array();
 //$stats_urls[0] = "testfile.log";		// test file
 $stats_urls[1] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		// Exite
@@ -163,7 +165,7 @@ foreach($stats_urls as $key => $url) {
 							// different from the old? close the old file, open the new file
 							if ($oldfile != $newfile) {
 								if ($loghandle) fclose($loghandle);
-								$loghandle = @fopen($newfile, "wt");	// overwrite if exists!
+								$loghandle = @fopen($newfile, "at");	// append if exists!
 								if (!$handle) {
 									display("     ERROR! Can not open logfile: ".$newfile);	
 									break;
@@ -186,7 +188,7 @@ foreach($stats_urls as $key => $url) {
 							}
 							// create a log record
 							//
-							// Layout -> 1|20070719;131502;1184846124|212.152.84.41|1|/helenite/plugins/inadyn_plugin_1.1.0.tar.gz
+							// Layout -> 1|20070719;131502;1184846124|212.152.84.41|1|/this/is/a/downloaded/file.tar.gz
 							//
 							$line  = $download['mirror']."|";
 							$line .= $download['date'].";".$download['time'].";".$download['timestamp']."|";
