@@ -36,9 +36,11 @@
 	</tr>
 {if $smarty.section.bar.last}
 	{if $settings.dlstats_title != "" || true}
+	<tr>
 		<td colspan='2' align='center'>
 			{ssprintf format=$settings.dlstats_title|replace:"|":"<br />" var1=$total}
 		</td>
+	</tr>
 	{/if}
 </table>
 {include file="_closeside_x.tpl"}
