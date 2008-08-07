@@ -18,7 +18,41 @@ if (eregi("login_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) d
 $variables = array();
 
 $variables['loginerror'] = isset($loginerror) ? $loginerror : "";
-$variables['remember_me'] = isset($_COOKIE['remember_me'])?$_COOKIE['remember_me']:"no";
+$variables['remember_me'] = isset($_SESSION['remember_me']) ? $_SESSION['remember_me'] : "no";
+$variables['login_expiry']  = (iADMIN && isset($_SESSION['login_expire'])) ? time_system2local($_SESSION['login_expire']) : "";
+
+// get which authentication to show
+$variables['auth_methods'] = explode(",",$settings['auth_type']);
+$variables['method_count'] = count($variables['auth_methods']);
+$variables['auth_state'] = array();
+foreach($variables['auth_methods'] as $key => $method) {
+	if (isset($_SESSION['box_login2'.$key])) {
+		$variables['auth_state'][] = $_SESSION['box_login2'.$key] == 0 ? 1 : 0;
+	} else {
+		$variables['auth_state'][] = 1;
+	}
+}
+
+// check if we need to display a registration link
+if ($settings['enable_registration']) {
+	require_once PATH_INCLUDES."menu_include.php";
+	$variables['show_reglink'] = true;
+	// get all menu items for this user
+	global $linkinfo;
+	$linkinfo = array();
+	menu_generate_tree("", array(1,2,3), false);
+	foreach ($linkinfo as $link) {
+		if ($link['link_url'] == "/register.php") {
+			$variables['show_reglink'] = false;
+			break;
+		}
+	}
+} else {
+	$variables['show_reglink'] = false;
+}
+
+// check if we need to display links
+$variables['show_passlink'] = 1;
 
 $template_variables['modules.login_panel'] = $variables;
 ?>

@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Login side panel";
 $mod_description = "Side panel to allow members to login";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -86,6 +86,8 @@ if (!function_exists('module_upgrade')) {
 				// ExiteCMS v7.0. no upgrade actions for this release
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+			case "1.1.1":
+				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
 			default:
 				// do this at every upgrade
 		}
