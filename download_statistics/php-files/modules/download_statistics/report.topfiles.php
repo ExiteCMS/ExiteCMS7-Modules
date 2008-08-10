@@ -79,24 +79,26 @@ if (isset($action)) {
 			}
 
 			// check how many rows this would output
-			$rptresult = mysql_query($sql);
+			$rptresult = mysql_query($sql.($top?" LIMIT $top":""));
 			if ($rptresult) {
 				// store some row counter for the pager
 				$variables['rows'] = dbrows($rptresult);
 				$variables['rowstart'] = $rowstart;
 
 				// now add a query limit, make sure not to overshoot the limit requested
-				if ($top > 0 && $rowstart+$settings['numofthreads'] > $top) {
-					$rowstart = max(0, $limit - $settings['numofthreads']);
-				} else {
-					// technically, this is never going to be the limit ;-)
-					$top = 99999999999999;
+				if ($top > 0) {
+					if ($variables['rows']-$rowstart > $settings['numofthreads']) {
+						$sql .= " LIMIT ".$rowstart.",".$settings['numofthreads'];
+					} else {
+						$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
+					}
 				}
-				$rptresult = dbquery($sql." LIMIT ".$rowstart.",".min($rowstart+$top, $settings['numofthreads']));
+				$rptresult = mysql_query($sql);
 
 				// get the results
 				$reportvars['output'] = array();
 				while ($rptdata = dbarray($rptresult)) {
+					$rptdata['_rownr'] = ++$rowstart;
 					$reportvars['output'][] = $rptdata;
 				}
 			} else {

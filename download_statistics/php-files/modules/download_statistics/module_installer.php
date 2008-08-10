@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.2";
+$mod_version = "1.1.3";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -347,12 +347,13 @@ if (!function_exists('uninstall_dlstats')) {
 if (!function_exists('module_upgrade')) {
 	function module_upgrade($current_version) {
 		global $db_prefix;
-			
+
 		switch ($current_version) {
 			case "1.1.0":
 			case "1.1.1":
-			case "1.1.2":			// current release version
 				$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
+			case "1.1.2":
+			case "1.1.3":			// current release version
 				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");
