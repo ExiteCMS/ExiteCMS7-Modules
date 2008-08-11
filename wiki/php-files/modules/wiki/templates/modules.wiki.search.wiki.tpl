@@ -22,8 +22,7 @@
 		{else}
 			{$reportvars.output[idx].tag}
 		{/if}
-		<br />
-		<span class='small'>
+		<br />&nbsp;<span class='small'>
 			<font class='smallalt'>{$locale.425}</font> {$reportvars.output[idx].time|date_format:"longdate"} - 
 			<font class='smallalt'>{$locale.426}</font>
 			{if iMEMBER && $reportvars.output[idx].user_id}

@@ -94,9 +94,9 @@ if (isset($action)) {
 					FROM ".$wakkaConfig["table_prefix"]."pages p
 					LEFT JOIN ".$db_prefix."users u ON u.user_name = p.owner
 					WHERE latest = 'Y'";
-			$stext = explode(" ", $stext);
+			$searchtext = explode(" ", $stext);
 			$searchstring = "";
-			foreach($stext as $sstring) {
+			foreach($searchtext as $sstring) {
 				if (!empty($sstring)) {
 					$searchstring .= ($searchstring==""?"":(" ".$qtype))." (tag LIKE '%".trim($sstring)."%' OR body LIKE '%".trim($sstring)."%') ";
 				}
@@ -163,8 +163,7 @@ if (isset($action)) {
 					if ($wakka->HasAccess("read",$rptdata["tag"])) {
 						$rptdata['access'] = true;
 						// display portion of the matching body and highlight the search term */ 
-						// Note that FullTextSearch finds a phrase even if it only matches a tag (name or attribute), and not its content
-						preg_match_all("/(.{0,120})($stext)(.{0,120})/is",$rptdata['tag'].' :: '.$rptdata['body'],$matchString);
+						preg_match_all("/(.{0,120})($stext)(.{0,120})/is",$rptdata['body'],$matchString);
 						if (count($matchString[0]) > 3)
 						{
 							$matchString[0] = array_splice($matchString[0], 3, count($matchString));
