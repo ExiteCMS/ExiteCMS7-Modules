@@ -10,7 +10,6 @@
 | the included gpl.txt file or visit http://gnu.org  |
 +----------------------------------------------------*/
 if (eregi("search.wiki.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
-error_reporting(E_ALL);
 
 // define the wakka version used
 if (!defined('WAKKA_VERSION')) define('WAKKA_VERSION', '1.1.6.3');
