@@ -62,7 +62,7 @@ if (isset($action)) {
 		if (!isNum($limit)) {
 			$limit = 0;
 		}
-		$boolean = isset($_POST['boolean']) ? 1 : 0;
+		$boolean = isset($_POST['boolean']) ? 0 : 1;
 
 		// basis of the query for this search
 		$sql = "SELECT *, 1 AS score FROM ".$db_prefix."dlstats_files WHERE ";
