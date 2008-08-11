@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.4";									// module version number
+$mod_version = "1.1.5";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -60,6 +60,19 @@ $mod_site_links = array();								// site_links definitions. Multiple can be def
 $mod_site_links[] = array('name' => 'ExiteCMS Wiki', 'url' => 'index.php', 'panel' => '', 'visibility' => 102);
 
 /*---------------------------------------------------+
+| Report entries for this module                     |
++----------------------------------------------------*/
+
+$mod_report_links = array();
+
+/*---------------------------------------------------+
+| Search entries for this module                     |
++----------------------------------------------------*/
+
+$mod_search_links = array();
+$mod_search_links[] = array('name' => "wiki", 'title' => "423", 'version' => "1.0.0", 'fulltext' => 1, 'visibility' => 0);
+
+/*---------------------------------------------------+
 | locale strings for this module                     |
 +----------------------------------------------------*/
 
@@ -87,6 +100,11 @@ $localestrings['en']['419'] = "Save Settings";
 $localestrings['en']['420'] = "(only if IP address matches)";
 $localestrings['en']['421'] = "Generate dynamic wiki links in forum posts:";
 $localestrings['en']['422'] = "(for manual links use [wiki] bbcode)";
+$localestrings['en']['423'] = "Wiki";
+$localestrings['en']['424'] = "Wiki search results";
+$localestrings['en']['425'] = "Last update:";
+$localestrings['en']['426'] = "Page owner:";
+$localestrings['en']['427'] = "You don't have the rights to view this wiki page.";
 
 $localestrings['nl'] = array();
 $localestrings['nl']['400'] = "Wiki configuratie";
@@ -111,6 +129,11 @@ $localestrings['nl']['419'] = "Bewaren";
 $localestrings['nl']['420'] = "(alleen vanaf hun eigen IP adres)";
 $localestrings['nl']['421'] = "Genereer dynamische wiki links in forum berichten:";
 $localestrings['nl']['422'] = "(voor handmatige links gebruik [wiki] bbcode)";
+$localestrings['nl']['423'] = "Wiki";
+$localestrings['nl']['424'] = "Wiki zoekresultaten";
+$localestrings['nl']['425'] = "Laatste wijziging:";
+$localestrings['nl']['426'] = "Pagina eigenaar:";
+$localestrings['nl']['427'] = "U hebt geen rechten op deze wiki pagina te bekijken.";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
@@ -429,6 +452,9 @@ if (!function_exists('module_upgrade')) {
 				// no specific changes between this version and the new one
 
 			case "1.1.4":
+				// added the wiki search plugin
+
+			case "1.1.5":
 				// current version
 
 			default:

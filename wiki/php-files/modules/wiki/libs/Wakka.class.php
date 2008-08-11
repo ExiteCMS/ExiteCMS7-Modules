@@ -1218,6 +1218,8 @@ class Wakka
 	// returns true if $user (defaults to current user) has access to $privilege on $page_tag (defaults to current page)
 	function HasAccess($privilege, $tag = "", $user = "")
 	{
+		global $userdata;
+
 		// set defaults
 		if (!$tag) $tag = $this->GetPageTag();
 		if (!$user) $user = $this->GetUserName();
@@ -1238,6 +1240,7 @@ class Wakka
 			$tag_ACLs = $this->LoadAllACLs($tag);
 			$acl = $tag_ACLs[$privilege."_acl"];
 		}
+
 		// fine fine... now go through acl
 		foreach (explode("\n", $acl) as $line)
 		{
