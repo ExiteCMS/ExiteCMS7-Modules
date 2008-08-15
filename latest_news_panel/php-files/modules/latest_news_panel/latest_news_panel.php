@@ -21,8 +21,16 @@ define('MAX_ITEMS', 10);
 $variables = array();
 
 // get the latest news items
-$result = dbquery("SELECT * FROM ".$db_prefix."news ORDER BY news_datestamp DESC LIMIT 0,".MAX_ITEMS
-);
+switch($settings['article_localisation']) {
+	case "multiple":
+		$result = dbquery("SELECT * FROM ".$db_prefix."news WHERE ".groupaccess('news_visibility')." AND news_locale = '".$settings['locale_code']."' ORDER BY news_datestamp DESC LIMIT 0,".MAX_ITEMS);
+		break;
+	case "single":
+		// not implemented
+	case "none":
+	default:
+		$result = dbquery("SELECT * FROM ".$db_prefix."news WHERE ".groupaccess('news_visibility')." ORDER BY news_datestamp DESC LIMIT 0,".MAX_ITEMS);
+}
 
 $variables['news'] = array();
 if (dbrows($result) != 0) {
