@@ -35,11 +35,11 @@ foreach($variables['auth_methods'] as $key => $method) {
 
 // check if we need to display a registration link
 if ($settings['enable_registration']) {
-	require_once PATH_INCLUDES."menu_include.php";
 	$variables['show_reglink'] = true;
 	// get all menu items for this user
 	global $linkinfo;
 	$linkinfo = array();
+	require_once PATH_INCLUDES."menu_include.php";
 	menu_generate_tree("", array(1,2,3), false);
 	foreach ($linkinfo as $link) {
 		if ($link['link_url'] == "/register.php") {
