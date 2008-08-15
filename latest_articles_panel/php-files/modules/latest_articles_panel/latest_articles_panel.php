@@ -21,11 +21,24 @@ define('MAX_ARTICLES', 10);
 $variables = array();
 
 // get the latest articles
-$result = dbquery(
-	"SELECT ta.*,tac.* FROM ".$db_prefix."articles ta
-	INNER JOIN ".$db_prefix."article_cats tac ON ta.article_cat=tac.article_cat_id
-	WHERE ".groupaccess('article_cat_access')." ORDER BY article_datestamp DESC LIMIT 0,".MAX_ARTICLES
-);
+switch($settings['article_localisation']) {
+	case "multiple":
+			$result = dbquery(
+				"SELECT ta.*,tac.* FROM ".$db_prefix."articles ta
+				INNER JOIN ".$db_prefix."article_cats tac ON ta.article_cat=tac.article_cat_id
+				WHERE ".groupaccess('article_cat_access')." AND article_locale = '".$settings['locale_code']."' ORDER BY article_datestamp DESC LIMIT 0,".MAX_ARTICLES
+			);
+		break;
+	case "single":
+		// not implemented
+	case "none":
+	default:
+		$result = dbquery(
+			"SELECT ta.*,tac.* FROM ".$db_prefix."articles ta
+			INNER JOIN ".$db_prefix."article_cats tac ON ta.article_cat=tac.article_cat_id
+			WHERE ".groupaccess('article_cat_access')." ORDER BY article_datestamp DESC LIMIT 0,".MAX_ARTICLES
+		);
+}
 
 $variables['articles'] = array();
 if (dbrows($result) != 0) {
