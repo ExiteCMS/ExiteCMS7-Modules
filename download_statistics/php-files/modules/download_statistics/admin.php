@@ -257,7 +257,12 @@ if ($action == "add" || $action == "edit") {
 	$result = dbquery("SELECT dlsf_file FROM ".$db_prefix."dlstats_files WHERE dlsf_success = 1 ORDER BY dlsf_file");
 	if (dbrows($result) != 0) {
 		while ($data = dbarray($result)) {
-			$variables['files'][] = $file['path'];
+			$file = pathinfo($data['dlsf_file']);
+			if (!empty($file['dirname']) && !empty($file['basename']) && !empty($file['extension']) && strpos($data['dlsf_file'], "//")===false) {
+				$variables['files'][] = $data['dlsf_file'];
+			} else {
+				// illegal filename. skip it for now
+			}
 		}
 	}
 }
