@@ -20,12 +20,14 @@ define('HOTTEST_THREADS', 5);
 // array's to store the variables for this panel
 $variables = array();
 
-// newest threads
+// check if there is a thread time limit defined for guests
+$thread_limit = iMEMBER ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
 
 $result = dbquery("
 	SELECT * FROM ".$db_prefix."threads
 	INNER JOIN ".$db_prefix."forums ON ".$db_prefix."threads.forum_id=".$db_prefix."forums.forum_id
-	WHERE ".groupaccess('forum_access')." ORDER BY thread_lastpost DESC LIMIT ".NEWEST_THREADS);
+	WHERE ".groupaccess('forum_access').($thread_limit==0?"":" AND thread_lastpost > ".$thread_limit)."
+	ORDER BY thread_lastpost DESC LIMIT ".NEWEST_THREADS);
 
 $variables['new_threads'] = array();
 while($data = dbarray($result)) {
@@ -39,7 +41,9 @@ $result = dbquery("
 	FROM ".$db_prefix."forums tf
 	INNER JOIN ".$db_prefix."threads tt USING(forum_id)
 	INNER JOIN ".$db_prefix."posts tp USING(thread_id)
-	WHERE ".groupaccess('forum_access')." GROUP BY thread_id ORDER BY count_posts DESC, thread_lastpost DESC LIMIT ".HOTTEST_THREADS);
+	WHERE ".groupaccess('forum_access').($thread_limit==0?"":" AND thread_lastpost > ".$thread_limit)."
+	GROUP BY thread_id
+	ORDER BY count_posts DESC, thread_lastpost DESC LIMIT ".HOTTEST_THREADS);
 
 $variables['hot_threads'] = array();
 while($data = dbarray($result)) {
