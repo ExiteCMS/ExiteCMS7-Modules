@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Forum threads body panel";
 $mod_description = "Shows the latest threads in a body panel, with links to my posts, my threads and new posts panels";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -59,6 +59,12 @@ $mod_site_links = array();
 
 $localestrings = array();
 
+$localestrings['en'] = array();
+$localestrings['en']['ftlp01'] = "For guest users, only the active threads of the last %s are visible. Please consider becoming a member";
+
+$localestrings['nl'] = array();
+$localestrings['nl']['ftlp01'] = "Voor gasten zijn alleen de topics van de laatste %s zichtbaar. Wordt lid om alles te kunnen zien";
+
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
 +----------------------------------------------------*/
@@ -86,6 +92,8 @@ if (!function_exists('module_upgrade')) {
 				// ExiteCMS v7.0. no upgrade actions for this release
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+			case "1.1.1":
+				// added the forum thread filter, and the locale strings for the filter message
 			default:
 				// do this at every upgrade
 		}

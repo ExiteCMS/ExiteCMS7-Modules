@@ -17,13 +17,17 @@ if (eregi("forum_threads_list_panel.php", $_SERVER['PHP_SELF']) || !defined('INI
 // load the forum functions include
 require_once PATH_INCLUDES."forum_functions_include.php";
 
+// check if there is a thread time limit defined for guests
+$thread_limit = iMEMBER ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
+
 // get the list of latest threads
 $result = dbquery(
 	"SELECT tf.*, tt.*, tu.user_id,user_name FROM ".$db_prefix."forums tf
 	INNER JOIN ".$db_prefix."threads tt USING(forum_id)
 	INNER JOIN ".$db_prefix."posts tp USING(thread_id)
 	INNER JOIN ".$db_prefix."users tu ON tt.thread_lastuser=tu.user_id
-	WHERE ".groupaccess('forum_access')." GROUP BY thread_id ORDER BY thread_lastpost DESC LIMIT 0,".$settings['numofthreads']
+	WHERE ".groupaccess('forum_access').($thread_limit==0?"":" AND tt.thread_lastpost > ".$thread_limit)."
+	GROUP BY tt.thread_id ORDER BY tt.thread_lastpost DESC LIMIT 0,".$settings['numofthreads']
 );
 
 // array's to store the variables for this panel

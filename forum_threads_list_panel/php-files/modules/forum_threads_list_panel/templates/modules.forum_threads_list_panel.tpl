@@ -43,15 +43,21 @@
 	</tr>
 	{/section}
 </table>
-{if $smarty.const.iMEMBER}
 <div style='text-align:center;'>
+{if $smarty.const.iMEMBER}
 	{buttonlink name=$locale.027a link=$smarty.const.BASEDIR|cat:"forum/viewposts.php"}
 	{buttonlink name=$locale.026 link=$smarty.const.MODULES|cat:"forum_threads_list_panel/my_threads.php"}&nbsp;
 	{buttonlink name=$locale.027 link=$smarty.const.MODULES|cat:"forum_threads_list_panel/my_posts.php"}&nbsp;
 	{buttonlink name=$locale.028|cat:" ("|cat:$locale.031|cat:")" link=$smarty.const.MODULES|cat:"forum_threads_list_panel/new_posts.php"}&nbsp;
 	{buttonlink name=$locale.028 link=$smarty.const.MODULES|cat:"forum_threads_list_panel/new_posts_detail.php"}
-</div>
+{else}
+	{if $settings.forum_guest_limit}
+		<span class='small' style='font-size:90%;font-weight:bold;'>
+			{if $settings.forum_guest_limit == 1}{$locale.ftlp01|sprintf:$locale.074}{else}{assign var=days value=$settings.forum_guest_limit|cat:" "|cat:$locale.075}{$locale.ftlp01|sprintf:$days}{/if}
+		</span>
+	{/if}
 {/if}
+</div>
 {include file="_closetable_x.tpl"}
 {***************************************************************************}
 {* End of template                                                         *}
