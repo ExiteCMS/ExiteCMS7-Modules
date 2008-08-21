@@ -9,7 +9,7 @@
 $text = htmlspecialchars($vars['text']);
 $width = htmlspecialchars($vars['width']);
 
-if (is_numeric($width) ? intval($width) == $width : false) {
+if (!is_numeric($width)) {
 		$width = "200";
 }
 
