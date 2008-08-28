@@ -38,8 +38,8 @@
 		</tr>
 		{sectionelse}
 		<tr>
-			<td align='center' class='tbl1' colspan='2'>
-				<b>{$locale.dls812}</b>
+			<td align='center' class='tbl1' colspan='3'>
+				<b>{$locale.rpt951}</b>
 			</td>
 		</tr>
 		{/section}

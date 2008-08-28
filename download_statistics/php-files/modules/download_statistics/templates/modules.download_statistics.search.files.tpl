@@ -24,7 +24,7 @@
 		<span class='small'><font class='smallalt'>{$locale.dls811}:</font> {$reportvars.output[idx].dlsf_counter}
 	{/section}
 {else}
-	<input type='radio' name='search_id' value='{$searches[id].search_id}' {if $search_id == $searches[id].search_id}checked='checked'{/if}onclick='javascript:show_filter("date,users");' /> {$searches[id].search_title} {if $searches[id].search_fulltext}<span style='color:red;'>*</span>{/if}<br />
+	<input type='radio' name='search_id' value='{$searches[id].search_id}' {if $search_id == $searches[id].search_id || $searches[id].search_order == $default_location}checked='checked'{/if}  onclick='javascript:show_filter("{$searches[id].search_filters}");'/> {$searches[id].search_title} {if $searches[id].search_fulltext}<span style='color:red;'>*</span>{/if}<br />
 {/if}
 {***************************************************************************}
 {* End of template                                                         *}
