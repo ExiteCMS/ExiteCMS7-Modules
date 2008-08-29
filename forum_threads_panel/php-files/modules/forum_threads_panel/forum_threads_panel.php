@@ -21,7 +21,7 @@ define('HOTTEST_THREADS', 5);
 $variables = array();
 
 // check if there is a thread time limit defined for guests
-$thread_limit = iMEMBER ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
+$thread_limit = ($settings['forum_guest_limit']== 0 || iMEMBER) ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
 
 $result = dbquery("
 	SELECT * FROM ".$db_prefix."threads

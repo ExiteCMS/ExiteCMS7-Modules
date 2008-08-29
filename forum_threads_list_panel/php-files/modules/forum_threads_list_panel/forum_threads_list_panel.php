@@ -18,7 +18,7 @@ if (eregi("forum_threads_list_panel.php", $_SERVER['PHP_SELF']) || !defined('INI
 require_once PATH_INCLUDES."forum_functions_include.php";
 
 // check if there is a thread time limit defined for guests
-$thread_limit = iMEMBER ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
+$thread_limit = ($settings['forum_guest_limit']== 0 || iMEMBER) ? 0 : (time() - $settings['forum_guest_limit'] * 86400);
 
 // get the list of latest threads
 $result = dbquery(
