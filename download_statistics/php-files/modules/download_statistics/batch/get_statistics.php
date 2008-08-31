@@ -157,6 +157,19 @@ foreach($stats_urls as $key => $url) {
 										if (CMS_CLI) display("-> added to the download logs");
 									}
 								}
+								// update download counters if need be
+								if ($settings['dlstats_remote']) {
+									// do we have a download record for this URL?
+									$result2 = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_url LIKE '%".$download['path']."' AND download_external = 1");
+									while ($data2 = dbarray($result2)) {
+										// check if this is a full URL match
+										$data2['url'] = parse_url($data2['download_url']);
+										if ($download['path'] == $data2['url']['path']) {
+											// match found, update the counter
+											$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_count=download_count+1 WHERE download_id = '".$data2['download_id']."'");
+										}
+									}
+								}
 							}
 							// add the record to the file cache (or update the existing record if it was already in the cache
 							$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$download['ip']."', '".mysql_escape_string($download['path'])."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
@@ -172,19 +185,6 @@ foreach($stats_urls as $key => $url) {
 								}
 								// store the filename to check if we need to change logsfiles at the next cycle
 								$oldfile = $newfile;
-							}
-							// update download counters if need be
-							if ($settings['dlstats_remote']) {
-								// do we have a download record for this URL?
-								$result2 = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_url LIKE '%".$download['path']."' AND download_external = 1");
-								while ($data2 = dbarray($result2)) {
-									// check if this is a full URL match
-									$data2['url'] = parse_url($data2['download_url']);
-									if ($download['path'] == $data2['url']['path']) {
-										// match found, update the counter
-										$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_count=download_count+1 WHERE download_id = '".$data2['download_id']."'");
-									}
-								}
 							}
 							// create a log record
 							//

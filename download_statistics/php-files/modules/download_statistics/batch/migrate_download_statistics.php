@@ -154,7 +154,7 @@ foreach($tables as $table) {
 }
 
 display("Update counters of the items in the download section");
-$result = mysql_query("SELECT * FROM ".$db_prefix."downloads WHERE download_external = 1")
+$result = mysql_query("SELECT * FROM ".$db_prefix."downloads WHERE download_external = 1");
 display("-> updating ".dbrows($result)." download records!");
 $data = mysql_fetch_assoc($result);
 while ($data !== false) {
