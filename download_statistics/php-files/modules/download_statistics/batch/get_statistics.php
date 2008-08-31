@@ -182,7 +182,7 @@ foreach($stats_urls as $key => $url) {
 									$data2['url'] = parse_url($data2['download_url']);
 									if ($download['path'] == $data2['url']['path']) {
 										// match found, update the counter
-										$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_counter=download_counter+1 WHERE download_id = '".$data2['download_id']."'");
+										$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_count=download_count+1 WHERE download_id = '".$data2['download_id']."'");
 									}
 								}
 							}
