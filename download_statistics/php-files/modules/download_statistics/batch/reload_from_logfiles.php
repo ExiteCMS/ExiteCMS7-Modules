@@ -85,7 +85,7 @@ if (count($logfiles)) {
 		}
 		$logfile = ($settings['dlstats_logs']{0} == "/" ? "" : PATH_ROOT) . $settings['dlstats_logs'] . "/".$logfile;
 		// create a fully qualified path
-		display("Processing logfile: ".$logfile);
+		display(date("Ymd-His")." - processing logfile: ".$logfile);
 		// open the logfile
 		$handle = @fopen($logfile, "r");
 		if (!$handle) {
@@ -97,10 +97,17 @@ if (count($logfiles)) {
 		while (!feof($handle)) {
 			// get a line from the file
 			$logline = trim(fgets($handle));
+			if (empty($logline)) continue;
 			// split the line into a record
 			$logrec = explode("|", $logline);
+			// check if the path is a full URL. If so, split it to get the path
+			if (substr($logrec[4],0,7)=="http://") {
+				$urlparts = parse_url($logrec[4]);
+				$logrec[4] = $urlparts['path'];
+				if ($logrec[4]{0} != "/") $logrec[4] = "/".$logrec[4];
+			}
 			// verify the record
-			if (count($logrec) == 5 && isNum($logrec[0]) && isIP($logrec[2]) && isNum($logrec[3]) && isURL("http://www.www.www".$logrec[4])) {
+			if (count($logrec) == 5 && isNum($logrec[0]) && isIP($logrec[2]) && isNum($logrec[3])) {
 				// record looks clean, check the date and timestamps
 				$logrec[1] = explode(";", $logrec[1]);
 				if (count($logrec[1]) == 3 && isNum($logrec[1][0]) && isNum($logrec[1][1]) && isNum($logrec[1][2])) {
