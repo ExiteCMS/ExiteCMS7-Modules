@@ -38,6 +38,7 @@ class Wakka
 	var $dblink;
 	var $page;
 	var $tag;
+	var $rawtag;
 	var $queryLog = array();
 	var $interWiki = array();
 	var $VERSION;
@@ -506,6 +507,7 @@ class Wakka
 	/**
 	 * Variable-related methods
 	 */
+	function GetRawPageTag() { return $this->rawtag; }
 	function GetPageTag() { return $this->tag; }
 	function GetPageTime() { return $this->page["time"]; }
 	function GetMethod() { return $this->method; }
@@ -523,7 +525,13 @@ class Wakka
 			if ($page=="cached_nonexistent_page") return null;
 		}
 		// load page
-		if (!isset($page)) $page = $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where tag = '".mysql_real_escape_string($tag)."' ".($time ? "and time = '".mysql_real_escape_string($time)."'" : "and latest = 'Y'")." limit 1");
+		if (!isset($page)) {
+			// check if this is a page alias
+			$alias = $this->LoadSingle("select * from ".$this->config["table_prefix"]."aliases where from_tag = '".mysql_real_escape_string($tag)."' limit 1");
+			// if the tag is an alias, replace the tag with the aliased one
+			if (is_array($alias)) $tag = $alias['to_tag'];
+			$page = $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where tag = '".mysql_real_escape_string($tag)."' ".($time ? "and time = '".mysql_real_escape_string($time)."'" : "and latest = 'Y'")." limit 1");
+		}
 		// cache result
 		if ($page && !$time) {
 			$this->pageCache[$page["tag"]] = $page;
@@ -678,6 +686,17 @@ class Wakka
 			$count = mysql_result($r,0);
 			mysql_free_result($r);
 		}
+		if ($count == 0)
+		{
+			$query = 	"SELECT COUNT(from_tag)
+						FROM ".$this->config['table_prefix']."aliases
+					WHERE from_tag='".mysql_real_escape_string($page)."'";
+			if ($r = $this->Query($query))
+			{
+				$count = mysql_result($r,0);
+				mysql_free_result($r);
+			}
+		}
 		return ($count > 0) ? TRUE : FALSE;
 	}
 
@@ -813,7 +832,11 @@ class Wakka
 		exit;
 	}
 	// returns just PageName[/method].
-	function MiniHref($method = "", $tag = "") { if (!$tag = trim($tag)) $tag = $this->tag; return $tag.($method ? "/".$method : ""); }
+	function MiniHref($method = "", $tag = "")
+	{
+		if (!$tag = trim($tag)) $tag = $this->tag;
+		return $tag.($method ? "/".$method : ""); 
+	}
 	// returns the full url to a page/method.
 	function Href($method = "", $tag = "", $params = "")
 	{
@@ -1280,6 +1303,7 @@ class Wakka
 		if (!$this->tag = trim($tag)) $this->Redirect($this->Href("", $this->config["root_page"]));
 		if (!$this->GetUser() && iMEMBER) $this->SetUser($userdata['user_name']);
 		#$this->SetPage($this->LoadPage($tag, (isset($_REQUEST["time"]) ? $_REQUEST["time"] :'')));
+		$this->rawtag = $tag;
 		$this->SetPage($this->LoadPage($tag, (isset($_GET['time']) ? $_GET['time'] :''))); #312
 
 		$this->LogReferrer();

@@ -28,7 +28,7 @@ if ($this->HasAccess("read")) {
 				break;
 		}
 		if (isset($error)) {
-			print("<table align='center' cellpadding='0' cellspacing='0' width='700'>
+			print("<table align='center' cellpadding='0' cellspacing='0' width='100%'>
 			<tr>
 				<td class='tbl' align='center'>
 					<br />
@@ -87,7 +87,7 @@ if ($this->HasAccess("read")) {
 	$user = "";
 	
 	// display the uploaded files in a foldable list
-	print("<table align='center' cellpadding='0' cellspacing='0' width='700'>
+	print("<table align='center' cellpadding='0' cellspacing='0' width='100%'>
 	<tr>
 		<td class='tbl2' style='white-space:nowrap;'>
 			Uploaded by
@@ -193,7 +193,7 @@ if ($this->HasAccess("read")) {
 
 	// upload form
 	print("<form name='uploadform' method='post' action='".$this->Href('upload')."' enctype='multipart/form-data'>
-	<table align='center' cellpadding='0' cellspacing='0' width='700'>
+	<table align='center' cellpadding='0' cellspacing='0' width='100%'>
 		<tr>
 			<td align='center' class='tbl'>
 				New Wiki Image: <input type='file' name='myfile' class='textbox' style='width:250px;' />

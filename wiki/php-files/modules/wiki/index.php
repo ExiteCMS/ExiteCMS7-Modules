@@ -179,8 +179,8 @@ $wakkaDefaultConfig = array(
 	// formatter and code highlighting paths
 	'wikka_formatter_path' 	=> 'formatters',		# (location of Wikka formatter - REQUIRED)
 	'wikka_highlighters_path'	=> 'formatters',		# (location of Wikka code highlighters - REQUIRED)
-	'geshi_path' 			=> '3rdparty/plugins/geshi',				# (location of GeSHi package)
-	'geshi_languages_path' 	=> '3rdparty/plugins/geshi/geshi',		# (location of GeSHi language highlighting files)
+	'geshi_path' 			=> PATH_GESHI,				# (location of GeSHi package)
+	'geshi_languages_path' 	=> PATH_GESHI.'/geshi',		# (location of GeSHi language highlighting files)
 
 	'header_action'			=> 'header',
 	'footer_action'			=> 'footer',
@@ -231,27 +231,6 @@ if (file_exists($configfile)) include($configfile);
 
 $wakkaConfigLocation = $configfile;
 $wakkaConfig = array_merge($wakkaDefaultConfig, $wakkaConfig);
-
-/**
- * Compare versions, start installer if necessary.
- */
-if (!isset($wakkaConfig["wakka_version"])) $wakkaConfig["wakka_version"] = 0;
-if ($wakkaConfig["wakka_version"] !== WAKKA_VERSION)
-{
-	/**
-	 * Start installer.
-	 * 
-	 * Data entered by the user is submitted in $_POST, next action for the
-	 * installer (which will receive this data) is passed as a $_GET parameter!
-	 */
-	$installAction = 'default';
-	#if (isset($_REQUEST['installAction'])) $installAction = trim($_REQUEST['installAction']);
-	if (isset($_GET['installAction'])) $installAction = trim($_GET['installAction']);	#312
-	if (file_exists('setup'.DIRECTORY_SEPARATOR.'header.php')) include('setup'.DIRECTORY_SEPARATOR.'header.php'); else print '<em>'.ERROR_SETUP_HEADER_MISSING.'</em>'; #89
-	if (file_exists('setup'.DIRECTORY_SEPARATOR.$installAction.'.php')) include('setup'.DIRECTORY_SEPARATOR.$installAction.'.php'); else print '<em>'.ERROR_SETUP_FILE_MISSING.'</em>'; #89
-	if (file_exists('setup'.DIRECTORY_SEPARATOR.'footer.php')) include('setup'.DIRECTORY_SEPARATOR.'footer.php'); else print '<em>'.ERROR_SETUP_FOOTER_MISSING.'</em>'; #89
-	exit;
-}
 
 /**
  * Start session.

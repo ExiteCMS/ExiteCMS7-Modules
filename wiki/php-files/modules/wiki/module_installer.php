@@ -19,7 +19,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.5";									// module version number
+$mod_version = "1.1.6";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -157,12 +157,12 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wi
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_comments (
   id int(10) unsigned NOT NULL auto_increment,
   page_tag varchar(75) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `comment` text NOT NULL,
-  `user` varchar(75) NOT NULL default '',
+  time datetime NOT NULL default '0000-00-00 00:00:00',
+  comment text NOT NULL,
+  user varchar(75) NOT NULL default '',
   PRIMARY KEY  (id),
   KEY idx_page_tag (page_tag),
-  KEY idx_time (`time`)
+  KEY idx_time (time)
 ) ENGINE=MyISAM;");
 
 // create the table: wiki_links
@@ -174,21 +174,30 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_to (to_tag)
 ) ENGINE=MyISAM;");
 
+// create the table: wiki_aliases
+$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_aliases (
+  from_tag varchar(75) NOT NULL default '',
+  to_tag varchar(75) NOT NULL default '',
+  UNIQUE KEY from_tag (from_tag,to_tag),
+  KEY idx_from (from_tag),
+  KEY idx_to (to_tag)
+) ENGINE=MyISAM;");
+
 // create the table: wiki_pages
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_pages (
   id int(10) unsigned NOT NULL auto_increment,
   tag varchar(75) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  time datetime NOT NULL default '0000-00-00 00:00:00',
   body mediumtext NOT NULL,
   owner varchar(75) NOT NULL default '',
-  `user` varchar(75) NOT NULL default '',
+  user varchar(75) NOT NULL default '',
   latest enum('Y','N') NOT NULL default 'N',
   hits int(11) NOT NULL default '0',
   note varchar(100) NOT NULL default '',
-  `handler` varchar(30) NOT NULL default 'page',
+  handler varchar(30) NOT NULL default 'page',
   PRIMARY KEY  (id),
   KEY idx_tag (tag),
-  KEY idx_time (`time`),
+  KEY idx_time (time),
   KEY idx_latest (latest),
   FULLTEXT KEY body (body)
 ) ENGINE=MyISAM;");
@@ -229,15 +238,15 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wi
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_referrers (
   page_tag varchar(75) NOT NULL default '',
   referrer varchar(150) NOT NULL default '',
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  time datetime NOT NULL default '0000-00-00 00:00:00',
   KEY idx_page_tag (page_tag),
-  KEY idx_time (`time`)
+  KEY idx_time (time)
 ) ENGINE=MyISAM;");
 
 // create the table: wiki_users
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_users (
   name varchar(75) NOT NULL default '',
-  `password` varchar(32) NOT NULL default '',
+  password varchar(32) NOT NULL default '',
   email varchar(50) NOT NULL default '',
   revisioncount int(10) unsigned NOT NULL default '20',
   changescount int(10) unsigned NOT NULL default '50',
@@ -453,6 +462,10 @@ if (!function_exists('module_upgrade')) {
 
 			case "1.1.4":
 				// added the wiki search plugin
+
+			case "1.1.5":
+				// added the wiki_aliases table
+				$result = dbquery("CREATE TABLE ".$db_prefix."wiki_aliases (from_tag varchar(75) NOT NULL default '', to_tag varchar(75) NOT NULL default '', UNIQUE KEY from_tag (from_tag,to_tag), KEY idx_from (from_tag), KEY idx_to (to_tag)) ENGINE=MyISAM;");
 
 			case "1.1.5":
 				// current version

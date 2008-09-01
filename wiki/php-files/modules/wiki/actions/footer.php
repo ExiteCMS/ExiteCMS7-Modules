@@ -34,6 +34,7 @@ echo $this->FormOpen("", "TextSearch", "get");
 			if ($this->LoadACL($this->tag, "read", false)) {
 				echo "<img src='images/lock.gif' alt='' title='There is an ACL defined for this page' style='vertical-align:bottom;'/>";
 			}
+			echo "| <a href=\"".$this->href("aliases")."\">Aliases</a>\n";
 		}
 	}
 ?>
