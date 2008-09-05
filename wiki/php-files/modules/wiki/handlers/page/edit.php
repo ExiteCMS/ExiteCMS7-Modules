@@ -130,7 +130,7 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 				if ($body != $this->page['body']) {
 
 					// add page (revisions)
-					$this->SavePage($this->tag, $body, $note, $this->page['hits']);
+					$this->SavePage($this->tag, $body, $note, 0); // replaced $this->page['hits'] by 0
 
 					// now we render it internally so we can write the updated link table.
 					$this->ClearLinkTable();
