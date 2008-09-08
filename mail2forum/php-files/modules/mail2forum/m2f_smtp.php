@@ -92,88 +92,73 @@ function mailer_init() {
 	$mail->CharSet = $settings['charset'];
 }
 
-/*---------------------------------------------------+
-| initialisation code
-+----------------------------------------------------*/
-
-ini_set('memory_limit', '64M');
-ini_set('max_execution_time', '0');
-
-// log the start
-if ($settings['m2f_process_log']) logentry('INIT', 'Program start');
-
-// get the last modified timestamp of this module
-$module_lastmod = filemtime('m2f_smtp.php');
-
-// get the last modified timestamp of the config
-$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
-$config_lastmod = $data['lastmod'];
-
-// check if the Mail2Forum module is installed
-$result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
-if (dbrows($result) == 0) {
-	if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' NOT_INSTALLED', true, 1);
-	die($locale['m2f110']);
-}
-
-// initialize PHP-Mailer
-require_once PATH_INCLUDES."phpmailer_include.php";
-$mail = new PHPMailer();
-mailer_init();
-
-// get the last polled time from the database
-$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
-if (dbrows($result) == 0) {
-	// the first time we start. Forget all old posts for now
-	$lastpoll = time();
-	$result = dbquery("INSERT INTO ".$db_prefix."M2F_status (m2f_lastpoll) VALUES ('".$lastpoll."')");
-	if ($settings['m2f_process_log']) logentry("INIT", sprintf($locale['m2f800'], $processor));
-} else {
-	if ($data = dbarray($result)) {
-		if ($data['m2f_lastpoll'] == 0) {
-			// 0 is used as an invalid polltime. This can be reset via the admin module
-			die($processor.': LastPoll time is invalid. Use the admin module to correct this');
-		}
-		if ((time() - $data['m2f_lastpoll']) > $settings['m2f_poll_threshold']) {
-			$result = dbquery("UPDATE ".$db_prefix."M2F_status SET m2f_lastpoll = 0");
-			if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' '.$locale['m2f801'], true, 1);
-			die($processor.': More time has passed since the last run then the threshold allows! Use the admin module to correct this');
-		}
-		$lastpoll = $data['m2f_lastpoll']+1;
-	} else {
-		if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
-		die('This should never happen');
-	}
-}
-
 // strip bbcode so a message stays readable in plain text
 function stripubb($text) {
 	global $locale;
-	
+
+	// replace horizontal line
+	$text = preg_replace('#\[hr\]#si', "-------------------------------------------------------------\r\n", $text);
+
+	// lists
 	$text = preg_replace('#\[li\](.*?)\[/li\]#si', '* \1', $text);
 	$text = preg_replace('#\[ul\](.*?)\[/ul\]#si', '\1', $text);
+	$text = preg_replace('#\[list=1\](.*?)\[/list\]#si', '\1', $text);
+	$text = preg_replace('#\[list\](.*?)\[/list\]#si', '\1', $text);
+	$text = preg_replace('#\r\n\[\*\]#si', "\r\n* ", $text);
 
+	// bbcode tables
+	$text = preg_replace('#\[table\]#si', '', $text);
+	$text = preg_replace('#\[\/table\]#si', '', $text);
+	$text = preg_replace('#\[td\]#si', '', $text);
+	$text = preg_replace('#\[\/td\]#si', '', $text);
+	$text = preg_replace('#\[tr\]#si', '', $text);
+	$text = preg_replace('#\[\/tr\]#si', '', $text);
+
+	// text formatting
 	$text = preg_replace('#\[b\](.*?)\[/b\]#si', '\1', $text);
 	$text = preg_replace('#\[i\](.*?)\[/i\]#si', '\1', $text);
 	$text = preg_replace('#\[u\](.*?)\[/u\]#si', '\1', $text);
+	$text = preg_replace('#\[strike\](.*?)\[/strike\]#si', '\1', $text);
+	$text = preg_replace('#\[sup\](.*?)\[/sup\]#si', '\1', $text);
+	$text = preg_replace('#\[sub\](.*?)\[/sub\]#si', '\1', $text);
+	$text = preg_replace('#\[blockquote\](.*?)\[/blockquote\]#si', '\1', $text);
+	$text = preg_replace('#\[left\](.*?)\[/left\]#si', '\1', $text);
 	$text = preg_replace('#\[center\](.*?)\[/center\]#si', '\1', $text);
-	
+	$text = preg_replace('#\[justify\](.*?)\[/justify\]#si', '\1', $text);
+	$text = preg_replace('#\[right\](.*?)\[/right\]#si', '\1', $text);
+	$text = preg_replace('#\[small\](.*?)\[/small\]#si', '\1', $text);
+	$text = preg_replace('#\[font=(.*?)\](.*?)\[/font\]#si', '\2', $text);
+	$text = preg_replace('#\[size=([0-3]?[0-9])\](.*?)\[/size\]#si', '\2', $text);
+
+	$text = preg_replace('#\[color=(\#[0-9a-fA-F]{6}|black|blue|brown|cyan|grey|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[/color\]#si', '\2', $text);
+	$text = preg_replace('#\[highlight=(\#[0-9a-fA-F]{6}|black|blue|brown|cyan|grey|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[/highlight\]#si', '\2', $text);
+
+	// strip the wiki bbcode
+	$text = preg_replace('#\[wiki\](.*?)\[/wiki\]#si', '\1', $text);
+
+	// correct illegal [url=] BBcode
+	$text = str_replace("[url=]", "[url]", $text);
+
+	// strip URL bbcode
 	$text = preg_replace('#\[url\]([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\";\+]*?)([\r\n]*)\[/url\]#si', '\2\3', $text);
 	$text = preg_replace('#\[url\]([\r\n]*)([^\s\'\";\+]*?)([\r\n]*)\[/url\]#si', 'http://\2', $text);
 	$text = preg_replace('#\[url=([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\";\+]*?)\](.*?)([\r\n]*)\[/url\]#si', '\2\3', $text);
 	$text = preg_replace('#\[url=([\r\n]*)([^\s\'\";\+]*?)\](.*?)([\r\n]*)\[/url\]#si', 'http://\2', $text);
-	
+
+	// convert mail bbcode
 	$text = preg_replace('#\[mail\]([\r\n]*)([^\s\'\";:\+]*?)([\r\n]*)\[/mail\]#si', 'mailto:\2', $text);
 	$text = preg_replace('#\[mail=([\r\n]*)([^\s\'\";:\+]*?)\](.*?)([\r\n]*)\[/mail\]#si', 'mailto:\2', $text);
-	
-	$text = preg_replace('#\[small\](.*?)\[/small\]#si', '\1', $text);
-	$text = preg_replace('#\[color=(black|blue|brown|cyan|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[/color\]#si', '\2', $text);
-	
+
+	// youtube bbcode
+	$text = preg_replace('#\[youtube\](.*?)\[/youtube\]#si', 'http://www.youtube.com/v/\1', $text);
+
+	// flash movies
 	$text = preg_replace('#\[flash width=([0-9]*?) height=([0-9]*?)\]([^\s\'\";:\+]*?)(\.swf)\[/flash\]#si', '\3\4', $text);
+
+	// images
 	$text = preg_replace("#\[img\]((http|ftp|https|ftps)://)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#sie","'\\1'.str_replace(array('.php','?','&','='),'','\\3').'\\4'",$text);
 
 	$text = descript($text,false);
-
 	return $text;
 }
 
@@ -204,7 +189,7 @@ function quotecode($text) {
 						// a new block before a non-empty line
 			$emptylines .= "$indent\n";
 	 	}
-		elseif ($line == "[/code]")
+		elseif (strtolower($line) == "[/code]")
 		{
 			$emptylines = "";
 			$boundary = 1;
@@ -215,13 +200,13 @@ function quotecode($text) {
 			$new .= "$emptylines$indent    $line\n";
 			$emptylines = "";
 		}
-		elseif ($line == "[code]") {
+		elseif (strtolower($line) == "[code]") {
 			$emptylines = "";
 			$boundary = 1;
 			$literal = 1;
 			$new .= "$indent\n$indent" . "[code]\n"; // one 'empty' line before a code block
 		}
-		elseif ($line == "[quote]") {
+		elseif (strtolower($line) == "[quote]") {
 			$emptylines = "";
 			$new .= "$indent\n"; // one 'empty' line before a new quote
 			$boundary = 1;
@@ -237,7 +222,7 @@ function quotecode($text) {
 			$new .= "$indent\n$indent" . $poster . " ".$locale['m2f815'].":\n"; // one 'empty' line before a new quote
 			$indent .= "> ";
 		}
-		elseif ($line == "[/quote]") {
+		elseif (strtolower($line) == "[/quote]") {
 			$emptylines = "";
 			$boundary = 1;
 			if ($quotelevel > 0) {
@@ -255,6 +240,54 @@ function quotecode($text) {
 
 	return $new;
 }
+
+/*---------------------------------------------------+
+| initialisation code
++----------------------------------------------------*/
+
+ini_set('memory_limit', '64M');
+ini_set('max_execution_time', '0');
+
+// log the start
+if ($settings['m2f_process_log']) logentry('INIT', 'Program start');
+
+// get the last modified timestamp of this module
+$module_lastmod = filemtime('m2f_smtp.php');
+
+// get the last modified timestamp of the config
+$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+$config_lastmod = $data['lastmod'];
+
+// check if the Mail2Forum module is installed
+$result = dbquery("SELECT * FROM ".$db_prefix."modules WHERE mod_title = '".$locale['m2f100']."'");
+if (dbrows($result) == 0) {
+	if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' NOT_INSTALLED', true, 1);
+	die($locale['m2f110']);
+}
+
+// initialize PHP-Mailer
+require_once PATH_INCLUDES."phpmailer_include.php";
+$mail = new PHPMailer();
+mailer_init();
+
+// get the last polled time from the configuration
+if (empty($settings['m2f_last_polled']) {
+	// the first time we start. Forget all old posts for now
+	$lastpoll = time();
+	if (!isset($settings['m2f_last_polled'])) {
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_lasted_polled', '".$lastpoll."')");
+	} else {
+		$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$lastpoll."' WHERE cfg_name = 'm2f_last_polled')");
+	}
+	if ($settings['m2f_process_log']) logentry("INIT", sprintf($locale['m2f800'], $processor));
+} else {
+	if ((time() - $settings['m2f_last_polled']) > $settings['m2f_poll_threshold']) {
+		if ($settings['m2f_process_log']) logentry('INIT', $locale['m2f999'].' '.$locale['m2f801'], true, 1);
+		die($processor.': More time has passed since the last run than the threshold allows! Use the admin module to correct this');
+	}
+	$lastpoll = $settings['m2f_last_polled']+1;
+}
+$settings['m2f_last_polled'] = $lastpoll;
 
 /*---------------------------------------------------+
 | main loop
@@ -332,7 +365,7 @@ while (true) {
 					$mail->AddReplyTo($sender['m2f_email'], $sender['forum_name']);
 
 					// identify this email as one from us
-					$mail->AddCustomHeader("X-M2F-version: ExiteCMS Mail2Forum v1.1.0");
+					$mail->AddCustomHeader("X-M2F-version: ExiteCMS Mail2Forum v1.1.1");
 					$mail->AddCustomHeader("X-M2F-host: ".utf8_decode($settings['sitename']));
 					$mail->AddCustomHeader("X-M2F-forum: ".$sender['forum_name']);
 
@@ -346,14 +379,13 @@ while (true) {
 
 					$TEXTbody = $edit_post?($locale['m2f814']."\r\n\r\n"):"";
 					$TEXTbody .= html_entity_decode($postrecord['post_message'], ENT_QUOTES);
-					//$TEXTbody = stripubb($TEXTbody);
 					$TEXTbody = quotecode($TEXTbody);
 
 					// check for attachments. If found, process them according to the users config
 					if ($recipient['m2f_attach'] > 0) {
 						$res_att = dbquery("SELECT * FROM ".$db_prefix."forum_attachments WHERE post_id = '".$postrecord['post_id']."'");
 						if (dbrows($res_att) != 0) {
-							// although PHP-Fusion does not support multiple attachments, we do... ;-)
+							// process the attachments
 							while ($attachment = dbarray($res_att)) {
 								if ($settings['m2f_smtp_debug']) logdebug('ATTACHMENT', print_r($attachment, true));
 								$attachURL = $settings['siteurl']."getfile.php?type=a&file_id=".$attachment['attach_id'];
@@ -374,7 +406,7 @@ while (true) {
 											$TEXTbody .= "\r\n\r\n".($attachment['attach_realname']==""?$attachment['attach_name']:$attachment['attach_realname']).": ".$attachURL;
 										}
 									} else {
-										// process the attachments
+										// process the attachments according to the user setting
 										switch ($recipient['m2f_attach']) {
 											case 0:
 												// ignore the attachments
@@ -466,7 +498,8 @@ while (true) {
 	}
 
 	// update the status table
-	$result = dbquery("UPDATE ".$db_prefix."M2F_status SET m2f_lastpoll = '".$polltime."'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$polltime."' WHERE cfg_name = 'm2f_last_polled')");
+	$settings['m2f_last_polled'] = $polltime;
 	
 	// if the module has been modified, exit so it can be restarted
 	clearstatcache();
@@ -487,19 +520,6 @@ while (true) {
 		if ($settings['m2f_process_log']) logentry('SLEEP', $locale['m2f999'].' '.$locale['m2f804']);
 	} else {
 		sleep($interval);
-	}
-
-	// get the last polled time from the database
-	$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
-	if ($data = dbarray($result)) {
-		if ($data['m2f_abort'] == 1) {
-			if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f805'], true, 1);
-			die($locale['m2f805']);
-		}
-		$lastpoll = $data['m2f_lastpoll']+1;
-	} else {
-		if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' '.$locale['m2f802'], true, 1);
-		die($locale['m2f802']);
 	}
 }
 ?>

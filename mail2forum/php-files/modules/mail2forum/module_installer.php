@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Mail2Forum";
 $mod_description = "Mail2Forum implements an interface between the mail and the web world. Posted messages are emailed to subscribers, their replies are posted on the forum on their behalf";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -380,12 +380,6 @@ $localestrings['nl']['m2f999'] = "Mail2Forum detected a problem. The error messa
 
 $mod_install_cmds = array();							// commands to execute when installing this module
 
-// M2F_status: status of the M2F background process
-$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_status (
-  m2f_lastpoll int(10) unsigned NOT NULL default '0',
-  m2f_abort tinyint(1) unsigned NOT NULL default '0'
-) ENGINE=MyISAM;");
-
 // M2F_config: user configuration table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_config (
   m2f_userid mediumint(8) unsigned NOT NULL default '0',
@@ -422,7 +416,25 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
   PRIMARY KEY  (m2f_subid)
 ) ENGINE=MyISAM;");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "install_function");
+// M2F configuration items
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_host', 'www.example.com')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_interval', '300')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_poll_threshold', '604800')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_max_attachments', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_max_attach_size', '5242880')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_use_forum_email', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_follow_thread', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_subscribe_required', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_send_ndr', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_server', '127.0.0.1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_port', '110')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_timeout', '25')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_logfile', 'logs')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_process_log', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_smtp_log', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_debug', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_pop3_message_debug', '0')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_smtp_debug', '0')");
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
@@ -430,27 +442,15 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "install_function")
 
 $mod_uninstall_cmds = array();							// commands to execute when uninstalling this module
 
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##M2F_status");
+// remove the M2F tables
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##M2F_config");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##M2F_forums");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##M2F_subscriptions");
 
-$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
+// remove the M2F configuration
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name LIKE 'm2f_%'");
 
-/*---------------------------------------------------+
-| function for special installations                 |
-+----------------------------------------------------*/
-if (!function_exists('install_function')) {
-	function install_function() {
-	}
-}
-/*---------------------------------------------------+
-| function for special de-installations              |
-+----------------------------------------------------*/
-if (!function_exists('uninstall_function')) {
-	function uninstall_function() {
-	}
-}
+$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
 
 /*---------------------------------------------------+
 | function to upgrade from a previous revision       |
@@ -515,7 +515,15 @@ if (!function_exists('module_upgrade')) {
 				if (defined("M2F_SMTP_DEBUG")) $result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_smtp_debug', '".(M2F_SMTP_DEBUG?"1":"0")."')");
 				@unlink(PATH_MODULES.$mod_folder."/m2f_config.php");
 			case "1.1.0":
-				// upgrade to ExiteCMS v7.1. - current version
+				// ExiteCMS v7.1. Remove the M2F_status table
+				$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status'");
+				if (dbrows($result)) {
+					$data = dbarray($result);
+					$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_last_polled', '".$data['m2f_lastpoll']."')");
+					$result = dbquery("DROP TABLE ".$db_prefix."M2F_status'");
+				}
+				case "1.1.1":
+				// Current version
 			default:
 				// do this at every upgrade
 		}

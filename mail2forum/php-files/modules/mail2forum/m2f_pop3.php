@@ -531,7 +531,7 @@ while (true) {
 	$marker = date("H");
 
 	// check for messages received since the last poll
-	$m2f_active = dbquery("SELECT * FROM ".$db_prefix."M2F_forums WHERE m2f_active = '1'");
+	$m2f_active = dbquery("SELECT f.forum_name, m.* FROM ".$db_prefix."M2F_forums m LEFT JOIN ".$db_prefix."forums f ON f.forum_id = m.m2f_forumid WHERE m.m2f_active = '1'");
 	while ($forum = dbarray($m2f_active)) {
 		// Get the incoming mail for this forum
 		$pop3connect = false;
@@ -549,7 +549,7 @@ while (true) {
 		}
 		// if the connect failed, log the error. Otherwise start processing the message(s)
 		if (!$pop3connect) {
-			if ($settings['m2f_process_log']) logentry('CONNECT', $locale['m2f999'].'No connection to the POP3 server');
+			if ($settings['m2f_process_log']) logentry('CONNECT', $locale['m2f999'].'No connection to the "'.$forum['forum_name'].'" POP3 mailbox ('.$forum['m2f_userid'].')');
 		} else {
 			// retrieve and process the new messages
 			for($i=1;$i<=$newmsg;$i++) {
@@ -772,18 +772,6 @@ while (true) {
 		if ($pop3connect) $pop3->disconnect();
 	}
 
-	// get the last polled time from the database
-	$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
-	if ($data = dbarray($result)) {
-		if ($data['m2f_abort'] == 1) {
-			if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' ABORT_BY_USER', true, 1);
-			die('aborted by user');
-		}
-	} else {
-		if ($settings['m2f_process_log']) logentry('WAKE-UP', $locale['m2f999'].' STATUS_RECORD_GONE', true, 1);
-		die('status record missing');
-	}
-
 	// if the module has been modified, exit so it can be restarted
 	clearstatcache();
 	if (filemtime('m2f_pop3.php') != $module_lastmod) {
@@ -800,7 +788,7 @@ while (true) {
 	// calculate the next interval. Log a warning if we can't process quick enough
 	$interval = $polltime + $settings['m2f_interval'] - time();
 	if ($interval < 0) {
-		if ($settings['m2f_process_log']) logentry('SLEEP', $locale['m2f999'].' INTERVAL_TO_SHORT_TO_PROCESS_ALL_POP3_MAIL');
+		if ($settings['m2f_process_log']) logentry('SLEEP', $locale['m2f999'].' '.$locale['m2f804']);
 	} else {
 		sleep($interval);
 	}
