@@ -11,6 +11,9 @@
 +----------------------------------------------------*/
 require_once dirname(__FILE__)."/../../../includes/core_functions.php";
 
+// set to true to enable detailed logging
+define("SHOW_DETAILS", false);
+
 // check for the proper admin access rights
 if (!CMS_CLI && (!checkrights("T") || !defined("iAUTH") || $aid != iAUTH)) fallback(ADMIN."index.php");
 
@@ -74,6 +77,9 @@ display(" ");
 // get the files from the logs folder
 $logfiles = makefilelist(($settings['dlstats_logs']{0} == "/" ? "" : PATH_ROOT) . $settings['dlstats_logs'], ".|..");
 
+// start with the newest logfile
+rsort($logfiles);
+
 // did we find anything?
 if (count($logfiles)) {
 	// loop through the files
@@ -93,6 +99,8 @@ if (count($logfiles)) {
 			display("-> unable to open this logfile!");
 			continue;
 		}
+		// previous record timestamp
+		$prev_timestamp = 0;
 		// loop through the logfile
 		while (!feof($handle)) {
 			// get a line from the file
@@ -111,8 +119,14 @@ if (count($logfiles)) {
 				// record looks clean, check the date and timestamps
 				$logrec[1] = explode(";", $logrec[1]);
 				if (count($logrec[1]) == 3 && isNum($logrec[1][0]) && isNum($logrec[1][1]) && isNum($logrec[1][2])) {
+					// check if this record is newer then the previous one
+					if ($prev_timestamp > $logrec[1][2]) {
+						// we've seen this record before, skip it
+						continue;
+					}
+					$prev_timestamp = $logrec[1][2];
 					// looks ok too, process the record
-					if (CMS_CLI) display($logline);
+					if (SHOW_DETAILS) display($logline);
 					$logrec['cc'] = GeoIP_IP2Code($logrec[2]);
 					$logrec['on_map'] = preg_match($settings['dlstats_geomap_regex'], trim($logrec[4])) ? 1 : 0;
 					// update the file cache
@@ -121,7 +135,7 @@ if (count($logfiles)) {
 					$result = mysql_query("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$logrec[2]."' AND dlsfc_file = '".mysql_escape_string($logrec[4])."'");
 					// not in the cache...
 					if (mysql_affected_rows() == 0) {
-						if (CMS_CLI) display("-> not in the file cache");
+						if (SHOW_DETAILS) display("-> not in the file cache");
 						// update the IP statistics
 						$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$logrec[2]."', '".$logrec['cc']."', '".$logrec['on_map']."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($logrec['on_map'] == 1 ? ", dlsi_onmap = 1" : ""));
 						// update fhe File statistics
@@ -136,7 +150,7 @@ if (count($logfiles)) {
 							if (dbrows($result3)) {
 								$data3 = mysql_fetch_assoc($result3);
 								$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$logrec[1][2]."')");
-								if (CMS_CLI) display("-> added to the download logs");
+								if (SHOW_DETAILS) display("-> added to the download logs");
 							}
 						}
 						// update download counters if need be
