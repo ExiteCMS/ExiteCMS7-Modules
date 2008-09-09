@@ -309,6 +309,7 @@ if ($wakka->GetMethod() != 'edit') {
 	$headerparms .= "\n\t".'<link rel="alternate" type="application/rss+xml" title="'.$wakka->GetWakkaName().': revisions for '.$wakka->tag.' (RSS)" href="'.$wakka->Href('revisions.xml', $wakka->tag).'" />';
 	$headerparms .= "\n\t".'<link rel="alternate" type="application/rss+xml" title="'.$wakka->GetWakkaName().': recently edited pages (RSS)" href="'.$wakka->Href('recentchanges.xml', $wakka->tag).'" />'."\n";
 }
+define('PAGETITLE', $wakkaConfig['wakka_name'].": ".$page);
 
 /** 
  * Run the engine.

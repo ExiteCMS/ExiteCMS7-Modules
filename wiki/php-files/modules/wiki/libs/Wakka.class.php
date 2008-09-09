@@ -573,6 +573,18 @@ class Wakka
 		return false;
 	}
 	function LoadOrphanedPages() { return $this->LoadAll("select distinct tag from ".$this->config["table_prefix"]."pages left join ".$this->config["table_prefix"]."links on ".$this->config["table_prefix"]."pages.tag = ".$this->config["table_prefix"]."links.to_tag where ".$this->config["table_prefix"]."links.to_tag is NULL order by tag"); }
+	function LoadAliasedPages() 
+	{
+		$pages = array();
+		$to_tags = $this->LoadAll("select distinct to_tag from ".$this->config["table_prefix"]."aliases order by to_tag");
+		foreach ($to_tags as $to_tag)
+		{
+			$thispage = array('to_tag' => $to_tag['to_tag']);
+			$thispage['from_tags'] = $this->LoadAll("select distinct from_tag from ".$this->config["table_prefix"]."aliases where to_tag = '".$to_tag['to_tag']."' order by from_tag");
+			$pages[] = $thispage;
+		}
+		return $pages;
+	}
 	function LoadPageTitles() { return $this->LoadAll("select distinct tag from ".$this->config["table_prefix"]."pages order by tag"); }
 	function LoadAllPages() { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' order by tag"); }
 	// function FullTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(tag, body) against('".mysql_real_escape_string($phrase)."')"); }
