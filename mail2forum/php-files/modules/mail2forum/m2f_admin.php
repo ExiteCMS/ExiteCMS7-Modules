@@ -67,6 +67,17 @@ if (isset($step) && $step == "subscribers") {
 	}
 }
 
+// reset the poll timer?
+if (isset($_POST['poll_restart'])) {
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".time()."' WHERE cfg_name = 'm2f_lastpoll'");	
+	$template_panels[] = array('type' => 'body', 'name' => 'message_panel', 'title' => $locale['m2f450'], 'template' => '_message_table_panel.tpl');
+	$variables['message'] = $locale['m2f521'];
+	$variables['bold'] = true;
+	$template_variables['message_panel'] = $variables;
+	// reset the variables, and return to the config screen
+	$variables = array('step' => "config");
+}
+
 // save the M2F config
 if (isset($_POST['saveconfig'])) {
 	// validate the input

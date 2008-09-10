@@ -168,6 +168,7 @@ $localestrings['en']['m2f519'] = "Activate POP3 message logging:";
 $localestrings['en']['m2f519a'] = "When set to 'Yes', debugging of POP3 message processing is activated. This logs the raw information from MimeDecode, and the extracted message. This makes it easier to debug MIME decoding errors. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
 $localestrings['en']['m2f520'] = "Activate SMTP processor debugging:";
 $localestrings['en']['m2f520a'] = "When set to 'Yes', additional STMP debugging will be activated, so the internal SMTP data structures can be monitored closely. Note, this can generate a BIG logfile on a busy system, use this for debugging purposes only";
+$localestrings['en']['m2f521'] = "The poll counter has been reset. You can restart the batch programs to collect and send email.";
 // M2F_SMTP processor: internal
 $localestrings['en']['m2f800'] = "First startup of the %s processor";
 $localestrings['en']['m2f801'] = "Time interval to large. Check the infusion admin module for instructions.";
@@ -324,6 +325,7 @@ $localestrings['nl']['m2f519'] = "Activeer POP3 message logging:";
 $localestrings['nl']['m2f519a'] = "Indien geactiveerd zal er additionele loggin worden aangemaakt van het POP3 berichtenverwerkingsproces. In een logfile per bericht kunnen de details van de MimeDecode en het resultaat van de verwerking worden bekeken. Opm, dit kan zorgen voor veel logfiles op een druk systeem, gebruik dit alleen voor debugging";
 $localestrings['nl']['m2f520'] = "Activeer SMTP processor debugging:";
 $localestrings['nl']['m2f520a'] = "Indien geactiveerd zal er additionele loggin worden aangemaakt van het SMTP berichtenverwerkingsproces. Opm, dit kan zorgen voor een GROTE logfile op een druk systeem, gebruik dit alleen voor debugging";
+$localestrings['nl']['m2f521'] = "De poll time is gereset. U kunt nu de achtergrond programma's voor het zenden en ontvangen van email weer starten.";
 // M2F_SMTP processor: internal
 $localestrings['nl']['m2f800'] = "First startup of the %s processor";
 $localestrings['nl']['m2f801'] = "Time interval to large. Check the infusion admin module for instructions.";
@@ -420,6 +422,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_host', 'www.example.com')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_interval', '300')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_poll_threshold', '604800')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_lastpoll', '".time()."')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_max_attachments', '1')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_max_attach_size', '5242880')");
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_use_forum_email', '1')");
@@ -449,9 +452,6 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##M
 
 // remove the M2F configuration
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name LIKE 'm2f_%'");
-
-$mod_install_cmds[] = array('type' => 'function', 'value' => "uninstall_function");
-
 /*---------------------------------------------------+
 | function to upgrade from a previous revision       |
 +----------------------------------------------------*/
@@ -520,7 +520,7 @@ if (!function_exists('module_upgrade')) {
 				if (dbrows($result)) {
 					$data = dbarray($result);
 					$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_last_polled', '".$data['m2f_lastpoll']."')");
-					$result = dbquery("DROP TABLE ".$db_prefix."M2F_status'");
+					$result = dbquery("DROP TABLE ".$db_prefix."M2F_status");
 				}
 				case "1.1.1":
 				// Current version
