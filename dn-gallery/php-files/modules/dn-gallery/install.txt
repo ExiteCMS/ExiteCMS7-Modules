@@ -1,0 +1,20 @@
+HOW TO DEPLOY DN-Gallery :
+
+1. Create a new MySQL database.
+2. Import dn-gallery.sql in "var/db/" 
+3. Open lib/config.lib.php
+4. Change $server, $user, $password and $database according to your database's configuration
+5. Change $email_from, $email_name, $smtp_server, $smtp_auth, $smtp_user, $smtp_pass, $smtp_secure,
+   $smtp_port, $mail_subject according to your mail configuration
+	Notes : if you don't use ssl within your SMTP configuration, then ;
+		set the $smtp_auth to false, 
+		set $smtp_secure = '' and 
+		set $smtp_port = "25";
+		or those three according to your default smtp server configuration
+6. Change $appsUrl according to your installation of DN-Gallery in document root, 
+	eg : if your document root is /var/www/ and DN-Gallery is in /var/www/MyGallery, then you have to change
+	     $appsUrl to ; $appsUrl = "http://".$__server."/MyGallery/";
+7. Change the root path in define("ROOT_PATH","/DN-Gallery/"); to the physical path of DN-Gallery in your system ;
+	eg : if your document root is /var/www/ and DN-Gallery is in /var/www/MyGallery, then your root path is /var/www/MyGallery
+	     define("ROOT_PATH","/var/www/MyGallery/");
+8. To manage your gallery and users, log in with user : admin and password : admin
