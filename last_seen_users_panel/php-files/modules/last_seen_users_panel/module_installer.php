@@ -71,7 +71,7 @@ $localestrings['da'] = array();
 $localestrings['da']['lsup000'] = "Sidste Brugere Online";
 
 $localestrings['sv'] = array();
-$localestrings['sv']['lsup000'] = "Senast inloggade anv‰ndare";
+$localestrings['sv']['lsup000'] = "Senast inloggade anv√§ndare";
 
 $localestrings['ro'] = array();
 $localestrings['ro']['lsup000'] = "Ultimii utilizatori v&#259;zu&#355;i";

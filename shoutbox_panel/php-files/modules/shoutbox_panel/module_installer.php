@@ -118,7 +118,7 @@ $localestrings['da']['420'] = "Rediger replik";
 $localestrings['da']['421'] = "Repliktekst:";
 $localestrings['da']['422'] = "Gem replik";
 // Prune Shoutbox
-$localestrings['da']['430'] = "Slet replikker ældre end";
+$localestrings['da']['430'] = "Slet replikker Ã¦ldre end";
 $localestrings['da']['431'] = " dage";
 $localestrings['da']['432'] = "Slet replikker";
 // Current Shouts
@@ -130,17 +130,17 @@ $localestrings['da']['444'] = "der er ikke skrevet replikker.";
 
 $localestrings['fr'] = array();
 $localestrings['da']['400'] = "Supprimer des messages";
-$localestrings['da']['401'] = "messages effacés";
-$localestrings['da']['402'] = "Retour à l'administration boîte de dialogue";
-$localestrings['da']['403'] = "Retour à l'administration du site";
+$localestrings['da']['401'] = "messages effacÃ©s";
+$localestrings['da']['402'] = "Retour Ã  l'administration boÃ®te de dialogue";
+$localestrings['da']['403'] = "Retour Ã  l'administration du site";
 $localestrings['da']['404'] = "Supprimer un message";
-$localestrings['da']['405'] = "Message effacé";
+$localestrings['da']['405'] = "Message effacÃ©";
 // Edit Shout
 $localestrings['da']['420'] = "Editer un message";
 $localestrings['da']['421'] = "Message:";
 $localestrings['da']['422'] = "Sauvegarder";
 // Prune Shoutbox
-$localestrings['da']['430'] = "Supprimer les messages antérieurs à";
+$localestrings['da']['430'] = "Supprimer les messages antÃ©rieurs Ã ";
 $localestrings['da']['431'] = " jours";
 $localestrings['da']['432'] = "Supprimer les messages";
 // Current Shouts
@@ -151,48 +151,48 @@ $localestrings['da']['443'] = "IP utilisateur: ";
 $localestrings['da']['444'] = "Aucun message.";
 
 $localestrings['de'] = array();
-$localestrings['de']['400'] = "Shouts löschen";
-$localestrings['de']['401'] = "Shouts wurden gelöscht";
-$localestrings['de']['402'] = "Zurück zum Shoutbox Admin";
-$localestrings['de']['403'] = "Zurück zum Admin Index";
-$localestrings['de']['404'] = "Shout löschen";
-$localestrings['de']['405'] = "Shout gelöscht";
+$localestrings['de']['400'] = "Shouts lÃ¶schen";
+$localestrings['de']['401'] = "Shouts wurden gelÃ¶scht";
+$localestrings['de']['402'] = "ZurÃ¼ck zum Shoutbox Admin";
+$localestrings['de']['403'] = "ZurÃ¼ck zum Admin Index";
+$localestrings['de']['404'] = "Shout lÃ¶schen";
+$localestrings['de']['405'] = "Shout gelÃ¶scht";
 // Edit Shout
 $localestrings['de']['420'] = "Shout bearbeiten";
 $localestrings['de']['421'] = "Shout Nachricht:";
 $localestrings['de']['422'] = "Shout speichern";
 // Prune Shoutbox
-$localestrings['de']['430'] = "Shouts löschen die älter als";
+$localestrings['de']['430'] = "Shouts lÃ¶schen die Ã¤lter als";
 $localestrings['de']['431'] = " Tage sind";
-$localestrings['de']['432'] = "Shouts löschen";
+$localestrings['de']['432'] = "Shouts lÃ¶schen";
 // Current Shouts
 $localestrings['de']['440'] = "Momentane Shouts";
 $localestrings['de']['441'] = "Bearbeiten";
-$localestrings['de']['442'] = "Löschen";
+$localestrings['de']['442'] = "LÃ¶schen";
 $localestrings['de']['443'] = "User IP: ";
 $localestrings['de']['444'] = "Es wurden keine Shouts eingereicht.";
 
 $localestrings['hu'] = array();
-$localestrings['hu']['400'] = "Üzenetek törlése";
-$localestrings['hu']['401'] = "Régebbi üzenetek törölve";
-$localestrings['hu']['402'] = "Vissza az üzenõfal adminisztrációjára";
-$localestrings['hu']['403'] = "Vissza az adminisztrátor fõoldalra";
-$localestrings['hu']['404'] = "Üzenet törlése";
-$localestrings['hu']['405'] = "Üzenet sikeresen törölve";
-// Üzenetek szerkesztése
-$localestrings['hu']['420'] = "Üzenet szerkesztése";
-$localestrings['hu']['421'] = "Üzenet:";
-$localestrings['hu']['422'] = "Mentés";
-// Rövidítés
+$localestrings['hu']['400'] = "Ãœzenetek tÃ¶rlÃ©se";
+$localestrings['hu']['401'] = "RÃ©gebbi Ã¼zenetek tÃ¶rÃ¶lve";
+$localestrings['hu']['402'] = "Vissza az Ã¼zenÃµfal adminisztrÃ¡ciÃ³jÃ¡ra";
+$localestrings['hu']['403'] = "Vissza az adminisztrÃ¡tor fÃµoldalra";
+$localestrings['hu']['404'] = "Ãœzenet tÃ¶rlÃ©se";
+$localestrings['hu']['405'] = "Ãœzenet sikeresen tÃ¶rÃ¶lve";
+// Ãœzenetek szerkesztÃ©se
+$localestrings['hu']['420'] = "Ãœzenet szerkesztÃ©se";
+$localestrings['hu']['421'] = "Ãœzenet:";
+$localestrings['hu']['422'] = "MentÃ©s";
+// RÃ¶vidÃ­tÃ©s
 $localestrings['hu']['430'] = "";
-$localestrings['hu']['431'] = " napnál régebbi üzenetek törlése";
-$localestrings['hu']['432'] = "Üzenetek törlése";
-// Jelenlegi üzenetek
-$localestrings['hu']['440'] = "Jelenlegi üzenetek";
-$localestrings['hu']['441'] = "Szerkesztés";
-$localestrings['hu']['442'] = "Törlés";
+$localestrings['hu']['431'] = " napnÃ¡l rÃ©gebbi Ã¼zenetek tÃ¶rlÃ©se";
+$localestrings['hu']['432'] = "Ãœzenetek tÃ¶rlÃ©se";
+// Jelenlegi Ã¼zenetek
+$localestrings['hu']['440'] = "Jelenlegi Ã¼zenetek";
+$localestrings['hu']['441'] = "SzerkesztÃ©s";
+$localestrings['hu']['442'] = "TÃ¶rlÃ©s";
 $localestrings['hu']['443'] = "IP: ";
-$localestrings['hu']['444'] = "Még nincs hozzászólás az üzenõfalon";
+$localestrings['hu']['444'] = "MÃ©g nincs hozzÃ¡szÃ³lÃ¡s az Ã¼zenÃµfalon";
 
 $localestrings['it'] = array();
 $localestrings['it']['400'] = "Elimina Messaggi";
@@ -206,7 +206,7 @@ $localestrings['it']['420'] = "Modifica Messaggio";
 $localestrings['it']['421'] = "Messaggio:";
 $localestrings['it']['422'] = "Salva Messaggio";
 // Prune Shoutbox
-$localestrings['it']['430'] = "Elimina Messaggi più vecchi di";
+$localestrings['it']['430'] = "Elimina Messaggi piÃ¹ vecchi di";
 $localestrings['it']['431'] = " giorni";
 $localestrings['it']['432'] = "Elimina Messaggi";
 // Current Shouts
@@ -239,48 +239,48 @@ $localestrings['no']['443'] = "Brukers IP-adresse: ";
 $localestrings['no']['444'] = "Det er ikke skrevet replikker.";
 
 $localestrings['li'] = array();
-$localestrings['li']['400'] = "Trinti þinutes";
-$localestrings['li']['401'] = "Þinutës iðtrintos";
-$localestrings['li']['402'] = "Gráþti á ðaukyklos administracijà";
-$localestrings['li']['403'] = "Gráþti á administracijos panelæ";
-$localestrings['li']['404'] = "Trinti þinutæ";
-$localestrings['li']['405'] = "Þinutë iðtrinta";
+$localestrings['li']['400'] = "Trinti Ã¾inutes";
+$localestrings['li']['401'] = "ÃžinutÃ«s iÃ°trintos";
+$localestrings['li']['402'] = "GrÃ¡Ã¾ti Ã¡ Ã°aukyklos administracijÃ ";
+$localestrings['li']['403'] = "GrÃ¡Ã¾ti Ã¡ administracijos panelÃ¦";
+$localestrings['li']['404'] = "Trinti Ã¾inutÃ¦";
+$localestrings['li']['405'] = "ÃžinutÃ« iÃ°trinta";
 // Edit Shout
-$localestrings['li']['420'] = "Redaguoti þinutæ";
-$localestrings['li']['421'] = "Raðyti þinutæ:";
-$localestrings['li']['422'] = "Iðsaugoti þinutæ";
+$localestrings['li']['420'] = "Redaguoti Ã¾inutÃ¦";
+$localestrings['li']['421'] = "RaÃ°yti Ã¾inutÃ¦:";
+$localestrings['li']['422'] = "IÃ°saugoti Ã¾inutÃ¦";
 // Prune Shoutbox
-$localestrings['li']['430'] = "Trinti þinutes, senesnes nei";
-$localestrings['li']['431'] = " dienø";
-$localestrings['li']['432'] = "Trinti þinutes";
+$localestrings['li']['430'] = "Trinti Ã¾inutes, senesnes nei";
+$localestrings['li']['431'] = " dienÃ¸";
+$localestrings['li']['432'] = "Trinti Ã¾inutes";
 // Current Shouts
-$localestrings['li']['440'] = "Esamos þinutës";
+$localestrings['li']['440'] = "Esamos Ã¾inutÃ«s";
 $localestrings['li']['441'] = "Redaguoti";
 $localestrings['li']['442'] = "Trinti";
 $localestrings['li']['443'] = "Vartotojo IP: ";
-$localestrings['li']['444'] = "Nëra þinuèiø.";
+$localestrings['li']['444'] = "NÃ«ra Ã¾inuÃ¨iÃ¸.";
 
 $localestrings['po'] = array();
-$localestrings['po']['400'] = "Usuñ Wpisy";
-$localestrings['po']['401'] = "Wpisy Zosta³y Usuniête";
-$localestrings['po']['402'] = "Powrót do Zarz±dzania Shoutboxem";
-$localestrings['po']['403'] = "Powrót do Panelu Admina";
-$localestrings['po']['404'] = "Usuñ Wpis";
-$localestrings['po']['405'] = "Wpis Usuniêty";
+$localestrings['po']['400'] = "UsuÃ± Wpisy";
+$localestrings['po']['401'] = "Wpisy ZostaÂ³y UsuniÃªte";
+$localestrings['po']['402'] = "PowrÃ³t do ZarzÂ±dzania Shoutboxem";
+$localestrings['po']['403'] = "PowrÃ³t do Panelu Admina";
+$localestrings['po']['404'] = "UsuÃ± Wpis";
+$localestrings['po']['405'] = "Wpis UsuniÃªty";
 // Edit Shout
 $localestrings['po']['420'] = "Edytuj Wpis";
-$localestrings['po']['421'] = "Tre¶æ Wpisu:";
+$localestrings['po']['421'] = "TreÂ¶Ã¦ Wpisu:";
 $localestrings['po']['422'] = "Zapisz Wpis";
 // Prune Shoutbox
-$localestrings['po']['430'] = "Usuñ Wpisy starsze ni¿";
+$localestrings['po']['430'] = "UsuÃ± Wpisy starsze niÂ¿";
 $localestrings['po']['431'] = " dni";
-$localestrings['po']['432'] = "Usuñ Wpisy";
+$localestrings['po']['432'] = "UsuÃ± Wpisy";
 // Current Shouts
 $localestrings['po']['440'] = "Obecne Wpisy";
 $localestrings['po']['441'] = "Edycja";
-$localestrings['po']['442'] = "Usuñ";
-$localestrings['po']['443'] = "IP U¿ytkownika: ";
-$localestrings['po']['444'] = "Brak Wpisów.";
+$localestrings['po']['442'] = "UsuÃ±";
+$localestrings['po']['443'] = "IP UÂ¿ytkownika: ";
+$localestrings['po']['444'] = "Brak WpisÃ³w.";
 
 $localestrings['ro'] = array();
 $localestrings['ro']['400'] = "&#350;terge shout-urile";
@@ -307,8 +307,8 @@ $localestrings['ro']['444'] = "Nici un shout postat.";
 $localestrings['sp'] = array();
 $localestrings['sp']['400'] = "Borrar Shouts";
 $localestrings['sp']['401'] = "Shouts han sido borrados";
-$localestrings['sp']['402'] = "Volver a la Administración de Shoutbox";
-$localestrings['sp']['403'] = "Volver Indice de Administración";
+$localestrings['sp']['402'] = "Volver a la AdministraciÃ³n de Shoutbox";
+$localestrings['sp']['403'] = "Volver Indice de AdministraciÃ³n";
 $localestrings['sp']['404'] = "Borrar Shout";
 $localestrings['sp']['405'] = "Shout Borrado";
 // Edit Shout
@@ -316,8 +316,8 @@ $localestrings['sp']['420'] = "Editar Shout";
 $localestrings['sp']['421'] = "Mensaje:";
 $localestrings['sp']['422'] = "Guardar";
 // Prune Shoutbox
-$localestrings['sp']['430'] = "Borrar Shouts que tengan más de";
-$localestrings['sp']['431'] = " días";
+$localestrings['sp']['430'] = "Borrar Shouts que tengan mÃ¡s de";
+$localestrings['sp']['431'] = " dÃ­as";
 $localestrings['sp']['432'] = "Borrar";
 // Current Shouts
 $localestrings['sp']['440'] = "Shouts Actuales";
@@ -328,47 +328,47 @@ $localestrings['sp']['444'] = "No se han enviado shouts.";
 
 $localestrings['sv'] = array();
 $localestrings['sv']['400'] = "Radera meddelanden";
-$localestrings['sv']['401'] = "Meddelandena är raderade";
+$localestrings['sv']['401'] = "Meddelandena Ã¤r raderade";
 $localestrings['sv']['402'] = "Tillbaka till administration av Klotterplanket";
 $localestrings['sv']['403'] = "Tillbaka till administrationspanelen";
 $localestrings['sv']['404'] = "Radera meddelande";
 $localestrings['sv']['405'] = "Meddelandet raderat";
 // Edit Shout
 $localestrings['sv']['420'] = "Redigera meddelande";
-$localestrings['sv']['421'] = "Meddelandets innehåll:";
+$localestrings['sv']['421'] = "Meddelandets innehÃ¥ll:";
 $localestrings['sv']['422'] = "Spara meddelande";
 // Prune Shoutbox
-$localestrings['sv']['430'] = "Radera meddelanden äldre än";
+$localestrings['sv']['430'] = "Radera meddelanden Ã¤ldre Ã¤n";
 $localestrings['sv']['431'] = " dagar";
 $localestrings['sv']['432'] = "Radera meddelanden";
 // Current Shouts
 $localestrings['sv']['440'] = "Aktuella meddelanden";
 $localestrings['sv']['441'] = "Redigera";
 $localestrings['sv']['442'] = "Radera";
-$localestrings['sv']['443'] = "Användares IP - nummer: ";
+$localestrings['sv']['443'] = "AnvÃ¤ndares IP - nummer: ";
 $localestrings['sv']['444'] = "Det finns inga meddelanden.";
 
 $localestrings['tr'] = array();
-$localestrings['tr']['400'] = "Kýsa Mesajlarý Sil";
-$localestrings['tr']['401'] = "Kýsa Mesajlar Silindi";
-$localestrings['tr']['402'] = "Kýsa Mesajlar Yönetimine Geri Dön";
-$localestrings['tr']['403'] = "Site Yönetimine Geri Dön";
-$localestrings['tr']['404'] = "Kýsa Mesaj Sil";
-$localestrings['tr']['405'] = "Kýsa Mesaj Silindi";
+$localestrings['tr']['400'] = "KÃ½sa MesajlarÃ½ Sil";
+$localestrings['tr']['401'] = "KÃ½sa Mesajlar Silindi";
+$localestrings['tr']['402'] = "KÃ½sa Mesajlar YÃ¶netimine Geri DÃ¶n";
+$localestrings['tr']['403'] = "Site YÃ¶netimine Geri DÃ¶n";
+$localestrings['tr']['404'] = "KÃ½sa Mesaj Sil";
+$localestrings['tr']['405'] = "KÃ½sa Mesaj Silindi";
 // Edit Shout
-$localestrings['tr']['420'] = "Kýsa Mesaj Düzenle";
-$localestrings['tr']['421'] = "Kýsa Mesaj Metni:";
-$localestrings['tr']['422'] = "Kýsa Mesajý Kaydet";
+$localestrings['tr']['420'] = "KÃ½sa Mesaj DÃ¼zenle";
+$localestrings['tr']['421'] = "KÃ½sa Mesaj Metni:";
+$localestrings['tr']['422'] = "KÃ½sa MesajÃ½ Kaydet";
 // Prune Shoutbox
-$localestrings['tr']['430'] = "Geçmiþ Kýsa Mesajlarý Sil";
-$localestrings['tr']['431'] = " günler";
-$localestrings['tr']['432'] = "Kýsa Mesajlarý Sil";
+$localestrings['tr']['430'] = "GeÃ§miÃ¾ KÃ½sa MesajlarÃ½ Sil";
+$localestrings['tr']['431'] = " gÃ¼nler";
+$localestrings['tr']['432'] = "KÃ½sa MesajlarÃ½ Sil";
 // Current Shouts
-$localestrings['tr']['440'] = "Geçerli Kýsa Mesajlar";
-$localestrings['tr']['441'] = "Düzenle";
+$localestrings['tr']['440'] = "GeÃ§erli KÃ½sa Mesajlar";
+$localestrings['tr']['441'] = "DÃ¼zenle";
 $localestrings['tr']['442'] = "Sil";
-$localestrings['tr']['443'] = "Üye IP: ";
-$localestrings['tr']['444'] = "Henüz Kýsa Mesaj Gönderilmemiþ.";
+$localestrings['tr']['443'] = "Ãœye IP: ";
+$localestrings['tr']['444'] = "HenÃ¼z KÃ½sa Mesaj GÃ¶nderilmemiÃ¾.";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |

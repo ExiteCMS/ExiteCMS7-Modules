@@ -42,7 +42,7 @@
 					<select name='dlsc_download_id' class='textbox' style='width:350px;'>
 						<option value='0'>&nbsp;</option>
 						{section name=id loop=$downloads}
-							<option value='{$downloads[id].download_id}'{if $downloads[id].download_id == $dlsc_download_id} selected="selected"{/if}>{$downloads[id].download_cat_name} » {$downloads[id].download_title}</option>
+							<option value='{$downloads[id].download_id}'{if $downloads[id].download_id == $dlsc_download_id} selected="selected"{/if}>{$downloads[id].download_cat_name} Â» {$downloads[id].download_title}</option>
 						{/section}
 					</select>
 				</td>
