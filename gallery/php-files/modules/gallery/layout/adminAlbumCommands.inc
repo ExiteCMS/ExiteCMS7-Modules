@@ -38,7 +38,7 @@ if ($gallery->user->isAdmin() || $gallery->user->isOwnerOfAlbum($gallery->album)
 
 	/* User is allowed to change Album Permissions */
     $iconText = getIconText('lock_edit.gif', gTranslate('core',"Permissions"), 'yes');
-	echo "\n\t". popup_link($iconText, "album_permissions.php?set_albumName={$tmpAlbumName}");
+	echo "\n\t". popup_link($iconText, "album_permissions.php?set_albumName={$tmpAlbumName}",0, true, 600, 600);
     $iconText = getIconText('table_edit.gif', gTranslate('core',"Properties"), 'yes');
 	echo "\n\t". popup_link($iconText, "edit_appearance.php?set_albumName={$tmpAlbumName}", 0, true, 500, 600);
 

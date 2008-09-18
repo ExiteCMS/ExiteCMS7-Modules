@@ -251,9 +251,6 @@ function initLanguage($sendHeader = true) {
 		return;
     }
 
-    /* $locale is *NUKEs locale var*/
-    global $locale ;
-
     $nls = getNLS();
 
     /* Set Defaults, they may be overwritten. */
@@ -388,9 +385,6 @@ function initLanguage($sendHeader = true) {
     else {
         $gallery->locale = $gallery->language;
     }
-
-    /* Override NUKEs locale :)))*/
-    $locale = $gallery->locale;
 
     /* Check defaults */
     $checklist = array('direction', 'charset') ;

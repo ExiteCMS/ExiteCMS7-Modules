@@ -50,12 +50,8 @@ $perms = array(
 foreach ($gallery->userDB->getUidList() as $uid) {
 	$tmpUser = $gallery->userDB->getUserByUid($uid);
 	$uname = $tmpUser->getUsername();
-	if ($uid > 0) {
-		$uAll[$uid] = $uname;
-		$uUsers[$uid] = $uname;
-	} else {
-		$uAll[$uid] = "*".$uname;
-	}
+	$uAll[$uid] = $uname;
+	$uUsers[$uid] = $uname;
 }
 
 asort($uUsers);
@@ -133,11 +129,12 @@ if ($gallery->user->isAdmin) {
 
 <table border="0" cellspacing="0" cellpadding="0">
  <tr>
-  <td align="center">
-   <?php echo drawSelect('actionUid', $uAll, isset($allUid) ? $allUid : array(), 28, array(), true); ?>
+  <td align="center" valign="top">
+  	<br />
+   <?php echo drawSelect('actionUid', $uAll, isset($allUid) ? $allUid : array(), 44, array('style' => 'width:200px;'), true); ?>
   </td>
 
-  <td>&nbsp;</td>
+  <td width="25">&nbsp;</td>
 
   <td style="vertical-align: top">
 <?php
@@ -152,7 +149,7 @@ foreach($perms as $perm => $permDesc) {
 	    "\n\t<input type=\"submit\" class=\"button\" name=\"submit[$perm]\" value=\"<--\">"
 	));
     $permsTable->addElement(
-	array('content' => drawSelect("actionUid", $uids[$perm], '', 3, array(), true))
+	array('content' => drawSelect("actionUid", $uids[$perm], '', 3, array('style' => 'width:250px;'), true))
     );
 }
 echo $permsTable->render();

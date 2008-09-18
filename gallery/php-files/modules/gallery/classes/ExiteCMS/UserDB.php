@@ -86,14 +86,19 @@ class ExiteCMS_UserDB extends Abstract_UserDB {
 		global $gallery;
 
 		$userDir = $gallery->app->userDir;
-
 		if ($uid === false) return $this->nobody;
-
 		$user = new ExiteCMS_User();
-		$user->loadByUid($uid);
-		return $user;
 
+		if ($uid > 0) {
+			$user->loadByUid($uid);
+		} else {
+			$user->username = "@".getgroupname(abs($uid), 1 or 2);
+			$user->fullname = $user->username;
+			$user->uid = $uid;
+		}
+		return $user;
 	}
+
 }
 
 ?>

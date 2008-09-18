@@ -205,10 +205,10 @@ if ($gallery->user->isLoggedIn() && !$gallery->session->offline) {
 /*        $iconText = getIconText('unsortedList.gif', gTranslate('core', "Administer startpage"));
         $linkurl = makeGalleryUrl('administer_startpage.php', array('type' => 'popup'));
         $iconElements[] = popup_link($iconText, $linkurl, true);
-*/
+
         $iconText = getIconText('kdf.gif', gTranslate('core', "Admin page"));
         $iconElements[] = '<a href="'. makeGalleryUrl('admin-page.php') .'">'. $iconText .'</a> ';
-
+*/
         $docsUrl = galleryDocs('admin');
         if ($docsUrl && file_exists("docs/index.html")) {
 	        $iconText = getIconText('info.gif', gTranslate('core', "Documentation"));

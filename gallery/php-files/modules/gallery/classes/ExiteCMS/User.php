@@ -37,7 +37,7 @@ class ExiteCMS_User extends Abstract_User {
 	}
 
 	function loadByUid($uid) {
-		global $db_prefix, $locale;
+		global $db_prefix, $locale, $settings;
 
 		if ($uid > 0) {
 			if ($row = dbarray(dbquery("SELECT user_name, user_fullname, user_email FROM ".$db_prefix."users WHERE user_id='$uid'"))) {
@@ -45,9 +45,8 @@ class ExiteCMS_User extends Abstract_User {
 				$this->fullname = $row['user_fullname'];
 				$this->email = $row['user_email'];
 				$this->uid = $uid;
-				// WANWIZARD => Needs to be a group membership check
-				$this->isAdmin = iSUPERADMIN ? 1 : 0;
-				$this->canCreateAlbums = iSUPERADMIN ? 1 : 0;
+				$this->isAdmin = checkgroup($settings['gallery_admingroup']);
+				$this->canCreateAlbums = checkgroup($settings['gallery_admingroup']);
 			} else {
 				$this->uid = -1;
 			}

@@ -326,20 +326,18 @@ function correctPseudoUsers(&$array, $ownerUid) {
 	global $gallery;
 
 	/*
-	 * If EVERYBODY is in the list, reduce it to just that entry.
+	 * If EVERYBODY is in the list, reduce it to just that entry (Public).
 	 */
-	$everybody = $gallery->userDB->getEverybody();
-	if (!empty($array[$everybody->getUid()])) {
-	        $array = array($everybody->getUid() => $everybody->getUsername());
+	if (!empty($array[-0])) {
+	        $array = array(-0 => "@".getgroupname(0, 1 or 2));
 		return;
 	}
 
 	/*
-	 * If LOGGEDIN is in the list, reduce it to just that entry.
+	 * If LOGGEDIN is in the list, reduce it to just that entry (Members).
 	 */
-	$loggedIn = $gallery->userDB->getLoggedIn();
-	if (!empty($array[$loggedIn->getUid()])) {
-		$array = array($loggedIn->getUid() => $loggedIn->getUsername());
+	if (!empty($array[-101])) {
+		$array = array(-101 => "@".getgroupname(101, 1 or 2));
 		return;
 	}
 
@@ -356,8 +354,8 @@ function correctPseudoUsers(&$array, $ownerUid) {
 	 * owner is the EVERYBODY user, in which case specify EVERYBODY.
 	 */
 	if (count($array) == 0) {
-		if (!strcmp($ownerUid, $everybody->getUid())) {
-		        $array = array($everybody->getUid() => $everybody->getUsername());
+		if (!strcmp($ownerUid, -0)) {
+		        $array = array(-0 => "@".getgroupname(0, 1 or 2));
 		} else {
 			$array[$nobody->getUid()] = $nobody->getUsername();
 		}
