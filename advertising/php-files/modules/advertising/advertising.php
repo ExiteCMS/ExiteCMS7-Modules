@@ -2,7 +2,7 @@
 /*---------------------------------------------------+
 | ExiteCMS Content Management System                 |
 +----------------------------------------------------+
-| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| Copyright 2008 Harro "WanWizard" Verton, Exite BV  |
 | for support, please visit http://exitecms.exite.eu |
 +----------------------------------------------------+
 | Released under the terms & conditions of v2 of the |
@@ -28,9 +28,6 @@ $ad_dimensions = array(0 => "160x65", 1 => "468x60", 2 => "468x60", 3 => "468x60
 // contract information
 $contract_types = array(0 => $locale['ads430'], 1 => $locale['ads431'], 2 => $locale['ads432']);
 
-// include the sendmail module
-include PATH_INCLUDES."sendmail_include.php";
-
 // initialize the flags used in the template
 $is_client = false;
 $is_updated = false;
@@ -52,10 +49,10 @@ if (iMEMBER) {
 			// email statistics
 			if (isset($_POST['email'])) {
 				// initialize PHPmailer
-				require_once PATH_INCLUDES."phpmailer_include.php";
+				require_once PATH_INCLUDES."class.phpmailer.php";
 				$mail = new PHPMailer();
-				if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$locale['phpmailer'].".php")) {
-					$mail->SetLanguage($locale['phpmailer'], PATH_INCLUDES."language/");
+				if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['PHPmailer_locale'].".php")) {
+					$mail->SetLanguage($settings['PHPmailer_locale'], PATH_INCLUDES."language/");
 				} else {
 					$mail->SetLanguage("en", PATH_INCLUDES."language/");
 				}
@@ -69,7 +66,7 @@ if (iMEMBER) {
 					if ($settings['smtp_username'] != "" && $settings['smtp_password'] != "")
 						$mail->SMTPAuth = true;
 				}
-				$mail->CharSet = $locale['charset'];
+				$mail->CharSet = $settings['charset'];
 				$mail->From = $settings['siteemail'];
 				$mail->FromName = $settings['siteusername'];
 				$mail->AddAddress($userdata['user_email'], $userdata['user_name']);
