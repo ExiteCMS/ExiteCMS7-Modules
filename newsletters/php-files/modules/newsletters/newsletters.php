@@ -2,7 +2,7 @@
 /*---------------------------------------------------+
 | ExiteCMS Content Management System                 |
 +----------------------------------------------------+
-| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
+| Copyright 2008 Harro "WanWizard" Verton, Exite BV  |
 | for support, please visit http://exitecms.exite.eu |
 +----------------------------------------------------+
 | Released under the terms & conditions of v2 of the |
@@ -54,10 +54,8 @@ function html2text($html)
 // phpmailer init functions
 function mailer_init() {
 	global $mail, $locale, $settings;
-
-	// $mail->SMTPDebug = 2;
-
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$locale['phpmailer'].".php")) {
+	
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['PHPmailer_locale'].".php")) {
 		$mail->SetLanguage($locale['phpmailer'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
@@ -77,7 +75,7 @@ function mailer_init() {
 		}
 	}
 	$mail->Timeout = 30;
-	$mail->CharSet = $locale['charset'];
+	$mail->CharSet = $settings['charset'];
 }
 
 /*---------------------------------------------------+
@@ -181,7 +179,7 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 		$error = $locale['nl419'];
 	} else {
 		// initialize PHP-Mailer
-		require_once PATH_INCLUDES."phpmailer_include.php";
+		require_once PATH_INCLUDES."class.phpmailer.php";
 		$mail = new PHPMailer();
 		mailer_init();
 		$error = array();
@@ -242,7 +240,7 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 				$mail->From = $settings['newsletter_email']=="" ? $settings['siteemail'] : $settings['newsletter_email'];
 				$mail->FromName = $settings['siteusername'];
 				$mail->AddAddress($data2['user_email'], ($data2['user_fullname']=="" ? $data2['user_name'] : $data2['user_fullname']));
-				$mail->AddCustomHeader("X-version: ExiteCMS Newsletters v".$locale['nlver']);
+				$mail->AddCustomHeader("X-version: ExiteCMS v".$settings['version']." Newsletters v1.1.1");
 				
 				switch ($data2['user_newsletters']) {
 					case 1:
@@ -251,6 +249,8 @@ if (isset($_POST['save']) || isset($_POST['copy'])) {
 						$mail->Body = $html;
 						$mail->AltBody = $text;
 						break;
+					case 0:
+						// send plain/text to users who have newsletters disabled
 					case 2:
 						$format = "plain/text";
 						$mail->IsHTML(false);

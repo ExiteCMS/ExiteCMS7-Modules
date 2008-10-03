@@ -17,7 +17,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 // Infusion titles & description
 $mod_title = "Newsletters";
 $mod_description = "Newsletter management system.";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_folder = "newsletters";							// sub-folder of the /modules folder
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
