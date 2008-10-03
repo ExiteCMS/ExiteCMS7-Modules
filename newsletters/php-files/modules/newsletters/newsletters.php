@@ -56,7 +56,7 @@ function mailer_init() {
 	global $mail, $locale, $settings;
 	
 	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['PHPmailer_locale'].".php")) {
-		$mail->SetLanguage($locale['phpmailer'], PATH_INCLUDES."language/");
+		$mail->SetLanguage($settings['PHPmailer_locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}
