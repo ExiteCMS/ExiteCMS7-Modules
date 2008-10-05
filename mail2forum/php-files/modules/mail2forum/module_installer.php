@@ -516,7 +516,7 @@ if (!function_exists('module_upgrade')) {
 				@unlink(PATH_MODULES.$mod_folder."/m2f_config.php");
 			case "1.1.0":
 				// ExiteCMS v7.1. Remove the M2F_status table
-				$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status'");
+				$result = dbquery("SELECT * FROM ".$db_prefix."M2F_status");
 				if (dbrows($result)) {
 					$data = dbarray($result);
 					$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_last_polled', '".$data['m2f_lastpoll']."')");
