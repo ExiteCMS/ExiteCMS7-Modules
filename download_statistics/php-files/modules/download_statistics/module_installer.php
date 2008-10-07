@@ -37,8 +37,8 @@ $mod_admin_page = 4;
 +----------------------------------------------------*/
 
 // check for a minumum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) < 710) {
-	$mod_errors .= sprintf($locale['mod001'], '7.10');
+if (str_replace(".", "", $settings['version']) < 720) {
+	$mod_errors .= sprintf($locale['mod001'], '7.20');
 }
 // check for a maximum version of the ExiteCMS engine
 if (str_replace(".", "", $settings['version']) > 720) {
