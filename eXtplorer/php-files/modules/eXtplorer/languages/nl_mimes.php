@@ -20,6 +20,7 @@ $GLOBALS["mimes"]=array(
 	"js"	=> "Javascript Bestand",
 	"css"	=> "CSS Bestand",
 	"cgi"	=> "CGI Script",
+	"tpl"	=> "Smarty Template",
 	// C++
 	"cpps"	=> "C++ Bronbestand",
 	"cpph"	=> "C++ Header Bestand",

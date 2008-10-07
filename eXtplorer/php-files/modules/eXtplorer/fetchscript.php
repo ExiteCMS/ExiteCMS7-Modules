@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__)."/../core_functions.php";
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
 /**
 * This file is used to send gzipped Javascripts and Stylesheets to the browser
 * 

@@ -5,7 +5,7 @@
 | Integrated by WanWizard (wanwizard@gmail.com)      |
 | http://exitecms.exite.eu                           |
 +----------------------------------------------------*/
-require_once dirname(__FILE__)."/../core_functions.php";
+require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
 /**

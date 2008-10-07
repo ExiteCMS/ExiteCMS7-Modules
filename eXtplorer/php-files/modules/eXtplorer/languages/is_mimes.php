@@ -21,6 +21,7 @@ $GLOBALS["mimes"]=array(
 	"js"	=> "Javascript skrá",
 	"css"	=> "CSS skrá",
 	"cgi"	=> "CGI Script",
+	"tpl"	=> "Smarty Template",
 	// C++
 	"cpps"	=> "C++ Source Skrá",
 	"cpph"	=> "C++ Header Skrá",

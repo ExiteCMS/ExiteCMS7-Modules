@@ -20,6 +20,7 @@ $GLOBALS["mimes"]=array(
 	"js"	=> "Archivo Javascript",
 	"css"	=> "Archivo CSS",
 	"cgi"	=> "Script CGI",
+	"tpl"	=> "Smarty Template",
 	// C++
 	"cpps"	=> "Archivo C++ Source",
 	"cpph"	=> "Archivo C++ Header",
