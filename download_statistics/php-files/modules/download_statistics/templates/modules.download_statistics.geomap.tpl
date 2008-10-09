@@ -56,7 +56,7 @@ function Gload() {
 		map.setCenter(new GLatLng(10, 17), 2);
 {/literal}
 {section name=mark loop=$markers}
-		var marker = createMarker(new GLatLng({$markers[mark].lat}, {$markers[mark].lng}), '{$markers[mark].icon}', '{$markers[mark].cc}', '{$markers[mark].cn}', '{$markers[mark].count}');
+		var marker = createMarker(new GLatLng({$markers[mark].lat}, {$markers[mark].lng}), '{$markers[mark].icon}', '{$markers[mark].cc}', '{$markers[mark].cn|escape:"html"}', '{$markers[mark].count}');
 {/section}
 {literal}	} else {
 		alert('Sorry, the Google Maps API is not compatible with this browser');
