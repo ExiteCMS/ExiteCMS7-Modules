@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Advertisements";							// title or name of this module
 $mod_description = "Advertisement image management";	// short description of it's purpose
-$mod_version = "1.1.1";									// module version number
+$mod_version = "1.1.2";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
