@@ -23,6 +23,7 @@ while(!file_exists($webroot."includes/core_functions.php")) {
 	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
 }
 require_once $webroot."includes/core_functions.php";
+require_once PATH_INCLUDES."forum_functions_include.php";
 
 // create a siteurl link from the m2f host settings
 $settings['siteurl'] = (substr($settings['m2f_host'],0,4)=="http" ? "" : "http://").$settings['m2f_host']."/";
@@ -69,8 +70,8 @@ function mailer_init() {
 
 	if ($settings['m2f_smtp_debug']) $mail->SMTPDebug = 2;
 
-	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
-		$mail->SetLanguage($settings['phpmailer_locale'], PATH_INCLUDES."language/");
+	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['PHPmailer_locale'].".php")) {
+		$mail->SetLanguage($settings['PHPmailer_locale'], PATH_INCLUDES."language/");
 	} else {
 		$mail->SetLanguage("en", PATH_INCLUDES."language/");
 	}
@@ -266,12 +267,12 @@ if (dbrows($result) == 0) {
 }
 
 // initialize PHP-Mailer
-require_once PATH_INCLUDES."phpmailer_include.php";
+require_once PATH_INCLUDES."class.phpmailer.php";
 $mail = new PHPMailer();
 mailer_init();
 
 // get the last polled time from the configuration
-if (empty($settings['m2f_last_polled']) {
+if (empty($settings['m2f_last_polled'])) {
 	// the first time we start. Forget all old posts for now
 	$lastpoll = time();
 	if (!isset($settings['m2f_last_polled'])) {
@@ -373,9 +374,7 @@ while (true) {
 					$HTMLbody = $edit_post?("<b>".$locale['m2f814']."</b><br /><br />"):"";
 					$HTMLbody = $postrecord['post_message'];
 //					if ($postrecord['post_showsig']) { $HTMLbody = $HTMLbody."\n\n<hr>".$postrecord['user_sig']; }
-					if ($postrecord['post_smileys']) { $HTMLbody = parsesmileys($HTMLbody); }
-					$HTMLbody = parseubb($HTMLbody);
-					$HTMLbody = nl2br($HTMLbody);
+					$HTMLbody = parsemessage(array(), $HTMLbody, $postrecord['post_smileys'], false);
 
 					$TEXTbody = $edit_post?($locale['m2f814']."\r\n\r\n"):"";
 					$TEXTbody .= html_entity_decode($postrecord['post_message'], ENT_QUOTES);

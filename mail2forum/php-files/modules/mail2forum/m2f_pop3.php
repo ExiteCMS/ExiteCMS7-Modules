@@ -492,7 +492,7 @@ $pop3->_debug = $settings['m2f_pop3_debug'];
 
 // initialize the SMTP mailer if required
 if ($settings['m2f_send_ndr']) {
-	require_once PATH_INCLUDES."phpmailer_include.php";
+	require_once PATH_INCLUDES."class.phpmailer.php";
 	$mail = new PHPMailer();
 	if (file_exists(PATH_INCLUDES."languages/phpmailer.lang-".$settings['phpmailer_locale'].".php")) {
 		$mail->SetLanguage($settings['phpmailer_locale'], PATH_INCLUDES."language/");
