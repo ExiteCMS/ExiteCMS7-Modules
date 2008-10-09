@@ -276,7 +276,7 @@ if (empty($settings['m2f_last_polled'])) {
 	// the first time we start. Forget all old posts for now
 	$lastpoll = time();
 	if (!isset($settings['m2f_last_polled'])) {
-		$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_lasted_polled', '".$lastpoll."')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('m2f_last_polled', '".$lastpoll."')");
 	} else {
 		$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$lastpoll."' WHERE cfg_name = 'm2f_last_polled')");
 	}
@@ -496,7 +496,8 @@ while (true) {
 		if ($settings['m2f_process_log']) logentry('POLL', 'no new posts');
 	}
 
-	// update the status table
+	// update the poll timers and the status record
+	$lastpoll = $polltime + 1;
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$polltime."' WHERE cfg_name = 'm2f_last_polled')");
 	$settings['m2f_last_polled'] = $polltime;
 	
