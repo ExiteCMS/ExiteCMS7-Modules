@@ -42,6 +42,9 @@ require_once PATH_INCLUDES."forum_functions_include.php";
 // include for image manipulation functions
 require_once PATH_INCLUDES."photo_functions_include.php";
 
+// need the GeoIP functions to determine the mailers country of origin
+require_once PATH_INCLUDES."geoip_include.php";
+
 // include the PEAR POP3 and MIME decode class
 require_once "includes/POP3.php";
 require_once "includes/mimeDecode.php";
@@ -259,9 +262,13 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 		}
 	}
 
+	// determine the country code for the senders mail server
+	$sender_cc = GeoIP_IP2Code($post['received']['ip']);
+	if (!$sender_cc) $sender_cc = "";
+
 	// insert the new message into the posts table
-	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_edituser, post_edittime) 
-		VALUES ('$forum_id', '$thread_id', '".mysql_escape_string($subject)."', '".mysql_escape_string($post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '0', '0')";
+	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_user_cc, post_edituser, post_edittime) 
+		VALUES ('$forum_id', '$thread_id', '".mysql_escape_string($subject)."', '".mysql_escape_string($post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
 		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT (new post)', $db_prefix.'posts'));
