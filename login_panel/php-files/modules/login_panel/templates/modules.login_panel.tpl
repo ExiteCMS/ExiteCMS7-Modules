@@ -14,11 +14,11 @@
 {* This template generates the PLi-Fusion infusion panel: login_panel       *}
 {*                                                                          *}
 {****************************************************************************}
-{if !$smarty.const.iMEMBER}
+{if !$smarty.const.iMEMBER && ($settings.auth_ssl == 0 || $_SERVER.HTTPS|default:"" == "on")}
 	{include file="_openside.tpl" name=$_name title=$locale.060 state=$_state style=$_style}
 	<div style='text-align:left'>
 		{$loginerror|default:""}
-		<form name='loginform2' method='post' action='{$smarty.const.FUSION_SELF}'>
+		<form name='loginform2' method='post' action='{$smarty.const.BASEDIR}setuser.php?login=yes'>
 			{foreach from=$auth_methods item=method key=i}
 				{if $method_count > 1}
 					{if $method == "ldap"}
