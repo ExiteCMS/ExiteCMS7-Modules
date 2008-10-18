@@ -91,7 +91,7 @@ if (isset($action)) {
 				} else {
 					$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
 				}
-				$rptresult = die($sql);
+				$rptresult = mysql_query($sql);
 
 				// get the results
 				$reportvars['output'] = array();
