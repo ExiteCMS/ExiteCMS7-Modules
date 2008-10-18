@@ -86,14 +86,12 @@ if (isset($action)) {
 				$variables['rowstart'] = $rowstart;
 
 				// now add a query limit, make sure not to overshoot the limit requested
-				if ($top > 0) {
-					if ($variables['rows']-$rowstart > $settings['numofthreads']) {
-						$sql .= " LIMIT ".$rowstart.",".$settings['numofthreads'];
-					} else {
-						$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
-					}
+				if ($variables['rows']-$rowstart > $settings['numofthreads']) {
+					$sql .= " LIMIT ".$rowstart.",".$settings['numofthreads'];
+				} else {
+					$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
 				}
-				$rptresult = mysql_query($sql);
+				$rptresult = die($sql);
 
 				// get the results
 				$reportvars['output'] = array();
