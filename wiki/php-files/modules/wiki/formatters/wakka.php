@@ -108,7 +108,7 @@ if (!function_exists("wakka2callback")) # DotMG [many lines] : Unclosed tags fix
 		// keyboard
 		else if ($thing == "#%")
 		{
-			return (++$trigger_keys % 2 ? "<kbd class=\"keys\">" : "</kbd>");
+			return (++$trigger_keys % 2 ? "<kbd class=\"button\">" : "</kbd>");
 		}
 		// bold
 		else if ($thing == "**")
