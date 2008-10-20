@@ -260,7 +260,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   UNIQUE KEY dlsi_ip_cc(dlsi_ip, dlsi_ccode),
   KEY dlsi_onmap (dlsi_ccode, dlsi_onmap),
   KEY dlsi_ccode (dlsi_ccode)
-) ENGINE=MyISAM");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 // statistics per file table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_files (
@@ -270,7 +270,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsf_counter int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (dlsf_id),
   UNIQUE KEY dlsf_file (dlsf_file)
-) ENGINE=MyISAM");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 // statistics per ip per file table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_file_ips (
@@ -279,7 +279,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsfi_timestamp int(10) unsigned NOT NULL default 0,
   KEY dlsf_id (dlsf_id),
   KEY dlsi_id (dlsi_id)
-) ENGINE=MyISAM");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 // Statistics counters table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_counters (
@@ -291,7 +291,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsc_files MEDIUMTEXT NOT NULL,
   dlsc_order SMALLINT(5) UNSIGNED NOT NULL default 0,
   PRIMARY KEY (dlsc_id)
-) ENGINE = MYISAM");
+) ENGINE = MYISAM DEFAULT CHARSET=utf8");
 
 // statistics file cache table (to detect retries)
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##dlstats_fcache (
@@ -299,7 +299,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##d
   dlsfc_file varchar(255) NOT NULL default '',
   dlsfc_timeout int(10) unsigned NOT NULL default 0,
   UNIQUE KEY dlsfc_file (dlsfc_ip, dlsfc_file)
-) ENGINE=MyISAM");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_dlstats");
 
