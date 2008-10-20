@@ -16,7 +16,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Shoutbox";
 $mod_description = "Shoutbox side panel";
-$mod_version = "1.1.0";
+$mod_version = "1.1.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@gmail.com";
 $mod_weburl = "http://exitecms.exite.eu/";
@@ -375,12 +375,21 @@ $localestrings['tr']['444'] = "Henüz Kýsa Mesaj Gönderilmemiþ.";
 +----------------------------------------------------*/
 
 $mod_install_cmds = array();
+$mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##shoutbox (
+  shout_id smallint(5) unsigned NOT NULL auto_increment,
+  shout_name varchar(50) NOT NULL default '',
+  shout_message varchar(200) NOT NULL default '',
+  shout_datestamp int(10) unsigned NOT NULL default '0',
+  shout_ip varchar(20) NOT NULL default '0.0.0.0',
+  PRIMARY KEY  (shout_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
 +----------------------------------------------------*/
 
 $mod_uninstall_cmds = array();
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##shoutbox");
 
 /*---------------------------------------------------+
 | function to upgrade from a previous revision       |
@@ -397,6 +406,16 @@ if (!function_exists('module_upgrade')) {
 				// ExiteCMS v7.0. no upgrade actions for this release
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+			case "1.1.1":
+				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
+				$result = dbquery"CREATE TABLE IF NOT EXISTS ".$db_prefix."shoutbox (
+						shout_id smallint(5) unsigned NOT NULL auto_increment,
+						shout_name varchar(50) NOT NULL default '',
+						shout_message varchar(200) NOT NULL default '',
+						shout_datestamp int(10) unsigned NOT NULL default '0',
+						shout_ip varchar(20) NOT NULL default '0.0.0.0',
+						PRIMARY KEY  (shout_id)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 			default:
 				// do this at every upgrade
 		}
