@@ -336,7 +336,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##a
   adverts_status enum('0','1') NOT NULL default '0',
   adverts_expired tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (adverts_id)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // add a user group for this module
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Advertising clients', 'Advertising clients', 'Advertising client', '1')");
