@@ -389,7 +389,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
   m2f_attach tinyint(1) unsigned NOT NULL default '0',
   m2f_inline tinyint(1) unsigned NOT NULL default '0',
   m2f_thumbnail tinyint(1) unsigned NOT NULL default '0'
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // M2F_forums: mailer configuration table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_forums (
@@ -407,7 +407,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
   m2f_posting tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (m2f_id),
   UNIQUE KEY m2f_forumid (m2f_forumid)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // M2F_subscriptions: user subscription table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M2F_subscriptions (
@@ -416,7 +416,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##M
   m2f_userid mediumint(8) unsigned NOT NULL default '0',
   m2f_subscribed tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (m2f_subid)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // M2F configuration items
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##configuration (cfg_name, cfg_value) VALUES ('m2f_host', 'www.example.com')");
