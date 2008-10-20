@@ -148,7 +148,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   write_acl text NOT NULL,
   comment_acl text NOT NULL,
   PRIMARY KEY  (page_tag)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // and add initial record(s) to it
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_acls (page_tag, read_acl, write_acl, comment_acl) VALUES ('UserSettings', 'G0', 'G101', 'G101')");
@@ -163,7 +163,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   PRIMARY KEY  (id),
   KEY idx_page_tag (page_tag),
   KEY idx_time (time)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the table: wiki_links
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_links (
@@ -172,7 +172,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   UNIQUE KEY from_tag (from_tag,to_tag),
   KEY idx_from (from_tag),
   KEY idx_to (to_tag)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the table: wiki_aliases
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_aliases (
@@ -181,7 +181,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   UNIQUE KEY from_tag (from_tag,to_tag),
   KEY idx_from (from_tag),
   KEY idx_to (to_tag)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the table: wiki_pages
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_pages (
@@ -200,7 +200,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   KEY idx_time (time),
   KEY idx_latest (latest),
   FULLTEXT KEY body (body)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // and add initial record(s) to it
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_pages (id, tag, time, body, owner, user, latest, note, handler) VALUES (1, 'HomePage', now(), '{{image url=\"images/wikka_logo.jpg\" alt=\"wikka logo\" title=\"Welcome to the ExiteCMS implementation of Wikka Wiki!\"}}\n\nThis wiki is based on Wikka Wiki version ##{{wikkaversion}}## (see WikkaReleaseNotes). \nTo edit a page, double-click on it or click on the \"Edit page\" link at the bottom. \n\nFor more information, visit the [[Wikka:HomePage WikkaWiki website]]! \n\nUseful pages: FormattingRules, WikkaDocumentation, OrphanedPages, WantedPages, TextSearch.', '##WEBMASTER##', '##WEBMASTER##', 'Y', '', 'page')");
@@ -229,7 +229,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wi
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_referrer_blacklist (
   spammer varchar(150) NOT NULL default '',
   KEY idx_spammer (spammer)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // and add initial record(s) to it
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##wiki_referrer_blacklist (spammer) VALUES ('".$_SERVER['SERVER_NAME']."')");
@@ -241,7 +241,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   time datetime NOT NULL default '0000-00-00 00:00:00',
   KEY idx_page_tag (page_tag),
   KEY idx_time (time)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the table: wiki_users
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_users (
@@ -255,7 +255,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   show_comments enum('Y','N') NOT NULL default 'N',
   PRIMARY KEY  (name),
   KEY idx_signuptime (signuptime)
-) ENGINE=MyISAM;");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the table: wiki_images
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##wiki_images (
@@ -263,8 +263,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##w
   image_user_id SMALLINT( 5 ) UNSIGNED NOT NULL ,
   image_name VARCHAR( 100 ) NOT NULL ,
   image_realname VARCHAR( 100 ) NOT NULL ,
-PRIMARY KEY ( image_id )
-) ENGINE=MyISAM;");
+  PRIMARY KEY ( image_id )
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // create the user groups for this module
 $mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'Wiki Admins', 'Wiki Admins', 'Wiki Admin', '1')");
