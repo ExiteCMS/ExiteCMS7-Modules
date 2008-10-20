@@ -202,7 +202,7 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##n
   newsletter_sent tinyint(1) unsigned NOT NULL default '0',
   newsletter_send_datestamp int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (newsletter_id)
-) ENGINE=MyISAM");
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 /*---------------------------------------------------+
 | commands to execute when uninstalling this module  |
