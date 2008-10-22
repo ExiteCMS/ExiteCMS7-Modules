@@ -408,7 +408,7 @@ if (!function_exists('module_upgrade')) {
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
 			case "1.1.1":
 				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
-				$result = dbquery"CREATE TABLE IF NOT EXISTS ".$db_prefix."shoutbox (
+				$result = dbquery("CREATE TABLE IF NOT EXISTS ".$db_prefix."shoutbox (
 						shout_id smallint(5) unsigned NOT NULL auto_increment,
 						shout_name varchar(50) NOT NULL default '',
 						shout_message varchar(200) NOT NULL default '',
