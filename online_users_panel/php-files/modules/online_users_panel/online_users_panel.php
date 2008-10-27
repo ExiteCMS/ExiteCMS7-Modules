@@ -54,7 +54,7 @@ $variables['last_user_flag'] = $cc_flag;
 $variables['max_users'] = number_format($settings['max_users']);
 $variables['max_date'] = showdate('forumdate', $settings['max_users_datestamp']);
 $variables['users_count'] = number_format(dbcount("(user_id)", "users", "user_status<='1'"));
-$variables['users_online'] = number_format(dbcount("(user_id)", "users", "user_lastvisit>'".(time()-60*60*24*60)."'"));
+$variables['users_online'] = number_format(dbcount("(user_id)", "users", "user_lastvisit>'".(time()-60*60*24*60)."' AND user_status='0'"));
 $variables['users_registered'] = dbcount("(user_id)", "users", "user_status='2'");
 
 $template_variables['modules.online_users_panel'] = $variables;
