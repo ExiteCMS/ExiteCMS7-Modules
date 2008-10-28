@@ -20,8 +20,8 @@ $mod_description = "Newsletter management system.";
 $mod_version = "1.1.1";
 $mod_folder = "newsletters";							// sub-folder of the /modules folder
 $mod_developer = "WanWizard";							// author's name
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "M";
 
 /*---------------------------------------------------+

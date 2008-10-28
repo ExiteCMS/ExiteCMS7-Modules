@@ -16,10 +16,10 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Shoutbox";
 $mod_description = "Shoutbox side panel";
-$mod_version = "1.1.1";
+$mod_version = "1.1.2";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "P";
 
 /*---------------------------------------------------+
@@ -69,6 +69,7 @@ $localestrings['en']['403'] = "Return to Admin Index";
 $localestrings['en']['404'] = "Delete Shout";
 $localestrings['en']['405'] = "Shout deleted";
 $localestrings['en']['406'] = "Shout from";
+$localestrings['en']['407'] = "Suspended due to post flooding";
 // Edit Shout
 $localestrings['en']['420'] = "Edit Shout";
 $localestrings['en']['421'] = "Shout Message:";
@@ -91,6 +92,9 @@ $localestrings['nl']['402'] = "Terug naar Shoutbox Beheer";
 $localestrings['nl']['403'] = "Terug naar Beheerder Index";
 $localestrings['nl']['404'] = "Shout verwijderen";
 $localestrings['nl']['405'] = "Shout verwijderd";
+$localestrings['nl']['406'] = "Shout van";
+$localestrings['nl']['407'] = "Geblokeerd wegens te snel te veel berichten te plaatsen";
+
 // Shout - Wijzigen
 $localestrings['nl']['420'] = "Shout wijzigen";
 $localestrings['nl']['421'] = "Shout tekst:";
@@ -407,7 +411,7 @@ if (!function_exists('module_upgrade')) {
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
 			case "1.1.1":
-				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
+				// upgrade to ExiteCMS v7.2. Create the table if it doesn't exist
 				$result = dbquery("CREATE TABLE IF NOT EXISTS ".$db_prefix."shoutbox (
 						shout_id smallint(5) unsigned NOT NULL auto_increment,
 						shout_name varchar(50) NOT NULL default '',
@@ -416,6 +420,8 @@ if (!function_exists('module_upgrade')) {
 						shout_ip varchar(20) NOT NULL default '0.0.0.0',
 						PRIMARY KEY  (shout_id)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+			case "1.1.2":
+				// locale update, no database changes
 			default:
 				// do this at every upgrade
 		}

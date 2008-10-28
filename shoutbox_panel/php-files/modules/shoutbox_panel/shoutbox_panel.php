@@ -14,6 +14,12 @@
 +----------------------------------------------------*/
 if (eregi("shout_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
 
+// load message parsing functions
+require_once PATH_INCLUDES."forum_functions_include.php";
+
+// load the locale for this include
+locale_load("modules.shoutbox_panel");
+
 // array's to store the variables for this panel
 $variables = array();
 
@@ -33,14 +39,20 @@ if (iMEMBER || $settings['guestposts'] == "1") {
 		$shout_message = trim(stripinput(censorwords($shout_message)));
 		$shout_message = str_replace("\n", "<br>", $shout_message);
 		if ($shout_name != "" && $shout_message != "") {
-			$result = dbquery("SELECT MAX(shout_datestamp) AS last_shout FROM ".$db_prefix."shoutbox WHERE shout_ip='".USER_IP."'");
-			if (!iSUPERADMIN || dbrows($result) > 0) {
+			$result = dbquery("SELECT MAX(shout_datestamp) AS last_shout FROM ".$db_prefix."shoutbox WHERE shout_ip='".USER_IP."' AND shout_name='".$shout_name."'");
+			if (!iSUPERADMIN && dbrows($result) > 0) {
 				$data = dbarray($result);
 				if ((time() - $data['last_shout']) < $settings['flood_interval']) {
 					$flood = true;
-					$result = dbquery("INSERT INTO ".$db_prefix."flood_control (flood_ip, flood_timestamp) VALUES ('".USER_IP."', '".time()."')");
-					if (dbcount("(flood_ip)", "flood_control", "flood_ip='".USER_IP."'") > 4) {
-						if (iMEMBER) $result = dbquery("UPDATE ".$db_prefix."users SET user_status='1' WHERE user_id='".$userdata['user_id']."'");
+					$result = dbquery("INSERT INTO ".$db_prefix."flood_control (flood_ip, flood_userid, flood_timestamp) VALUES ('".USER_IP."', '".$shout_name."', '".time()."')");
+					if (dbcount("(flood_ip)", "flood_control", "flood_ip='".USER_IP."' AND flood_userid='".$shout_name."'") > 4) {
+						if (iMEMBER) {
+							// ban the member for flooding
+							$result = dbquery("UPDATE ".$db_prefix."users SET user_status='1', user_ban_reason='".$locale['407']."' WHERE user_id='".$userdata['user_id']."'");
+						} else {
+							// anonymous user, blacklist the IP address
+							$result = dbquery("INSERT INTO ".$db_prefix."blacklist (blacklist_ip, blacklist_reason) VALUES ('".USER_IP."', '".$locale['407']."')");
+						}
 					}
 				}
 			}
@@ -60,7 +72,7 @@ $variables['shouts'] = array();
 if (dbrows($result) != 0) {
 	$i = 0;
 	while ($data = dbarray($result)) {
-		$data['shout_message'] = parsesmileys($data['shout_message']);
+		$data['shout_message'] = parsemessage(array(), $data['shout_message'], true, true);
 		$variables['shouts'][] = $data;
 	}
 	$variables['more_shouts'] = ($numrows > $settings['numofshouts']);
