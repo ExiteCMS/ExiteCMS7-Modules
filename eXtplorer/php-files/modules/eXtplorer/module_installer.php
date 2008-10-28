@@ -18,8 +18,8 @@ $mod_title = "eXtplorer";
 $mod_description = "Webbased file explorer and FTP client";
 $mod_version = "1.0.0";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "M";
 
 /*---------------------------------------------------+

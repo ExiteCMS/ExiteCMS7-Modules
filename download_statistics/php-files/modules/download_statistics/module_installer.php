@@ -18,8 +18,8 @@ $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
 $mod_version = "1.1.3";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "M";
 
 /*---------------------------------------------------+
