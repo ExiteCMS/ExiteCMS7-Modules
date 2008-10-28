@@ -18,8 +18,8 @@ $mod_title = "Mail2Forum";
 $mod_description = "Mail2Forum implements an interface between the mail and the web world. Posted messages are emailed to subscribers, their replies are posted on the forum on their behalf";
 $mod_version = "1.1.1";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "M";
 
 /*---------------------------------------------------+

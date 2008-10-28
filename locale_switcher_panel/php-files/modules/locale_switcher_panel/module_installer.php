@@ -18,8 +18,8 @@ $mod_title = "Locale Switcher side panel";
 $mod_description = "Allows easy switching of installed locales";
 $mod_version = "1.1.0";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "P";
 
 /*---------------------------------------------------+

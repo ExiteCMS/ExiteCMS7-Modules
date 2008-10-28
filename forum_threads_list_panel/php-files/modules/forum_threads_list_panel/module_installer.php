@@ -18,8 +18,8 @@ $mod_title = "Forum threads body panel";
 $mod_description = "Shows the latest threads in a body panel, with links to my posts, my threads and new posts panels";
 $mod_version = "1.1.1";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "P";
 
 /*---------------------------------------------------+

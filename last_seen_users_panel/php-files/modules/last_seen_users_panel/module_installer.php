@@ -18,8 +18,8 @@ $mod_title = "Last Seen Users Panel";
 $mod_description = "Side panel to display the last active website users";
 $mod_version = "1.1.1";
 $mod_developer = "WanWizard";
-$mod_email = "wanwizard@gmail.com";
-$mod_weburl = "http://exitecms.exite.eu/";
+$mod_email = "wanwizard@exitecms.org";
+$mod_weburl = "http://www.exitecms.org/";
 $mod_type = "M";
 
 /*---------------------------------------------------+
