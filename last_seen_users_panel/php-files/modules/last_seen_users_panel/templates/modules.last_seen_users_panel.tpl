@@ -12,15 +12,14 @@
 {*                                                                         *}
 {***************************************************************************}
 {*                                                                         *}
-{* This template generates the PLi-Fusion infusion panel:                  *}
-{* last_seen_users_panel                                                   *}
+{* This template generates the panel: last_seen_users_panel                *}
 {*                                                                         *}
 {***************************************************************************}
 {include file="_openside_x.tpl" name=$_name title=$locale.lsup000 state=$_state style=$_style}
 <table cellpadding='0' cellspacing='0' width='100%'>
 	{section name=entry loop=$members}
 	<tr>
-		{if $smarty.const.LOCALEDIR == "LTR"}
+		{if $smarty.const.LOCALEDIR == "ltr"}
 			<td class='small' align='left'>
 				<div style='width:{$smarty.const.SIDE_WIDTH-75}px;white-space:nowrap;overflow:hidden;'>
 					{if $members[entry].cc_flag == ""}
