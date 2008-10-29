@@ -156,7 +156,7 @@ elseif ($this->HasAccess("write") && $this->HasAccess("read"))
 	// ** WanWizard ** added the default template for new/empty pages
 	if (empty($body)) {
 		global $settings;
-		$body = $settings['wiki_page_template'];
+		$body = html_entity_decode($settings['wiki_page_template']);
 	}
 	// ** WanWizard **
 	
