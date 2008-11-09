@@ -27,10 +27,10 @@ $variables = array();
 $result = dbquery(
 	"SELECT ton.*, tu.user_id,user_name FROM ".$db_prefix."online ton
 	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level IS NULL OR tu.user_level != '103'":""));
-$rows = dbrows($result);
-if ($rows > $settings['max_users']) {
+$variables['online'] = dbrows($result);
+if ($variables['online'] > $settings['max_users']) {
 	$settings['max_users'] = $rows;
-	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$rows."' WHERE cfg_name = 'max_users'");
+	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$variables['online']."' WHERE cfg_name = 'max_users'");
 	$settings['max_users_datestamp'] = time();
 	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users_datestamp'");
 }
