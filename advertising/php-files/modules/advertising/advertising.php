@@ -26,7 +26,7 @@ $variables = array();
 locale_load("modules.advertising");
 
 // advertisement location and type. 
-$ad_locations = array(0 => $locale['ads450'], 1 => $locale['ads451'], 2 => $locale['ads452'], 3 => $locale['ads453']);
+$ad_locations = array(0 => $locale['ads450'], 1 => $locale['ads451'], 2 => $locale['ads452'], 3 => $locale['ads453'], 4 => $locale['ads454'], 5 => $locale['ads455']);
 asort($ad_locations);	// sort the locations alphabetically
 
 // maximum dimensions for each advertisement location
