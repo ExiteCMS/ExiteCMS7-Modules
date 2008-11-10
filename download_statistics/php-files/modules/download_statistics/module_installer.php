@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.3";
+$mod_version = "1.1.4";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -358,9 +358,9 @@ if (!function_exists('module_upgrade')) {
 		switch ($current_version) {
 			case "1.1.0":
 			case "1.1.1":
-				$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
 			case "1.1.2":
 			case "1.1.3":			// current release version
+				$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
 				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");
