@@ -19,7 +19,7 @@
 <table cellpadding='0' cellspacing='0' width='100%'>
 	{section name=entry loop=$members}
 	<tr>
-		{if $smarty.const.LOCALEDIR == "ltr"}
+		{if $smarty.const.LOCALEDIR == "LTR"}
 			<td class='small' align='left'>
 				<div style='width:{$smarty.const.SIDE_WIDTH-75}px;white-space:nowrap;overflow:hidden;'>
 					{if $members[entry].cc_flag == ""}
