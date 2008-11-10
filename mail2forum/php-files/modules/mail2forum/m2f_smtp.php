@@ -505,7 +505,7 @@ while (true) {
 
 	// update the poll timers and the status record
 	$lastpoll = $polltime + 1;
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$polltime."' WHERE cfg_name = 'm2f_last_polled')");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$polltime."' WHERE cfg_name = 'm2f_last_polled'");
 	$settings['m2f_last_polled'] = $polltime;
 	
 	// if the module has been modified, exit so it can be restarted
