@@ -269,7 +269,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	if (!$sender_cc) $sender_cc = "";
 
 	// insert the new message into the posts table
-	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_user_cc, post_edituser, post_edittime) 
+	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_cc, post_edituser, post_edittime) 
 		VALUES ('$forum_id', '$thread_id', '".mysql_escape_string($subject)."', '".mysql_escape_string($post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
@@ -788,7 +788,7 @@ while (true) {
 		exit(99);
 	}
 	// get the last modified timestamp of the config
-	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%' AND cfg_name != 'm2f_last_polled'"));
 	if ($data['lastmod'] != $config_lastmod) {
 		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to a configuration change');
 		exit(99);

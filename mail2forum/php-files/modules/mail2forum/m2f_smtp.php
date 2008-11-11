@@ -515,7 +515,7 @@ while (true) {
 		exit(99);
 	}
 	// get the last modified timestamp of the config
-	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+	$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%' AND cfg_name != 'm2f_last_polled'"));
 	if ($data['lastmod'] != $config_lastmod) {
 		if ($settings['m2f_process_log']) logentry('EXIT', 'Restart due to a configuration change');
 		exit(99);
