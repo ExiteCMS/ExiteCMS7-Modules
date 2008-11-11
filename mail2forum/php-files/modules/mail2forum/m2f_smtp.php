@@ -263,7 +263,7 @@ if ($settings['m2f_process_log']) logentry('INIT', 'Program start');
 $module_lastmod = filemtime('m2f_smtp.php');
 
 // get the last modified timestamp of the config
-$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%'"));
+$data = dbarray(dbquery("SELECT MAX(cfg_timestamp) AS lastmod FROM ".$db_prefix."configuration WHERE cfg_name LIKE 'm2f_%' AND cfg_name != 'm2f_last_polled'"));
 $config_lastmod = $data['lastmod'];
 
 // check if the Mail2Forum module is installed
