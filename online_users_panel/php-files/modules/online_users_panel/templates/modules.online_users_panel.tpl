@@ -16,7 +16,7 @@
 {****************************************************************************}
 {include file="_openside_x.tpl" name=$_name title=$locale.010 state=$_state style=$_style}
 <img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.011}{$guests}<br />
-<img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.012}{$online}<br />
+<img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.012}{$members|@count}<br />
 <div style='margin-left:8px;'>
 {section name=member loop=$members}
 	{if $smarty.const.iMEMBER}<a href='{$smarty.const.BASEDIR}profile.php?lookup={$members[member].user_id}' class='side'>{$members[member].user_name}</a>{else}<u>{$members[member].user_name}</u>{/if}{if $smarty.section.member.last}{else}, {/if}
