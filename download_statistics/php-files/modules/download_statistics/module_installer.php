@@ -360,7 +360,11 @@ if (!function_exists('module_upgrade')) {
 			case "1.1.1":
 			case "1.1.2":
 			case "1.1.3":			// current release version
-				$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
+				// add the dlsc_count_id if it doesn't exist
+				$data = dbarray(dbquery("SELECT * FROM ".$db_prefix."dlstats_counters LIMIT 1"));
+				if (is_array($data) && !isset($data['dlsc_count_id'])) {
+					$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
+				}
 				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");
