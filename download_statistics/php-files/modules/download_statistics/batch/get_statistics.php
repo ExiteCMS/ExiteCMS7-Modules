@@ -1,14 +1,21 @@
 <?php 
-/*---------------------------------------------------+
-| ExiteCMS Content Management System                 |
-+----------------------------------------------------+
-| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
-| for support, please visit http://exitecms.exite.eu |
-+----------------------------------------------------+
-| Released under the terms & conditions of v2 of the |
-| GNU General Public License. For details refer to   |
-| the included gpl.txt file or visit http://gnu.org  |
-+----------------------------------------------------*/
+/*---------------------------------------------------------------------+
+| ExiteCMS Content Management System                                   |
++----------------------------------------------------------------------+
+| Copyright 2006-2008 Exite BV, The Netherlands                        |
+| for support, please visit http://www.exitecms.org                    |
++----------------------------------------------------------------------+
+| Some code derived from PHP-Fusion, copyright 2002 - 2006 Nick Jones  |
++----------------------------------------------------------------------+
+| Released under the terms & conditions of v2 of the GNU General Public|
+| License. For details refer to the included gpl.txt file or visit     |
+| http://gnu.org                                                       |
++----------------------------------------------------------------------+
+| $Id:: viewpage.php 1935 2008-10-29 23:42:42Z WanWizard              $|
++----------------------------------------------------------------------+
+| Last modified by $Author:: WanWizard                                $|
+| Revision number $Rev:: 1935                                         $|
++---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../../includes/core_functions.php";
 
 // check for the proper admin access rights
@@ -20,8 +27,8 @@ if (!CMS_CLI && (!checkrights("T") || !defined("iAUTH") || $aid == iAUTH)) fallb
 
 // TODO - need to move these values to an admin interface and configuration table!!
 
-$localkey = md5("server50096.uk2net.com"."*"."83.170.99.141");	// internal IP address
-$remotekey = md5("server50096.uk2net.com"."*"."83.170.97.97");	// external IP address
+$localkey = md5("exb001-1.exite.nl"."*"."94.75.199.4");	// internal IP address
+$remotekey = md5("exb001-1.exite.nl"."*"."94.75.199.4");	// external IP address
 
 $logfile = "/logs/downloads.log";
 
@@ -31,8 +38,6 @@ $stats_urls[1] = "http://download1.pli-images.org".$logfile."?key=".$localkey;		
 $stats_urls[2] = "http://download2.pli-images.org".$logfile."?key=".$remotekey;		// NedLinux
 $stats_urls[3] = "http://download3.pli-images.org".$logfile."?key=".$remotekey;		// Graver
 //$stats_urls[4] = "http://download4.pli-images.org".$logfile."?key=".$remotekey;		// Snoopy
-
-define("RETRY_TIMEOUT", time() - (60 * 10) );	// 10 minutes
 
 /*---------------------------------------------------+
 | local functions                                    |
@@ -69,6 +74,9 @@ error_reporting(E_ALL);
 // load the GeoIP functions
 require_once PATH_INCLUDES."geoip_include.php";
 
+// load the download log include
+require_once dirname(__FILE__)."/../download_include.php";
+
 // load the theme functions when not in CLI mode
 if (!CMS_CLI) {
 	require_once PATH_INCLUDES."theme_functions.php";
@@ -82,9 +90,6 @@ $_db_log = false;
 
 // define the array to store our progress messages in
 $messages = array();
-
-// delete expired records from the file cache table
-$result = dbquery("DELETE FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_timeout < ".RETRY_TIMEOUT);
 
 // replace numeric entities
 $settings['dlstats_geomap_regex'] = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $settings['dlstats_geomap_regex']);
@@ -132,48 +137,11 @@ foreach($stats_urls as $key => $url) {
 							$download['date'] = date("Ymd", $record[0]);
 							$download['time'] = date("His", $record[0]);
 							$download['ip'] = $record[1];
-							$download['cc'] = GeoIP_IP2Code($download['ip']);
 							$download['on_map'] = preg_match($settings['dlstats_geomap_regex'], trim($download['path']));
 							$download['success'] = $record[2];
-							// check if the file it's in the retry cache
-							$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$download['ip']."' AND dlsfc_file = '".mysql_escape_string($download['path'])."'");
-							// not in the cache...
-							if (dbrows($result) == 0) {
-								if (CMS_CLI) display("-> not in the file cache");
-								// update the IP statistics
-								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$download['ip']."', '".$download['cc']."', '".$download['on_map']."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($download['on_map'] == 1 ? ", dlsi_onmap = 1" : ""));
-								// update fhe File statistics
-								$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$download['path']."', '".$download['success']."', 1) ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + 1");
-								// now update the download details for this record
-								// get the dlsi_id for this IP
-								$result2 = mysql_query("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$download['ip']."' LIMIT 1");
-								if (dbrows($result2)) {
-									$data2 = mysql_fetch_assoc($result2);
-									// get the dlsf_id for this file
-									$result3 = mysql_query("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$download['path']."' LIMIT 1");
-									if (dbrows($result3)) {
-										$data3 = mysql_fetch_assoc($result3);
-										$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$download['timestamp']."')");
-										if (CMS_CLI) display("-> added to the download logs");
-									}
-								}
-								// update download counters if need be
-								if ($settings['dlstats_remote']) {
-									// do we have a download record for this URL?
-									$result2 = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_url LIKE '%".$download['path']."' AND download_external = 1");
-									while ($data2 = dbarray($result2)) {
-										// check if this is a full URL match
-										$data2['url'] = parse_url($data2['download_url']);
-										if ($download['path'] == $data2['url']['path']) {
-											// match found, update the counter
-											$result3 = dbquery("UPDATE ".$db_prefix."downloads SET download_count=download_count+1 WHERE download_id = '".$data2['download_id']."'");
-										}
-									}
-								}
-							}
-							// add the record to the file cache (or update the existing record if it was already in the cache
-							$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$download['ip']."', '".mysql_escape_string($download['path'])."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
-							// generate the new filename
+							// add the download to the statistics tables
+							log_download($download['path'], $download['ip'], $download['on_map'], $record[2], $record[0]);
+							// generate the new log filename
 							$newfile = ($settings['dlstats_logs']{0} == "/" ? "" : PATH_ROOT) . $settings['dlstats_logs']."/".date("Y-", $download['timestamp']).substr('00'.date("W", $download['timestamp']), -2).".download.log";
 							// different from the old? close the old file, open the new file
 							if ($oldfile != $newfile) {
