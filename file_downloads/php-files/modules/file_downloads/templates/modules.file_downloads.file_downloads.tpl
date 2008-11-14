@@ -22,6 +22,14 @@
 				<b>{$cats[id].fd_name}</b>
 			</td>
 		</tr>
+		{if $cats[id].fd_prev_dir != ""}
+			<tr>
+				<td class='tbl2'>
+					<img src='{$smarty.const.THEME}images/directory.gif' title='' alt='' />&nbsp;
+					<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir=-1'>..</a>
+				</td>
+			</tr>
+		{/if}
 		{if $cats[id].directories|@count == 0 && $cats[id].files|@count == 0}
 			<tr>
 				<td class='tbl1'>
@@ -29,14 +37,6 @@
 				</td>
 			</tr>
 		{else}
-			{if $cats[id].fd_prev_dir != ""}
-				<tr>
-					<td class='tbl2'>
-						<img src='{$smarty.const.THEME}images/directory.gif' title='' alt='' />&nbsp;
-						<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir=-1'>..</a>
-					</td>
-				</tr>
-			{/if}
 			{foreach from=$cats[id].directories item=dir name=dir}
 				<tr>
 					<td class='tbl2'>
