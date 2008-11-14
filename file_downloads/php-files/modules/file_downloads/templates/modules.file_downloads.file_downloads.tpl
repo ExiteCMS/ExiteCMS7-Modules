@@ -49,7 +49,7 @@
 				<tr>
 					<td class='tbl1'>
 						<img src='{$smarty.const.THEME}images/file.gif' title='' alt='' />&nbsp;
-						<a href='{$smarty.const.BASEDIR}getfile.php?type=fd&amp;fd_id={$cats[id].fd_id}&amp;file_id={$smarty.foreach.file.index}'>{$cats[id].files[file].name|truncate:90:" &hellip; ":true:true}</a>
+						<a href='{$smarty.const.BASEDIR}getfile.php?type=fd&amp;fd_id={$cats[id].fd_id}&amp;file_id={$smarty.section.file.index}'>{$cats[id].files[file].name|truncate:90:" &hellip; ":true:true}</a>
 					</td>
 					<td width='1%' class='tbl1' style='white-space:nowrap;'>
 						{$cats[id].files[file].date|date_format:"forumdate"}
