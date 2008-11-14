@@ -68,6 +68,50 @@ $mod_site_links[] = array('name' => $mod_title, 'url' => 'file_downloads.php', '
 +----------------------------------------------------*/
 $localestrings = array();
 $localestrings['en'] = array();
+// admin panel
+$localestrings['en']['400'] = "File Downloads";
+$localestrings['en']['401'] = "Category";
+$localestrings['en']['402'] = "Order";
+$localestrings['en']['403'] = "Options";
+$localestrings['en']['404'] = "Move Up";
+$localestrings['en']['405'] = "Move Down";
+$localestrings['en']['406'] = "Edit Category";
+$localestrings['en']['407'] = "Delete Category";
+$localestrings['en']['408'] = "There are no local file download categories defined.";
+$localestrings['en']['409'] = "Add a new category";
+$localestrings['en']['410'] = "Category name:";
+$localestrings['en']['411'] = "Local file path";
+$localestrings['en']['412'] = "Give access to:";
+$localestrings['en']['413'] = "Save";
+$localestrings['en']['414'] = "The field 'Category name' may not be empty";
+$localestrings['en']['415'] = "The field 'Local file path' may not be empty";
+$localestrings['en']['416'] = "No access to the local file path or it does not exist";
+$localestrings['en']['417'] = "New category successfully added";
+$localestrings['en']['418'] = "New category successfully updated";
+$localestrings['en']['419'] = "The requested category can not be found";
+$localestrings['en']['420'] = "Visibility";
+$localestrings['en']['421'] = "Are you sure you want to delete this category?";
+// user panel
+$localestrings['en']['450'] = "There are no files in this category";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+$localestrings['en'][''] = "";
+
+
 
 $localestrings['nl'] = array();
 
@@ -80,13 +124,15 @@ $mod_install_cmds = array();							// commands to execute when installing this m
 // adverts: advertising table
 $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##file_downloads (
   fd_id smallint(5) NOT NULL auto_increment,
+  fd_name varchar(25) NOT NULL default '',
   fd_path varchar(255) NOT NULL default '',
   fd_group smallint(5) NOT NULL default '103',
+  fd_order smallint(5) NOT NULL default '0',
   PRIMARY KEY  (fd_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 // add a user group for this module
-$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'File Downloads', 'File Downloads', '', '1')");
+$mod_install_cmds[] = array('type' => 'db', 'value' => "INSERT INTO ##PREFIX##user_groups (group_ident, group_name, group_description, group_forumname, group_visible) VALUES ('".$mod_admin_rights."01', 'File Downloads', 'File Downloads', '', '0')");
 
 $mod_install_cmds[] = array('type' => 'function', 'value' => "install_function");
 
@@ -106,7 +152,7 @@ $mod_uninstall_cmds[] = array('type' => 'function', 'value' => "uninstall_functi
 if (!function_exists('install_function')) {
 	function install_function() {
 
-		global $db_prefix, $locale, $mod_title, $mod_admin_rights;
+		global $db_prefix, $locale, $mod_title, $mod_admin_rights, $mod_folder;
 
 		// update the visiblity of the menu link
 
@@ -114,7 +160,7 @@ if (!function_exists('install_function')) {
 		$group = dbarray(dbquery("SELECT group_id FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'"));
 		if (is_array($group)) {
 			// modify the visibility of the URL
-			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$mod_title."' AND link_url = 'file_downloads.php'");
+			$result = dbquery("UPDATE ".$db_prefix."site_links SET link_visibility = '".$group['group_id']."' WHERE link_name = '".$mod_title."' AND link_url = '".substr(MODULES,1).$mod_folder."/file_downloads.php'");
 		}
 	}
 }
@@ -123,6 +169,11 @@ if (!function_exists('install_function')) {
 +----------------------------------------------------*/
 if (!function_exists('uninstall_function')) {
 	function uninstall_function() {
+
+		global $db_prefix, $mod_admin_rights;
+
+		// delete the module group
+		$result = dbquery("DELETE FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'");
 	}
 }
 
