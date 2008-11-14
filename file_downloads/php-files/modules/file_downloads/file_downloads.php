@@ -69,7 +69,11 @@ while ($data = dbarray($result)) {
 	// get the list of directories for this category
 	$data['directories'] = makefilelist($data['fd_path'].$data['fd_this_dir'], ".|..", true, "folders");
 	// get the list of files for this category directory
-	$data['files'] = makefilelist($data['fd_path'].$data['fd_this_dir'], ".|..", true, "files");
+	$files = makefilelist($data['fd_path'].$data['fd_this_dir'], ".|..", true, "files");
+	$data['files'] = array();
+	foreach($files as $file) {
+		$data['files'][] = array('name' => $file, 'date' => filemtime($data['fd_path'].$data['fd_this_dir'].$file), 'size' => parsebytesize(filesize($data['fd_path'].$data['fd_this_dir'].$file), 3));
+	}
 	// store all info
 	$variables['cats'][] = $data;
 }
