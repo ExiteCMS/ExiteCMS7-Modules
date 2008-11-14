@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "File Downloads";							// title or name of this module
 $mod_description = "Module to provide a secure download page for files stored locally on the webserver";	// short description of it's purpose
-$mod_version = "1.0.0";									// module version number
+$mod_version = "1.0.1";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -92,28 +92,33 @@ $localestrings['en']['419'] = "The requested category can not be found";
 $localestrings['en']['420'] = "Visibility";
 $localestrings['en']['421'] = "Are you sure you want to delete this category?";
 // user panel
-$localestrings['en']['450'] = "There are no files in this category";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-$localestrings['en'][''] = "";
-
-
+$localestrings['en']['450'] = "There are no files found in this category";
 
 $localestrings['nl'] = array();
+$localestrings['en']['400'] = "Bestand downloads";
+$localestrings['en']['401'] = "Categorie";
+$localestrings['en']['402'] = "Volgorde";
+$localestrings['en']['403'] = "Opties";
+$localestrings['en']['404'] = "Naar boven";
+$localestrings['en']['405'] = "Naar beneden";
+$localestrings['en']['406'] = "Categorie wijzigen";
+$localestrings['en']['407'] = "Categorie verwijderen";
+$localestrings['en']['408'] = "Er zijn geen categorieen voor lokale download bestanden gedefinieerd.";
+$localestrings['en']['409'] = "Nieuwe categorie toevoegen";
+$localestrings['en']['410'] = "Categorie naam:";
+$localestrings['en']['411'] = "Lokale bestandsfolder";
+$localestrings['en']['412'] = "Geef toegang aan:";
+$localestrings['en']['413'] = "Bewaar";
+$localestrings['en']['414'] = "Het veld 'Categorie naam' mag niet leeg zijn";
+$localestrings['en']['415'] = "Het veld 'Lokale bestandsfolder' mag niet leeg zijn";
+$localestrings['en']['416'] = "Geen toegang tot de bestandsfolder of de folder bestaat niet";
+$localestrings['en']['417'] = "Nieuwe categorie succesvol toegevoegd";
+$localestrings['en']['418'] = "Nieuwe categorie succesvol aangepast";
+$localestrings['en']['419'] = "De gevraagde categorie kan niet worden gevonden";
+$localestrings['en']['420'] = "Toegang voor";
+$localestrings['en']['421'] = "Weet u zeker dat u deze categorie wilt verwijderen?";
+// user panel
+$localestrings['en']['450'] = "Er zijn geen bestanden in deze directory gevonden";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
