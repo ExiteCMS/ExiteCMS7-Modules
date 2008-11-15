@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Download Statistics";
 $mod_description = "Gather and display download statistics from download mirror logs. includes a Google Map with downloaders per country";
-$mod_version = "1.1.4";
+$mod_version = "1.1.5";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -318,11 +318,12 @@ $mod_uninstall_cmds = array();							// commands to execute when uninstalling th
 
 // delete config entries
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_access'");
-$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_geomap_where'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_geomap_regex'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_logs'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_remote'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_google_api_key'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_title'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'dlstats_history'");
 
 // delete the tables
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DROP TABLE ##PREFIX##dlstats_ips");
@@ -359,12 +360,14 @@ if (!function_exists('module_upgrade')) {
 			case "1.1.0":
 			case "1.1.1":
 			case "1.1.2":
-			case "1.1.3":			// current release version
+			case "1.1.3":
 				// add the dlsc_count_id if it doesn't exist
 				$data = dbarray(dbquery("SELECT * FROM ".$db_prefix."dlstats_counters LIMIT 1"));
 				if (is_array($data) && !isset($data['dlsc_count_id'])) {
 					$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
 				}
+				break;
+			case "1.1.4":			// current release version
 				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");
