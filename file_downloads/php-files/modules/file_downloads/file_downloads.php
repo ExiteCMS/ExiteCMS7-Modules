@@ -72,7 +72,7 @@ while ($data = dbarray($result)) {
 	$files = makefilelist($data['fd_path'].$data['fd_this_dir'], ".|..", true, "files");
 	$data['files'] = array();
 	foreach($files as $file) {
-		$data['files'][] = array('name' => $file, 'date' => filemtime($data['fd_path'].$data['fd_this_dir'].$file), 'size' => parsebytesize(filesize($data['fd_path'].$data['fd_this_dir'].$file), 3));
+		$data['files'][] = array('name' => $file, 'date' => filemtime($data['fd_path'].$data['fd_this_dir']."/".$file), 'size' => parsebytesize(filesize($data['fd_path'].$data['fd_this_dir']."/".$file), 3));
 	}
 	// store all info
 	$variables['cats'][] = $data;
