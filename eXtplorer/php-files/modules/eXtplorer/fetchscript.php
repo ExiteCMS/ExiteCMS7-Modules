@@ -10,7 +10,7 @@ require_once dirname(__FILE__)."/../../includes/core_functions.php";
 * file[INDEX] (filename only)
 * where INDEX is the actual number of the file to be included, so you can include multiple scripts at a time
 * 
-* @version $Id: fetchscript.php 104 2008-05-28 17:20:00Z soeren $
+* @version $Id$
 * @package eXtplorer
 * @copyright Copyright (C) 2006-2007 Soeren Eberhardt. All rights reserved.
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php

@@ -1,10 +1,21 @@
 <?php
-/*---------------------------------------------------+
-| ExiteCMS Content Management System                 |
-+----------------------------------------------------+
-| Integrated by WanWizard (wanwizard@gmail.com)      |
-| http://exitecms.exite.eu                           |
-+----------------------------------------------------*/
+/*---------------------------------------------------------------------+
+| ExiteCMS Content Management System                                   |
++----------------------------------------------------------------------+
+| Copyright 2006-2008 Exite BV, The Netherlands                        |
+| for support, please visit http://www.exitecms.org                    |
++----------------------------------------------------------------------+
+| wikkawiki, integrated into ExiteCMS by WanWizard[at]exitecms.org     |
++----------------------------------------------------------------------+
+| Released under the terms & conditions of v2 of the GNU General Public|
+| License. For details refer to the included gpl.txt file or visit     |
+| http://gnu.org                                                       |
++----------------------------------------------------------------------+
+| $Id::                                                               $|
++----------------------------------------------------------------------+
+| Last modified by $Author::                                          $|
+| Revision number $Rev::                                              $|
++---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
@@ -20,7 +31,7 @@ require_once PATH_ROOT."/includes/theme_functions.php";
  *
  * @package Wikka
  * @subpackage Core
- * @version $Id$
+ * @version 1.1.6.3
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @see /docs/Wikka.LICENSE
  * @filesource

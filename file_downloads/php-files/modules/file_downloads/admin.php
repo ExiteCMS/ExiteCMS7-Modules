@@ -11,10 +11,10 @@
 | License. For details refer to the included gpl.txt file or visit     |
 | http://gnu.org                                                       |
 +----------------------------------------------------------------------+
-| $Id:: viewpage.php 1935 2008-10-29 23:42:42Z WanWizard              $|
+| $Id::                                                               $|
 +----------------------------------------------------------------------+
-| Last modified by $Author:: WanWizard                                $|
-| Revision number $Rev:: 1935                                         $|
+| Last modified by $Author::                                          $|
+| Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
@@ -162,7 +162,7 @@ if ($action == "") {
 	$variables['entries'] = array();
 	$result = dbquery("SELECT * FROM ".$db_prefix."file_downloads ORDER BY fd_order");
 	while ($data = dbarray($result)) {
-		$data['group_name'] = getgroupname($data['fd_group']);
+		$data['group_name'] = getgroupname($data['fd_group'], -1);
 		$variables['entries'][] = $data;
 	}	
 }

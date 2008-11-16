@@ -1,19 +1,22 @@
-{*****************************************************************************}
-{*                                                                           *}
-{* PLi-Fusion CMS template: forum_theads_panel.tpl                           *}
-{*                                                                           *}
-{*****************************************************************************}
-{*                                                                           *}
-{* Author: WanWizard <wanwizard@gmail.com>                                   *}
-{*                                                                           *}
-{* Revision History:                                                         *}
-{* 2007-07-22 - WW - Initial version                                         *}
-{*                                                                           *}
-{*****************************************************************************}
-{*                                                                           *}
-{* This template generates the PLi-Fusion infusion panel: forum_threads_panel*}
-{*                                                                           *}
-{*****************************************************************************}
+{***************************************************************************}
+{* ExiteCMS Content Management System                                      *}
+{***************************************************************************}
+{* Copyright 2006-2008 Exite BV, The Netherlands                           *}
+{* for support, please visit http://www.exitecms.org                       *}
+{*-------------------------------------------------------------------------*}
+{* Released under the terms & conditions of v2 of the GNU General Public   *}
+{* License. For details refer to the included gpl.txt file or visit        *}
+{* http://gnu.org                                                          *}
+{***************************************************************************}
+{* $Id::                                                                  $*}
+{*-------------------------------------------------------------------------*}
+{* Last modified by $Author::                                             $*}
+{* Revision number $Rev::                                                 $*}
+{***************************************************************************}
+{*                                                                         *}
+{* This template generates the panel: forum_threads_panel                  *}
+{*                                                                         *}
+{***************************************************************************}
 {include file="_openside_x.tpl" name=$_name title=$locale.020 state=$_state style=$_style}
 <div class='side-label'>
 	<b>{$locale.021}</b>

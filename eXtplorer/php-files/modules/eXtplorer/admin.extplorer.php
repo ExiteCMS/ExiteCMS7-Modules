@@ -4,7 +4,7 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
 /**
  * MAIN FILE! (formerly known as index.php)
  * 
- * @version $Id: admin.extplorer.php 104 2008-05-28 17:20:00Z soeren $
+ * @version $Id$
  * 
  * @package eXtplorer
  * @copyright soeren 2007
