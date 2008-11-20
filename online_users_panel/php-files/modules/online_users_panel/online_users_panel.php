@@ -35,7 +35,7 @@ if ($variables['online'] > $settings['max_users']) {
 	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users_datestamp'");
 }
 // get who's online
-$variables['guests'] = 0;
+$variables['guests'] = array();
 $variables['members'] = array();
 while ($data = dbarray($result)) {
 	if ($data['online_user'] == "0") {
