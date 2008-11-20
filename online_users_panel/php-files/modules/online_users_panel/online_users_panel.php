@@ -40,7 +40,7 @@ $variables['members'] = array();
 while ($data = dbarray($result)) {
 	if ($data['online_user'] == "0") {
 		if ($settings['forum_flags']) {
-			$data['cc_flag'] = GeoIP_Code2Flag($data['online_ip'], true, false, 10);
+			$data['cc_flag'] = GeoIP_IP2Flag($data['online_ip'], true, false, 10);
 		}
 		$variables['guests'][] = $data;
 	} else {
