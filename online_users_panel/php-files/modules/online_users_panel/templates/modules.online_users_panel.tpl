@@ -18,7 +18,12 @@
 {*                                                                         *}
 {***************************************************************************}
 {include file="_openside_x.tpl" name=$_name title=$locale.010 state=$_state style=$_style}
-<img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.011}{$guests}<br />
+<img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.011}{$guests|@count}<br />
+<div style='margin-left:8px;'>
+{section name=guest loop=$guests}
+	{$guests[guest].cc_flag}
+{/section}
+</div>
 <img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.012}{$members|@count}<br />
 <div style='margin-left:8px;'>
 {section name=member loop=$members}
