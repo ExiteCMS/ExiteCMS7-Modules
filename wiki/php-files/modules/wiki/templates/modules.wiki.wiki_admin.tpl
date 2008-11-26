@@ -42,8 +42,8 @@
 			</td>
 			<td class='tbl' width='50%'>
 				<select name='admin_group' class='textbox'>
-				{section name=id loop=$usergroups}
-					<option value='{$usergroups[id].0}'{if $usergroups[id].0 == $settings2.wiki_admin_group} selected="selected"{/if}>{$usergroups[id].1}</option>
+				{section name=id loop=$wikigroups}
+					<option value='{$wikigroups[id].0}'{if $wikigroups[id].0 == $settings2.wiki_admin_group} selected="selected"{/if}>{$wikigroups[id].1}</option>
 				{/section}
 				</select>
 			</td>
@@ -89,8 +89,8 @@
 			</td>
 			<td class='tbl' width='50%'>
 				<select name='default_read_acl' class='textbox'>
-				{section name=id loop=$usergroups}
-					<option value='{$usergroups[id].0}'{if $usergroups[id].0 == $settings2.wiki_default_read_acl} selected="selected"{/if}>{$usergroups[id].1}</option>
+				{section name=id loop=$wikigroups}
+					<option value='{$wikigroups[id].0}'{if $wikigroups[id].0 == $settings2.wiki_default_read_acl} selected="selected"{/if}>{$wikigroups[id].1}</option>
 				{/section}
 				</select>
 			</td>
@@ -164,6 +164,21 @@
 					<option value='1'{if $settings2.wiki_forum_links == "1"} selected="selected"{/if}>{$locale.413}</option>
 				</select>
 				<span class='small'>{$locale.422}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class='tbl' width='50%'>
+				{$locale.428}
+			</td>
+			<td class='tbl' width='50%'>
+				<select name='report_uploads' class='textbox'>
+				<option value=''{if "" == $settings2.wiki_report_uploads} selected="selected"{/if}>{$locale.429}</option>
+				{section name=id loop=$usergroups}
+					{if $usergroups[id].0 != 0 && $usergroups[id].0 != 100 && $usergroups[id].0 != 101}
+						<option value='{$usergroups[id].0}'{if $usergroups[id].0 == $settings2.wiki_report_uploads} selected="selected"{/if}>{$usergroups[id].1}</option>
+					{/if}
+				{/section}
+				</select>
 			</td>
 		</tr>
 		<tr>

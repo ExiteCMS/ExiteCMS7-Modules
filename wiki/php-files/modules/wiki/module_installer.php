@@ -22,8 +22,8 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 | Module identification                              |
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
-$mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.3";	// short description of it's purpose
-$mod_version = "1.1.6";									// module version number
+$mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.4";	// short description of it's purpose
+$mod_version = "1.1.9";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -109,6 +109,10 @@ $localestrings['en']['424'] = "Wiki search results";
 $localestrings['en']['425'] = "Last update:";
 $localestrings['en']['426'] = "Page owner:";
 $localestrings['en']['427'] = "You don't have the rights to view this wiki page.";
+$localestrings['en']['428'] = "Send file upload notifications to:";
+$localestrings['en']['429'] = "No one";
+$localestrings['en']['430'] = "Wiki Upload notification";
+$localestrings['en']['431'] = "Wiki upload by: %s\n\nStatus message is: %s";
 
 $localestrings['nl'] = array();
 $localestrings['nl']['400'] = "Wiki configuratie";
@@ -138,6 +142,10 @@ $localestrings['nl']['424'] = "Wiki zoekresultaten";
 $localestrings['nl']['425'] = "Laatste wijziging:";
 $localestrings['nl']['426'] = "Pagina eigenaar:";
 $localestrings['nl']['427'] = "U hebt geen rechten op deze wiki pagina te bekijken.";
+$localestrings['nl']['428'] = "Stuur een notificatie van bestandsuploads naar:";
+$localestrings['nl']['429'] = "Niemand";
+$localestrings['nl']['430'] = "Wiki upload notificatie";
+$localestrings['nl']['431'] = "Wiki upload door: %s\n\nStatus bericht is: %s";
 
 /*---------------------------------------------------+
 | commands to execute when installing this module    |
@@ -308,6 +316,7 @@ $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_admin_group'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_forum_links'");
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_page_template'");
+$mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##configuration WHERE cfg_name = 'wiki_report_uploads'");
 
 // delete the user groups
 $mod_uninstall_cmds[] = array('type' => 'db', 'value' => "DELETE FROM ##PREFIX##user_groups WHERE group_ident = '".$mod_admin_rights."01'");
@@ -339,6 +348,10 @@ if (!function_exists('module_install')) {
 		if (!is_dir(PATH_IMAGES."wiki")) {
 			@mkdir(PATH_IMAGES."wiki");
 		}
+		// create the wiki file directory
+		if (!is_dir(PATH_ROOT."files/wiki")) {
+			@mkdir(PATH_ROOT."files/wiki");
+		}
 	}
 }
 
@@ -356,6 +369,7 @@ if (!function_exists('add_config_items')) {
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_anony_delete_own_comments', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_external_link_new_window', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_read_acl', 'G0');");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_report_uploads', '103');");
 		// get the group_id of the Wiki Editors group
 		$result = dbquery("SELECT * FROM ".$db_prefix."user_groups WHERE group_ident = '".$mod_admin_rights."01'");
 		if (dbrows($result)) {
@@ -378,6 +392,7 @@ if (!function_exists('add_config_items')) {
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_page_template', '')");
+		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_report_uploads', '103');");
 	}
 }
 
@@ -471,10 +486,28 @@ if (!function_exists('module_upgrade')) {
 				// added the wiki_aliases table
 				$result = dbquery("CREATE TABLE ".$db_prefix."wiki_aliases (from_tag varchar(75) NOT NULL default '', to_tag varchar(75) NOT NULL default '', UNIQUE KEY from_tag (from_tag,to_tag), KEY idx_from (from_tag), KEY idx_to (to_tag)) ENGINE=MyISAM;");
 
-			case "1.1.5":
+			case "1.1.6":
+				// no specific changes between this version and the new one
+
+			case "1.1.7":
+				// new configuration item for the wiki file upload reports
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_report_uploads', '103')");
+
+			case "1.1.8":
+				// added upload notifications
+
+			case "1.1.9":
 				// current version
 
 			default:
+				// create the wiki image directory
+				if (!is_dir(PATH_IMAGES."wiki")) {
+					@mkdir(PATH_IMAGES."wiki");
+				}
+				// create the wiki file directory
+				if (!is_dir(PATH_ROOT."files/wiki")) {
+					@mkdir(PATH_ROOT."files/wiki");
+				}
 				// commands to execute for every upgrade
 		}
 	}

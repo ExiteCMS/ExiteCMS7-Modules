@@ -44,6 +44,7 @@ if (isset($_POST['savesettings'])) {
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['admin_group'])."' WHERE cfg_name = 'wiki_admin_group'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['forum_links'])."' WHERE cfg_name = 'wiki_forum_links'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['page_template'])."' WHERE cfg_name = 'wiki_page_template'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['report_uploads'])."' WHERE cfg_name = 'wiki_report_uploads'");
 	// if the name of the homepage has changed, update the wiki record
 	if ($settings['wiki_root_page'] != stripinput($_POST['root_page'])) {
 		$result = dbquery("UPDATE ".$db_prefix."wiki_pages SET tag = '".mysql_escape_string(stripinput($_POST['root_page']))."' WHERE tag = '".mysql_escape_string($settings['wiki_root_page'])."'");
@@ -64,9 +65,11 @@ $variables['settings2'] = $settings2;
 // get the list of user groups
 $groups = getusergroups();
 $variables['usergroups'] = array();
+$variables['wikigroups'] = array();
 foreach ($groups as $group) {
-	$group[0] = "G".$group[0];
 	$variables['usergroups'][] = $group;
+	$group[0] = "G" . $group[0];
+	$variables['wikigroups'][] = $group;
 }
 
 // define the admin body panel
