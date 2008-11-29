@@ -17,7 +17,7 @@
 {* This template generates the ExiteCMS panel: login_panel                 *}
 {*                                                                         *}
 {***************************************************************************}
-{if !$smarty.const.iMEMBER && ($settings.auth_ssl == 0 || $_SERVER.HTTPS|default:"" == "on")}
+{if $show_login}
 	{include file="_openside.tpl" name=$_name title=$locale.060 state=$_state style=$_style}
 	<div style='text-align:left'>
 		{$loginerror|default:""}
