@@ -25,7 +25,8 @@
 		{else}
 			{$reportvars.output[idx].tag}
 		{/if}
-		<br />&nbsp;<span class='small'>
+		<blockquote>{$reportvars.output[idx].snippet}</blockquote>
+		&nbsp;<span class='small'>
 			<font class='smallalt'>{$locale.425}</font> {$reportvars.output[idx].time|date_format:"longdate"} - 
 			<font class='smallalt'>{$locale.426}</font>
 			{if iMEMBER && $reportvars.output[idx].user_id}
@@ -34,7 +35,7 @@
 				{$reportvars.output[idx].owner}
 			{/if}
 		</span>
-		<blockquote>{$reportvars.output[idx].snippet}</blockquote>
+		<br /><br />
 	{/section}
 {else}
 	<input type='radio' name='search_id' value='{$searches[id].search_id}' {if $search_id == $searches[id].search_id || $searches[id].search_order == $default_location}checked='checked'{/if}  onclick='javascript:show_filter("{$searches[id].search_filters}");'/> {$searches[id].search_title} {if $searches[id].search_fulltext}<span style='color:red;'>*</span>{/if}<br />
