@@ -25,17 +25,8 @@ $variables['loginerror'] = isset($loginerror) ? $loginerror : "";
 $variables['remember_me'] = isset($_SESSION['remember_me']) ? $_SESSION['remember_me'] : "no";
 $variables['login_expiry']  = (iADMIN && isset($_SESSION['login_expire'])) ? time_system2local($_SESSION['login_expire']) : "";
 
-// get which authentication to show
-$variables['auth_methods'] = $GLOBALS['cms_authentication']->selected;
-$variables['method_count'] = count($variables['auth_methods']);
-$variables['auth_state'] = array();
-foreach($variables['auth_methods'] as $key => $method) {
-	if (isset($_SESSION['box_login2'.$key])) {
-		$variables['auth_state'][] = $_SESSION['box_login2'.$key] == 0 ? 1 : 0;
-	} else {
-		$variables['auth_state'][] = 1;
-	}
-}
+// get the login templates to allow authentication
+$variables['auth_templates'] = $GLOBALS['cms_authentication']->get_templates("side");
 
 // check if we need to display a registration link
 if ($settings['enable_registration']) {
@@ -60,7 +51,7 @@ $variables['show_passlink'] = 1;
 
 // can we show the login panel?
 $variables['show_login'] = $settings['auth_ssl'] == 0 || ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on" );
-if (!iMEMBER && !$variables['show_login']) $no_panel_displayed = true;
+if (iMEMBER || !$variables['show_login']) $no_panel_displayed = true;
 
 $template_variables['modules.login_panel'] = $variables;
 ?>
