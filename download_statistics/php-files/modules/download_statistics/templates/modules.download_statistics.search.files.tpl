@@ -18,14 +18,10 @@
 {*                                                                         *}
 {***************************************************************************}
 {if $action == "search"}
-	{section name=idx loop=$reportvars.output}
-		{if !$smarty.section.idx.first}
-			<br /><br />
-		{/if}
-		{$locale.dls810}: {$reportvars.output[idx].dlsf_file}
-		<br />
-		<span class='small'><font class='smallalt'>{$locale.dls811}:</font> {$reportvars.output[idx].dlsf_counter}
-	{/section}
+	<br /><br />
+	{$locale.dls810}: {$output.dlsf_file}
+	<br />
+	<span class='small'><font class='smallalt'>{$locale.dls811}:</font> {$output.dlsf_counter}
 {else}
 	<input type='radio' name='search_id' value='{$searches[id].search_id}' {if $search_id == $searches[id].search_id || $searches[id].search_order == $default_location}checked='checked'{/if}  onclick='javascript:show_filter("{$searches[id].search_filters}");'/> {$searches[id].search_title} {if $searches[id].search_fulltext}<span style='color:red;'>*</span>{/if}<br />
 {/if}

@@ -18,25 +18,23 @@
 {*                                                                         *}
 {***************************************************************************}
 {if $action == "search"}
-	{section name=idx loop=$reportvars.output}
-		<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />
-		{if $reportvars.output[idx].access}
-			<a href='{$smarty.const.MODULES}wiki/index.php?wakka={$reportvars.output[idx].tag}'>{$reportvars.output[idx].tag}</a>
+	<br /><br />
+	<img src='{$smarty.const.THEME}images/bullet.gif' alt='' />
+	{if $output.access}
+		<a href='{$smarty.const.MODULES}wiki/index.php?wakka={$output.tag}'>{$output.tag}</a>
+	{else}
+		{$output.tag}
+	{/if}
+	<blockquote>{$output.snippet}</blockquote>
+	&nbsp;<span class='small'>
+		<font class='smallalt'>{$locale.425}</font> {$output.time|date_format:"longdate"} - 
+		<font class='smallalt'>{$locale.426}</font>
+		{if iMEMBER && $output.user_id}
+			<a href='profile.php?lookup={$output.user_id}'>{$output.owner}</a>
 		{else}
-			{$reportvars.output[idx].tag}
+			{$output.owner}
 		{/if}
-		<blockquote>{$reportvars.output[idx].snippet}</blockquote>
-		&nbsp;<span class='small'>
-			<font class='smallalt'>{$locale.425}</font> {$reportvars.output[idx].time|date_format:"longdate"} - 
-			<font class='smallalt'>{$locale.426}</font>
-			{if iMEMBER && $reportvars.output[idx].user_id}
-				<a href='profile.php?lookup={$reportvars.output[idx].user_id}'>{$reportvars.output[idx].owner}</a>
-			{else}
-				{$reportvars.output[idx].owner}
-			{/if}
-		</span>
-		<br /><br />
-	{/section}
+	</span>
 {else}
 	<input type='radio' name='search_id' value='{$searches[id].search_id}' {if $search_id == $searches[id].search_id || $searches[id].search_order == $default_location}checked='checked'{/if}  onclick='javascript:show_filter("{$searches[id].search_filters}");'/> {$searches[id].search_title} {if $searches[id].search_fulltext}<span style='color:red;'>*</span>{/if}<br />
 {/if}

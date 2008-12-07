@@ -33,11 +33,8 @@ $wakka =& new Wakka($wakkaConfig);
 // add the Wikka CSS to the page header, we need some tags
 $headerparms = '	<link rel="stylesheet" type="text/css" href="'.$wakka->GetConfigValue("stylesheet").'" />';
 
-// array to store variables we want to use in the search template
-$reportvars = array();
-
 // set the page title
-$title = $locale['424'];
+if ($search_id != 99999) $title = $locale['424'];
 
 // make sure we have an action variable
 if (isset($action)) {
@@ -147,64 +144,67 @@ if (isset($action)) {
 				break;
 		}
 
-		// check if we have a rowstart value
-		if (!isset($rowstart)) $rowstart = 0;
-
 		// check how many rows this would output
 		$rptresult = mysql_query($sql.($limit?" LIMIT $limit":""));
-		$variables['rows'] = dbrows($rptresult);
-		if ($variables['rows']) {
-			// store some row counter for the pager
-			$variables['rowstart'] = $rowstart;
-			$variables['items_per_page'] = $settings['numofthreads'];
+		$rows = dbrows($rptresult);
 
-			// now add a query limit, make sure not to overshoot the limit requested
-			if ($variables['rows']-$rowstart > $settings['numofthreads']) {
-				$sql .= " LIMIT ".$rowstart.",".$settings['numofthreads'];
-			} else {
-				$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
-			}
-			$rptresult = dbquery($sql);
+		// are there any results?
+		if ($rows) {
 
-			// get the results if any
-			if ($variables['rows']) {
-				$reportvars['output'] = array();
-				$i=0;
-				while ($rptdata = dbarray($rptresult)) {
-					if ($wakka->HasAccess("read",$rptdata["tag"])) {
-						$rptdata['access'] = true;
-						// display portion of the matching body and highlight the search term */ 
-						preg_match_all("/(.{0,120})($stext)(.{0,120})/is",$rptdata['body'],$matchString);
-						if (count($matchString[0]) > 3)
-						{
-							$matchString[0] = array_splice($matchString[0], 3, count($matchString));
+			// are we interested in these results?
+			if ($lines < $settings['numofthreads'] && $rowstart < $variables['rows'] + $rows) {
+
+				// add a query limit, we might not need all records
+				$sql .= " LIMIT ".(max($rowstart-$variables['rows'],0)).",".min($rows,($settings['numofthreads']-$lines));
+
+				// launch the query
+				$rptresult = dbquery($sql);
+
+				// get the results if any
+				if ($rptresult) {
+					while ($rptdata = dbarray($rptresult)) {
+						if ($wakka->HasAccess("read",$rptdata["tag"])) {
+							$rptdata['access'] = true;
+							// display portion of the matching body and highlight the search term */ 
+							preg_match_all("/(.{0,120})($stext)(.{0,120})/is",$rptdata['body'],$matchString);
+							if (count($matchString[0]) > 3)
+							{
+								$matchString[0] = array_splice($matchString[0], 3, count($matchString));
+							}
+							$text = $wakka->htmlspecialchars_ent(implode('<br />', $matchString[0]));
+							$text = str_replace('&lt;br /&gt;', '&hellip;<br />&hellip;', $text);
+							// CSS-driven highlighting, tse stands for textsearchexpanded. We highlight $text in 2 steps, 
+							// We do not use <span>..</span> with preg_replace to ensure that the tag `span' won't be replaced if
+							// $phrase contains `span'.
+							$highlightMatch = preg_replace('/('.$wakka->htmlspecialchars_ent($stext).')/i','<<$1>>',$text,-1); // -1 = no limit (default!)
+							$rptdata['snippet'] = "&hellip;".str_replace(array('<<', '>>'), array('<span class="tse_keywords">', '</span>'), $highlightMatch)."&hellip;";
+						} else {
+							$rptdata['access'] = false;
+							$rptdata['snippet'] = $locale['427'];
 						}
-						$text = $wakka->htmlspecialchars_ent(implode('<br />', $matchString[0]));
-						$text = str_replace('&lt;br /&gt;', '&hellip;<br />&hellip;', $text);
-						// CSS-driven highlighting, tse stands for textsearchexpanded. We highlight $text in 2 steps, 
-						// We do not use <span>..</span> with preg_replace to ensure that the tag `span' won't be replaced if
-						// $phrase contains `span'.
-						$highlightMatch = preg_replace('/('.$wakka->htmlspecialchars_ent($stext).')/i','<<$1>>',$text,-1); // -1 = no limit (default!)
-						$rptdata['snippet'] = "&hellip;".str_replace(array('<<', '>>'), array('<span class="tse_keywords">', '</span>'), $highlightMatch)."&hellip;";
-					} else {
-						$rptdata['access'] = false;
-						$rptdata['snippet'] = $locale['427'];
+						$rptdata['_template'] = $data['template'];
+						$reportvars['output'][] = $rptdata;
 					}
-					$reportvars['output'][] = $rptdata;
+
+					// get the score divider for this result set
+					$divider = 0;
+					foreach($reportvars['output'] as $key => $value) {
+						$divider = max($divider, $value['score']);
+					}
+
+					// calculate the relevance for this result set
+					foreach($reportvars['output'] as $key => $value) {
+						$reportvars['output'][$key]['relevance'] = $value['score'] / $divider * 100;
+					}
 				}
 
-				// get the score divider for this result set
-				$divider = 0;
-				foreach($reportvars['output'] as $key => $value) {
-					$divider = max($divider, $value['score']);
-				}
-
-				// calculate the relevance for this result set
-				foreach($reportvars['output'] as $key => $value) {
-					$reportvars['output'][$key]['relevance'] = $value['score'] / $divider * 100;
-				}
 			}
+
+			// add the amount of rows found to the total rows counter
+			$variables['rows'] += $rows;
+
 		}
+
 	}
 }
 ?>
