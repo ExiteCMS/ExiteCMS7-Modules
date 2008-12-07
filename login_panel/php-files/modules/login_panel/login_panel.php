@@ -26,7 +26,7 @@ $variables['remember_me'] = isset($_SESSION['remember_me']) ? $_SESSION['remembe
 $variables['login_expiry']  = (iADMIN && isset($_SESSION['login_expire'])) ? time_system2local($_SESSION['login_expire']) : "";
 
 // get which authentication to show
-$variables['auth_methods'] = isset($settings['auth_type']) ? explode(",",$settings['auth_type']) : array('local');
+$variables['auth_methods'] = $GLOBALS['cms_authentication']->selected;
 $variables['method_count'] = count($variables['auth_methods']);
 $variables['auth_state'] = array();
 foreach($variables['auth_methods'] as $key => $method) {
