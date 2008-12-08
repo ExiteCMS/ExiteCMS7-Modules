@@ -53,8 +53,8 @@
 	</div>
 {/section}
 {include file="_closetable.tpl"}
-{if $rows > $smarty.const.ITEMS_PER_PAGE}
-	{makepagenav start=$rowstart count=$smarty.const.ITEMS_PER_PAGE total=$rows range=3 link=$pagenav_url}
+{if $rows > $settings.numofthreads}
+	{makepagenav start=$rowstart count=$settings.numofthreads total=$rows range=3 link=$pagenav_url}
 {/if}
 {***************************************************************************}
 {* End of template                                                         *}

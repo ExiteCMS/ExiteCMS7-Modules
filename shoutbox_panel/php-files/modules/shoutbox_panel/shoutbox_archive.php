@@ -19,11 +19,11 @@
 require_once dirname(__FILE__)."../../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
+// load message parsing functions
+require_once PATH_INCLUDES."forum_functions_include.php";
+
 // temp storage for template variables
 $variables = array();
-
-// defines
-define('ITEMS_PER_PAGE', 20);
 
 // check howmany shouts we have
 $variables['rows'] = dbfunction("COUNT(shout_id)","shoutbox");
@@ -34,15 +34,14 @@ $variables['rowstart'] = $rowstart;
 
 // shouts present? Get them!
 $variables['shouts'] = array();
-if ($rows != 0) {
+if ($variables['rows'] != 0) {
 	$result = dbquery(
 		"SELECT * FROM ".$db_prefix."shoutbox LEFT JOIN ".$db_prefix."users
 		ON ".$db_prefix."shoutbox.shout_name=".$db_prefix."users.user_id
-		ORDER BY shout_datestamp DESC LIMIT $rowstart,".ITEMS_PER_PAGE
+		ORDER BY shout_datestamp DESC LIMIT $rowstart,".$settings['numofthreads']
 	);
 	while ($data = dbarray($result)) {
-		// parse any smiley's in the message, and strip breaks while at it...
-		$data['shout_message'] = str_replace("<br>", "", parsesmileys($data['shout_message']));
+		$data['shout_message'] = parsemessage(array(), $data['shout_message'], true, true);
 		// store the data
 		$variables['shouts'][]  = $data;
 	}
