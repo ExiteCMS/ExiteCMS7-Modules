@@ -19,10 +19,11 @@
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
+// load message parsing functions
+require_once PATH_INCLUDES."forum_functions_include.php";
+
 // load the locale for this module
 locale_load("modules.shoutbox_panel");
-
-define('ITEMS_PER_PAGE', 20);
 
 // temp storage for template variables
 $variables = array();
@@ -83,24 +84,27 @@ if ($action == "deleteshouts") {
 	$variables['rows'] = $rows;
 	if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;
 	$variables['rowstart'] = $rowstart;
-	$variables['items_per_page'] = ITEMS_PER_PAGE;
-	$variables['items_per_page'] = ITEMS_PER_PAGE;
 	$variables['pagenavurl'] = FUSION_SELF.$aidlink."&amp;";
 	
 	$result = dbquery(
 		"SELECT * FROM ".$db_prefix."shoutbox LEFT JOIN ".$db_prefix."users
 		ON ".$db_prefix."shoutbox.shout_name=".$db_prefix."users.user_id
-		ORDER BY shout_datestamp DESC LIMIT $rowstart,".ITEMS_PER_PAGE);
+		ORDER BY shout_datestamp DESC LIMIT $rowstart,".$settings['numofthreads']);
 
 	$variables['shouts'] = array();
 	while ($data = dbarray($result)) {
-		$data['shout_message'] = str_replace("<br>", "", parsesmileys($data['shout_message']));
+		$data['shout_message'] = parsemessage(array(), $data['shout_message'], true, true);
 		$variables['shouts'][] = $data;
 	}
 }
 
+// load the hoteditor if needed
+if ($settings['hoteditor_enabled'] && (!iMEMBER || $userdata['user_hoteditor'])) {
+	define('LOAD_HOTEDITOR', true);
+}
+
 // define the admin body panel
-$template_panels[] = array('type' => 'body', 'name' => 'admin.shoutbox', 'template' => 'admin.shoutbox.tpl', 'locale' => "modules.shoutbox_panel");
+$template_panels[] = array('type' => 'body', 'name' => 'admin.shoutbox', 'template' => 'modules.shoutbox_panel.admin.tpl', 'locale' => "modules.shoutbox_panel");
 $template_variables['admin.shoutbox'] = $variables;
 
 // Call the theme code to generate the output for this webpage

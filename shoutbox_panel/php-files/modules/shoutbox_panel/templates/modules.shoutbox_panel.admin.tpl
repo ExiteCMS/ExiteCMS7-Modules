@@ -20,20 +20,44 @@
 {if $action == "edit"}
 	{include file="_opentable.tpl" name=$_name title=$locale.420 state=$_state style=$_style}
 	<form name='editform' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;shout_id={$editdata.shout_id}'>
-		<table align='center' cellpadding='0' cellspacing='0'>
+		<table align='center' cellpadding='0' cellspacing='0' width='100%'>
 			<tr>
 				<td class='tbl'>
 					{$locale.421}
 				</td>
 			</tr>
 			<tr>
-				<td class='tbl'>
+				<td align='center' class='tbl'>
+				{if $settings.hoteditor_enabled == 0 || $userdata.user_hoteditor == 0}
 					<textarea name='shout_message' rows='3' class='textbox' style='width:250px;'>{$editdata.shout_message}</textarea>
+					<br />
+					<input type='button' value='b' class='button' style='font-weight:bold;width:25px;' onclick="addText('shout_message', '[b]', '[/b]');" />
+					<input type='button' value='i' class='button' style='font-style:italic;width:25px;' onclick="addText('shout_message', '[i]', '[/i]');" />
+					<input type='button' value='u' class='button' style='text-decoration:underline;width:25px;' onclick="addText('shout_message', '[u]', '[/u]');" />
+					<input type='button' value='center' class='button' style='width:45px;' onclick="addText('shout_message', '[center]', '[/center]');" />
+					<input type='button' value='small' class='button' style='width:40px;' onclick="addText('shout_message', '[small]', '[/small]');" />
+				{else}
+					<script language="javascript" type="text/javascript">
+						// non-standard toolbars for this editor instance
+						var toolbar1 ="SPACE,btFont_Name,btFont_Size,btFont_Color,btHighlight";
+						var toolbar2 ="SPACE,btRemove_Format,SPACE,btBold,btItalic,btUnderline,SPACE,btAlign_Left,btCenter,btAlign_Right,SPACE,btStrikethrough,btSubscript,btSuperscript,btHorizontal";
+						var toolbar3 ="SPACE,btHyperlink,btHyperlink_Email,btInsert_Image,btEmotions";
+
+						var textarea_toolbar1 ="SPACE,btFont_Name,btFont_Size,btFont_Color,btHighlight";
+						var textarea_toolbar2 ="SPACE,btRemove_Format,SPACE,btBold,btItalic,btUnderline,SPACE,btAlign_Left,btCenter,btAlign_Right,SPACE,btStrikethrough,btSubscript,btSuperscript,btHorizontal";
+						var textarea_toolbar3 ="SPACE,btHyperlink,btHyperlink_Email,btInsert_Image,btEmotions";
+					</script>
+					{include file="_bbcode_editor.tpl" name="shout_message" id="shout_message" author="" message=$editdata.shout_message width="90%" height="150px"}
+				{/if}
 				</td>
 			</tr>
 			<tr>
 				<td align='center' class='tbl'>
+				{if $settings.hoteditor_enabled == 0 || $userdata.user_hoteditor == 0}
 					<input type='submit' name='saveshout' value='{$locale.422}' class='button' />
+				{else}
+					<input type='submit' name='saveshout' value='{$locale.422}' class='button' onclick='javascript:get_hoteditor_data("shout_message");' />
+				{/if}
 				</td>
 			</tr>
 		</table>
@@ -104,8 +128,8 @@
 {sectionelse}
 {/section}
 {include file="_closetable.tpl"}
-{if $rows > $items_per_page}
-	{makepagenav start=$rowstart count=$items_per_page total=$rows range=$settings.navbar_range link=$pagenavurl}
+{if $rows > $settings.numofthreads}
+	{makepagenav start=$rowstart count=$settings.numofthreads total=$rows range=$settings.navbar_range link=$pagenavurl}
 {/if}
 {***************************************************************************}
 {* End of template                                                         *}
