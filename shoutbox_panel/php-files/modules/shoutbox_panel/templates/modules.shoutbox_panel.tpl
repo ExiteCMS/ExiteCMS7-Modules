@@ -70,7 +70,7 @@
 		{$shouts[shout].shout_datestamp|date_format:"shortdate"}
 	</span>
 	{if $smarty.const.iADMIN && $allow_edit}
-		[<a href='{$smarty.const.ADMIN}shoutbox.php{$aidlink}&amp;action=edit&amp;shout_id={$shouts[shout].shout_id}' class='side'>{$locale.048}</a>]
+		[<a href='{$smarty.const.MODULES}shoutbox_panel/shoutbox_admin.php{$aidlink}&amp;action=edit&amp;shout_id={$shouts[shout].shout_id}' class='side'>{$locale.048}</a>]
 	{/if}
 	<br />
 	{$shouts[shout].shout_message}
