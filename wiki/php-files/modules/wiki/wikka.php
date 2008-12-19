@@ -342,7 +342,7 @@ if (!preg_match("/(xml|raw|mm|grabcode)$/", $method))
 	<meta http-equiv="Content-Language" content="en" />
 	<link href="css/wikka.css" rel="stylesheet" type="text/css" />
 </head>
-<body>';
+<body style="font-size:80%">';
 }
 $wakka->Run($page, $method);
 if (!preg_match("/(xml|raw|mm|grabcode)$/", $method))
