@@ -3,7 +3,7 @@
  * INI language file for Wikka highlighting (configuration file).
  * 
  * @package	Formatters
- * @version	$Id: ini.php 355 2007-02-27 20:52:29Z JavaWoman $
+ * @version	$Id$
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
  * 

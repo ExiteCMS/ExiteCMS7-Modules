@@ -3,7 +3,7 @@
 if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' );
 require_once dirname(__FILE__)."/../../core_functions.php";
 /**
- * @version $Id: edit.php 105 2008-05-31 13:38:38Z soeren $
+ * @version $Id$
  * @package eXtplorer
  * @copyright soeren 2007
  * @author The eXtplorer project (http://sourceforge.net/projects/extplorer)

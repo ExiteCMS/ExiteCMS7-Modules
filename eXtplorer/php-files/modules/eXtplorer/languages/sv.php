@@ -1,5 +1,5 @@
 <?php
-// $Id: swedish.php 80 2007-07-27 10:57:13Z soeren $
+// $Id$
 // Swedish Language Module for v2.3 (translated by the Olle Zettergren)
 global $_VERSION;
 

@@ -23,7 +23,7 @@
 // | Author: Vincent Blavet <vincent@phpconcept.net>                      |
 // +----------------------------------------------------------------------+
 //
-// $Id: Zip.php,v 1.2 2005/11/21 06:51:57 vblavet Exp $
+// $Id$
 
   require_once( dirname(__FILE__) .'/PEAR.php' );
 
@@ -95,7 +95,7 @@
 * It provides creation, extraction, deletion and add features.
 *
 * @author   Vincent Blavet <vincent@blavet.net>
-* @version  $Revision: 1.2 $
+* @version  $Revision$
 * @package  Archive_Zip
 * @category Archive
 */

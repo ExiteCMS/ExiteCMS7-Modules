@@ -1,6 +1,6 @@
 <?php
 /**
-* @version $Id: standalone.php 106 2008-06-02 18:34:39Z soeren $
+* @version $Id$
 * @package eXtplorer
 * @copyright Copyright (C) 2007 Open Source Matters. All rights reserved.
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php

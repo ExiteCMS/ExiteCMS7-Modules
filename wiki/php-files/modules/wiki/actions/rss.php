@@ -14,7 +14,7 @@
  * NOTE 2: no solution for timeout problems with non-existing feeds yet...
  * 
  * @package		Actions
- * @version		$Id: rss.php 340 2007-02-25 16:16:02Z JavaWoman $
+ * @version		$Id$
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
  * 

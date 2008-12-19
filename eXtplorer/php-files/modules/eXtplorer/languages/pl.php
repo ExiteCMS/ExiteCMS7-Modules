@@ -1,5 +1,5 @@
 <?php
-// $Id: polish.php 86 2007-08-28 15:53:55Z soeren $
+// $Id$
 // Polish Language Module for v2.3 (translated by l0co@wp.pl)
 global $_VERSION;
 

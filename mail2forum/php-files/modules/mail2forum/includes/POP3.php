@@ -38,7 +38,7 @@
 // | logfile defined                                                       |
 // +-----------------------------------------------------------------------+
 //
-// $Id: POP3.php,v 1.2 2004/12/05 16:34:39 damian Exp $
+// $Id$
 
 require_once('includes/Socket.php');
 

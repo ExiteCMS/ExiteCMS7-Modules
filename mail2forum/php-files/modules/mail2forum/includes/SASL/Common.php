@@ -32,7 +32,7 @@
 // | Author: Richard Heyes <richard@php.net>                               | 
 // +-----------------------------------------------------------------------+ 
 // 
-// $Id: Common.php,v 1.6 2003/02/21 16:07:17 mj Exp $
+// $Id$
 
 /**
 * Common functionality to SASL mechanisms

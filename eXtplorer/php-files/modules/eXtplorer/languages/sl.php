@@ -1,5 +1,5 @@
 ﻿<?php
-// $Id: slovenian.php 80 2007-07-27 10:57:13Z soeren $
+// $Id$
 // Slovenian Language Module for v2.3 (translated by KSi)
 global $_VERSION;
 

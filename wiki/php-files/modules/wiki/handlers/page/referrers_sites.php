@@ -4,7 +4,7 @@
  * 
  * @package		Handlers
  * @subpackage	Referrers	
- * @version		$Id: referrers_sites.php 438 2007-04-28 18:12:01Z DarTar $
+ * @version		$Id$
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
  * 

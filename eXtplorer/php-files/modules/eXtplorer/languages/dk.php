@@ -1,5 +1,5 @@
 <?php
-// $Id: english.php 96 2008-02-03 18:13:22Z soeren $
+// $Id$
 // English Language Module for v2.3 (translated by the QuiX project)
 global $_VERSION;
 

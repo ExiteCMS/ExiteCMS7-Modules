@@ -3,7 +3,7 @@
 if( ! defined( '_JEXEC' ) && ! defined( '_VALID_MOS' ) )
 	die( 'Restricted access' ) ;
 /**
- * @version $Id: extract.php 109 2008-07-29 16:56:08Z soeren $
+ * @version $Id$
  * @package eXtplorer
  * @copyright soeren 2007
  * @author The eXtplorer project (http://sourceforge.net/projects/extplorer)

@@ -1,7 +1,7 @@
 <?php
 if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' );
 /**
- * @version		$Id: path.php 9854 2008-01-04 15:44:02Z jinx $
+ * @version		$Id$
  * @package		Joomla.Framework
  * @subpackage	FileSystem
  * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
