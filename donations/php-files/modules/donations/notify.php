@@ -1,57 +1,22 @@
 <?php
-/*---------------------------------------------------+
-| ExiteCMS Content Management System                 |
-+----------------------------------------------------+
-| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
-| for support, please visit http://exitecms.exite.eu |
-+----------------------------------------------------+
-| Released under the terms & conditions of v2 of the |
-| GNU General Public License. For details refer to   |
-| the included gpl.txt file or visit http://gnu.org  |
-+----------------------------------------------------*/
+/*---------------------------------------------------------------------+
+| ExiteCMS Content Management System                                   |
++----------------------------------------------------------------------+
+| Copyright 2006-2008 Exite BV, The Netherlands                        |
+| for support, please visit http://www.exitecms.org                    |
++----------------------------------------------------------------------+
+| Some code derived from PHP-Fusion, copyright 2002 - 2006 Nick Jones  |
++----------------------------------------------------------------------+
+| Released under the terms & conditions of v2 of the GNU General Public|
+| License. For details refer to the included gpl.txt file or visit     |
+| http://gnu.org                                                       |
++----------------------------------------------------------------------+
+| $Id::                                                               $|
++----------------------------------------------------------------------+
+| Last modified by $Author::                                          $|
+| Revision number $Rev::                                              $|
++---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
-
-// function to update the unread flags
-function update_unread($forum_id, $thread_id, $post_id) {
-        global $db_prefix, $userdata;
-
-        // make sure we have all required info
-        if ($forum_id == 0 || $thread_id == 0 || $post_id == 0) return false;
-
-        // flag the post as unread for all users that have read access to this forum
-        // get the access group number for this forum
-        $result = dbquery("SELECT forum_access from ".$db_prefix."forums WHERE forum_id = ".$forum_id);
-        $data = dbarray($result);
-        $group_id = $data['forum_access'];
-        // check for group inheritance
-        global $groups; $groups = array();
-        getgroupmembers($group_id);
-        // select all users that are a member of this forum access group
-        $result = dbquery("SELECT user_id, user_name, user_groups, user_level from ".$db_prefix."users");
-        if (dbrows($result)) {
-                while ($data = dbarray($result)) {
-                        $insert = false;
-                        // if the group is public, or it is a builtin group and user has higher-or-equal system rights, insert an unread record
-                        if ($group_id == 0 or ($group_id > 100 and $data['user_level'] >= $group_id)) {
-                                $insert = true;
-                        } else {
-                                // otherwise, check for group membership for this user
-                                foreach ($groups as $group) {
-                                        if (preg_match("(^\.{$group}|\.{$group}\.|\.{$group}$)", $data['user_groups'])) {
-                                                $insert = true;
-                                                break;
-                                        }
-                                }
-                        }
-                        // if the user has access to this post, flag it as unread for this user
-                        if ($insert) {
-                                $result2 = dbquery("INSERT IGNORE INTO ".$db_prefix."posts_unread (user_id, forum_id, thread_id, post_id, post_time) VALUES(".$data['user_id'].", ".$forum_id.", ".$thread_id.", ".$post_id.", ".time().")", false);
-                        }
-
-                }
-        }
-        return true;
-}
 
 // function to process the payment or the refund
 function process_payment($payer_name, $comment, $subject) {
@@ -88,7 +53,6 @@ function process_payment($payer_name, $comment, $subject) {
 		$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
 							VALUES ('".$settings['donate_forum_id']."', '".$thread_id."', '".$subject."', '".$message."', '0', '".time()."', '0.0.0.0')");
 		$post_id = mysql_insert_id();
-		update_unread($settings['donate_forum_id'], $thread_id, $post_id);
 	}
 
 	$logmsg .= "\n\n~~~~ PROCESSED: PAYMENT STATUS = ".strtoupper($_POST['payment_status'])." ~~~~";
@@ -103,7 +67,7 @@ $log = PATH_MODULES.'donations/paypal_payments.log';
 $logthis = true;
 
 // check if we're running in development. If so, switch to Paypal sandbox
-if ($_SERVER['HTTP_HOST'] != "www.pli-images.org") {
+if ($settings['donate_use_sandbox']) {
 	$danbox = true;
 	$verify_url = 'www.sandbox.paypal.com';
 } else {

@@ -1,14 +1,21 @@
 <?php
-/*---------------------------------------------------+
-| ExiteCMS Content Management System                 |
-+----------------------------------------------------+
-| Copyright 2007 Harro "WanWizard" Verton, Exite BV  |
-| for support, please visit http://exitecms.exite.eu |
-+----------------------------------------------------+
-| Released under the terms & conditions of v2 of the |
-| GNU General Public License. For details refer to   |
-| the included gpl.txt file or visit http://gnu.org  |
-+----------------------------------------------------*/
+/*---------------------------------------------------------------------+
+| ExiteCMS Content Management System                                   |
++----------------------------------------------------------------------+
+| Copyright 2006-2008 Exite BV, The Netherlands                        |
+| for support, please visit http://www.exitecms.org                    |
++----------------------------------------------------------------------+
+| Some code derived from PHP-Fusion, copyright 2002 - 2006 Nick Jones  |
++----------------------------------------------------------------------+
+| Released under the terms & conditions of v2 of the GNU General Public|
+| License. For details refer to the included gpl.txt file or visit     |
+| http://gnu.org                                                       |
++----------------------------------------------------------------------+
+| $Id::                                                               $|
++----------------------------------------------------------------------+
+| Last modified by $Author::                                          $|
+| Revision number $Rev::                                              $|
++---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 require_once PATH_ROOT."/includes/theme_functions.php";
 
@@ -18,17 +25,16 @@ if (!checkrights("wD") || !defined("iAUTH") || $aid != iAUTH) fallback(BASEDIR."
 // temp storage for template variables
 $variables = array();
 
-// defines
-define('ITEMS_PER_PAGE', 20);
-
 // load the locale for this module
 locale_load("modules.donations");
 
 // define the donation types
-$types = array($locale['don425'], $locale['don426'], $locale['don427']);
+$types = array($locale['don479'], $locale['don480'], $locale['don481']);
 
 // check parameters and provide defaults
-if (!isset($action)) $action = "add";
+if (!isset($action)) $action = "";
+if (!isset($lc)) $lc = "";
+if (!isset($key)) $key = "";
 
 // delete requested
 if ($action == "delete") {
@@ -39,7 +45,7 @@ if ($action == "delete") {
 		$result = dbquery("DELETE FROM ".$db_prefix."donations WHERE donate_id = '$id'");
 		$error = 6;
 	}
-	$action = "add";
+	$action = "";
 }
 
 // initialize the error indicator
@@ -59,7 +65,10 @@ $donate_state = (isset($_POST['donate_state']) && isNum($_POST['donate_state']))
 $donate_type = (isset($_POST['donate_type']) && isNum($_POST['donate_type'])) ? $_POST['donate_type'] : 1;
 
 // save requested?
-if (isset($_POST['save_notify'])) {
+if (isset($_POST['save_settings'])) {
+	$use_sandbox = (isset($_POST['donate_use_sandbox']) && isNum($_POST['donate_use_sandbox'])) ? $_POST['donate_use_sandbox'] : 1;
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$use_sandbox."' WHERE cfg_name = 'donate_use_sandbox'");
+	$settings['donate_use_sandbox'] = $use_sandbox;
 	$old_forum_id = (isset($_POST['forum_id']) && isNum($_POST['forum_id'])) ? $_POST['forum_id'] : -1;
 	$new_forum_id = (isset($_POST['new_forum_id']) && isNum($_POST['new_forum_id'])) ? $_POST['new_forum_id'] : -1;
 	if ($old_forum_id != $new_forum_id && $old_forum_id >= 0 && $new_forum_id >= 0) {
@@ -76,7 +85,7 @@ if (isset($_POST['save_notify'])) {
 		}
 		// move if we need to move something
 		if ($donate_forum_move) {
-			$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$old_forum_id."' AND thread_subject = '".$locale['don453']."'");
+			$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$old_forum_id."' AND thread_subject = '".$locale['don491']."'");
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				$result = dbquery("UPDATE ".$db_prefix."posts SET forum_id = '".$new_forum_id."' WHERE thread_id = '".$data['thread_id']."'");
@@ -89,46 +98,56 @@ if (isset($_POST['save_notify'])) {
 		}
 		if ($donate_forum_add) {
 			// check if it doesn't exist from a previous activation
-			$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$new_forum_id."' AND thread_subject = '".$locale['don453']."'");
+			$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$new_forum_id."' AND thread_subject = '".$locale['don491']."'");
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				$thread_id = $data['thread_id'];
 			} else {
 				// add if there wasn't any previous thread
 				$result = dbquery("INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_sticky, thread_locked, thread_lastpost, thread_lastuser)
-									VALUES ('".$new_forum_id."', '".$locale['don453']."', '0', '1', '1', '".time()."', '0')");
+									VALUES ('".$new_forum_id."', '".$locale['don491']."', '0', '1', '1', '".time()."', '0')");
 				$thread_id = mysql_insert_id();
 			}
 			// and insert all donations in the thread
 			$result = dbquery("SELECT * FROM ".$db_prefix."donations WHERE donate_type IN (0,1) ORDER BY donate_timestamp ASC");
-			$message = $locale['don454']."\n\n";
+			$message = $locale['don492']."\n\n";
 			while ($data = dbarray($result)) {
 				if ($data['donate_comment']) {
 					$message .= "[b]".$data['donate_comment']."[/b]:\n";
 				}
-				$message .= ($data['donate_name'] == "" ? $locale['don215'] : $data['donate_name']);
-				$message .= " ".$locale['don455']." ".$data['donate_currency']." ".$data['donate_amount'];
-				$message .= " ".$locale['don456']." ".showdate('forumdate', $data['donate_timestamp'])."\n\n";
+				$message .= ($data['donate_name'] == "" ? $locale['don459'] : $data['donate_name']);
+				$message .= " ".$locale['don493']." ".$data['donate_currency']." ".$data['donate_amount'];
+				$message .= " ".$locale['don494']." ".showdate('forumdate', $data['donate_timestamp'])."\n\n";
 			}
 			$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
-								VALUES ('".$new_forum_id."', '".$thread_id."', '".$locale['don453']."', '".$message."', '0', '".time()."', '0.0.0.0')");
+								VALUES ('".$new_forum_id."', '".$thread_id."', '".$locale['don491']."', '".$message."', '0', '".time()."', '0.0.0.0')");
 			$error = 9;
 		}
-		// update the settings record
-		$result = dbquery("UPDATE ".$db_prefix."CMSconfig SET cfg_value = '".$new_forum_id."' WHERE cfg_name = 'donate_forum_id'");
+		// update the settings records
+		$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$new_forum_id."' WHERE cfg_name = 'donate_forum_id'");
 		$settings['donate_forum_id'] = $new_forum_id;
 	} else {
 		// oops
 	}
 	// continue with the default action
-	$action = "add";
+	$action = "";
+} elseif (isset($_POST['save_template'])) {
+	$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$key'");
+	if (dbrows($result)) {
+		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".addslash($_POST['tpldata'])."' WHERE locales_code = '$lc' AND locales_key = '$key'");
+		$error = 12;
+	} else {
+		$error = 11;
+	}
+	// continue with the default action
+	$action = "";
 } elseif (isset($_POST['save'])) {
 	// validate the input
 	$errfields = array();
-	if (!isDec($donate_amount)) $errfields[] = sprintf($locale['don485'], $locale['don213']);
-	if ($donate_amount == "0.00") $errfields[] = sprintf($locale['don484'], $locale['don213']);
-	if ($donate_currency == "") $errfields[] = sprintf($locale['don484'], $locale['don218']);
-	if ($donate_country == "") $errfields[] = sprintf($locale['don484'], $locale['don219']);
+	if (!isDec($donate_amount)) $errfields[] = sprintf($locale['donerr06'], $locale['don457']);
+	if ($donate_amount == "0.00") $errfields[] = sprintf($locale['donerr05'], $locale['don457']);
+	if ($donate_currency == "") $errfields[] = sprintf($locale['donerr05'], $locale['don462']);
+	if ($donate_country == "") $errfields[] = sprintf($locale['donerr05'], $locale['don463']);
 	if (count($errfields))
 		$error = 3;
 	else {
@@ -157,7 +176,7 @@ if (isset($_POST['save_notify'])) {
 		}
 		// reset the form
 		if ($error <= 2) {
-			$action = "add";
+			$action = "";
 			$donate_id = 0;
 			$donate_name = "";
 			$donate_amount = "0.00";
@@ -173,11 +192,12 @@ if (isset($_POST['save_notify'])) {
 
 // set the title and prepare the action
 switch ($action) {
+	default:
 	case "add":
-		$title = $locale['don400'];
+		$title = $locale['don475'];
 		break;
 	case "edit":
-		$title = $locale['don401'];
+		$title = $locale['don476'];
 		if ($error == 0) {
 			$result = dbquery("SELECT * FROM ".$db_prefix."donations WHERE donate_id = '$id'");
 			if (dbrows($result) == 0) {
@@ -196,21 +216,31 @@ switch ($action) {
 			}
 		}
 		break;
+	case "tpledit":
+		$title = "";
+		$variables['lc'] = $lc;
+		$variables['key'] = $key;
+		$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$key'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$variables['tpldata'] = phpentities(stripslashes($data['locales_value']));
+		} else {
+			$error = 11;
+		}
+		break;
 	case "delete":
 		if (!isset($id) && !isNum($id)) fallback(BASEDIR."index.php");
 		break;
-	default:
-		fallback(BASEDIR."index.php");
 }
 
 // need to display an error message?
 if (isset($error) && isNum($error) && $error) {
 	switch ($error) {
 		case 1:
-			$error = $locale['don482'];
+			$error = $locale['donerr03'];
 			break;
 		case 2:
-			$error = $locale['don483'];
+			$error = $locale['donerr04'];
 			break;
 		case 3:
 			$error = "";
@@ -219,32 +249,36 @@ if (isset($error) && isNum($error) && $error) {
 			}
 			break;
 		case 4:
-			$error = $locale['don481'];
+			$error = $locale['donerr02'];
 			break;
 		case 5:
-			$error = $locale['don486'];
+			$error = $locale['donerr07'];
 			break;
 		case 6:
-			$error = $locale['don487'];
+			$error = $locale['donerr08'];
 			$action = "add";
 			break;
 		case 7:
-			$error = $locale['don489'];
+			$error = $locale['donerr10'];
 			break;
 		case 8:
-			$error = $locale['don463'];
+			$error = $locale['don497'];
 			break;
 		case 9:
-			$error = $locale['don462'];
+			$error = $locale['don496'];
 			break;
 		case 10:
-			$error = $locale['don461'];
+			$error = $locale['don495'];
+			break;
+		case 11:
+			$error = $locale['don424'];
 			break;
 		default:
 			$error = "Unknown error code!";
 	}
+	$variables['error'] = $error;
 } else {
-	$error = "";
+	$variables['error'] = "";
 }
 
 // create the country dropdown
@@ -252,6 +286,18 @@ $variables['countries'] = array();
 $result = dbquery("SELECT UPPER(locales_key) AS locales_key, locales_value FROM ".$db_prefix."locales WHERE locales_name = 'countrycode' AND locales_code = '".$settings['locale_code']."' ORDER BY locales_value");
 while ($data = dbarray($result)) {
 	$variables['countries'][] = $data;
+}
+
+// get the list of index and thanks pages
+$variables['templates'] = array();
+$result = dbquery(
+	"SELECT ".$db_prefix."locale.locale_code, ".$db_prefix."locale.locale_name, ".$db_prefix."locales.* FROM ".$db_prefix."locales 
+		INNER JOIN ".$db_prefix."locale ON locale_code = locales_code 
+		WHERE locales_name = 'modules.donations' AND (locales_key = 'don_index' OR locales_key = 'don_thanks' OR locales_key = 'don_list') ORDER BY locale_name"
+);
+while ($data = dbarray($result)) {
+	$data['pagename'] = $locale[$data['locales_key'].'_name'];
+	$variables['templates'][] = $data;
 }
 
 // create the forums dropdown
@@ -263,19 +309,19 @@ $result = dbquery(
 	INNER JOIN ".$db_prefix."forums f2 ON f.forum_cat=f2.forum_id
 	WHERE ".groupaccess('f.forum_access')." AND f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC"
 );
-while ($data2 = dbarray($result)) {
-	if ($data2['forum_cat_name'] != $current_cat) {
-		$data2['forum_new_cat'] = true;
-		$current_cat = $data2['forum_cat_name'];
+while ($data = dbarray($result)) {
+	if ($data['forum_cat_name'] != $current_cat) {
+		$data['forum_new_cat'] = true;
+		$current_cat = $data['forum_cat_name'];
 	} else {
-		$data2['forum_new_cat'] = false;
+		$data['forum_new_cat'] = false;
 	}
-	if ($data2['forum_id'] == $settings['donate_forum_id']) {
-		$data2['selected'] = true;
+	if ($data['forum_id'] == $settings['donate_forum_id']) {
+		$data['selected'] = true;
 	} else {
-		$data2['selected'] = false;
+		$data['selected'] = false;
 	}
-	$variables['forums'][] = $data2;
+	$variables['forums'][] = $data;
 }
 
 // make sure rowstart has a valid value
@@ -288,7 +334,7 @@ $variables['rows'] = $rows;
 
 // get the donations for this page
 $variables['donations'] = array();
-$result = dbquery("SELECT * FROM ".$db_prefix."donations ORDER BY donate_timestamp DESC LIMIT $rowstart,".ITEMS_PER_PAGE);
+$result = dbquery("SELECT * FROM ".$db_prefix."donations ORDER BY donate_timestamp DESC LIMIT $rowstart,".$settings['numofthreads']);
 while ($data = dbarray($result)) {
 	$data['type'] = $types[$data['donate_type']];
 	$variables['donations'][] = $data;
@@ -307,6 +353,7 @@ $variables['donate_comment'] = $donate_comment;
 $variables['donate_timestamp'] = $donate_timestamp;
 $variables['donate_state'] = $donate_state;
 $variables['donate_type'] = $donate_type;
+$variables['donate_use_sandbox'] = $settings['donate_use_sandbox'];
 
 // define the body panel variables
 $template_panels[] = array('type' => 'body', 'name' => 'donations.admin_panel', 'title' => $title, 'template' => 'modules.donations.admin_panel.tpl', 'locale' => "modules.donations");
