@@ -134,7 +134,7 @@ if (isset($_POST['save_settings'])) {
 } elseif (isset($_POST['save_template'])) {
 	$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$key'");
 	if (dbrows($result)) {
-		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".addslash($_POST['tpldata'])."' WHERE locales_code = '$lc' AND locales_key = '$key'");
+		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".mysql_real_escape_string($_POST['tpl'])."', locales_datestamp = '".time()."' WHERE locales_code = '$lc' AND locales_key = '$key'");
 		$error = 12;
 	} else {
 		$error = 11;
@@ -272,6 +272,9 @@ if (isset($error) && isNum($error) && $error) {
 			break;
 		case 11:
 			$error = $locale['don424'];
+			break;
+		case 12:
+			$error = $locale['don426'];
 			break;
 		default:
 			$error = "Unknown error code!";
