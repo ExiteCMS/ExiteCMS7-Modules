@@ -32,15 +32,20 @@ function process_payment($payer_name, $comment, $subject) {
 	// if notification is requested, post a notify message
 	if ($settings['donate_forum_id']) {
 
+		// make sure we use the same timestamp for all updates
+		$posttime = time();
+
 		// check if the paypal thread exists. If not, create it
 		$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$settings['donate_forum_id']."' AND thread_subject = '".$locale['don491']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$thread_id = $data['thread_id'];
+			// update the last post time of this thread
+			$result = dbquery("UPDATE ".$db_prefix."threads SET thread_lastpost = '".$posttime."' WHERE thread_id = '".$thread_id."'");
 		} else {
 			// add if there wasn't any previous thread
 			$result = dbquery("INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_sticky, thread_locked, thread_lastpost, thread_lastuser)
-								VALUES ('".$settings['donate_forum_id']."', '".$locale['don491']."', '0', '1', '1', '".time()."', '0')");
+								VALUES ('".$settings['donate_forum_id']."', '".$locale['don491']."', '0', '1', '1', '".$posttime."', '0')");
 			$thread_id = mysql_insert_id();
 		}
 		// compose the paypal post
@@ -51,10 +56,10 @@ function process_payment($payer_name, $comment, $subject) {
 		$message .= "[b]".$locale['don464']."[/b] : ".$_POST['payer_email']."\n";
 		$message .= "[b]".$locale['don458']."[/b] : ".$comment."\n";
 		if ($payer_name == "") {
-			$message .= "\n[b]".$locale['don459']."[/b]";
+			$message .= "\n[b]".$locale['don498']."[/b]";
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
-							VALUES ('".$settings['donate_forum_id']."', '".$thread_id."', '".$subject."', '".$message."', '0', '".time()."', '0.0.0.0')");
+							VALUES ('".$settings['donate_forum_id']."', '".$thread_id."', '".$subject."', '".$message."', '0', '".$posttime."', '0.0.0.0')");
 		$post_id = mysql_insert_id();
 	}
 
