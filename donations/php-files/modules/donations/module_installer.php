@@ -931,6 +931,9 @@ if (!function_exists('module_upgrade')) {
 		switch ($current_version) {
 			case "1.0.0":			// current release version
 				break;
+			case "1.0.1":			// current release version
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('donate_use_sandbox', '0')");
+				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");
 		}

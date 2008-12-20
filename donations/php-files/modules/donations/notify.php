@@ -18,6 +18,9 @@
 +---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 
+// load the locale for this module
+locale_load("modules.donations");
+
 // function to process the payment or the refund
 function process_payment($payer_name, $comment, $subject) {
 	global $logmsg, $locale, $db_prefix, $settings;
@@ -30,25 +33,25 @@ function process_payment($payer_name, $comment, $subject) {
 	if ($settings['donate_forum_id']) {
 
 		// check if the paypal thread exists. If not, create it
-		$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$settings['donate_forum_id']."' AND thread_subject = '".$locale['don453']."'");
+		$result = dbquery("SELECT * FROM ".$db_prefix."threads WHERE forum_id = '".$settings['donate_forum_id']."' AND thread_subject = '".$locale['don491']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$thread_id = $data['thread_id'];
 		} else {
 			// add if there wasn't any previous thread
 			$result = dbquery("INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_sticky, thread_locked, thread_lastpost, thread_lastuser)
-								VALUES ('".$settings['donate_forum_id']."', '".$locale['don453']."', '0', '1', '1', '".time()."', '0')");
+								VALUES ('".$settings['donate_forum_id']."', '".$locale['don491']."', '0', '1', '1', '".time()."', '0')");
 			$thread_id = mysql_insert_id();
 		}
 		// compose the paypal post
-		$message = "[b]".$locale['don212']."[/b] : ".trim($_POST['first_name'])." ".trim($_POST['last_name'])."\n";
-		$message .= "[b]".$locale['don219']."[/b] : ".$_POST['residence_country']."\n";
-		$message .= "[b]".$locale['don211']."[/b] : ".$_POST['payment_date']."\n";
-		$message .= "[b]".$locale['don213']."[/b] : ".$_POST['mc_currency']." ".$_POST['mc_gross']."\n";
-		$message .= "[b]".$locale['don220']."[/b] : ".$_POST['payer_email']."\n";
-		$message .= "[b]".$locale['don214']."[/b] : ".$comment."\n";
+		$message = "[b]".$locale['don456']."[/b] : ".trim($_POST['first_name'])." ".trim($_POST['last_name'])."\n";
+		$message .= "[b]".$locale['don463']."[/b] : ".$_POST['residence_country']."\n";
+		$message .= "[b]".$locale['don455']."[/b] : ".$_POST['payment_date']."\n";
+		$message .= "[b]".$locale['don457']."[/b] : ".$_POST['mc_currency']." ".$_POST['mc_gross']."\n";
+		$message .= "[b]".$locale['don464']."[/b] : ".$_POST['payer_email']."\n";
+		$message .= "[b]".$locale['don458']."[/b] : ".$comment."\n";
 		if ($payer_name == "") {
-			$message .= "\n[b]".$locale['don464']."[/b]";
+			$message .= "\n[b]".$locale['don459']."[/b]";
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
 							VALUES ('".$settings['donate_forum_id']."', '".$thread_id."', '".$subject."', '".$message."', '0', '".time()."', '0.0.0.0')");
@@ -59,7 +62,6 @@ function process_payment($payer_name, $comment, $subject) {
 }
 
 // *** main ***
-locale_load('modules.donations');
 
 // donation log file
 $log = PATH_MODULES.'donations/paypal_payments.log';
@@ -68,7 +70,7 @@ $logthis = true;
 
 // check if we're running in development. If so, switch to Paypal sandbox
 if ($settings['donate_use_sandbox']) {
-	$danbox = true;
+	$sandbox = true;
 	$verify_url = 'www.sandbox.paypal.com';
 } else {
 	$sandbox = false;

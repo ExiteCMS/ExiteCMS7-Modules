@@ -18,13 +18,6 @@ $variables = array();
 // load the locale for this module
 locale_load("modules.donations");
 
-// make sure our extra stylesheet is loaded
-if (file_exists(PATH_THEME."donations.css")) {
-	$headerparms = '	<link rel="stylesheet" type="text/css" href="'.THEME."donations.css".'" />';
-} else {
-	$headerparms = '	<link rel="stylesheet" type="text/css" href="'.MODULES.'donations/donations.css" />';
-}
-
 /* TEST VALUES
 $_POST['mc_gross'] = '12.34';
 $_POST['mc_currency'] = 'GBP';
