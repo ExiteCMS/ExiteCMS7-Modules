@@ -69,6 +69,8 @@ if (isset($_POST['save_settings'])) {
 	$use_sandbox = (isset($_POST['donate_use_sandbox']) && isNum($_POST['donate_use_sandbox'])) ? $_POST['donate_use_sandbox'] : 1;
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$use_sandbox."' WHERE cfg_name = 'donate_use_sandbox'");
 	$settings['donate_use_sandbox'] = $use_sandbox;
+	// update the timestamp on the index page template, to avoid caching issues
+	$result = dbquery("UPDATE ".$db_prefix."locales SET locales_datestamp = '".time()."' WHERE locales_key = 'don_index'");
 	$old_forum_id = (isset($_POST['forum_id']) && isNum($_POST['forum_id'])) ? $_POST['forum_id'] : -1;
 	$new_forum_id = (isset($_POST['new_forum_id']) && isNum($_POST['new_forum_id'])) ? $_POST['new_forum_id'] : -1;
 	if ($old_forum_id != $new_forum_id && $old_forum_id >= 0 && $new_forum_id >= 0) {
