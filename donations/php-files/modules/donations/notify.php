@@ -111,7 +111,7 @@ while ($errcnt++ < 5) {
 			$logmsg .= $res;
 			if (strcmp ($res, "VERIFIED") == 0) {
 				// get a name
-				if ($_POST['option_selection1']=='Mention my name') {
+				if (isset($_POST['option_selection1']) && $_POST['option_selection1']=='Mention my name') {
 					if (isset($_POST['first_name']) && isset($_POST['last_name'])) {
 						$payer_name = trim($_POST['first_name'])." ".trim($_POST['last_name']);
 					} else {
@@ -130,13 +130,13 @@ while ($errcnt++ < 5) {
 						if (isset($_POST['option_selection2']) && $_POST['option_selection2'] != "")
 							$comment = $_POST['option_selection2'];
 						else
-							$comment = $locale['don216'];
-						process_payment($payer_name, phpentities($comment), $locale['don426']);
+							$comment = $locale['don460'];
+						process_payment($payer_name, phpentities($comment), $locale['don480']);
 						break;
 					case "Refunded":
 						// if the payment is refunded, record the refund
-						$refund_reason = isset($_POST['memo']) ? $_POST['memo'] : $locale['don480'];
-						process_payment($payer_name, phpentities($refund_reason), $locale['don428']);
+						$refund_reason = isset($_POST['memo']) ? $_POST['memo'] : $locale['donerr01'];
+						process_payment($payer_name, phpentities($refund_reason), $locale['don482']);
 						break;
 					default:
 						$logmsg .= "\n\n**** NOT PROCESSED: PAYMENT STATUS = ".strtoupper($_POST['payment_status'])." ****";
