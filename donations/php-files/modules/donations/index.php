@@ -37,6 +37,7 @@ if ($settings['donate_use_sandbox']) {
 // make the variables available to the template parser
 $template->assign($variables);
 $template->assign('locale', $locale);
+$template->assign('settings', $settings);
 
 // parse the page
 $variables['html'] = $template->fetch("string:".$locale['don_index']);
