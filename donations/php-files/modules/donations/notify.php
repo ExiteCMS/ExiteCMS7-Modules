@@ -25,9 +25,11 @@ locale_load("modules.donations");
 function process_payment($payer_name, $comment, $subject) {
 	global $logmsg, $locale, $db_prefix, $settings;
 
+	$refund = isset($_POST['payment_status']) && $_POST['payment_status'] == "Refunded";
+	
 	// if the payment is completed, write to the database
 	$result = dbquery("INSERT INTO ".$db_prefix."donations (donate_name, donate_amount, donate_currency, donate_country, donate_comment, donate_timestamp) 
-		VALUES ('".$payer_name."', '".$_POST['mc_gross']."', '".$_POST['mc_currency']."', '".$_POST['residence_country']."', '".$comment."', '".strtotime($_POST['payment_date'])."')");
+		VALUES ('".$payer_name."', '".($refund ? (-1 * $_POST['mc_gross']) : $_POST['mc_gross'])."', '".$_POST['mc_currency']."', '".$_POST['residence_country']."', '".$comment."', '".strtotime($_POST['payment_date'])."')");
 
 	// if notification is requested, post a notify message
 	if ($settings['donate_forum_id']) {
@@ -55,7 +57,7 @@ function process_payment($payer_name, $comment, $subject) {
 		$message .= "[b]".$locale['don457']."[/b] : ".$_POST['mc_currency']." ".$_POST['mc_gross']."\n";
 		$message .= "[b]".$locale['don464']."[/b] : ".$_POST['payer_email']."\n";
 		$message .= "[b]".$locale['don458']."[/b] : ".$comment."\n";
-		if ($payer_name == "") {
+		if ($payer_name == "" && !$refund) {
 			$message .= "\n[b]".$locale['don498']."[/b]";
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
