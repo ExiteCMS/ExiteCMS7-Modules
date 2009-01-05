@@ -21,7 +21,7 @@
 <img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.011}{$guests|@count}<br />
 <div style='margin-left:8px;'>
 {section name=guest loop=$guests}
-	{$guests[guest].cc_flag}
+	{$guests[guest].cc_flag|replace:"&nbsp;":""}<img src='{$smarty.const.IMAGES}spacer.gif' width='2' alt='' title='' />
 {/section}
 </div>
 <img src='{$smarty.const.THEME}images/bullet.gif' alt='' /> {$locale.012}{$members|@count}<br />
