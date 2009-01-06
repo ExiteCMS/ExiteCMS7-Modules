@@ -79,7 +79,7 @@ function InputIsValid() {
 		</script>
 	{/literal}
 	{include file="_opentable.tpl" name=$_name title=$locale.don423 state=$_state style=$_style}
-	<form name='{$action}_donate' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action={$action}&amp;lc={$lc}&amp;key={$key}'>
+	<form name='{$action}_donate' method='post' action='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action={$action}&amp;lc={$lc}&amp;lk={$lk}'>
 		<textarea id='tpl' name='tpl' cols='80' rows='30' class='textbox' style='width:100%;'>{$tpldata}</textarea>
 		<div style='text-align:center;margin-top:10px;'>
 			<input type='submit' name='save_template' value='{$locale.don425}' class='button' />
@@ -215,7 +215,7 @@ function InputIsValid() {
 					{$locale.don420}<br /><br />
 					<table align='center' cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>
 						<tr>
-							<td width='1%' align='center' class='tbl2' style='white-space:nowrap'> 
+							<td width='1%' align='center' class='tbl2' style='white-space:nowrap'>
 								<b>{$locale.don422}</b>
 							</td>
 							<td width='1%' align='center' class='tbl2' style='white-space:nowrap'>
@@ -234,7 +234,7 @@ function InputIsValid() {
 								{$templates[id].pagename}
 							</td>
 							<td align='center' class='{cycle values='tbl1,tbl2'}' style='white-space:nowrap'>
-								{imagelink link=$smarty.const.FUSION_SELF|cat:$aidlink|cat:"&amp;action=tpledit&amp;lc="|cat:$templates[id].locale_code|cat:"&amp;key="|cat:$templates[id].locales_key image="page_edit.gif" alt=$locale.don485 title=$locale.don485}
+								{imagelink link=$smarty.const.FUSION_SELF|cat:$aidlink|cat:"&amp;action=tpledit&amp;lc="|cat:$templates[id].locale_code|cat:"&amp;lk="|cat:$templates[id].locales_key image="page_edit.gif" alt=$locale.don485 title=$locale.don485}
 							</td>
 						</tr>
 						{/section}
@@ -265,7 +265,7 @@ function InputIsValid() {
 			<td width='1%' align='center' class='tbl2' style='white-space:nowrap'>
 				<b>{$locale.don455}</b>
 			</td>
-			<td width='1%' align='center' class='tbl2' style='white-space:nowrap'> 
+			<td width='1%' align='center' class='tbl2' style='white-space:nowrap'>
 				<b>{$locale.don456}</b>
 			</td>
 			<td align='left' class='tbl2'>

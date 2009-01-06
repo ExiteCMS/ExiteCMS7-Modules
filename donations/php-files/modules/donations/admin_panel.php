@@ -34,7 +34,7 @@ $types = array($locale['don479'], $locale['don480'], $locale['don481']);
 // check parameters and provide defaults
 if (!isset($action)) $action = "";
 if (!isset($lc)) $lc = "";
-if (!isset($key)) $key = "";
+if (!isset($lk)) $lk = "";
 
 // delete requested
 if ($action == "delete") {
@@ -134,9 +134,9 @@ if (isset($_POST['save_settings'])) {
 	// continue with the default action
 	$action = "";
 } elseif (isset($_POST['save_template'])) {
-	$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$key'");
+	$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$lk'");
 	if (dbrows($result)) {
-		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".mysql_real_escape_string($_POST['tpl'])."', locales_datestamp = '".time()."' WHERE locales_code = '$lc' AND locales_key = '$key'");
+		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".mysql_real_escape_string($_POST['tpl'])."', locales_datestamp = '".time()."' WHERE locales_code = '$lc' AND locales_key = '$lk'");
 		$error = 12;
 	} else {
 		$error = 11;
@@ -159,7 +159,7 @@ if (isset($_POST['save_settings'])) {
 					$error = 4;
 				} else {
 					// insert the new donation record
-					$result = dbquery("INSERT INTO ".$db_prefix."donations (donate_name, donate_amount, donate_currency, donate_country, donate_comment, donate_timestamp, donate_type, donate_state) 
+					$result = dbquery("INSERT INTO ".$db_prefix."donations (donate_name, donate_amount, donate_currency, donate_country, donate_comment, donate_timestamp, donate_type, donate_state)
 						VALUES ('$donate_name', '$donate_amount', '$donate_currency', '$donate_country', '$donate_comment', '".time()."', '$donate_type', '$donate_state')");
 					$error = 1;
 				}
@@ -221,8 +221,8 @@ switch ($action) {
 	case "tpledit":
 		$title = "";
 		$variables['lc'] = $lc;
-		$variables['key'] = $key;
-		$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$key'");
+		$variables['lk'] = $lk;
+		$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$lk'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$variables['tpldata'] = phpentities(stripslashes($data['locales_value']));
@@ -296,8 +296,8 @@ while ($data = dbarray($result)) {
 // get the list of index and thanks pages
 $variables['templates'] = array();
 $result = dbquery(
-	"SELECT ".$db_prefix."locale.locale_code, ".$db_prefix."locale.locale_name, ".$db_prefix."locales.* FROM ".$db_prefix."locales 
-		INNER JOIN ".$db_prefix."locale ON locale_code = locales_code 
+	"SELECT ".$db_prefix."locale.locale_code, ".$db_prefix."locale.locale_name, ".$db_prefix."locales.* FROM ".$db_prefix."locales
+		INNER JOIN ".$db_prefix."locale ON locale_code = locales_code
 		WHERE locales_name = 'modules.donations' AND (locales_key = 'don_index' OR locales_key = 'don_thanks' OR locales_key = 'don_list') ORDER BY locale_name"
 );
 while ($data = dbarray($result)) {
