@@ -28,30 +28,70 @@ $variables = array();
 // make sure the parameter is valid
 if (!isset($fd_id) || !isNum($fd_id)) $fd_id = 0;
 $variables['fd_id'] = $fd_id;
-if (!isset($dir)) $dir = "";
+if (!isset($dir)) $dir = ""; else $dir=stripinput($dir);
+if (!isset($file)) $file = ""; else $file=stripinput($file);
+
+// download request?
+if ($file != "") {
+	session_set_flash('file_downloads', array('dir' => $dir, 'file' => $file));
+	redirect(BASEDIR."getfile.php?type=fd&fd_id=".$fd_id);
+	exit;
+}
 
 // get the available categories
 $variables['cats'] = array();
 $result = dbquery("SELECT * FROM ".$db_prefix."file_downloads WHERE ".($fd_id != 0 ? "fd_id = '$fd_id' AND " : "").groupaccess('fd_group')." ORDER BY fd_order");
 while ($data = dbarray($result)) {
 	// create the full path (deal with any double slash)
-	$data['path'] = str_replace("//", "/", $data['fd_path'].$dir);
-	$data['dir'] = $dir."/";
-	$data['prev_dir'] = substr($dir, 0, strlen($dir)-strlen(strrchr($dir, "/")));
+	$data['path'] = str_replace("//", "/", $data['fd_path']."/".$dir);
+	// hack test
+	if ($data['fd_path'] != substr(realpath($data['path']),0,strlen($data['fd_path']))) {
+		terminate('hack attempt detected! Program terminated and you activity has been logged!');
+	}
+	$data['dir'] = $dir;
+	if (strpos($dir, "/") === false) {
+		$data['prev_dir'] = "";
+	} else {
+		$data['prev_dir'] = substr($dir, 0, strlen($dir)-strlen(strrchr($dir, "/")));
+	}
 	// get the list of directories for this category
 	$data['directories'] = makefilelist($data['path'], ".|..", true, "folders");
 	// get the list of files for this category directory
 	$files = makefilelist($data['path'], ".|..", true, "files");
+	// get extra info for these files
+	$dates = array();
+	$sizes = array();
 	$data['files'] = array();
 	foreach($files as $file) {
+		$dates[] = filemtime($data['path']."/".$file);
+		$sizes[] = parsebytesize(filesize($data['path']."/".$file), 3);
 		$data['files'][] = array('name' => $file, 'date' => filemtime($data['path']."/".$file), 'size' => parsebytesize(filesize($data['path']."/".$file), 3));
+	}
+	switch ($data['fd_sort_field']) {
+		case "NAME":
+			switch ($data['fd_sort_order']) {
+				case "ASC":
+					// this sort order is default
+					break;
+				case "DESC":
+					array_multisort($files, SORT_DESC, $data['files']);
+					break;
+			}
+			break;
+		case "DATE":
+			switch ($data['fd_sort_order']) {
+				case "ASC":
+					array_multisort($dates, SORT_ASC, $data['files']);
+					break;
+				case "DESC":
+					array_multisort($dates, SORT_DESC, $data['files']);
+					break;
+			}
+			break;
 	}
 	// store all info
 	$variables['cats'][] = $data;
 }
-
-// store the info in session flash
-session_set_flash('file_downloads', $variables['cats']);
 
 // define the admin body panel
 $template_panels[] = array('type' => 'body', 'name' => 'modules.file_downloads.file_downloads', 'template' => 'modules.file_downloads.file_downloads.tpl', 'locale' => "modules.file_downloads");

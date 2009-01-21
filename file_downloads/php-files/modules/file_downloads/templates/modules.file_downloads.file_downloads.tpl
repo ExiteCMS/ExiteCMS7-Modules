@@ -24,7 +24,7 @@
 			<td colspan='3' class='infobar'>
 				<b>
 					{$cats[id].fd_name|upper}
-					{if $cats[id].dir != "/"}<img src='{$smarty.const.THEME}images/bullet.gif' alt='' title='' /> {$cats[id].dir}{/if}
+					{if $cats[id].dir != ""}<img src='{$smarty.const.THEME}images/bullet.gif' alt='' title='' /> {$cats[id].dir}/{/if}
 				</b>
 			</td>
 		</tr>
@@ -32,7 +32,7 @@
 			<tr>
 				<td colspan='3' class='tbl2'>
 					<img src='{$smarty.const.THEME}images/directory.gif' title='' alt='' />&nbsp;
-					{if $cats[id].dir != "/"}
+					{if $cats[id].dir != ""}
 						<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir={$cats[id].prev_dir}'>..</a>
 					{else}
 						<a href='{$smarty.const.FUSION_SELF}'>..</a>
@@ -47,11 +47,11 @@
 				</td>
 			</tr>
 		{else}
-			{foreach from=$cats[id].directories item=dir name=dir}
+			{foreach from=$cats[id].directories item=subdir name=subdir}
 				<tr>
 					<td colspan='3' class='tbl2'>
 						<img src='{$smarty.const.THEME}images/directory.gif' title='' alt='' />&nbsp;
-						<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir={$cats[id].dir}{$dir}'>{$dir}</a>
+						<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir={$cats[id].dir}/{$subdir}'>{$subdir}</a>
 					</td>
 				</tr>
 			{/foreach}
@@ -59,7 +59,7 @@
 				<tr>
 					<td class='tbl1'>
 						<img src='{$smarty.const.THEME}images/file.gif' title='' alt='' />&nbsp;
-						<a href='{$smarty.const.BASEDIR}getfile.php?type=fd&amp;fd_id={$cats[id].fd_id}&amp;file_id={$smarty.section.file.index}'>{$cats[id].files[file].name|truncate:65:" &hellip; ":true:true}</a>
+						<a href='{$smarty.const.FUSION_SELF}?fd_id={$cats[id].fd_id}&amp;dir={$cats[id].dir}&amp;file={$cats[id].files[file].name}'>{$cats[id].files[file].name|truncate:65:" &hellip; ":true:true}</a>
 					</td>
 					<td width='1%' class='tbl1' style='white-space:nowrap;'>
 						{$cats[id].files[file].date|date_format:"forumdate"}

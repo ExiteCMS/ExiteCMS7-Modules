@@ -50,6 +50,28 @@
 				</td>
 			</tr>
 			<tr>
+				<td class='tbl' valign='top'>
+					{$locale.422}
+				</td>
+				<td class='tbl'>
+					<select name='fd_sort_field' class='textbox'>
+						<option value="NAME"{if $fd_sort_field == "NAME"} selected="selected"{/if}>{$locale.426}</option>
+						<option value="DATE"{if $fd_sort_field == "DATE"} selected="selected"{/if}>{$locale.427}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class='tbl' valign='top'>
+					{$locale.423}
+				</td>
+				<td class='tbl'>
+					<select name='fd_sort_order' class='textbox'>
+						<option value="ASC"{if $fd_sort_order == "ASC"} selected="selected"{/if}>{$locale.424}</option>
+						<option value="DESC"{if $fd_sort_order == "DESC"} selected="selected"{/if}>{$locale.425}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td align='center' colspan='2' class='tbl'>
 					<input type='hidden' name='fd_id' value='{$fd_id}' />
 					<input type='hidden' name='fd_order' value='{$fd_order}' />

@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "File Downloads";							// title or name of this module
 $mod_description = "Module to provide a secure download page for files stored locally on the webserver";	// short description of it's purpose
-$mod_version = "1.0.1";									// module version number
+$mod_version = "1.0.2";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -91,6 +91,12 @@ $localestrings['en']['418'] = "New category successfully updated";
 $localestrings['en']['419'] = "The requested category can not be found";
 $localestrings['en']['420'] = "Visibility";
 $localestrings['en']['421'] = "Are you sure you want to delete this category?";
+$localestrings['en']['422'] = "Sort the list on:";
+$localestrings['en']['423'] = "Sort order:";
+$localestrings['en']['424'] = "Ascending";
+$localestrings['en']['425'] = "Descending";
+$localestrings['en']['426'] = "Filename";
+$localestrings['en']['427'] = "Date";
 // user panel
 $localestrings['en']['450'] = "There are no files found in this category";
 
@@ -117,6 +123,12 @@ $localestrings['nl']['418'] = "Nieuwe categorie succesvol aangepast";
 $localestrings['nl']['419'] = "De gevraagde categorie kan niet worden gevonden";
 $localestrings['nl']['420'] = "Toegang voor";
 $localestrings['nl']['421'] = "Weet u zeker dat u deze categorie wilt verwijderen?";
+$localestrings['en']['422'] = "Sorteer de lijst op:";
+$localestrings['en']['423'] = "Sorteer volgorde:";
+$localestrings['en']['424'] = "Oplopend";
+$localestrings['en']['425'] = "Aflopend";
+$localestrings['en']['426'] = "Bestandsnaam";
+$localestrings['en']['427'] = "Datum";
 // user panel
 $localestrings['nl']['450'] = "Er zijn geen bestanden in deze directory gevonden";
 
@@ -131,6 +143,8 @@ $mod_install_cmds[] = array('type' => 'db', 'value' => "CREATE TABLE ##PREFIX##f
   fd_id smallint(5) NOT NULL auto_increment,
   fd_name varchar(25) NOT NULL default '',
   fd_path varchar(255) NOT NULL default '',
+  fd_sort_field varchar(10) NOT NULL default 'NAME',
+  fd_sort_order varchar(4) NOT NULL default 'ASC',
   fd_group smallint(5) NOT NULL default '103',
   fd_order smallint(5) NOT NULL default '0',
   PRIMARY KEY  (fd_id)
@@ -194,6 +208,12 @@ if (!function_exists('module_upgrade')) {
 			case "0.0.1":
 				// pre-release version, no database or other changes
 			case "1.0.0":
+				// no database or other changes
+			case "1.0.1":
+				// added file sort fields
+				$result = dbquery("ALTER TABLE ".$db_prefix."file_downloads ADD fd_sort_field VARCHAR(10) NOT NULL DEFAULT 'NAME' AFTER fd_path,
+										ADD fd_sort_order CHAR(4) NOT NULL DEFAULT 'ASC' AFTER fd_sort_field;");
+			case "1.0.2":
 				// current version
 			default:
 				// do this at every upgrade
