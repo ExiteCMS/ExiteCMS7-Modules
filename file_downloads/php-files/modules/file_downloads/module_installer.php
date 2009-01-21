@@ -123,12 +123,12 @@ $localestrings['nl']['418'] = "Nieuwe categorie succesvol aangepast";
 $localestrings['nl']['419'] = "De gevraagde categorie kan niet worden gevonden";
 $localestrings['nl']['420'] = "Toegang voor";
 $localestrings['nl']['421'] = "Weet u zeker dat u deze categorie wilt verwijderen?";
-$localestrings['en']['422'] = "Sorteer de lijst op:";
-$localestrings['en']['423'] = "Sorteer volgorde:";
-$localestrings['en']['424'] = "Oplopend";
-$localestrings['en']['425'] = "Aflopend";
-$localestrings['en']['426'] = "Bestandsnaam";
-$localestrings['en']['427'] = "Datum";
+$localestrings['nl']['422'] = "Sorteer de lijst op:";
+$localestrings['nl']['423'] = "Sorteer volgorde:";
+$localestrings['nl']['424'] = "Oplopend";
+$localestrings['nl']['425'] = "Aflopend";
+$localestrings['nl']['426'] = "Bestandsnaam";
+$localestrings['nl']['427'] = "Datum";
 // user panel
 $localestrings['nl']['450'] = "Er zijn geen bestanden in deze directory gevonden";
 
@@ -211,8 +211,7 @@ if (!function_exists('module_upgrade')) {
 				// no database or other changes
 			case "1.0.1":
 				// added file sort fields
-				$result = dbquery("ALTER TABLE ".$db_prefix."file_downloads ADD fd_sort_field VARCHAR(10) NOT NULL DEFAULT 'NAME' AFTER fd_path,
-										ADD fd_sort_order CHAR(4) NOT NULL DEFAULT 'ASC' AFTER fd_sort_field;");
+				$result = dbquery("ALTER TABLE ".$db_prefix."file_downloads ADD fd_sort_field VARCHAR(10) NOT NULL DEFAULT 'NAME' AFTER fd_path, ADD fd_sort_order CHAR(4) NOT NULL DEFAULT 'ASC' AFTER fd_sort_field;");
 			case "1.0.2":
 				// current version
 			default:
