@@ -57,15 +57,21 @@ while ($data = dbarray($result)) {
 	// get the list of directories for this category
 	$data['directories'] = makefilelist($data['path'], ".|..", true, "folders");
 	// get the list of files for this category directory
-	$files = makefilelist($data['path'], ".|..", true, "files");
+	$rawfiles = makefilelist($data['path'], ".|..", true, "files");
 	// get extra info for these files
+	$files = array();
 	$dates = array();
 	$sizes = array();
 	$data['files'] = array();
-	foreach($files as $file) {
-		$dates[] = filemtime($data['path']."/".$file);
-		$sizes[] = parsebytesize(filesize($data['path']."/".$file), 3);
-		$data['files'][] = array('name' => $file, 'date' => filemtime($data['path']."/".$file), 'size' => parsebytesize(filesize($data['path']."/".$file), 3));
+	foreach($rawfiles as $file) {
+		$size = filesize($data['path']."/".$file);
+		// hide all files with zero length
+		if ($size > 0) {
+			$files[] = $file;
+			$dates[] = filemtime($data['path']."/".$file);
+			$sizes[] = parsebytesize($size, 3);
+			$data['files'][] = array('name' => $file, 'date' => filemtime($data['path']."/".$file), 'size' => parsebytesize(filesize($data['path']."/".$file), 3));
+		}
 	}
 	switch ($data['fd_sort_field']) {
 		case "NAME":
