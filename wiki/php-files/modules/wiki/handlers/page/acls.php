@@ -65,14 +65,14 @@ if ($this->UserIsOwner())
 				}
 			}
 			$message = '';
-	
+
 			// store lists only if ACLs have previously been defined,
 			// or if the posted values are different than the defaults
-	
+
 			$page = $this->LoadSingle('SELECT * FROM '.$this->config['table_prefix'].
 			    "acls WHERE page_tag = '".mysql_real_escape_string($this->GetPageTag()).
 			    "' LIMIT 1");
-	
+
 			if ($page ||
 			    ($posted_read_acl	 != $default_read_acl	||
 			     $posted_write_acl	 != $default_write_acl	||
@@ -83,10 +83,10 @@ if ($this->UserIsOwner())
 				$this->SaveACL($this->GetPageTag(), 'comment', $this->TrimACLs($posted_comment_acl));
 				$message = ACLS_UPDATED;
 			}
-	
+
 			// change owner?
 			$newowner = $_POST['newowner'];
-	
+
 			if (($newowner != 'same') &&
 			    ($this->GetPageOwner($this->GetPageTag()) != $newowner))
 			{
@@ -94,11 +94,11 @@ if ($this->UserIsOwner())
 				{
 					$newowner = NO_PAGE_OWNER;
 				}
-	
+
 				$this->SetPageOwner($this->GetPageTag(), $newowner);
 				$message .= sprintf(PAGE_OWNERSHIP_CHANGED, $newowner);
 			}
-	
+
 			// redirect back to page
 			$this->Redirect($this->Href(), $message);
 		}
@@ -107,7 +107,7 @@ if ($this->UserIsOwner())
 	{
 		echo $this->Format(sprintf(ACL_HEADING, '[['.$this->tag.']]').' --- ');
 		// get the list of groups
-		$user_groups = getusergroups();
+		$user_groups = getusergroups(false, false);
 		// get the list of users
 		$user_list = array();
 		$result = dbquery("SELECT u.user_id, u.user_name FROM ".$db_prefix."users u WHERE user_status = 0 ORDER BY user_level DESC, user_name ASC");
@@ -186,7 +186,7 @@ if ($this->UserIsOwner())
 					}
 				}
 			}
-		}	
+		}
 ?>
 <?php echo $this->FormOpen('acls') ?>
 <table class="acls" width="100%">
@@ -403,7 +403,7 @@ if ($this->UserIsOwner())
 		}
 		return false;
 	}
-	
+
 	function AddGroup(fld, fldtype) {
 		var i = 0;
 		switch (fldtype) {
