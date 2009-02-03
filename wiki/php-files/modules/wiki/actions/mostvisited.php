@@ -1,5 +1,5 @@
 <?php
-    /*    
+    /*
         @filename:        mostvisited.php
         @author:         George Petsagourakis
         @email:         petsagouris@hotmail.com
@@ -27,7 +27,7 @@
 
     // mysql query ...
     $hitlistQuery = $this->Query( "SELECT id,hits,tag,owner,latest FROM ".$this->config['table_prefix']."pages; " );
-   
+
     // initialising variables ...
     $hitlist = array();
     $i = 0;
@@ -37,7 +37,7 @@
     {
         if (!$hitlist[$row['tag']]){
             $hitlist[$row['tag']] = array("owner" => $row['owner'],"hits" => $row['hits']);
-            if ($row['latest'] == "Y") 
+            if ($row['latest'] == "Y")
 				$hitlist[$row['tag']]['latest'] = $row['hits']+0;
 			else
 				$hitlist[$row['tag']]['latest'] = "N/A";
@@ -47,14 +47,16 @@
             if ( ($row['latest'] == "Y") && (!$hitlist[$row['latest']]) ) $hitlist[$row['tag']]['latest'] = $row['hits'];
         }
     }
-   
+
     // sorting the array ...
-    function hitlistsort( $a, $b ) {
-        if ($a['hits'] == $b['hits']) return 0;
-        return ($a['hits'] > $b['hits']) ? -1 : 1;
-    }
+	if (!function_exists("hitlistsort")) {
+		function hitlistsort( $a, $b ) {
+			if ($a['hits'] == $b['hits']) return 0;
+			return ($a['hits'] > $b['hits']) ? -1 : 1;
+		}
+	}
     uasort($hitlist, "hitlistsort");
-   
+
     // creating the output ...
 	if ($show_header)
 	{
@@ -79,12 +81,12 @@
     // creating the listing ...
 	$i = 0;
     foreach($hitlist as $pag => $arr){
-       
+
         if ( ($i < $hitlist_limit) && ( $arr['hits'] !== 0) )
         {
             $str .= "\t<tr>\n";
             $i++;
-            if ($show_ranking) 
+            if ($show_ranking)
 			{
                 $str .= "\t\t<td class='tbl2' align=\"right\">".$i."</td>\n";
 			}
@@ -103,7 +105,7 @@
             $str .= "\t</tr>\n";
         }
         else break;
-   
+
     }
     $str .= "</table>";
     // displaying the output ...
