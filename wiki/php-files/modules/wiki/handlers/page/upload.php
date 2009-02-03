@@ -21,7 +21,7 @@ if (!$this->HasAccess("write")) {
 // load the locale
 locale_load('modules.wiki');
 
-// error handling
+// (error) message handling
 if (isset($_GET['status'])) {
 	$status = stripinput($_GET['status']);
 	$file = isset($_GET['file']) ? stripinput($_GET['file']) : "";
@@ -48,7 +48,7 @@ if (isset($_GET['status'])) {
 
 		// no we need to report this to the wiki admins?
 		if (!empty($settings['wiki_report_uploads'])) {
-		
+
 			// include the pm functions
 			include_once PATH_INCLUDES."pm_functions_include.php";
 
@@ -75,7 +75,7 @@ if (isset($_GET['status'])) {
 				$groups = array();
 				// gather the group and it's sub-groups into an array
 				getgroupmembers($group_id);
-				$sql = "SELECT u.user_id, u.user_name, u.user_email, mo.pmconfig_email_notify FROM ".$db_prefix."users u 
+				$sql = "SELECT u.user_id, u.user_name, u.user_email, mo.pmconfig_email_notify FROM ".$db_prefix."users u
 						LEFT JOIN ".$db_prefix."pm_config mo USING(user_id)
 						WHERE ";
 				$c = 0;
@@ -84,20 +84,23 @@ if (isset($_GET['status'])) {
 				}
 				$result = dbquery($sql);
 			}
-		}
 
-		// process the user information retrieved
-		while ($data = dbarray($result)) {
-			// make sure we don't already have this user (due to group membership)
-			if (!in_array($data['user_id'], $message['user_ids'])) {
-			// add it to the processed user_ids list
-				$message['user_ids'][] = $data;
+			// process the user information retrieved
+			while ($data = dbarray($result)) {
+				// make sure we don't already have this user (due to group membership)
+				if (!in_array($data['user_id'], $message['user_ids'])) {
+				// add it to the processed user_ids list
+					$message['user_ids'][] = $data;
+				}
 			}
+
+			// if any recipients found, send the PM message
+			if (count($message['user_ids'] ) > 0) {
+				storemessage($message, false, true);
+			}
+
 		}
 
-		// send the PM message
-		storemessage($message, false, true);
-		
 		print("<table align='center' cellpadding='0' cellspacing='0' width='100%'>
 		<tr>
 			<td class='tbl' align='center'>
@@ -158,7 +161,7 @@ if (isset($_POST['uploadfile']) && !empty($_FILES['myfile']['name'])) {
 	} else {
 		redirect($this->Href('upload')."&file=".stripinput($imgname)."&status=upx");
 	}
-		
+
 }
 
 if (isset($_GET['delete']) && isset($_GET['type']) && $this->IsAdmin()) {
@@ -183,12 +186,12 @@ foreach($filelist as $key => $value) {
 	if (isNum($value)) $filelist[$key] = "F";
 }
 ksort($filelist);
-		
+
 // create a page
 $upload_list = array();
 $uploads = count($imagelist) + count($filelist);
 $user = "";
-	
+
 // open the page body
 print("<div class='page'>");
 
