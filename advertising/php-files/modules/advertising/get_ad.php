@@ -64,14 +64,11 @@ function get_ad($location, $bheight=60, $bwidth=468) {
 
 		//Randomize
 		if ($numrows > 1) {
-			$numrows = $numrows-1;
-			list($usec, $sec) = explode(" ", microtime());
-			mt_srand(((float)$usec + (float)$sec));
-			$bannum = mt_rand(0, $numrows);
+			mt_srand ((double) microtime() * 1000000);
+			$bannum = mt_rand(0,$numrows-1);
 		} else {
 				$bannum = 0;
 		}
-
 		$bresult2 = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_id='".$ads[$bannum]."'");
 		$advert = dbarray($bresult2);
 		if($numrows > 0) {
