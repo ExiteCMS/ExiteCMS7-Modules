@@ -65,7 +65,7 @@ function get_ad($location, $bheight=60, $bwidth=468) {
 		//Randomize
 		if ($numrows > 1) {
 			mt_srand ((double) microtime() * 1000000);
-			$bannum = mt_rand(0,$numrows-1);
+			$bannum = mt_rand()%(--$numrows);
 		} else {
 				$bannum = 0;
 		}
