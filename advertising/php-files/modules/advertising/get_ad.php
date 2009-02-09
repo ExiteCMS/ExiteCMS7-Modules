@@ -45,7 +45,7 @@ function get_ad($location, $bheight=60, $bwidth=468) {
 	}
 
 	$advert_html = "";
-		
+
 	$bresult = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE ".$where);
 	$gotadverts = dbrows($bresult);
 	if($gotadverts > "0") {
@@ -75,8 +75,19 @@ function get_ad($location, $bheight=60, $bwidth=468) {
 		$bresult2 = dbquery("SELECT * FROM ".$db_prefix."advertising WHERE adverts_id='".$ads[$bannum]."'");
 		$advert = dbarray($bresult2);
 		if($numrows > 0) {
-//			$advert_html = "<a target='_blank' href='".MODULES."advertising/click.php?id=".$advert['adverts_id']."'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")."></a>";
-			$advert_html = "<a target='_blank' href='".$advert['adverts_url']."' onclick='window.location.href=\"".MODULES."advertising/click.php?id=".$advert['adverts_id']."\";return true;'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")." alt='' /></a>";
+			// if this a flash ad?
+			if (strtolower(substr($advert['adverts_image'],-4,4)) == ".swf") {
+				$dimensions = @getimagesize(PATH_IMAGES_ADS.$advert['adverts_image']);
+				$advert_html = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://active.macromedia.com/flash9/cabs/swflash.cab#version=9,0,0,0\" id=\"AD\" ".$dimensions[3].">
+					<param name=movie value=\"".IMAGES_ADS.$advert['adverts_image']."\">
+					<param name=\"quality\" value=\"high\">
+					<param name=\"bgcolor\" value=\"#ffffff\">
+					<embed src=\"".IMAGES_ADS.$advert['adverts_image']."\" quality=\"high\" bgcolor=\"#ffffff\" ".$dimensions[3]." type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\">
+					</embed>
+					</object>";
+			} else {
+				$advert_html = "<a target='_blank' href='".$advert['adverts_url']."' onclick='window.location.href=\"".MODULES."advertising/click.php?id=".$advert['adverts_id']."\";return true;'><img src='".IMAGES_ADS.$advert['adverts_image']."' border='0' ".($bheight==0?"":"height='".$bheight."'")." ".($bwidth==0?"":"width='".$bwidth."'")." alt='' /></a>";
+			}
 			//check ownership user to client id
 			if(isset($userdata['user_id']) && $advert['adverts_userid']!=$userdata['user_id']) {
 			 	// increment the advert_shown counter

@@ -176,7 +176,7 @@ if (isset($_POST['save'])) {
 				// save the posted data
 				switch ($action) {
 					case "addad":
-						$result = dbquery("INSERT INTO ".$db_prefix."advertising (adverts_userid, adverts_contract, adverts_contract_start, adverts_contract_end, adverts_priority, adverts_location, adverts_url, adverts_sold, adverts_image, adverts_status) 
+						$result = dbquery("INSERT INTO ".$db_prefix."advertising (adverts_userid, adverts_contract, adverts_contract_start, adverts_contract_end, adverts_priority, adverts_location, adverts_url, adverts_sold, adverts_image, adverts_status)
 							VALUES ('".$adverts_userid."', '".$adverts_contract."', '".$adverts_contract_start."', '".$adverts_contract_end."', '".$adverts_priority."', '".$adverts_location."', '".$adverts_url."', '".$adverts_sold."', '".$adverts_image."', '".$adverts_status."')");
 						$adverts_id = mysql_insert_id();
 						$errormessage = $locale['ads906'];
@@ -195,7 +195,7 @@ if (isset($_POST['save'])) {
 				else
 					$adverts_expired = 0;
 				$result = dbquery("UPDATE ".$db_prefix."advertising SET adverts_expired = '".$adverts_expired."' WHERE adverts_id = '".$adverts_id."'");
-				$action = "list";	
+				$action = "list";
 			} else {
 				$errortitle = $locale['ads900'];
 			}
@@ -205,7 +205,7 @@ if (isset($_POST['save'])) {
 // upload image (from add/edit or from image management)?
 if (isset($_POST['upload']) || isset($_POST['uploadimage'])) {
 		if (isset($_FILES['myfile']['name']) && $_FILES['myfile']['name'] != "") {
-		$image_types = array(".gif",".GIF",".jpeg",".JPEG",".jpg",".JPG",".png",".PNG");
+		$image_types = array(".gif",".GIF",".jpeg",".JPEG",".jpg",".JPG",".png",".PNG", ".swf", ".SWF");
 		$imgext = strrchr($_FILES['myfile']['name'], ".");
 		$imgname = $_FILES['myfile']['name'];
 		if (isset($_POST['ad_client'])) $imgname = $_POST['ad_client']."_".$imgname;
@@ -435,7 +435,7 @@ switch ($action) {
 		fallback(BASEDIR."index.php");
 }
 
-// process the action 
+// process the action
 switch ($action) {
 	case "delclient":
 		$variables['id'] = $id;
@@ -525,7 +525,7 @@ switch ($action) {
 		$variables['ad_images'] = array();
 		foreach($adverts_images as $idx => $ad_image) {
 			$dimensions = @getimagesize(PATH_IMAGES_ADS.$ad_image);
-			if (isset($ad_client)) 
+			if (isset($ad_client))
 				$img = substr($ad_image, strlen($ad_client)+1);
 			else
 				$img = $ad_image;

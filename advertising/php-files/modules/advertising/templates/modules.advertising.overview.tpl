@@ -51,12 +51,12 @@ function confdel(url) {
 		<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].adverts_clicks}</td>
 		<td align='center' class='tbl1' style='white-space:nowrap'>{$ads1[ad].percentage}%</td>
 		<td align='center' class='tbl1' style='white-space:nowrap'>
-			<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;adverts_id={$ads1[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_edit.gif' alt='{$locale.ads469}' title='{$locale.ads469}' /></a>&nbsp;	
-			<a href='javascript:confdel("{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;adverts_id={$ads1[ad].adverts_id}");'><img src='{$smarty.const.THEME}images/page_delete.gif' alt='{$locale.ads470}' title='{$locale.ads470}' /></a>&nbsp;	
+			<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;adverts_id={$ads1[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_edit.gif' alt='{$locale.ads469}' title='{$locale.ads469}' /></a>&nbsp;
+			<a href='javascript:confdel("{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;adverts_id={$ads1[ad].adverts_id}");'><img src='{$smarty.const.THEME}images/page_delete.gif' alt='{$locale.ads470}' title='{$locale.ads470}' /></a>&nbsp;
 			{if $ads1[ad].adverts_status == 0}
 				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=enable&amp;adverts_id={$ads1[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_green.gif' alt='{$locale.ads467}' title='{$locale.ads467}' /></a>
 			{else}
-				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=enable&amp;adverts_id={$ads1[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_red.gif' alt='{$locale.ads468}' title='{$locale.ads468}' /></a>
+				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=disable&amp;adverts_id={$ads1[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_red.gif' alt='{$locale.ads468}' title='{$locale.ads468}' /></a>
 			{/if}
 		</td>
 	</tr>
@@ -80,8 +80,8 @@ function confdel(url) {
 		<td align='center' class='tbl1' style='white-space:nowrap'>{$ads2[ad].adverts_clicks}</td>
 		<td align='center' class='tbl1' style='white-space:nowrap'>{$ads2[ad].percentage}%</td>
 		<td align='center' class='tbl1' style='white-space:nowrap'>
-			<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;adverts_id={$ads2[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_edit.gif' alt='{$locale.ads469}' title='{$locale.ads469}' /></a>&nbsp;	
-			<a href='javascript:confdel("{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;adverts_id={$ads2[ad].adverts_id}");'><img src='{$smarty.const.THEME}images/page_delete.gif' alt='{$locale.ads470}' title='{$locale.ads470}' /></a>&nbsp;	
+			<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=edit&amp;adverts_id={$ads2[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_edit.gif' alt='{$locale.ads469}' title='{$locale.ads469}' /></a>&nbsp;
+			<a href='javascript:confdel("{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=delete&amp;adverts_id={$ads2[ad].adverts_id}");'><img src='{$smarty.const.THEME}images/page_delete.gif' alt='{$locale.ads470}' title='{$locale.ads470}' /></a>&nbsp;
 			{if $ads2[ad].adverts_status == 0}
 				<a href='{$smarty.const.FUSION_SELF}{$aidlink}&amp;action=enable&amp;adverts_id={$ads2[ad].adverts_id}'><img src='{$smarty.const.THEME}images/page_green.gif' alt='{$locale.ads467}' title='{$locale.ads467}' /></a>
 			{else}

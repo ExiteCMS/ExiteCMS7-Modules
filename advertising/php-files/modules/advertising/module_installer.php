@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Advertisements";							// title or name of this module
 $mod_description = "Advertisement image management";	// short description of it's purpose
-$mod_version = "1.1.2";									// module version number
+$mod_version = "1.1.3";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -86,8 +86,8 @@ $localestrings['en']['ads412'] = "Contract start date";
 $localestrings['en']['ads413'] = "Contract end date";
 $localestrings['en']['ads414'] = "Ads currently purchased";
 $localestrings['en']['ads415'] = "Modify purchased amount";
-$localestrings['en']['ads416'] = "Ad location";
-$localestrings['en']['ads417'] = "Ad image";
+$localestrings['en']['ads416'] = "Advert location";
+$localestrings['en']['ads417'] = "Advert image";
 $localestrings['en']['ads418'] = "Advert click URL";
 $localestrings['en']['ads419'] = "Enable this advert";
 $localestrings['en']['ads420'] = "Increase by";
@@ -111,7 +111,7 @@ $localestrings['en']['ads446'] = "Email All statistics";
 $localestrings['en']['ads447'] = "Add a new client";
 $localestrings['en']['ads448'] = "Advert image management";
 $localestrings['en']['ads449'] = "Upload image";
-// advertisement location and type. 
+// advertisement location and type.
 $localestrings['en']['ads450'] = "Logo - left side panel";			// location = 0
 $localestrings['en']['ads451'] = "Banner - Forum, on top";			// location = 1
 $localestrings['en']['ads452'] = "Banner - Forum index only";		// location = 2
@@ -147,9 +147,9 @@ $localestrings['en']['ads502'] = "Guest";
 $localestrings['en']['ads510'] = "Following are the complete stats for all your advertising investments at ".$settings['sitename'].":";
 $localestrings['en']['ads511'] = "Following are the complete stats for your advertising investment with ID %s at ".$settings['sitename'].":";
 $localestrings['en']['ads512'] = "Statistics report generated on %s\r\n\r\n";
-$localestrings['en']['ads513'] = "Ads still available";
+$localestrings['en']['ads513'] = "Adverts still available";
 // advertisement - image upload
-$localestrings['en']['ads530'] = "Image filename";
+$localestrings['en']['ads530'] = "Image or flash filename";
 // advertisement - image management
 $localestrings['en']['ads540'] = "View";
 $localestrings['en']['ads541'] = "Delete";
@@ -237,7 +237,7 @@ $localestrings['nl']['ads446'] = "Email alle statistieken";
 $localestrings['nl']['ads447'] = "Nieuwe adverteerder toevoegen";
 $localestrings['nl']['ads448'] = "Advertentie beheer";
 $localestrings['nl']['ads449'] = "Plaatje uploaden";
-// advertisement location and type. 
+// advertisement location and type.
 $localestrings['nl']['ads450'] = "Logo - zijpaneel";				// location = 0
 $localestrings['nl']['ads451'] = "Banner - Forum, bovenaan";		// location = 1
 $localestrings['nl']['ads452'] = "Banner - Alleen forum index";		// location = 2
@@ -275,7 +275,7 @@ $localestrings['nl']['ads511'] = "Dit zijn de complete statistieken van uw adver
 $localestrings['nl']['ads512'] = "Statistiek rapport aangemaakt op %s\r\n\r\n";
 $localestrings['nl']['ads513'] = "Nog steeds beschikbaar";
 // advertisement - image upload
-$localestrings['nl']['ads530'] = "Bestandsnaam";
+$localestrings['nl']['ads530'] = "Bestandsnaam (plaatje of flash)";
 // advertisement - image management
 $localestrings['nl']['ads540'] = "Bekijk";
 $localestrings['nl']['ads541'] = "Verwijder";
