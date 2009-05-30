@@ -29,14 +29,15 @@ $result = dbquery(
 	LEFT JOIN ".$db_prefix."users tu ON ton.online_user=tu.user_id".($settings['hide_webmaster']?" WHERE tu.user_level IS NULL OR tu.user_level != '103'":""));
 $variables['online'] = dbrows($result);
 if ($variables['online'] > $settings['max_users']) {
-	$settings['max_users'] = $rows;
-	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$variables['online']."' WHERE cfg_name = 'max_users'");
+	$settings['max_users'] = $variables['online'];
+	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$settings['max_users']."' WHERE cfg_name = 'max_users'");
 	$settings['max_users_datestamp'] = time();
 	$result2 = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".$settings['max_users_datestamp']."' WHERE cfg_name = 'max_users_datestamp'");
 }
 // get who's online
 $variables['guests'] = array();
 $variables['members'] = array();
+$members = array();
 while ($data = dbarray($result)) {
 	if ($data['online_user'] == "0") {
 		if ($settings['forum_flags']) {
@@ -44,9 +45,14 @@ while ($data = dbarray($result)) {
 		}
 		$variables['guests'][] = $data;
 	} else {
-		$variables['members'][] = $data;
+		// check if we've already seen this member
+		if (!isset($members[$data['user_name']])) {
+			$variables['members'][] = $data;
+			$members[] = $data['user_name'];
+		}
 	}
 }
+unset($members);
 
 // get information of the last registered user
 $data = dbarray(dbquery("SELECT user_id,user_name, user_ip, user_cc_code FROM ".$db_prefix."users WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));
