@@ -31,13 +31,13 @@ $variables['fd_id'] = $fd_id;
 if (!isset($dir)) $dir = ""; else $dir=stripinput($dir);
 if (!isset($file)) $file = ""; else $file=stripinput($file);
 
+
 // download request?
 if ($file != "") {
-	session_set_flash('file_downloads', array('dir' => $dir, 'file' => $file));
-	redirect(BASEDIR."getfile.php?type=fd&fd_id=".$fd_id);
+	$type = "fd";
+	require PATH_ROOT."getfile.php";
 	exit;
 }
-
 // get the available categories
 $variables['cats'] = array();
 $result = dbquery("SELECT * FROM ".$db_prefix."file_downloads WHERE ".($fd_id != 0 ? "fd_id = '$fd_id' AND " : "").groupaccess('fd_group')." ORDER BY fd_order");
