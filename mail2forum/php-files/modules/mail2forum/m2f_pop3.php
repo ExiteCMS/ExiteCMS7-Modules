@@ -447,30 +447,44 @@ function processmessageparts($messagepart) {
 }
 
 // returns true if this user is allowed to post in this forum
-function can_post($usergroups, $forumgroup) {
+function can_post($usergroups, $forumgroup, $userlevel) {
 	global $db_prefix, $groups;
 	
-	$groups = explode(".", substr($usergroups, 1));
-	foreach ($groups as $group) {
-		// check if this groups has subgroups. If so, add them to the array
-		getsubgroups($group);
-	}
-	// create a new user_group field with all inherited groups, and
-	// get the inherited group rights and add them to the user own rights
-	// everyone is always member of group 0 (public)
-	$usergroups = ".0";
-	foreach ($groups as $group) {
-		$usergroups .= ".".$group;
-		$result = dbarray(dbquery("SELECT group_groups FROM ".$db_prefix."user_groups WHERE group_id = '".$group."'"));
-		if (isset($result['group_groups']) && $result['group_groups'] != "") {
-			$usergroups .= ($usergroups==""?"":".").$result['group_groups'];
-		}
-	}
-
-	if (in_array($forumgroup, explode(".", substr($usergroups,1)))) {
-		return true;
-	} else {
-		return false;
+	// process according to the forumgroup
+	switch ($forumgroup) {
+		case 0:
+			// public access
+			return true;
+			break;
+		case 101:
+		case 102:
+		case 103:
+			// members, administrators and webmaster fixed groups
+			return ($userlevel >= $forumgroup);
+			break;
+		default:
+			// all other groups
+			$groups = explode(".", substr($usergroups, 1));
+			foreach ($groups as $group) {
+				// check if this groups has subgroups. If so, add them to the array
+				getsubgroups($group);
+			}
+			// create a new user_group field with all inherited groups, and
+			// get the inherited group rights and add them to the user own rights
+			// everyone is always member of group 0 (public)
+			$usergroups = ".0";
+			foreach ($groups as $group) {
+				$usergroups .= ".".$group;
+				$result = dbarray(dbquery("SELECT group_groups FROM ".$db_prefix."user_groups WHERE group_id = '".$group."'"));
+				if (isset($result['group_groups']) && $result['group_groups'] != "") {
+					$usergroups .= ($usergroups==""?"":".").$result['group_groups'];
+				}
+			}
+			if (in_array($forumgroup, explode(".", substr($usergroups,1)))) {
+				return true;
+			} else {
+				return false;
+			}
 	}
 }
 
@@ -683,8 +697,10 @@ while (true) {
 						} else {
 							if ($settings['m2f_subscribe_required']) {
 								$send_allowed = dbrows(dbquery("SELECT m2f_subid FROM ".$db_prefix."M2F_subscriptions WHERE m2f_subscribed = '1' AND m2f_userid = '".$sender['user_id']."' AND m2f_forumid = '".$recipient['m2f_forumid']."'"));
+								if ($settings['m2f_process_log']) logentry('DEBUG', "QUERY: SELECT m2f_subid FROM ".$db_prefix."M2F_subscriptions WHERE m2f_subscribed = '1' AND m2f_userid = '".$sender['user_id']."' AND m2f_forumid = '".$recipient['m2f_forumid']."', result = ".($send_allowed?"TRUE":"FALSE"));
 							} else {
-								$send_allowed = can_post($sender['user_groups'], $recipient['m2f_posting']);
+								$send_allowed = can_post($sender['user_groups'], $recipient['m2f_posting'], $sender['user_level']);
+								if ($settings['m2f_process_log']) logentry('DEBUG', "CAN_POST() CHECK: ".($send_allowed?"TRUE":"FALSE").", sender = ".$sender['user_groups'].", recipient = ".$recipient['m2f_posting']);
 							}
 						}
 						if($send_allowed) {
@@ -778,7 +794,9 @@ while (true) {
 			}
 		}
 		// finished processing POP3 messages. Close the connection
-		if ($pop3connect) $pop3->disconnect();
+		if ($pop3connect) {
+			$pop3->disconnect();
+		}
 	}
 
 	// if the module has been modified, exit so it can be restarted
