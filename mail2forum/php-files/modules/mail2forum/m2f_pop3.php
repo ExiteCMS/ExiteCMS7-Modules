@@ -29,9 +29,9 @@ ini_set('max_execution_time', '0');
 
 // find the webroot, so we can load the core functions
 $webroot = "";
-while(!file_exists($webroot."includes/core_functions.php")) { 
-	$webroot .= '../'; 
-	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!'); 
+while(!file_exists($webroot."includes/core_functions.php")) {
+	$webroot .= '../';
+	if (strlen($webroot)>100) die('Unable to find the ExiteCMS document root!');
 }
 require_once $webroot."includes/core_functions.php";
 
@@ -50,7 +50,7 @@ require_once PATH_INCLUDES."geoip_include.php";
 // include the PEAR POP3 and MIME decode class
 require_once "includes/POP3.php";
 require_once "includes/mimeDecode.php";
-	
+
 // include the proper language file
 locale_load("modules.mail2forum");
 
@@ -73,11 +73,11 @@ define('NET_POP3_DEBUG_LOGFILE', $settings['m2f_logfile'].'/'.$processor.'.debug
 function logentry($task="", $message="", $abort=false, $exitcode=0) {
 
 	global $processor, $settings;
-	
+
 	$handle = fopen($settings['m2f_logfile'].'/M2F_process.log', 'a');
 	fwrite($handle, date("Ymd").";".date("His").";".$processor.";".$task.";".$message.chr(10));
 	fclose($handle);
-	
+
 	if ($abort) die($exitcode);
 }
 
@@ -85,7 +85,7 @@ function logentry($task="", $message="", $abort=false, $exitcode=0) {
 function logdebug($task="", $message="") {
 
 	global $processor;
-	
+
 	$handle = fopen(NET_POP3_DEBUG_LOGFILE, 'a');
 	fwrite($handle, date("Ymd").";".date("His").";".$task.";".$message.chr(10));
 	fclose($handle);
@@ -95,11 +95,11 @@ function logdebug($task="", $message="") {
 function dumpmessage($message, $post) {
 
 	global $processor, $settings;
-	
+
 	$i=1;
 	$log = $settings['m2f_logfile'].'/'.$processor.'.message.';
 	while(file_exists($log.sprintf('%06u', $i))) {
-		$i++; 
+		$i++;
 		if ($i>1000000) return false;
 	}
 	$handle = fopen($log.sprintf('%06u', $i), 'a');
@@ -197,11 +197,20 @@ function charsetconv($text, $fromcharset) {
 	// do we need to convert anything? If not, just return unaltered
 	if ($fromcharset == $settings['charset']) return $text;
 
-	// do we have mbstring? 
+	// do we have mbstring?
+	if (function_exists('mb_convert_encoding')) {
+		if (strtoupper($fromcharset) != strtoupper($settings['charset'])) {
+			if ($settings['m2f_pop3_debug']) logdebug("mb_convert_encoding", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
+			// attempt to convert
+			$mbresult = mb_convert_encoding($text, strtoupper($settings['charset']), strtoupper($fromcharset));
+			if ($mbresult) {
+				return $mbresult;
+			}
+			if ($settings['m2f_pop3_debug']) logdebug("mb_convert_encoding", "conversion failed!");
+		}
+	}
 
-	# not supported yet
-	
-	// do we have iconv? 
+	// next attempt, do we have iconv?
 	if (function_exists('iconv')) {
 		if (strtoupper($fromcharset) != strtoupper($settings['charset'])) {
 			if ($settings['m2f_pop3_debug']) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
@@ -213,7 +222,7 @@ function charsetconv($text, $fromcharset) {
 			if ($settings['m2f_pop3_debug']) logdebug("iconv", "conversion failed!");
 		}
 	}
-	
+
 	// We couldn't convert, or there was no need to. Return unaltered
 	return $text;
 }
@@ -222,7 +231,7 @@ function charsetconv($text, $fromcharset) {
 function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	global $imagetypes, $settings, $locale, $db_prefix;
-	
+
 	// get the post subject
 	$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
 
@@ -233,7 +242,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	// time of this post
 	$posttime = time();
-		
+
 	// update the forum post status
 	$sql = "UPDATE ".$db_prefix."forums SET forum_lastpost='$posttime', forum_lastuser='".$sender['user_id']."' WHERE forum_id='".$recipient['m2f_forumid']."'";
 	$result = dbquery($sql);
@@ -244,7 +253,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	}
 	// is this a new thread?
 	if ($thread_id == -1) {
-		$sql = "INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_views, thread_lastpost, thread_lastuser, thread_sticky, thread_locked) 
+		$sql = "INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_views, thread_lastpost, thread_lastuser, thread_sticky, thread_locked)
 					VALUES('$forum_id', '".mysql_escape_string($subject)."', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
 		$result = dbquery($sql);
 		if (!$result) {
@@ -269,7 +278,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	if (!$sender_cc) $sender_cc = "";
 
 	// insert the new message into the posts table
-	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_cc, post_edituser, post_edittime) 
+	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_cc, post_edituser, post_edittime)
 		VALUES ('$forum_id', '$thread_id', '".mysql_escape_string($subject)."', '".mysql_escape_string($post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
@@ -290,7 +299,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	// update the m2f received counter
 	$result = dbquery("UPDATE ".$db_prefix."M2F_forums SET m2f_received=m2f_received+1 WHERE m2f_forumid='".$forum_id."'");
-	
+
 	// check if there are attachments. If so, save them, and link them to the post
 	$error = 0;
 	if (isset($post['attachment']) and is_array($post['attachment'])) {
@@ -449,7 +458,7 @@ function processmessageparts($messagepart) {
 // returns true if this user is allowed to post in this forum
 function can_post($usergroups, $forumgroup, $userlevel) {
 	global $db_prefix, $groups;
-	
+
 	// process according to the forumgroup
 	switch ($forumgroup) {
 		case 0:
@@ -675,7 +684,7 @@ while (true) {
 				}
 				if (!isset($post['from']) && $settings['m2f_process_log']) logentry('PARSE', "Missing 'From' information!");
 				if (!isset($post['to']) && $settings['m2f_process_log']) logentry('PARSE', "Missing 'To' information!");
-				
+
 				if ($settings['m2f_pop3_message_debug']) dumpmessage($message, $post);
 
 				// find the user
@@ -683,7 +692,7 @@ while (true) {
 
 				// find the forum
 				$recipient = dbarray(dbquery("SELECT m.*, f.forum_name, f.forum_posting FROM ".$db_prefix."M2F_forums m, ".$db_prefix."forums f WHERE m2f_active = '1' AND m.m2f_forumid = f.forum_id AND LOWER(m2f_email) = '".strtolower($post['to']['email'])."'"));
-				
+
 				// if the user is not found, but public posts to the forum are allowed, create a dummy sender record
 				if (!is_array($sender) && $recipient['m2f_posting'] == 0) {
 					$sender = array('user_id' => 0);
@@ -754,7 +763,7 @@ while (true) {
 										$processed = true;
 										break;
 									default:
-										// multiple subjects matched the query. How now brown cow? 
+										// multiple subjects matched the query. How now brown cow?
 										if ($settings['m2f_process_log']) logentry('VERIFY', "Multiple subject match: ".$post['from']['email']." => ".$post['to']['email']);
 										// For now, assume a new post
 										if (addnewpost($recipient['m2f_forumid'], -1, $sender, $recipient, $post))
@@ -774,7 +783,7 @@ while (true) {
 							$processed = true;
 						}
 					} else {
-						// no match on recipient, shouldn't be possible, means a mismatch between smtp envelope and message header. 
+						// no match on recipient, shouldn't be possible, means a mismatch between smtp envelope and message header.
 						// Output some debug info for now and send an NDR
 						if ($settings['m2f_process_log']) logentry('VERIFY', "No such forum: ".$post['to']['email']);
 						$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
@@ -790,7 +799,7 @@ while (true) {
 					$processed = true;
 				}
 				// finished processing this message. Delete it from the server
-				if ($processed) $pop3->deleteMsg($i);	
+				if ($processed) $pop3->deleteMsg($i);
 			}
 		}
 		// finished processing POP3 messages. Close the connection
