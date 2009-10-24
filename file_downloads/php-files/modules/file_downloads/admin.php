@@ -149,7 +149,7 @@ switch ($action) {
 }
 
 // get the list of user groups
-$variables['usergroups'] = getusergroups(true);
+$variables['usergroups'] = getusergroups(false);
 
 // default action: config panel and statistics overview list
 if ($action == "") {
