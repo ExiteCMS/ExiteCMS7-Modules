@@ -177,10 +177,9 @@ function InputIsValid() {
 							{if !$smarty.section.id.first}</optgroup>{/if}
 							<optgroup label='{$forums[id].forum_cat_name}'>
 							{assign var='hasvalues' value=false}
-						{else}
-							<option value='{$forums[id].forum_id}'{if $forums[id].forum_id == $settings.donate_forum_id} selected="selected"{/if}>{$forums[id].forum_name}</option>
-							{assign var='hasvalues' value=true}
 						{/if}
+						<option value='{$forums[id].forum_id}'{if $forums[id].forum_id == $settings.donate_forum_id} selected="selected"{/if}>{$forums[id].forum_name}</option>
+						{assign var='hasvalues' value=true}
 						{if $smarty.section.id.last && $hasvalues}</optgroup>{/if}
 					{/section}
 					</select>
