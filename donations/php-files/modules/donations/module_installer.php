@@ -254,10 +254,11 @@ function InputIsValid() {
 										<input type='hidden' name='no_note' value='0' />
 										<input type='hidden' name='cmd' value='_xclick' />
 										<input type='hidden' name='on0' value='Anonymity' />
-										<input type='hidden' name='on1' value='Comment' /> 
+										<input type='hidden' name='on1' value='Comment' />
 										<input type='hidden' name='lc' value='{\$smarty.const.USER_CC}' />
 										<input type='hidden' name='rm' value='2' />
 										<input type='hidden' name='no_shipping' value='1' />
+										<input type='hidden' name='charset' value='utf-8' />
 										<input type='hidden' name='return' value='{\$smarty.const.siteurl}modules/donations/thanks.php' />
 										<input type='hidden' name='cancel_return' value='{\$smarty.const.siteurl}modules/donations/index.php' />
 										<input type='hidden' name='notify_url' value='{\$smarty.const.siteurl}modules/donations/notify.php' />
@@ -441,7 +442,7 @@ $localestrings['en']['don_list'] = "{literal}
 	<tr>
 		<td align='left' class='donate_title'>
 			<p>Thank you for your donations</p>
-			<hr />		
+			<hr />
 		</td>
 	</tr>
 	<tr>
@@ -459,7 +460,7 @@ $localestrings['en']['don_list'] = "{literal}
 		<td align='left' class='donate_title'>
 			<br />
 			<p>Where did your money go to?</p>
-			<hr />		
+			<hr />
 		</td>
 	</tr>
 	<tr>
@@ -649,10 +650,11 @@ function InputIsValid() {
 										<input type='hidden' name='no_note' value='0' />
 										<input type='hidden' name='cmd' value='_xclick' />
 										<input type='hidden' name='on0' value='Anonymity' />
-										<input type='hidden' name='on1' value='Comment' /> 
+										<input type='hidden' name='on1' value='Comment' />
 										<input type='hidden' name='lc' value='{\$smarty.const.USER_CC}' />
 										<input type='hidden' name='rm' value='2' />
 										<input type='hidden' name='no_shipping' value='1' />
+										<input type='hidden' name='charset' value='utf-8' />
 										<input type='hidden' name='return' value='{\$smarty.const.siteurl}modules/donations/thanks.php' />
 										<input type='hidden' name='cancel_return' value='{\$smarty.const.siteurl}modules/donations/index.php' />
 										<input type='hidden' name='notify_url' value='{\$smarty.const.siteurl}modules/donations/notify.php' />
@@ -835,7 +837,7 @@ $localestrings['nl']['don_list'] = "{literal}
 	<tr>
 		<td align='left' class='donate_title'>
 			<p>Hartelijk dank voor uw donatie</p>
-			<hr />		
+			<hr />
 		</td>
 	</tr>
 	<tr>
@@ -853,7 +855,7 @@ $localestrings['nl']['don_list'] = "{literal}
 		<td align='left' class='donate_title'>
 			<br />
 			<p>Waar ging uw geld naar toe?</p>
-			<hr />		
+			<hr />
 		</td>
 	</tr>
 	<tr>
