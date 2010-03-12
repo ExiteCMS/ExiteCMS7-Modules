@@ -197,6 +197,22 @@ function charsetconv($text, $fromcharset) {
 	// do we need to convert anything? If not, just return unaltered
 	if ($fromcharset == $settings['charset']) return $text;
 
+	// does the string already have the proper encoding?
+	if (function_exists('mb_check_encoding')) {
+		if (mb_check_encoding($text, strtoupper($settings['charset']))) {
+			// no need for conversion
+			return $text;
+		}
+	}
+
+	// if the detected encoding is different from the fromcharset, update it
+	if (function_exists('mb_detect_encoding')) {
+		$encoding = mb_detect_encoding($text);
+		if ($encoding != FALSE && $encoding != strtoupper($fromcharset)) {
+			$fromcharset = $encoding;
+		}
+	}
+
 	// do we have mbstring?
 	if (function_exists('mb_convert_encoding')) {
 		if (strtoupper($fromcharset) != strtoupper($settings['charset'])) {
