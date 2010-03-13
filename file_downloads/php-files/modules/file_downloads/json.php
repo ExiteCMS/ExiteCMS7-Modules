@@ -39,9 +39,18 @@ function fetchfiletree($root, $path, $id) {
 			}
 			// is this a directory
 			if (@is_dir($root.$path.$file)) {
-				$results[] = array("name" => $file, "date" => filemtime($root.$path.$file), "tree" => fetchfiletree($root, $path.$file."/", $id));
+				$results[] = array(
+								"name" => $file,
+								"date" => filemtime($root.$path.$file),
+								"tree" => fetchfiletree($root, $path.$file."/", $id)
+							);
 			} else {
-				$results[] = array("name" => $file, "date" => filemtime($root.$path.$file), "url" => $settings["siteurl"]."modules/file_downloads/file_downloads.php?fd_id=".$id."&dir=".rtrim($path,"/")."&file=".$file);
+				$results[] = array(
+								"name" => $file,
+								"size" => filesize($root.$path.$file),
+								"date" => filemtime($root.$path.$file),
+								"link" => $settings["siteurl"]."modules/file_downloads/file_downloads.php?fd_id=".$id."&dir=".rtrim($path,"/")."&file=".$file
+							);
 			}
 		}
 	}
