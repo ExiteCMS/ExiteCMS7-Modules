@@ -41,14 +41,14 @@ function fetchfiletree($root, $path, $id) {
 			if (@is_dir($root.$path.$file)) {
 				$results[] = array(
 								"name" => $file,
-								"date" => filemtime($root.$path.$file),
+								"date" => showdate("%Y-%m-%d %H:%M:%S", filemtime($root.$path.$file)),
 								"tree" => fetchfiletree($root, $path.$file."/", $id)
 							);
 			} else {
 				$results[] = array(
 								"name" => $file,
-								"size" => filesize($root.$path.$file),
-								"date" => filemtime($root.$path.$file),
+								"date" => showdate("%Y-%m-%d %H:%M:%S", filemtime($root.$path.$file)),
+								"size" => parsebytesize(filesize($root.$path.$file), 3),
 								"link" => $settings["siteurl"]."modules/file_downloads/file_downloads.php?fd_id=".$id."&dir=".rtrim($path,"/")."&file=".$file
 							);
 			}
@@ -65,7 +65,7 @@ function fetchfiletree($root, $path, $id) {
 $variables = array();
 
 // is this a json call?
-if (is_ajax_call()) {
+if (true or is_ajax_call()) {
 
 	// get the available categories
 	$result = dbquery("SELECT * FROM ".$db_prefix."file_downloads WHERE ".($fd_id != 0 ? "fd_id = '$fd_id' AND " : "").groupaccess('fd_group')." ORDER BY fd_order");
@@ -80,7 +80,7 @@ if (is_ajax_call()) {
 
 // make sure the page isn't cached
 header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Content-Type:application/json; charset=utf-8");
+//header("Content-Type:application/json; charset=utf-8");
 header("Pragma: no-cache");
 
 echo json_encode($variables);
