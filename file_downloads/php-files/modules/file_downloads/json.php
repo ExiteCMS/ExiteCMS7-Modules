@@ -18,6 +18,11 @@
 +---------------------------------------------------------------------*/
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 
+// terminate if this is not a json call
+if (! is_ajax_call()) {
+	die('This page returns information that is only relevant for javascript ajax code.');
+}
+
 // make sure we have json_encode and json_decode available
 require_once dirname(__FILE__)."/../../includes/json_include.php";
 
@@ -37,18 +42,32 @@ function fetchfiletree($root, $path, $id) {
 			if (strncmp($file, '.', 1) == 0 OR ($file == '.' OR $file == '..')) {
 				continue;
 			}
+			// fetch the modify timestamp
+			$time = filemtime($root.$path.$file);
+			// and the filesize
+			$size = filesize($root.$path.$file);
+			// is this a directory?
+			$isdir = @is_dir($root.$path.$file);
+			// determine the sort index
+			if ($path == '/') {
+				// sort on filename, directories first
+				$sortindex = ($isdir?"0":"1").'_'.$file;
+			} else {
+				// sort on timestamp, directories first
+				$sortindex = ($isdir?"1":"0").'_'.$time.'_'.$file;
+			}
 			// is this a directory
-			if (@is_dir($root.$path.$file)) {
-				$results[] = array(
+			if ($isdir) {
+				$results[$sortindex] = array(
 								"name" => $file,
-								"date" => showdate("%Y-%m-%d %H:%M:%S", filemtime($root.$path.$file)),
+								"date" => showdate("%Y-%m-%d %H:%M:%S", $time),
 								"tree" => fetchfiletree($root, $path.$file."/", $id)
 							);
 			} else {
-				$results[] = array(
+				$results[$sortindex] = array(
 								"name" => $file,
-								"date" => showdate("%Y-%m-%d %H:%M:%S", filemtime($root.$path.$file)),
-								"size" => parsebytesize(filesize($root.$path.$file), 3),
+								"date" => showdate("%Y-%m-%d %H:%M:%S", $time),
+								"size" => parsebytesize($size, 3),
 								"link" => $settings["siteurl"]."modules/file_downloads/file_downloads.php?fd_id=".$id."&dir=".rtrim($path,"/")."&file=".$file
 							);
 			}
@@ -57,6 +76,15 @@ function fetchfiletree($root, $path, $id) {
 	// close the directory handle
 	closedir($handle);
 
+	// determine the sort order
+	if ($path == '/') {
+		// sort ascending
+		sort($results);
+	} else {
+		// sort descending
+		rsort($results);
+	}
+
 	// return the results
 	return $results;
 }
@@ -64,18 +92,14 @@ function fetchfiletree($root, $path, $id) {
 // temp storage for template variables
 $variables = array();
 
-// is this a json call?
-if (true or is_ajax_call()) {
+// get the available categories
+$result = dbquery("SELECT * FROM ".$db_prefix."file_downloads WHERE ".($fd_id != 0 ? "fd_id = '$fd_id' AND " : "").groupaccess('fd_group')." ORDER BY fd_order");
 
-	// get the available categories
-	$result = dbquery("SELECT * FROM ".$db_prefix."file_downloads WHERE ".($fd_id != 0 ? "fd_id = '$fd_id' AND " : "").groupaccess('fd_group')." ORDER BY fd_order");
-
-	while ($data = dbarray($result)) {
-		// fetch the tree for this category
-		$data["tree"] = fetchfiletree($data["fd_path"], "/", $data["fd_id"]);
-		// store this category
-		$variables[] = array("id" => $data["fd_id"], "name" => $data["fd_name"], "tree" => $data["tree"]);
-	}
+while ($data = dbarray($result)) {
+	// fetch the tree for this category
+	$data["tree"] = fetchfiletree($data["fd_path"], "/", $data["fd_id"]);
+	// store this category
+	$variables[] = array("id" => $data["fd_id"], "name" => $data["fd_name"], "tree" => $data["tree"]);
 }
 
 // make sure the page isn't cached
