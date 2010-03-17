@@ -429,6 +429,8 @@ if (!function_exists('module_upgrade')) {
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 			case "1.1.2":
 				// locale update, no database changes
+			case "1.1.3":
+				// upgrade to ExiteCMS v7.3. no upgrade actions for this release
 			default:
 				// do this at every upgrade
 		}

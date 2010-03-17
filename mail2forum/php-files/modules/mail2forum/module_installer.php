@@ -530,6 +530,7 @@ if (!function_exists('module_upgrade')) {
 					$result = dbquery("DROP TABLE ".$db_prefix."M2F_status");
 				}
 				case "1.1.1":
+				case "1.1.2":
 				// Current version
 			default:
 				// do this at every upgrade

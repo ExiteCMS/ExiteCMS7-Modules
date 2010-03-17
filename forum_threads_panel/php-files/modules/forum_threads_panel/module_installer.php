@@ -92,6 +92,10 @@ if (!function_exists('module_upgrade')) {
 				// ExiteCMS v7.0. no upgrade actions for this release
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+			case "1.1.1":
+				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
+			case "1.1.2":
+				// upgrade to ExiteCMS v7.3. no upgrade actions for this release
 			default:
 				// do this at every upgrade
 		}

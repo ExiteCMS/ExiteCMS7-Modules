@@ -101,6 +101,8 @@ if (!function_exists('module_upgrade')) {
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
 			case "1.1.1":
 				// added the forum thread filter, and the locale strings for the filter message
+			case "1.1.2":
+				// upgrade to ExiteCMS v7.2. no upgrade actions for this release
 			default:
 				// do this at every upgrade
 		}

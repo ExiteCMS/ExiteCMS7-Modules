@@ -119,6 +119,7 @@ if (!function_exists('module_upgrade')) {
 
 		switch($current_version) {
 			case "1.0.0":
+			case "1.0.1":
 				// current release, add changes here!
 			default:
 				// do this at every upgrade

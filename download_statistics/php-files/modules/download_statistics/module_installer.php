@@ -367,7 +367,9 @@ if (!function_exists('module_upgrade')) {
 					$result = dbquery("ALTER TABLE ".$db_prefix."dlstats_counters ADD dlsc_count_id TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER dlsc_download_id");
 				}
 				break;
-			case "1.1.4":			// current release version
+			case "1.1.4":			// upgrade to ExiteCMS v7.2
+			case "1.1.5":			// upgrade to ExiteCMS v7.3
+			case "1.1.6":			// current release version
 				break;
 			default:
 				terminate("invalid current version number passed to module_upgrade()!");

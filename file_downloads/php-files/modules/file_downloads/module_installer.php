@@ -213,6 +213,7 @@ if (!function_exists('module_upgrade')) {
 				// added file sort fields
 				$result = dbquery("ALTER TABLE ".$db_prefix."file_downloads ADD fd_sort_field VARCHAR(10) NOT NULL DEFAULT 'NAME' AFTER fd_path, ADD fd_sort_order CHAR(4) NOT NULL DEFAULT 'ASC' AFTER fd_sort_field;");
 			case "1.0.2":
+			case "1.0.3":
 				// current version
 			default:
 				// do this at every upgrade

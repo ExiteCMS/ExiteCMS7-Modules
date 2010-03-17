@@ -402,6 +402,10 @@ if (!function_exists('module_upgrade')) {
 				$result = dbquery("ALTER TABLE ".$db_prefix."advertising CHANGE adverts_userid adverts_userid MEDIUMINT(8) NOT NULL DEFAULT '0'");
 			case "1.1.0":
 				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
+			case "1.1.1":
+			case "1.1.2":
+			case "1.1.3":
+				// upgrade to ExiteCMS v7.1. no upgrade actions for this release
 			default:
 				// do this at every upgrade
 		}

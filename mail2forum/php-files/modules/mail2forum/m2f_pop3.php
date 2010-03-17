@@ -189,18 +189,27 @@ function charsetconv($text, $fromcharset) {
 	global $settings;
 
 	// validate the input. if not a string, just return unaltered
-	if (empty($text) || !is_string($text)) return $text;
+	if (empty($text) || !is_string($text)) {
+		if ($settings['m2f_pop3_debug']) logentry("charsetconv", "Parameter is empty or not a string");
+		return $text;
+	}
 
 	// validate the original charset. if not a string, just return unaltered
-	if (empty($fromcharset) || !is_string($fromcharset)) return $text;
-
-	// do we need to convert anything? If not, just return unaltered
-	if ($fromcharset == $settings['charset']) return $text;
+	if (empty($fromcharset) || !is_string($fromcharset)) {
+		if ($settings['m2f_pop3_debug']) logentry("charsetconv", "Missing 'fromcharset', assuming utf-8");
+		$fromcharset = "utf-8";
+	}
 
 	// does the string already have the proper encoding?
 	if (function_exists('mb_check_encoding')) {
-		if (mb_check_encoding($text, strtoupper($settings['charset']))) {
+		if (strtoupper($settings['charset']) == "UTF-8") {
+			$conv_needed = check_utf8($text);
+		} else {
+			$conv_needed = mb_check_encoding($text, strtoupper($settings['charset']));
+		}
+		if (!$conv_needed) {
 			// no need for conversion
+			if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "String is already in ".strtoupper($settings['charset']));
 			return $text;
 		}
 	}
@@ -209,39 +218,70 @@ function charsetconv($text, $fromcharset) {
 	if (function_exists('mb_detect_encoding')) {
 		$encoding = mb_detect_encoding($text);
 		if ($encoding != FALSE && $encoding != strtoupper($fromcharset)) {
+			if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "New detected encoding is ".$encoding);
 			$fromcharset = $encoding;
 		}
+	}
+
+	// do we need to convert anything? If not, just return unaltered
+	if ($fromcharset == $settings['charset']) {
+		if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "No need to recode");
+		return $text;
 	}
 
 	// do we have mbstring?
 	if (function_exists('mb_convert_encoding')) {
 		if (strtoupper($fromcharset) != strtoupper($settings['charset'])) {
-			if ($settings['m2f_pop3_debug']) logdebug("mb_convert_encoding", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
+			if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
 			// attempt to convert
 			$mbresult = mb_convert_encoding($text, strtoupper($settings['charset']), strtoupper($fromcharset));
 			if ($mbresult) {
 				return $mbresult;
 			}
-			if ($settings['m2f_pop3_debug']) logdebug("mb_convert_encoding", "conversion failed!");
+			if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "conversion failed!");
 		}
 	}
 
 	// next attempt, do we have iconv?
 	if (function_exists('iconv')) {
 		if (strtoupper($fromcharset) != strtoupper($settings['charset'])) {
-			if ($settings['m2f_pop3_debug']) logdebug("iconv", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
+			if ($settings['m2f_pop3_debug']) logentry("iconv", "converting string from ".strtoupper($fromcharset)." to ".strtoupper($settings['charset']));
 			// attempt to convert
 			$iconvresult = iconv(strtoupper($fromcharset), strtoupper($settings['charset']), $text);
 			if ($iconvresult) {
 				return $iconvresult;
 			}
-			if ($settings['m2f_pop3_debug']) logdebug("iconv", "conversion failed!");
+			if ($settings['m2f_pop3_debug']) logentry("iconv", "conversion failed!");
 		}
 	}
 
 	// We couldn't convert, or there was no need to. Return unaltered
+	if ($settings['m2f_pop3_debug']) logentry("mb_convert_encoding", "No need to recode or impossible to recode");
 	return $text;
 }
+
+function check_utf8($str) {
+	$len = strlen($str);
+	for($i = 0; $i < $len; $i++){
+		$c = ord($str[$i]);
+		if ($c > 128) {
+			if (($c > 247)) return false;
+			elseif ($c > 239) $bytes = 4;
+			elseif ($c > 223) $bytes = 3;
+			elseif ($c > 191) $bytes = 2;
+			else return false;
+			if (($i + $bytes) > $len) return false;
+			while ($bytes > 1) {
+				$i++;
+				$b = ord($str[$i]);
+				if ($b < 128 || $b > 191) return false;
+				$bytes--;
+			}
+		}
+	}
+	return true;
+} // end of check_utf8
+
 
 // add the new message as a post record to the forum
 function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
@@ -675,12 +715,12 @@ while (true) {
 					if ($settings['m2f_pop3_debug']) echo "Message: ".$message->ctype_primary."\n";
 					if (strtolower($message->ctype_primary) == 'text') {
 						// if it's a plain-text message, just grab the body
-						$post['body'] = charsetconv($message->body, $messagepart->ctype_parameters['charset']);
+						$post['body'] = charsetconv($message->body, $message->ctype_parameters['charset']);
 						if (isset($post['subject'])) {
 							if (is_array($post['subject'])) {
-								$post['subject']['subject'] = charsetconv($post['subject']['subject'], $messagepart->ctype_parameters['charset']);
+								$post['subject']['subject'] = charsetconv($post['subject']['subject'], $message->ctype_parameters['charset']);
 							} else {
-								$post['subject'] = charsetconv($post['subject'], $messagepart->ctype_parameters['charset']);
+								$post['subject'] = charsetconv($post['subject'], $message->ctype_parameters['charset']);
 							}
 						}
 					} elseif (strtolower($message->ctype_primary) == 'multipart') {

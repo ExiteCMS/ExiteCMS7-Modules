@@ -497,6 +497,9 @@ if (!function_exists('module_upgrade')) {
 				// added upload notifications
 
 			case "1.1.9":
+				// upgrade to ExiteCMS v7.2
+
+			case "1.2.0":
 				// current version
 
 			default:
