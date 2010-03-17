@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "File Downloads";							// title or name of this module
 $mod_description = "Module to provide a secure download page for files stored locally on the webserver";	// short description of it's purpose
-$mod_version = "1.0.2";									// module version number
+$mod_version = "1.0.3";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -48,8 +48,8 @@ if (str_replace(".", "", $settings['version']) < 720) {
 	$mod_errors .= sprintf($locale['mod001'], '7.20');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 720) {
-	$mod_errors .= sprintf($locale['mod002'], '7.20');
+if (str_replace(".", "", $settings['version']) > 730) {
+	$mod_errors .= sprintf($locale['mod002'], '7.30');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {

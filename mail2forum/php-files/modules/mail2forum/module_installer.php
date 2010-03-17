@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Mail2Forum";
 $mod_description = "Mail2Forum implements an interface between the mail and the web world. Posted messages are emailed to subscribers, their replies are posted on the forum on their behalf";
-$mod_version = "1.1.1";
+$mod_version = "1.1.2";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -48,8 +48,8 @@ if (str_replace(".", "", $settings['version']) < 720) {
 	$mod_errors .= sprintf($locale['mod001'], '7.20');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 720) {
-	$mod_errors .= sprintf($locale['mod002'], '7.20');
+if (str_replace(".", "", $settings['version']) > 730) {
+	$mod_errors .= sprintf($locale['mod002'], '7.30');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {

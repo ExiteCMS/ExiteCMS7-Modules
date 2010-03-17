@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "Wikka Wiki";								// title or name of this module
 $mod_description = "ExiteCMS embedded implementation of Wikka Wakka Wiki v1.1.6.4";	// short description of it's purpose
-$mod_version = "1.1.9";									// module version number
+$mod_version = "1.2.0";									// module version number
 $mod_developer = "WanWizard";							// author's name
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -48,8 +48,8 @@ if (str_replace(".", "", $settings['version']) < 720) {
 	$mod_errors .= sprintf($locale['mod001'], '7.20');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 720) {
-	$mod_errors .= sprintf($locale['mod002'], '7.20');
+if (str_replace(".", "", $settings['version']) > 730) {
+	$mod_errors .= sprintf($locale['mod002'], '7.30');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
@@ -330,7 +330,7 @@ $mod_uninstall_cmds[] = array('type' => 'function', 'value' => "module_uninstall
 +----------------------------------------------------*/
 if (!function_exists('module_install')) {
 	function module_install() {
-		
+
 		global $db_prefix, $mod_admin_rights;
 
 		// add the Wiki config variables
@@ -359,7 +359,7 @@ if (!function_exists('module_install')) {
 if (!function_exists('add_config_items')) {
 	function add_config_items() {
 		global $db_prefix, $mod_admin_rights;
-	
+
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_root_page', 'HomePage')");
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_wakka_name', 'ExiteCMS Wiki')");
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_navigation_links', '[[CategoryCategory Categories]] | PageIndex | RecentChanges | RecentlyCommented')");
@@ -377,7 +377,7 @@ if (!function_exists('add_config_items')) {
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G".$data['group_id']."')");
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G".$data['group_id']."')");
 		} else {
-			// can't find it? default to all members			
+			// can't find it? default to all members
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_write_acl', 'G101')");
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_default_comment_acl', 'G101')");
 		}
@@ -387,7 +387,7 @@ if (!function_exists('add_config_items')) {
 			$data = dbarray($result);
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G".$data['group_id']."')");
 		} else {
-			// can't find it? default to all members			
+			// can't find it? default to all members
 			$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_admin_group', 'G103')");
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."configuration( cfg_name, cfg_value ) VALUES ('wiki_forum_links', '0')");
@@ -451,7 +451,7 @@ if (!function_exists('module_upgrade')) {
 									$result2 = dbquery("SELECT * FROM ".$db_prefix."users WHERE user_name = '".trim($acl)."'");
 									if (dbrows($result2)) {
 										$data2 = dbarray($result2);
-										$newacl .= ($newacl == "" ? "" : "\n").$data2['user_id'];									
+										$newacl .= ($newacl == "" ? "" : "\n").$data2['user_id'];
 									} else {
 										echo "=> ",$acl," not found<br>";
 									}

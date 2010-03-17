@@ -23,7 +23,7 @@ if (!checkrights("I") || !defined("iAUTH") || $aid != iAUTH || !defined('INIT_CM
 +----------------------------------------------------*/
 $mod_title = "eXtplorer";
 $mod_description = "Webbased file explorer and FTP client";
-$mod_version = "1.0.0";
+$mod_version = "1.0.1";
 $mod_developer = "WanWizard";
 $mod_email = "wanwizard@exitecms.org";
 $mod_weburl = "http://www.exitecms.org/";
@@ -46,8 +46,8 @@ if (str_replace(".", "", $settings['version']) < 720) {
 	$mod_errors .= sprintf($locale['mod001'], '7.20');
 }
 // check for a maximum version of the ExiteCMS engine
-if (str_replace(".", "", $settings['version']) > 720) {
-	$mod_errors .= sprintf($locale['mod002'], '7.20');
+if (str_replace(".", "", $settings['version']) > 730) {
+	$mod_errors .= sprintf($locale['mod002'], '7.30');
 }
 // check for a specific revision number range that is supported
 if ($settings['revision'] < 0 || $settings['revision'] > 999999) {
@@ -89,12 +89,12 @@ if (!function_exists('eXtplorer_add_to_menu')) {
 			$group = $data['group_id'];
 		} else {
 			// if it doesn't exist, create it
-			$result = dbquery("INSERT INTO ".$db_prefix."user_groups (group_ident, group_name, group_groups, group_rights, group_description, group_forumname, group_visible) 
+			$result = dbquery("INSERT INTO ".$db_prefix."user_groups (group_ident, group_name, group_groups, group_rights, group_description, group_forumname, group_visible)
 							VALUES ('EX01', 'File Administrators', '', '', 'File Administrators', 'File Administrator', '0')");
 			$group = mysql_insert_id();
 		}
 
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_locale, link_url, panel_name, link_visibility, link_position, link_window, link_order) 
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_locale, link_url, panel_name, link_visibility, link_position, link_window, link_order)
 							VALUES('File Explorer', '".$settings['locale_code']."', 'modules/eXtplorer/index.php', 'main_menu_panel', ".$group.", 1, 1, ".$order.")");
 	}
 }
