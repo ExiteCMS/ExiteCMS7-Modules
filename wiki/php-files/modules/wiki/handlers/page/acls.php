@@ -137,6 +137,8 @@ if ($this->UserIsOwner())
 					if (dbrows($result)) {
 						$data = dbarray($result);
 						$selected_read_acl[$key] = array($acl, $data['user_name']);
+					} else {
+						unset($selected_read_acl[$key]);
 					}
 				}
 			}
@@ -160,6 +162,8 @@ if ($this->UserIsOwner())
 					if (dbrows($result)) {
 						$data = dbarray($result);
 						$selected_write_acl[$key] = array($acl, $data['user_name']);
+					} else {
+						unset($selected_write_acl[$key]);
 					}
 				}
 			}
@@ -183,6 +187,8 @@ if ($this->UserIsOwner())
 					if (dbrows($result)) {
 						$data = dbarray($result);
 						$selected_comment_acl[$key] = array($acl, $data['user_name']);
+					} else {
+						unset($selected_comment_acl[$key]);
 					}
 				}
 			}

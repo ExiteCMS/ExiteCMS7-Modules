@@ -101,8 +101,8 @@
 			</td>
 			<td class='tbl' width='50%'>
 				<select name='default_write_acl' class='textbox'>
-				{section name=id loop=$usergroups}
-					<option value='{$usergroups[id].0}'{if $usergroups[id].0 == $settings2.wiki_default_write_acl} selected="selected"{/if}>{$usergroups[id].1}</option>
+				{section name=id loop=$wikigroups}
+					<option value='{$wikigroups[id].0}'{if $wikigroups[id].0 == $settings2.wiki_default_write_acl} selected="selected"{/if}>{$wikigroups[id].1}</option>
 				{/section}
 				</select>
 			</td>
@@ -136,8 +136,8 @@
 			</td>
 			<td class='tbl' width='50%'>
 				<select name='default_comment_acl' class='textbox'>
-				{section name=id loop=$usergroups}
-					<option value='{$usergroups[id].0}'{if $usergroups[id].0 == $settings2.wiki_default_comment_acl} selected="selected"{/if}>{$usergroups[id].1}</option>
+				{section name=id loop=$wikigroups}
+					<option value='{$wikigroups[id].0}'{if $wikigroups[id].0 == $settings2.wiki_default_comment_acl} selected="selected"{/if}>{$wikigroups[id].1}</option>
 				{/section}
 				</select>
 			</td>
@@ -188,7 +188,7 @@
 			</td>
 		</tr>
 	</table>
-</form>	
+</form>
 {include file="_closetable.tpl"}
 <script type='text/javascript'>
 {literal}
