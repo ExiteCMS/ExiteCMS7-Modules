@@ -1,0 +1,170 @@
+<?php 
+/*---------------------------------------------------------------------+
+| ExiteCMS Content Management System                                   |
++----------------------------------------------------------------------+
+| Copyright 2006-2008 Exite BV, The Netherlands                        |
+| for support, please visit http://www.exitecms.org                    |
++----------------------------------------------------------------------+
+| Some code derived from PHP-Fusion, copyright 2002 - 2006 Nick Jones  |
++----------------------------------------------------------------------+
+### CREDITS ###
+| Released under the terms & conditions of v2 of the GNU General Public|
+| License. For details refer to the included gpl.txt file or visit     |
+| http://gnu.org                                                       |
++----------------------------------------------------------------------+
+| $Id:: viewpage.php 1935 2008-10-29 23:42:42Z WanWizard              $|
++----------------------------------------------------------------------+
+| Last modified by $Author:: WanWizard                                $|
+| Revision number $Rev:: 1935                                         $|
++---------------------------------------------------------------------*/
+if (!function_exists('install_language_pack')) {
+	function install_language_pack($step) {
+### LOCALESTRINGS ###
+		return "";
+	}
+}
+/*---------------------------------------------------+
+| start of the language pack load code               |
++----------------------------------------------------*/
+if (!defined('CMS_SETUP')) require_once dirname(__FILE__)."/../../includes/core_functions.php";
+
+/*---------------------------------------------------+
+| local functions                                    |
++----------------------------------------------------*/
+if (!function_exists('load_localestrings')) {
+	function load_localestrings($localestrings, $locales_code, $locales_name, $step="") {
+		global $db_prefix, $_db_log;
+	
+		// if this is an upgrade, remove the old locale strings first
+		if ($step == "upgrade") {
+			$result = dbquery("DELETE FROM ".$db_prefix."locales WHERE locales_code = '$locales_code' AND locales_name = '$locales_name'");
+		}
+
+		// temporary disable query logging
+		$dblog = $_db_log; $_db_log = false;
+		// proces the imported locale strings
+		foreach ($localestrings as $key => $value) {
+			if (is_array($value)) {
+				$value = "#ARRAY#\n".serialize($value);
+			}
+			$result = dbquery("INSERT INTO ".$db_prefix."locales (locales_code, locales_name, locales_key, locales_value, locales_datestamp) VALUES ('$locales_code', '$locales_name', '".mysql_escape_string($key)."', '".mysql_escape_string($value)."', '".LP_DATE."')");
+		}
+		$_db_log = $dblog;
+		return true;
+	}
+}
+
+### DEFINES ###
+
+/*---------------------------------------------------+
+| main code                                          |
++----------------------------------------------------*/
+if (!defined('LP_SKIP_MAIN')) {
+	// when not in CLI mode, check the users rights, and load the locale strings
+	if (!CMS_CLI) {
+		// check for the proper admin access rights
+		if (!checkrights("T") || !defined("iAUTH") || $aid != iAUTH) {
+			fallback(ADMIN."index.php");
+		}
+		// load the locale for this module
+		locale_load("admin.main");
+	}
+	
+	if (defined('CMS_SETUP') && !defined('CMS_SETUP_LOAD')) {
+		// skip if in setup and no load request was given
+		$step = "skip";
+	} elseif (CMS_CLI) {
+		// in CLI mode, just import the language pack. If already present, overwrite it
+		$step = "upgrade";
+	} else {
+		//else load the theme functions for interactive mode
+		require_once PATH_INCLUDES."theme_functions.php";
+	}
+	
+	// used to store template variables
+	$variables = array();
+	
+	// message variable
+	$variables['message'] = "";
+	
+	// make sure step has a value
+	if (!isset($step)) $step = "";
+	
+	// de-install the language pack
+	if ($step == "remove") {
+		// check if the locale exists
+		$result = dbquery("SELECT * FROM ".$db_prefix."locale WHERE locale_code = '".LP_LOCALE."'");
+		if (dbrows($result)) {
+			// delete the language from the locales table
+			$result = dbquery("DELETE FROM ".$db_prefix."locales WHERE locales_code = '".LP_LOCALE."'");
+			// delete the locale record itself
+			$result = dbquery("DELETE FROM ".$db_prefix."locale WHERE locale_code = '".LP_LOCALE."'");
+			if ($step == "remove") {
+				// update the site default locale
+				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = 'en' WHERE cfg_name = 'locale' AND cfg_value = '".LP_LOCALE."'");
+				// update the members default locale
+				$result = dbquery("UPDATE ".$db_prefix."users SET user_locale = 'en' WHERE user_locale = '".LP_LOCALE."'");
+				// report the save succesfully, and go back to the overview table
+				if (!CMS_CLI) $variables['message'] .= sprintf($locale['305'],LP_LOCALE, LP_LANGUAGE);
+			}
+		}
+	}
+	
+	// install the language pack
+	if ($step == "install" || $step == "upgrade") {
+		if ($step == "install" || defined('CMS_SETUP_LOAD')) {
+			$result = dbquery("INSERT INTO ".$db_prefix."locale (locale_code, locale_name, locale_countries, locale_locale, locale_charset, locale_direction, locale_active) VALUES ('".LP_LOCALE."', '".LP_LANGUAGE."', '".LP_COUNTRIES."', '".LP_LOCALES."', '".LP_CHARSET."', '".LP_DIRECTION."', 1)");
+		} elseif ($step == "upgrade") {
+			$result = dbquery("UPDATE ".$db_prefix."locale SET locale_name = '".LP_LANGUAGE."', locale_countries = '".LP_COUNTRIES."', locale_locale = '".LP_LOCALES."', locale_charset = '".LP_CHARSET."', locale_direction = '".LP_DIRECTION."' WHERE locale_code = '".LP_LOCALE."'");
+		}
+		if ($error = install_language_pack($step)) {
+			if (!CMS_CLI) $variables['message'] .= sprintf($locale['308'],LP_LOCALE, LP_LANGUAGE)."<br /><br />".$error;
+		} else {
+			if ($step == "install") {
+				if (!CMS_CLI) $variables['message'] .= sprintf($locale['306'],LP_LOCALE, LP_LANGUAGE);
+			} else {
+				if (!CMS_CLI) $variables['message'] .= sprintf($locale['307'],LP_LOCALE, LP_LANGUAGE);
+			}
+			// update the install timestamp in the config
+			if (isset($settings['LanguagePack.'.LP_LANGUAGE])) {
+				$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".LP_DATE."' WHERE cfg_name = 'LanguagePack.".LP_LANGUAGE."'");
+			} else {
+				$result = dbquery("INSERT INTO ".$db_prefix."configuration (cfg_name, cfg_value) VALUES ('LanguagePack.".LP_LANGUAGE."', '".LP_DATE."')");
+			}
+		}
+	}
+	
+	if (defined('CMS_SETUP')) {
+	
+		// no output at all in setup mode
+		
+	} elseif (CMS_CLI) {
+	
+		// output in CLI mode
+		echo "Language pack installed.\n";
+		
+	} else {
+	
+		// interactive mode
+		require_once PATH_INCLUDES."theme_functions.php";
+	
+		// countries for which this language pack applies
+		$variables['flags'] = explode("|", LP_COUNTRIES);
+
+		// check the last update of the locale
+		$variables['last_update'] = isset($settings['LanguagePack.'.LP_LANGUAGE]) ? $settings['LanguagePack.'.LP_LANGUAGE] : min(LP_DATE - 1, dbfunction("MAX(locales_datestamp)", "locales", "locales_code = '".LP_LOCALE."' AND locales_name NOT LIKE 'modules%'"));
+		
+		// check if this language pack has been installed
+		$variables['can_install'] = dbcount("(*)", "locale", "locale_code = '".LP_LOCALE."'") == 0;
+		$variables['can_remove'] = LP_LOCALE != $settings['default_locale'] && $variables['can_install'] == false;
+		$variables['can_upgrade'] = $variables['can_install'] == false && $variables['last_update'] < LP_DATE;
+	
+		// define the body panel variables
+		$template_panels[] = array('type' => 'body', 'name' => 'admin.tools.languagepack', 'title' => "ExiteCMS Language Packs", 'template' => 'admin.tools.languagepack.tpl', 'locale' => "admin.main");
+		$template_variables['admin.tools.languagepack'] = $variables;
+		
+		// Call the theme code to generate the output for this webpage
+		require_once PATH_THEME."/theme.php";
+	}
+}
+?>
