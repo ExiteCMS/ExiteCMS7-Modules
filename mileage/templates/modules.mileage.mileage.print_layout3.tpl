@@ -131,14 +131,14 @@ body 		{ font-family:Verdana,Tahoma,Arial,Sans-Serif;font-size:10pt; }
 				<td align='left'>
 				{if $trips[id].trip.type == "B"}
 					{$locale.eA_726}
-					{if $trips[id].detour.reason != ""}
+					{if $trips[id].detour.mileage > 0}
 						{if $trips[id].detour.type == "P"}
 							{$locale.eA_839} {$locale.eA_727}
 						{/if}
 					{/if}
 				{elseif $trips[id].trip.type == "P"}
 					{$locale.eA_727}
-					{if $trips[id].detour.reason != ""}
+					{if $trips[id].detour.mileage > 0}
 						{if $trips[id].detour.type == "B"}
 							{$locale.eA_839} {$locale.eA_726}
 						{/if}
