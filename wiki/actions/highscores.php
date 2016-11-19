@@ -12,13 +12,13 @@
 
     $str = 'SELECT COUNT(*) FROM '.$this->config["table_prefix"].'pages WHERE `latest` = \'Y\' ';
     $totalQuery = $this->Query( $str );
-    $total  = mysql_result($totalQuery, 0);
+    $total  = mysqli_result($totalQuery, 0);
 
     print( "<blockquote><table>" );
 
-    $i = 0;    
-    while( $row = mysql_fetch_array($rankQuery) )
-    { 
+    $i = 0;
+    while( $row = mysqli_fetch_array($rankQuery) )
+    {
         $i++;
         $str = '<tr>';
         $str .= "<td>$i. &nbsp;</td>";
@@ -31,5 +31,5 @@
         $str .= '</tr>';
         print( $str );
     }
-    print( "</table></blockquote>" );    
+    print( "</table></blockquote>" );
 ?>

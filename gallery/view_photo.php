@@ -212,7 +212,7 @@ $allImageAreas = $gallery->album->getAllImageAreas($index);
 $metaTags = array();
 $keyWords = $gallery->album->getKeywords($index);
 if (!empty($keyWords)) {
-    $metaTags['Keywords'] = ereg_replace("[[:space:]]+",' ',$keyWords);
+    $metaTags['Keywords'] = preg_replace("~[[:space:]]+~",' ',$keyWords);
 }
 
 if (!$GALLERY_EMBEDDED_INSIDE) {
@@ -333,7 +333,7 @@ if (!$gallery->album->isMovie($id)) {
     print '<a id="page_url" href="'. $page_url .'"></a>'."\n";
 
     if ($gallery->album->fields["use_exif"] == "yes" &&
-      (eregi("jpe?g\$", $photo->image->type)) &&
+      (preg_match("~jpe?g\$~i", $photo->image->type)) &&
       (isset($gallery->app->use_exif) || isset($gallery->app->exiftags)) &&
       sizeof($albumItemOptions) == 2) {
         $albumName = $gallery->session->albumName;
@@ -348,7 +348,7 @@ if (!$gallery->album->isMovie($id)) {
         $photo = $gallery->album->getPhoto($GLOBALS["index"]);
         $photoPath = $gallery->album->getAlbumDirURL("full");
         $prependURL = '';
-        if (!ereg('^https?://', $photoPath)) {
+        if (!preg_match('~^https?://~', $photoPath)) {
             $prependURL = 'http';
             if (isset($_SERVER['HTTPS']) && stristr($_SERVER['HTTPS'], "on")) {
                 $prependURL .= 's';
@@ -635,7 +635,7 @@ if (!$gallery->album->isMovie($id)) {
 }
 
 $frame = $gallery->album->fields['image_frame'];
-if ($fitToWindow && (eregi('safari|opera', $_SERVER['HTTP_USER_AGENT']) || $gallery->session->offline)) {
+if ($fitToWindow && (preg_match('~^(safari|opera)$~', $_SERVER['HTTP_USER_AGENT']) || $gallery->session->offline)) {
     //Safari/Opera can't render dynamically sized image frame
     $frame = 'none';
 }

@@ -16,7 +16,7 @@
 | Last modified by $Author:: WanWizard                                $|
 | Revision number $Rev:: 2043                                         $|
 +---------------------------------------------------------------------*/
-if (eregi("tracsvn_functions.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // convert the extensions list into an array
 $tracsvn_extensions = explode(",", str_replace(" ", "", $settings['tracsvn_extensions']));
@@ -82,7 +82,7 @@ function tracsvn_wiki2html($text) {
 	// external links in a new window
 	$text = preg_replace("/\[http(.*?) (.*?)\]/si", "<a href='http\\1' title='' target='_blank'>\\2</a><img src='".THEME."images/external_link.gif' alt='' />", $text);
 	// other links as is
-	$text = preg_replace("/\[(.*?) (.*?)\]/si", "<a href='\\1' title=''>\\2</a> alt='' />", $text);	
+	$text = preg_replace("/\[(.*?) (.*?)\]/si", "<a href='\\1' title=''>\\2</a> alt='' />", $text);
 	// svn revisions
 	if (FUSION_SELF == "trac.php") {
 		$text = preg_replace("/\[([0-9]+?)\]/i", "#<a href='svn.php?rev=\\1' title=''>\\1</a>", $text);
@@ -92,8 +92,8 @@ function tracsvn_wiki2html($text) {
 		$text = preg_replace("/#([0-9]+)(\s)/si", "#<a href='trac.php?step=ticket&amp;id=\\1' title=''>\\1</a>\\2", $text);
 	}
 	$text = preg_replace("/rev. ([0-9]+)/i", "rev. <a href='svn.php?rev=\\1' title=''>\\1</a>", $text);
-	
-	// return the converted text	
+
+	// return the converted text
 	return $text;
 }
 
@@ -101,11 +101,11 @@ function tracsvn_wiki2html($text) {
 function tracsvn_getalias($tracname) {
 
 	global $db_prefix;
-	
+
 	// validate the parameter
 	if (!empty($tracname) && is_string($tracname)) {
 		// translate Trac/SVN users to ExiteCMS users if needed
-    	$result = dbquery("SELECT u.user_id, u.user_name FROM ".$db_prefix."users u, ".$db_prefix."tracsvn_alias t WHERE t.tracsvn_userid = u.user_id AND t.tracsvn_username = '$tracname' LIMIT 1"); 
+    	$result = dbquery("SELECT u.user_id, u.user_name FROM ".$db_prefix."users u, ".$db_prefix."tracsvn_alias t WHERE t.tracsvn_userid = u.user_id AND t.tracsvn_username = '$tracname' LIMIT 1");
     	if (dbrows($result)) {
 	    	$tracname = dbarray($result);
 		}
@@ -113,7 +113,7 @@ function tracsvn_getalias($tracname) {
 	// not found? maybe there's a direct link with a member
 	if (!is_array($tracname)) {
 		// check the users table
-    	$result = dbquery("SELECT user_id, user_name FROM ".$db_prefix."users WHERE user_name = '$tracname' LIMIT 1"); 
+    	$result = dbquery("SELECT user_id, user_name FROM ".$db_prefix."users WHERE user_name = '$tracname' LIMIT 1");
     	if (dbrows($result)) {
 	    	$tracname = dbarray($result);
 		}
@@ -123,7 +123,7 @@ function tracsvn_getalias($tracname) {
 	if (!is_array($tracname)) {
 		$tracname = array('user_id' => '0', 'user_name' => $tracname);
 	}
-		
+
 	return $tracname;
 }
 
@@ -177,14 +177,14 @@ function tracsvn_dump($svnfile) {
 
 	// and do the GeSHi processing
 	require_once PATH_GESHI.'geshi.php';
-	$geshi =& new GeSHi($sourcecode, $geshi_processor, PATH_GESHI.'geshi');
+	$geshi = new GeSHi($sourcecode, $geshi_processor, PATH_GESHI.'geshi');
 	$geshi->enable_classes();
 	$geshi->set_overall_class('code');
 	$geshi->set_header_type(GESHI_HEADER_DIV);
 	$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
 	$geshi->set_tab_width(4);
-	
-	$output = '<!--start GeSHi-->'."\n".$geshi->parse_code()."\n".'<!--end GeSHi-->'."\n";	
+
+	$output = '<!--start GeSHi-->'."\n".$geshi->parse_code()."\n".'<!--end GeSHi-->'."\n";
 
 	// delete the temp file
 	@unlink($filename);
@@ -250,7 +250,7 @@ function tracsvn_diff($diffs) {
 
 	// drop the last entry in the raw output
 	array_pop($raw);
-		
+
 	// loop trough the raw output
 	foreach($raw as $nr => $line) {
 
@@ -280,7 +280,7 @@ function tracsvn_diff($diffs) {
 				$thisline['left'] = $left[0]++;
 				$thisline['right'] = "";
 				break;
-			
+
 			case "+":
 				// added to the new file
 				$thisline['left'] = "";
@@ -292,20 +292,20 @@ function tracsvn_diff($diffs) {
 				$thisline['left'] = $left[0]++;
 				$thisline['right'] = $right[0]++;
 				break;
-		}	
+		}
 		// line
 		$thisline['line'] = stripinput(substr($line,2));
 		$thisline['line'] = str_repeat("&nbsp;", strlen($thisline['line']) - strlen(ltrim($thisline['line']))) . ltrim($thisline['line']);
-		
+
 		// store this line
 		$output[] = $thisline;
 	}
-	
+
 	// store the diffcount
 	$output[0]['diffcount'] = $diffcount;
-	
+
 	// and return the output
-	return $output;	
+	return $output;
 }
 
 // On Windows machines, the whole line needs quotes round it so that it's
@@ -345,7 +345,7 @@ function tracsvn_ExtCmd($cmd, $mayReturnNothing = true) {
 		$output[] = rtrim($line);
 	}
 
-	while (!feof($pipes[2])) {               
+	while (!feof($pipes[2])) {
 		$error .= fgets($pipes[2]);
 	}
 

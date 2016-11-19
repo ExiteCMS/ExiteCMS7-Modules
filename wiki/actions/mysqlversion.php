@@ -2,5 +2,5 @@
 /**
  * Print current MySQL version.
  */
-echo mysql_get_server_info();
+echo mysqli_get_server_info($his->dblink);
 ?>

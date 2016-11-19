@@ -1,7 +1,7 @@
 <?php
 /**
  * The Wikka mainscript.
- * 
+ *
  * This file is called each time a request is made from the browser.
  * Most of the core methods used by the engine are located in the Wakka class.
  * @see Wakka
@@ -15,32 +15,32 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @see /docs/Wikka.LICENSE
  * @filesource
- * 
+ *
  * @author Hendrik Mans <hendrik@mans.de>
  * @author Jason Tourtelotte <wikka-admin@jsnx.com>
  * @author {@link http://wikkawiki.org/JavaWoman Marjolein Katsma}
  * @author {@link http://wikkawiki.org/NilsLindenberg Nils Lindenberg}
  * @author {@link http://wikkawiki.org/DotMG Mahefa Randimbisoa}
  * @author {@link http://wikkawiki.org/DarTar Dario Taraborelli}
- * 
+ *
  * @copyright Copyright 2002-2003, Hendrik Mans <hendrik@mans.de>
  * @copyright Copyright 2004-2005, Jason Tourtelotte <wikka-admin@jsnx.com>
  * @copyright Copyright 2006, {@link http://wikkawiki.org/CreditsPage Wikka Development Team}
- * 
+ *
  * @todo use templating class for page generation;
  * @todo add phpdoc documentation for configuration array elements;
  * @todo	replace $_REQUEST with either $_GET or $_POST (or both if really
- * 			necessary) - #312  
+ * 			necessary) - #312
  */
 
-// If you need to use this installation with a configuration file outside the 
-// installation directory uncomment the following line and adapt it to reflect 
+// If you need to use this installation with a configuration file outside the
+// installation directory uncomment the following line and adapt it to reflect
 // the (filesystem) path to where your configuration file is located.
 // This would make it possible to store the configuration file outside of the
 // webroot, or to share one configuration file between several Wikka Wiki
 // installations.
 // This replaces the use of the environment variable WAKKA_CONFIG for security
-// reasons. [SEC]      
+// reasons. [SEC]
 require_once dirname(__FILE__)."/../../includes/core_functions.php";
 
 #if (!defined('WAKKA_CONFIG')) define('WAKKA_CONFIG','path/to/your/wikka.config.php');
@@ -50,7 +50,7 @@ if(!defined('ERROR_SETUP_FILE_MISSING')) define ('ERROR_SETUP_FILE_MISSING', 'A 
 if(!defined('ERROR_SETUP_HEADER_MISSING')) define ('ERROR_SETUP_HEADER_MISSING', 'The file "setup/header.php" was not found. Please install Wikka again!');
 if(!defined('ERROR_SETUP_FOOTER_MISSING')) define ('ERROR_SETUP_FOOTER_MISSING', 'The file "setup/footer.php" was not found. Please install Wikka again!');
 if(!defined('ERROR_NO_DB_ACCESS')) define ('ERROR_NO_DB_ACCESS', 'The wiki is currently unavailable. <br /><br />Error: Unable to connect to the MySQL database.');
-if(!defined('PAGE_GENERATION_TIME')) define ('PAGE_GENERATION_TIME', 'Page was generated in %.4f seconds'); // %.4f - generation time in seconds with 4 digits after the dot   
+if(!defined('PAGE_GENERATION_TIME')) define ('PAGE_GENERATION_TIME', 'Page was generated in %.4f seconds'); // %.4f - generation time in seconds with 4 digits after the dot
 if(!defined('WIKI_UPGRADE_NOTICE')) define ('WIKI_UPGRADE_NOTICE', 'This site is currently being upgraded. Please try again later.');
 
 ob_start();
@@ -77,21 +77,6 @@ function getmicrotime() {
 
 $tstart = getmicrotime();
 
-if ( ! function_exists("mysql_real_escape_string") )
-{
-/**
- * Escape special characters in a string for use in a SQL statement.
- * 
- * This function is added for back-compatibility with MySQL 3.23.
- * @param string $string the string to be escaped
- * @return string a string with special characters escaped
- */
-	function mysql_real_escape_string($string)
-	{
-		return mysql_escape_string($string);
-	}
-}
-
 /**
  * Include main library if it exists.
  * @see /libs/Wakka.class.php
@@ -102,7 +87,7 @@ else die(ERROR_WAKKA_LIBRARY_MISSING);
 // stupid version check
 if (!isset($_REQUEST)) die(ERROR_WRONG_PHP_VERSION); // TODO replace with php version_compare
 
-/** 
+/**
  * Workaround for the amazingly annoying magic quotes.
  */
 function magicQuotesWorkaround(&$a)
@@ -139,7 +124,7 @@ if (preg_match('@\.php$@', $t_request) && !preg_match('@wikka\.php$@', $t_reques
 }
 if ( !preg_match('@wakka=@',$_SERVER['REQUEST_URI']) && isset($_SERVER['QUERY_STRING']) && preg_match('@wakka=@',$_SERVER['QUERY_STRING']))
 {
-	// looks like we got a rewritten request via .htaccess 
+	// looks like we got a rewritten request via .htaccess
 	$t_query = '';
 	$t_request = preg_replace('@'.preg_quote('wikka.php').'@', '', $t_request);
 	$t_rewrite_mode = 1;
@@ -212,7 +197,7 @@ $wakkaDefaultConfig = array(
 $wakkaConfig = array();
 if (file_exists("wakka.config.php")) rename("wakka.config.php", "wikka.config.php");
 #if (!$configfile = GetEnv("WAKKA_CONFIG")) $configfile = "wikka.config.php";
-if (defined('WAKKA_CONFIG'))	// use a define instead of GetEnv [SEC] 
+if (defined('WAKKA_CONFIG'))	// use a define instead of GetEnv [SEC]
 {
 	$configfile = WAKKA_CONFIG;
 }
@@ -262,7 +247,7 @@ if ($wakkaConfig["wakka_version"] !== WAKKA_VERSION)
 {
 	/**
 	 * Start installer.
-	 * 
+	 *
 	 * Data entered by the user is submitted in $_POST, next action for the
 	 * installer (which will receive this data) is passed as a $_GET parameter!
 	 */
@@ -284,7 +269,7 @@ session_start();
 // fetch wakka location
 /**
  * Fetch wakka location (requested page + parameters)
- * 
+ *
  * @todo files action uses POST, everything else uses GET #312
  */
 #$wakka = $_REQUEST["wakka"];
@@ -297,7 +282,7 @@ $wakka = preg_replace("/^\//", "", $wakka);
 
 /**
  * Split into page/method.
- * 
+ *
  * Note this splits at the FIRST / so $method may contain one or more slashes;
  * this is not allowed, and ultimately handled in the Method() method. [SEC]
  */
@@ -316,9 +301,9 @@ if ((strtolower($page) == $page) && (isset($_SERVER['REQUEST_URI']))) #38
 /**
  * Create Wakka object
  */
-$wakka =& new Wakka($wakkaConfig);
+$wakka = new Wakka($wakkaConfig);
 
-/** 
+/**
  * Check for database access.
  */
 if (!$wakka->dblink)
@@ -328,7 +313,7 @@ if (!$wakka->dblink)
 }
 
 
-/** 
+/**
  * Run the engine.
  */
 if (!isset($method)) $method='';
@@ -355,7 +340,7 @@ if (!preg_match("/(xml|raw|mm|grabcode)$/", $method))
 }
 
 $content =  ob_get_contents();
-/** 
+/**
  * Use gzip compression if possible.
  */
 if ( false && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strstr ($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && function_exists('gzencode') ) #38
@@ -380,7 +365,7 @@ header('ETag: '.$etag);
 header('Content-Length: '.$page_length);
 ob_end_clean();
 
-/** 
+/**
  * Output the page.
  */
 echo $page_output;

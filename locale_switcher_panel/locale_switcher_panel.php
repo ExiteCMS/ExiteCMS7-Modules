@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("locale_switcher_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // check if the theme has been changed
 if (iMEMBER && isset($_POST['locale_switcher_panel_locale'])) {

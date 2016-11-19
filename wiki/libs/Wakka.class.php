@@ -1,36 +1,36 @@
 <?php
 /**
  * This file is part of Wikka, a PHP wiki engine.
- * 
+ *
  * It includes the Wakka class, which provides the core functions
- * to run Wikka. 
+ * to run Wikka.
  *
  * @package Wikka
  * @subpackage Libs
  * @version $Id$
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
- * 
+ *
  * @author Hendrik Mans <hendrik@mans.de>
  * @author Jason Tourtelotte <wikka-admin@jsnx.com>
  * @author {@link http://wikkawiki.org/JavaWoman Marjolein Katsma}
  * @author {@link http://wikkawiki.org/NilsLindenberg Nils Lindenberg}
  * @author {@link http://wikkawiki.org/DotMG Mahefa Randimbisoa}
  * @author {@link http://wikkawiki.org/DarTar Dario Taraborelli}
- * 
+ *
  * @copyright Copyright 2002-2003, Hendrik Mans <hendrik@mans.de>
  * @copyright Copyright 2004-2005, Jason Tourtelotte <wikka-admin@jsnx.com>
  * @copyright Copyright 2006, {@link http://wikkawiki.org/CreditsPage Wikka Development Team}
  */
- 
+
 /**
  * The Wikka core.
- * 
+ *
  * This class contains all the core methods used to run Wikka.
  * @name Wakka
  * @package Wikka
  * @subpackage Libs
- * 
+ *
  */
 class Wakka
 {
@@ -50,12 +50,12 @@ class Wakka
 	function Wakka($config)
 	{
 		$this->config = $config;
-		$this->dblink = @mysql_connect($this->config["mysql_host"], $this->config["mysql_user"], $this->config["mysql_password"]);
+		$this->dblink = @mysqli_connect($this->config["mysql_host"], $this->config["mysql_user"], $this->config["mysql_password"]);
 		if ($this->dblink)
 		{
-			if (!@mysql_select_db($this->config["mysql_database"], $this->dblink))
+			if (!@mysqli_select_db($this->config["mysql_database"], $this->dblink))
 			{
-				@mysql_close($this->dblink);
+				@mysqli_close($this->dblink);
 				$this->dblink = false;
 			}
 		}
@@ -67,18 +67,21 @@ class Wakka
 	 */
 	function Query($query)
 	{
-		$start = $this->GetMicroTime();
-		if (!$result = mysql_query($query, $this->dblink))
-		{
-			ob_end_clean();
-			die("Query failed: ".$query." (".mysql_error().")");
-		}
-		if ($this->GetConfigValue("sql_debugging"))
-		{
-			$time = $this->GetMicroTime() - $start;
-			$this->queryLog[] = array(
-				"query"		=> $query,
-				"time"		=> $time);
+		$result = false;
+		if ($this->dblink) {
+			$start = $this->GetMicroTime();
+			if (!$result = mysqli_query($this->dblink, $query))
+			{
+				ob_end_clean();
+				die("Query failed: ".$query." (".mysqli_error($this->dblink).")");
+			}
+			if ($this->GetConfigValue("sql_debugging"))
+			{
+				$time = $this->GetMicroTime() - $start;
+				$this->queryLog[] = array(
+					"query"		=> $query,
+					"time"		=> $time);
+			}
 		}
 		return $result;
 	}
@@ -88,24 +91,24 @@ class Wakka
 		$data = array();
 		if ($r = $this->Query($query))
 		{
-			while ($row = mysql_fetch_assoc($r)) $data[] = $row;
-			mysql_free_result($r);
+			while ($row = mysqli_fetch_assoc($r)) $data[] = $row;
+			mysqli_free_result($r);
 		}
 		return $data;
 	}
 	function CheckMySQLVersion($major, $minor, $subminor)
 	{
-		$result = @mysql_query('SELECT VERSION() AS version');
-		if ($result != FALSE && @mysql_num_rows($result) > 0)
+		$result = mysqli_query($this->dblink, 'SELECT VERSION() AS version');
+		if ($result != FALSE && mysqli_num_rows($result) > 0)
 		{
-			$row   = mysql_fetch_array($result);
+			$row   = mysqli_fetch_array($result);
 			$match = explode('.', $row['version']);
 		}
 		else
 		{
-			$result = @mysql_query('SHOW VARIABLES LIKE \'version\'');
-			if ($result != FALSE && @mysql_num_rows($result) > 0) {
-				$row   = mysql_fetch_row($result);
+			$result = mysqli_query($this->dblink, 'SHOW VARIABLES LIKE \'version\'');
+			if ($result != FALSE && mysqli_num_rows($result) > 0) {
+				$row   = mysqli_fetch_row($result);
 				$match = explode('.', $row[1]);
 			} else {
 				return 0;
@@ -133,13 +136,13 @@ class Wakka
 	function GetMicroTime() { list($usec, $sec) = explode(" ",microtime()); return ((float)$usec + (float)$sec); }
 	function IncludeBuffered($filename, $notfoundText='', $vars='', $path='')
 	{
-		# TODO: change parameter order, so $path (no default,. it's required) 
-		# comes after $filename and only $notfoundtext and $vars will actually 
-		# be optional with a default of ''. MK/2007-03-31    
+		# TODO: change parameter order, so $path (no default,. it's required)
+		# comes after $filename and only $notfoundtext and $vars will actually
+		# be optional with a default of ''. MK/2007-03-31
 
 		// check if required parameter $path is supplied (see TODO)
 		if ('' != trim($path))
-		{ 
+		{
 			// build full (relative) path to requested plugin (method/action/formatter)
 			$fullfilepath = trim($path).DIRECTORY_SEPARATOR.$filename;	#89 - Note $filename may actually already contain a (partial) path
 			// check if requested file (method/action/formatter) actually exists
@@ -174,7 +177,7 @@ class Wakka
 		require_once('3rdparty/core/safehtml/classes/safehtml.php');
 
 		// Instantiate the handler
-		$safehtml =& new safehtml();
+		$safehtml = new safehtml();
 
 		$filtered_output = $safehtml->parse($html);
 
@@ -185,16 +188,16 @@ class Wakka
 	 * Make sure a (user-provided) URL does use &amp; instead of & and is protected from attacks.
 	 *
 #	 * Any already-present '&amp;' is first turned into '&'; then htmlspecialchars() is applied so
-	 * Any already-present '&amp;' is first turned into '&'; then hsc_secure() 
-	 * is applied so all ampersands are "escaped" while characters that could be 
-	 * used to create a script attack (< > or ") are "neutralized" by escaping 
+	 * Any already-present '&amp;' is first turned into '&'; then hsc_secure()
+	 * is applied so all ampersands are "escaped" while characters that could be
+	 * used to create a script attack (< > or ") are "neutralized" by escaping
 	 * them.
 	 *
-	 * This method should be applied on any user-provided url in actions, 
+	 * This method should be applied on any user-provided url in actions,
 	 * handlers etc.
-	 * 
+	 *
 	 * Note: hsc_secure() is the secure replacement for PHP's htmlspecialchars().
-	 * See #427. 
+	 * See #427.
 	 *
 	 * @author		{@link http://wikkawiki.org/JavaWoman JavaWoman}
 	 * @copyright	Copyright © 2004, Marjolein Katsma
@@ -215,38 +218,38 @@ class Wakka
 	/**
 	 * Wrapper around hsc_secure() which preserves entity references.
 	 *
-	 * The first two parameters for this function as the same as those for 
+	 * The first two parameters for this function as the same as those for
 	 * htmlspecialchars() in PHP: the text to be treated, and an optional
-	 * parameter determining how to handle quotes; both these parameters are 
+	 * parameter determining how to handle quotes; both these parameters are
 	 * passed on to our hsc_secure() replacement for htmlspecialchars().
-	 * 
+	 *
 	 * Since hsc_secure() does not need a character set parameter, we don't
 	 * have that here any more either.
-	 * 
-	 * A third 'doctype' parameter is for local use only and determines how 
-	 * pre-existing entity references are treated after hsc_secure() has done 
+	 *
+	 * A third 'doctype' parameter is for local use only and determines how
+	 * pre-existing entity references are treated after hsc_secure() has done
 	 * its work: numeic entity references are always "unescaped' since they are
 	 * valid for both HTML and XML doctypes; for XML the named entity references
 	 * for the special characters are unescaped as well, while for for HTML any
-	 * named entity reference is unescaped. This parameter is optional and 
-	 * defaults to HTML.   
+	 * named entity reference is unescaped. This parameter is optional and
+	 * defaults to HTML.
 	 *
-	 * The function first applies hsc_secure() to the input string and then 
-	 * "unescapes" character entity references and numeric character references 
+	 * The function first applies hsc_secure() to the input string and then
+	 * "unescapes" character entity references and numeric character references
 	 * (both decimal and hexadecimal).
-	 * Entities are recognized also if the ending semicolon is omitted at the 
-	 * end or before a newline or tag but for consistency the semicolon is 
+	 * Entities are recognized also if the ending semicolon is omitted at the
+	 * end or before a newline or tag but for consistency the semicolon is
 	 * always added in the output where it was omitted.
 	 *
 	 * Usage note:
-	 * Where code should be rendered <em>as code</em> hsc_secure() should be 
-	 * used directly so that entity references are also rendered as such instead 
+	 * Where code should be rendered <em>as code</em> hsc_secure() should be
+	 * used directly so that entity references are also rendered as such instead
 	 * of as their corresponding characters.
-	 * 
+	 *
 	 * Documentation note:
-	 * It seems the $doctype parameter was added in 1.1.6.2; version should have 
+	 * It seems the $doctype parameter was added in 1.1.6.2; version should have
 	 * been bumped up to 1.1, and the param documented. We'll assume the updated
-	 * version was indeed 1.1, and put this one using hsc_secure() at 1.2 (at 
+	 * version was indeed 1.1, and put this one using hsc_secure() at 1.2 (at
 	 * the same time updating the 'XML' doctype with apos as named entity).
 	 *
 	 * @access	public
@@ -255,20 +258,20 @@ class Wakka
 	 *
 	 * @uses	Wakka::hsc_secure()
 	 * @param	string	$text required: text to be converted
-	 * @param	integer	$quote_style optional: quoting style - can be ENT_COMPAT 
-	 * 			(default, escape only double quotes), ENT_QUOTES (escape both 
-	 * 			double and single quotes) or ENT_NOQUOTES (don't escape any 
+	 * @param	integer	$quote_style optional: quoting style - can be ENT_COMPAT
+	 * 			(default, escape only double quotes), ENT_QUOTES (escape both
+	 * 			double and single quotes) or ENT_NOQUOTES (don't escape any
 	 * 			quotes)
 	 * @param	string $doctype 'HTML' (default) or 'XML'; for XML only the XML
 	 * 			standard entities are unescaped so we'll have valid XML content
-	 * @return	string	converted string with escaped special characted but 
+	 * @return	string	converted string with escaped special characted but
 	 * 			entity references intact
-	 * 
-	 * @todo	(maybe) recognize valid html entities and only leave those 
+	 *
+	 * @todo	(maybe) recognize valid html entities and only leave those
 	 * 			alone, thus transform &error; to &amp;error;
-	 * @todo	later - maybe) support full range of situations where (in SGML) 
-	 * 			a terminating ; may legally be omitted (end, newline and tag are 
-	 * 			merely the most common ones); such usage is quite rare though 
+	 * @todo	later - maybe) support full range of situations where (in SGML)
+	 * 			a terminating ; may legally be omitted (end, newline and tag are
+	 * 			merely the most common ones); such usage is quite rare though
 	 * 			and may not be worth the effort
 	 */
 	function htmlspecialchars_ent($text,$quote_style=ENT_COMPAT,$doctype='HTML')
@@ -278,9 +281,9 @@ class Wakka
 	    // [ENT_QUOTES] => 3
 	    // [ENT_NOQUOTES] => 0
 		if (!in_array($quote_style,array(ENT_COMPAT,ENT_QUOTES,ENT_NOQUOTES))) {
-			$quote_style = ENT_COMPAT;	
+			$quote_style = ENT_COMPAT;
 		}
-		
+
 		// define patterns
 		$terminator = ';|(?=($|[\n<]|&lt;))';	// semicolon; or end-of-string, newline or tag
 		$numdec = '#[0-9]+';					// numeric character reference (decimal)
@@ -288,7 +291,7 @@ class Wakka
 		if ($doctype == 'XML')					// pure XML allows only named entities for special chars
 		{
 			// only valid named entities in XML (case-sensitive)
-			$named = 'lt|gt|quot|apos|amp';			
+			$named = 'lt|gt|quot|apos|amp';
 			$ignore_case = '';
 			$entitystring = $named.'|'.$numdec.'|'.$numhex;
 		}
@@ -313,62 +316,62 @@ class Wakka
 
 	/**
 	 * Secure replacement for PHP built-in function htmlspecialchars().
-	 * 
-	 * See ticket #427 (http://wush.net/trac/wikka/ticket/427) for the rationale 
+	 *
+	 * See ticket #427 (http://wush.net/trac/wikka/ticket/427) for the rationale
 	 * for this replacement function.
-	 * 
+	 *
 	 * The INTERFACE for this function is almost the same as that for
 	 * htmlspecialchars(), with the same default for quote style; however, there
 	 * is no 'charset' parameter. The reason for this is as follows:
-	 * 
+	 *
 	 * The PHP docs say:
 	 * 	"The third argument charset defines character set used in conversion."
-	 * 
+	 *
 	 * I suspect PHP's htmlspecialchars() is working at the byte-value level and
-	 * thus _needs_ to know (or asssume) a character set because the special 
+	 * thus _needs_ to know (or asssume) a character set because the special
 	 * characters to be replaced could exist at different code points in
-	 * different character sets. (If indeed htmlspecialchars() works at 
-	 * byte-value level that goes some  way towards explaining why the 
-	 * vulnerability would exist in this function, too, and not only in 
+	 * different character sets. (If indeed htmlspecialchars() works at
+	 * byte-value level that goes some  way towards explaining why the
+	 * vulnerability would exist in this function, too, and not only in
 	 * htmlentities() which certainly is working at byte-value level.)
-	 * 
+	 *
 	 * This replacement function however works at character level and should
-	 * therefore be "immune" to character set differences - so no charset 
+	 * therefore be "immune" to character set differences - so no charset
 	 * parameter is needed or provided. If a third parameter is passed, it will
 	 * be silently ignored.
-	 * 
+	 *
 	 * In the OUTPUT there is a minor difference in that we use '&#39;' instead
 	 * of PHP's '&#039;' for a single quote: this provides compatibility with
 	 * 	get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES)
-	 * (see comment by mikiwoz at yahoo dot co dot uk on 
-	 * http://php.net/htmlspecialchars); it also matches the entity definition 
-	 * for XML 1.0 
-	 * (http://www.w3.org/TR/xhtml1/dtds.html#a_dtd_Special_characters). 
-	 * Like PHP we use a numeric character reference instead of '&apos;' for the 
-	 * single quote. For the other special characters we use the named entity 
+	 * (see comment by mikiwoz at yahoo dot co dot uk on
+	 * http://php.net/htmlspecialchars); it also matches the entity definition
+	 * for XML 1.0
+	 * (http://www.w3.org/TR/xhtml1/dtds.html#a_dtd_Special_characters).
+	 * Like PHP we use a numeric character reference instead of '&apos;' for the
+	 * single quote. For the other special characters we use the named entity
 	 * references, as PHP is doing.
-	 * 
+	 *
 	 * And finally:
-	 * The name for this function was basically inspired by waawaamilk (GeSHi), 
-	 * kindly provided by BenBE (GeSHi), happily acknowledged by WikkaWiki Dev 
+	 * The name for this function was basically inspired by waawaamilk (GeSHi),
+	 * kindly provided by BenBE (GeSHi), happily acknowledged by WikkaWiki Dev
 	 * Team and finally used by JavaWoman. :)
-	 * 
+	 *
 	 * @author 		{@link http://wikkawiki.org/JavaWoman Marjolein Katsma}
 	 *
 	 * @since		Wikka 1.1.7
 	 * @version		1.0
-	 * @license		http://www.gnu.org/copyleft/lgpl.html 
+	 * @license		http://www.gnu.org/copyleft/lgpl.html
 	 * 				GNU Lesser General Public License
-	 * @copyright	Copyright 2007, {@link http://wikkawiki.org/CreditsPage 
+	 * @copyright	Copyright 2007, {@link http://wikkawiki.org/CreditsPage
 	 * 				Wikka Development Team}
-	 * 
+	 *
 	 * @access	public
 	 * @param	string	$string	string to be converted
-	 * @param	integer	$quote_style 
+	 * @param	integer	$quote_style
 	 * 			- ENT_COMPAT:   escapes &, <, > and double quote (default)
 	 * 			- ENT_NOQUOTES: escapes only &, < and >
 	 * 			- ENT_QUOTES:   escapes &, <, >, double and single quotes
-	 * @return	string	converted string   
+	 * @return	string	converted string
 	 */
 	 function hsc_secure($string, $quote_style=ENT_COMPAT)
 	 {
@@ -461,7 +464,7 @@ class Wakka
 	{
 		// create GeSHi object
 		include_once($this->config['geshi_path'].'/geshi.php');
-		$geshi =& new GeSHi($sourcecode, $language, $this->config['geshi_languages_path']);				# create object by reference
+		$geshi = new GeSHi($sourcecode, $language, $this->config['geshi_languages_path']);				# create object by reference
 
 		$geshi->enable_classes();								# use classes for hilighting (must be first after creating object)
 		$geshi->set_overall_class('code');						# enables using a single stylesheet for multiple code fragments
@@ -501,7 +504,7 @@ class Wakka
 
 		// parse and return highlighted code
 		// comments added to make GeSHi-highlighted block visible in code JW/20070220
-		return '<!--start GeSHi-->'."\n".$geshi->parse_code()."\n".'<!--end GeSHi-->'."\n";	
+		return '<!--start GeSHi-->'."\n".$geshi->parse_code()."\n".'<!--end GeSHi-->'."\n";
 	}
 
 	/**
@@ -527,10 +530,10 @@ class Wakka
 		// load page
 		if (!isset($page)) {
 			// check if this is a page alias
-			$alias = $this->LoadSingle("select * from ".$this->config["table_prefix"]."aliases where from_tag = '".mysql_real_escape_string($tag)."' limit 1");
+			$alias = $this->LoadSingle("select * from ".$this->config["table_prefix"]."aliases where from_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' limit 1");
 			// if the tag is an alias, replace the tag with the aliased one
 			if (is_array($alias)) $tag = $alias['to_tag'];
-			$page = $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where tag = '".mysql_real_escape_string($tag)."' ".($time ? "and time = '".mysql_real_escape_string($time)."'" : "and latest = 'Y'")." limit 1");
+			$page = $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where tag = '".mysqli_real_escape_string($this->dblink, $tag)."' ".($time ? "and time = '".mysqli_real_escape_string($this->dblink, $time)."'" : "and latest = 'Y'")." limit 1");
 		}
 		// cache result
 		if ($page && !$time) {
@@ -546,9 +549,9 @@ class Wakka
 	function GetCachedPage($tag) { return (isset($this->pageCache[$tag])) ? $this->pageCache[$tag] : null; }
 	function CachePage($page) { $this->pageCache[$page["tag"]] = $page; }
 	function SetPage($page) { $this->page = $page; if ($this->page["tag"]) $this->tag = $this->page["tag"]; }
-	function LoadPageById($id) { return $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where id = '".mysql_real_escape_string($id)."' limit 1"); }
-	function LoadRevisions($page) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where tag = '".mysql_real_escape_string($page)."' order by time desc"); }
-	function LoadPagesLinkingTo($tag) { return $this->LoadAll("select from_tag as tag from ".$this->config["table_prefix"]."links where to_tag = '".mysql_real_escape_string($tag)."' order by tag"); }
+	function LoadPageById($id) { return $this->LoadSingle("select * from ".$this->config["table_prefix"]."pages where id = '".mysqli_real_escape_string($this->dblink, $id)."' limit 1"); }
+	function LoadRevisions($page) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where tag = '".mysqli_real_escape_string($this->dblink, $page)."' order by time desc"); }
+	function LoadPagesLinkingTo($tag) { return $this->LoadAll("select from_tag as tag from ".$this->config["table_prefix"]."links where to_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' order by tag"); }
 	function LoadRecentlyChanged()
 	{
 		if ($pages = $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' order by time desc"))
@@ -573,7 +576,7 @@ class Wakka
 		return false;
 	}
 	function LoadOrphanedPages() { return $this->LoadAll("select distinct tag from ".$this->config["table_prefix"]."pages left join ".$this->config["table_prefix"]."links on ".$this->config["table_prefix"]."pages.tag = ".$this->config["table_prefix"]."links.to_tag where ".$this->config["table_prefix"]."links.to_tag is NULL order by tag"); }
-	function LoadAliasedPages() 
+	function LoadAliasedPages()
 	{
 		$pages = array();
 		$to_tags = $this->LoadAll("select distinct to_tag from ".$this->config["table_prefix"]."aliases order by to_tag");
@@ -587,7 +590,7 @@ class Wakka
 	}
 	function LoadPageTitles() { return $this->LoadAll("select distinct tag from ".$this->config["table_prefix"]."pages order by tag"); }
 	function LoadAllPages() { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' order by tag"); }
-	// function FullTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(tag, body) against('".mysql_real_escape_string($phrase)."')"); }
+	// function FullTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(tag, body) against('".mysqli_real_escape_string($this->dblink, $phrase)."')"); }
 	function FullTextSearch($phrase)
 	{
 		$data = "";
@@ -596,9 +599,9 @@ class Wakka
 			if (preg_match('/[A-Z]/', $phrase)) $phrase = "\"".$phrase."\"";
 			$data = $this->LoadAll(" select * from "
 			.$this->config["table_prefix"]
-			."pages where latest = 'Y' and tag like('%".mysql_real_escape_string($phrase)."%') UNION select * from "
+			."pages where latest = 'Y' and tag like('%".mysqli_real_escape_string($this->dblink, $phrase)."%') UNION select * from "
 			.$this->config["table_prefix"]
-			."pages where latest = 'Y' and match(tag, body) against('".mysql_real_escape_string($phrase)
+			."pages where latest = 'Y' and match(tag, body) against('".mysqli_real_escape_string($this->dblink, $phrase)
 			."' IN BOOLEAN MODE) order by time DESC");
 		}
 
@@ -608,7 +611,7 @@ class Wakka
 		//	.$this->config["table_prefix"]
 		//	."pages where latest = 'Y' and
 		//		  match(tag, body)
-		//		  against('".mysql_real_escape_string($phrase)."')
+		//		  against('".mysqli_real_escape_string($this->dblink, $phrase)."')
 		//		  order by time DESC");
 		// }
 
@@ -617,14 +620,14 @@ class Wakka
 				$data = $this->LoadAll("select * from "
 				.$this->config["table_prefix"]
 				."pages where latest = 'Y' and
-				  (tag like '%".mysql_real_escape_string($phrase)."%' or
-				   body like '%".mysql_real_escape_string($phrase)."%')
+				  (tag like '%".mysqli_real_escape_string($this->dblink, $phrase)."%' or
+				   body like '%".mysqli_real_escape_string($this->dblink, $phrase)."%')
 				   order by time DESC");
 		}
 
 		return($data);
 	}
-	function FullCategoryTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(body) against('".mysql_real_escape_string($phrase)."' IN BOOLEAN MODE)"); }
+	function FullCategoryTextSearch($phrase) { return $this->LoadAll("select * from ".$this->config["table_prefix"]."pages where latest = 'Y' and match(body) against('".mysqli_real_escape_string($this->dblink, $phrase)."' IN BOOLEAN MODE)"); }
 	function SavePage($tag, $body, $note, $pagehits=0)
 	{
 		// get current user
@@ -646,18 +649,18 @@ class Wakka
 			}
 
 			// set all other revisions to old
-			$this->Query("update ".$this->config["table_prefix"]."pages set latest = 'N' where tag = '".mysql_real_escape_string($tag)."'");
+			$this->Query("update ".$this->config["table_prefix"]."pages set latest = 'N' where tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
 
 			// add new revision
 			$this->Query("insert into ".$this->config["table_prefix"]."pages set ".
-				"tag = '".mysql_real_escape_string($tag)."', ".
+				"tag = '".mysqli_real_escape_string($this->dblink, $tag)."', ".
  				"time = now(), ".
-  				"owner = '".mysql_real_escape_string($owner)."', ".
- 				"user = '".mysql_real_escape_string($user)."', ".
-				"note = '".mysql_real_escape_string($note)."', ".
-				"hits = '".mysql_real_escape_string($pagehits)."', ".
+  				"owner = '".mysqli_real_escape_string($this->dblink, $owner)."', ".
+ 				"user = '".mysqli_real_escape_string($this->dblink, $user)."', ".
+				"note = '".mysqli_real_escape_string($this->dblink, $note)."', ".
+				"hits = '".mysqli_real_escape_string($this->dblink, $pagehits)."', ".
  				"latest = 'Y', ".
- 				"body = '".mysql_real_escape_string($body)."'");
+ 				"body = '".mysqli_real_escape_string($this->dblink, $body)."'");
 
 			if ($pingdata = $this->GetPingParams($this->config["wikiping_server"], $tag, $user, $note))
 				$this->WikiPing($pingdata);
@@ -666,7 +669,7 @@ class Wakka
 	function PageTitle() {
 		$title = "";
 		$pagecontent = $this->page["body"];
-		if (ereg( "(=){3,5}([^=\n]+)(=){3,5}", $pagecontent, $title)) {
+		if (preg_match( "~(=){3,5}([^=\n]+)(=){3,5}~", $pagecontent, $title)) {
 			$formatting_tags = array("**", "//", "__", "##", "''", "++", "#%", "@@", "\"\"");
 			$title = str_replace($formatting_tags, "", $title[2]);
 		}
@@ -692,21 +695,21 @@ class Wakka
 		$count = 0;
 		$query = 	"SELECT COUNT(tag)
 					FROM ".$this->config['table_prefix']."pages
-					WHERE tag='".mysql_real_escape_string($page)."'";
+					WHERE tag='".mysqli_real_escape_string($this->dblink, $page)."'";
 		if ($r = $this->Query($query))
 		{
-			$count = mysql_result($r,0);
-			mysql_free_result($r);
+			$count = mysqli_result($r,0);
+			mysqli_free_result($r);
 		}
 		if ($count == 0)
 		{
 			$query = 	"SELECT COUNT(from_tag)
 						FROM ".$this->config['table_prefix']."aliases
-					WHERE from_tag='".mysql_real_escape_string($page)."'";
+					WHERE from_tag='".mysqli_real_escape_string($this->dblink, $page)."'";
 			if ($r = $this->Query($query))
 			{
-				$count = mysql_result($r,0);
-				mysql_free_result($r);
+				$count = mysqli_result($r,0);
+				mysqli_free_result($r);
 			}
 		}
 		return ($count > 0) ? TRUE : FALSE;
@@ -829,15 +832,15 @@ class Wakka
 	{
 		if ($message != '') $_SESSION["redirectmessage"] = $message;
 		$url = ($url == '' ) ? $this->config['base_url'].$this->tag : $url;
-		if ((eregi('IIS', $_SERVER["SERVER_SOFTWARE"])) && ($this->cookies_sent))
+		if ((preg_match('~IIS~i', $_SERVER["SERVER_SOFTWARE"])) && ($this->cookies_sent))
 		{
 			@ob_end_clean();
 			die('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.
 					'<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>Redirected to '.$this->Href($url).'</title>'.
 					'<meta http-equiv="refresh" content="0; url=\''.$url.'\'" /></head><body><div><script type="text/javascript">window.location.href="'.$url.'";</script>'.
 					'</div><noscript>If your browser does not redirect you, please follow <a href="'.$this->Href($url).'">this link</a></noscript></body></html>');
-		} 
-		else 
+		}
+		else
 		{
 			header("Location: ".$url);
 		}
@@ -847,7 +850,7 @@ class Wakka
 	function MiniHref($method = "", $tag = "")
 	{
 		if (!$tag = trim($tag)) $tag = $this->tag;
-		return $tag.($method ? "/".$method : ""); 
+		return $tag.($method ? "/".$method : "");
 	}
 	// returns the full url to a page/method.
 	function Href($method = "", $tag = "", $params = "")
@@ -860,23 +863,23 @@ class Wakka
 		return $href;
 	}
 	/**
-	 * Link 
-	 * 
-	 * Beware of the $title parameter: quotes and backslashes should be previously escaped before passed to 
+	 * Link
+	 *
+	 * Beware of the $title parameter: quotes and backslashes should be previously escaped before passed to
 	 * this method.
 	 *
-	 * @param mixed $tag 
-	 * @param string $method 
-	 * @param string $text 
-	 * @param boolean $track 
-	 * @param boolean $escapeText 
-	 * @param string $title 
+	 * @param mixed $tag
+	 * @param string $method
+	 * @param string $text
+	 * @param boolean $track
+	 * @param boolean $escapeText
+	 * @param string $title
 	 * @access public
 	 * @return string
 	 */
 	function Link($tag, $method='', $text='', $track=TRUE, $escapeText=TRUE, $title='') {
 		global $settings;
-		
+
 		if (!$text) $text = $tag;
 		// escape text?
 		if ($escapeText) $text = $this->htmlspecialchars_ent($text);
@@ -937,18 +940,18 @@ class Wakka
 	function WriteLinkTable()
 	{
 		// delete old link table
-		$this->Query("delete from ".$this->config["table_prefix"]."links where from_tag = '".mysql_real_escape_string($this->GetPageTag())."'");
+		$this->Query("delete from ".$this->config["table_prefix"]."links where from_tag = '".mysqli_real_escape_string($this->dblink, $this->GetPageTag())."'");
 		// build new link table
 		if ($linktable = $this->GetLinkTable())
 		{
-			$from_tag = mysql_real_escape_string($this->GetPageTag());
+			$from_tag = mysqli_real_escape_string($this->dblink, $this->GetPageTag());
 			$written = array();
 			foreach ($linktable as $to_tag)
 			{
 				$lower_to_tag = strtolower($to_tag);
 				if (!$written[$lower_to_tag])
 				{
-					$this->Query("insert into ".$this->config["table_prefix"]."links set from_tag = '".$from_tag."', to_tag = '".mysql_real_escape_string($to_tag)."'");
+					$this->Query("insert into ".$this->config["table_prefix"]."links set from_tag = '".$from_tag."', to_tag = '".mysqli_real_escape_string($this->dblink, $to_tag)."'");
 					$written[$lower_to_tag] = 1;
 				}
 			}
@@ -1008,18 +1011,18 @@ class Wakka
 		{
 			$parsed_url = parse_url($referrer);
 			$spammer = $parsed_url["host"];
-			$blacklist = $this->LoadSingle("select * from ".$this->config["table_prefix"]."referrer_blacklist WHERE spammer = '".mysql_real_escape_string($spammer)."'");
+			$blacklist = $this->LoadSingle("select * from ".$this->config["table_prefix"]."referrer_blacklist WHERE spammer = '".mysqli_real_escape_string($this->dblink, $spammer)."'");
 			if (!$blacklist) {
 			$this->Query("insert into ".$this->config["table_prefix"]."referrers set ".
-				"page_tag = '".mysql_real_escape_string($tag)."', ".
-				"referrer = '".mysql_real_escape_string($referrer)."', ".
+				"page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."', ".
+				"referrer = '".mysqli_real_escape_string($this->dblink, $referrer)."', ".
 				"time = now()");
 			}
 		}
 	}
 	function LoadReferrers($tag = "")
 	{
-		return $this->LoadAll("select referrer, count(referrer) as num from ".$this->config["table_prefix"]."referrers ".($tag = trim($tag) ? "where page_tag = '".mysql_real_escape_string($tag)."'" : "")." group by referrer order by num desc");
+		return $this->LoadAll("select referrer, count(referrer) as num from ".$this->config["table_prefix"]."referrers ".($tag = trim($tag) ? "where page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'" : "")." group by referrer order by num desc");
 	}
 
 	// PLUGINS
@@ -1030,7 +1033,7 @@ class Wakka
 		// and thus provides defense against directory traversal or XSS
 		if (!preg_match('/^\s*([a-zA-Z0-9]+)(\s.+?)?\s*$/', $actionspec, $matches))	# see also #34
 		{
-			return '<em class="error">Unknown action; the action name must not contain special characters.</em>';	# [SEC]			
+			return '<em class="error">Unknown action; the action name must not contain special characters.</em>';	# [SEC]
 		}
 		else
 		{
@@ -1047,14 +1050,14 @@ class Wakka
 
 			// prepare an array for extract() (in $this->IncludeBuffered()) to work with
 			$vars = array();
-			if (is_array($matches)) 
+			if (is_array($matches))
 			{
-				for ($a = 0; $a < count($matches[0]); $a++) 
+				for ($a = 0; $a < count($matches[0]); $a++)
 				{
 					// parameter value is sanitized using htmlspecialchars_ent(); if an
 					// action really needs "raw" HTML as input it can still be "unescaped"by the action
 					// itself; for any other action this guards against XSS or directory traversal
-					// via user-supplied action parameters. Any HTML will be displayed _as code_, 
+					// via user-supplied action parameters. Any HTML will be displayed _as code_,
 					// but not interpreted.
 					$vars[$matches[1][$a]] = $this->htmlspecialchars_ent($matches[3][$a]);	// parameter name = sanitized value [SEC]
 				}
@@ -1071,18 +1074,18 @@ class Wakka
 	{
 		if (strstr($method, '/'))
 		{
-			# Observations - MK 2007-03-30 
+			# Observations - MK 2007-03-30
 			# extract part after the last slash (if the whole request contained multiple slashes)
 			# TODO:
 			# but should such requests be accepted in the first place?
 			# at least it is a SORT of defense against directory traversal (but not necessarily XSS)
-			# NOTE that name syntax check now takes care of XSS 
+			# NOTE that name syntax check now takes care of XSS
 			$method = substr($method, strrpos($method, '/')+1);
 		}
 		// check valid method name syntax (similar to Action())
 		if (!preg_match('/^([a-zA-Z0-9_.-]+)$/', $method)) // allow letters, numbers, underscores, dashes and dots only (for now); see also #34
 		{
-			return '<em class="error">Unknown method; the method name must not contain special characters.</em>';	# [SEC]			
+			return '<em class="error">Unknown method; the method name must not contain special characters.</em>';	# [SEC]
 		}
 		else
 		{
@@ -1093,23 +1096,23 @@ class Wakka
 		$methodLocation = $handler.DIRECTORY_SEPARATOR.$method.'.php';	#89
 		return $this->IncludeBuffered($methodLocation, '<em class="error">Unknown method "'.$methodLocation.'"</em>', '', $this->config['handler_path']);
 	}
-	function Format($text, $formatter='wakka') 
-	{ 
+	function Format($text, $formatter='wakka')
+	{
 		// check valid formatter name syntax (similar to Action())
 		if (!preg_match('/^([a-zA-Z0-9_.-]+)$/', $formatter)) // allow letters, numbers, underscores, dashes and dots only (for now); see also #34
 		{
-			return '<em class="error">Unknown formatter; the formatter name must not contain special characters.</em>';	# [SEC]			
+			return '<em class="error">Unknown formatter; the formatter name must not contain special characters.</em>';	# [SEC]
 		}
 		else
 		{
 			// valid method name; now make sure it's lower case
 			$formatter	= strtolower($formatter);
 		}
-		return $this->IncludeBuffered($formatter.'.php', '<em class="error">Formatter "'.$formatter.'" not found</em>', compact("text"), $this->config['wikka_formatter_path']); 
+		return $this->IncludeBuffered($formatter.'.php', '<em class="error">Formatter "'.$formatter.'" not found</em>', compact("text"), $this->config['wikka_formatter_path']);
 	}
 
 	// USERS
-	function LoadUser($name, $password = 0) { return $this->LoadSingle("select * from ".$this->config['table_prefix']."users where name = '".mysql_real_escape_string($name)."' ".($password === 0 ? "" : "and password = '".mysql_real_escape_string($password)."'")." limit 1"); }
+	function LoadUser($name, $password = 0) { return $this->LoadSingle("select * from ".$this->config['table_prefix']."users where name = '".mysqli_real_escape_string($this->dblink, $name)."' ".($password === 0 ? "" : "and password = '".mysqli_real_escape_string($this->dblink, $password)."'")." limit 1"); }
 	function LoadUsers() { return $this->LoadAll("select * from ".$this->config['table_prefix']."users order by name"); }
 	function GetUserName() { if ($user = $this->GetUser()) $name = $user["name"]; else if (!$name = gethostbyaddr($_SERVER["REMOTE_ADDR"])) $name = $_SERVER["REMOTE_ADDR"]; return $name; }
 	function GetUser() { return (isset($_SESSION["user"])) ? $_SESSION["user"] : NULL; }
@@ -1126,7 +1129,7 @@ class Wakka
 	 * @param	string $tag mandatory: name of the page
 	 * @return	array all the comments for this page
 	 */
-	function LoadComments($tag) { return $this->LoadAll("SELECT * FROM ".$this->config["table_prefix"]."comments WHERE page_tag = '".mysql_real_escape_string($tag)."' ORDER BY time"); }
+	function LoadComments($tag) { return $this->LoadAll("SELECT * FROM ".$this->config["table_prefix"]."comments WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' ORDER BY time"); }
 	/**
 	 * Load the last 50 comments on the wiki.
 	 *
@@ -1167,29 +1170,29 @@ class Wakka
 
 		// add new comment
 		$this->Query("INSERT INTO ".$this->config["table_prefix"]."comments SET ".
-			"page_tag = '".mysql_real_escape_string($page_tag)."', ".
+			"page_tag = '".mysqli_real_escape_string($this->dblink, $page_tag)."', ".
 			"time = now(), ".
-			"comment = '".mysql_real_escape_string($comment)."', ".
-			"user = '".mysql_real_escape_string($user)."'");
+			"comment = '".mysqli_real_escape_string($this->dblink, $comment)."', ".
+			"user = '".mysqli_real_escape_string($this->dblink, $user)."'");
 	}
 
 	// ACCESS CONTROL
-	/** 
-	 * Check if current user is the owner of the current or a specified page. 
-	 *  
+	/**
+	 * Check if current user is the owner of the current or a specified page.
+	 *
 	 * @access		public
 	 * @uses		Wakka::GetPageOwner()
-	 * @uses		Wakka::GetPageTag() 
+	 * @uses		Wakka::GetPageTag()
 	 * @uses		Wakka::GetUser()
 	 * @uses		Wakka::GetUserName()
 	 * @uses		Wakka::IsAdmin()
-	 * 
-	 * @param		string  $tag optional: page to be checked. Default: current page. 
-	 * @return		boolean TRUE if the user is the owner, FALSE otherwise. 
-	 */ 
+	 *
+	 * @param		string  $tag optional: page to be checked. Default: current page.
+	 * @return		boolean TRUE if the user is the owner, FALSE otherwise.
+	 */
 	function UserIsOwner($tag = "")
 	{
-		// if not logged in, user can't be owner! 
+		// if not logged in, user can't be owner!
 		if (!$this->GetUser()) return false;
 
 		// if user is admin, return true. Admin can do anything!
@@ -1216,12 +1219,12 @@ class Wakka
 		{
 			if ($user == "(Nobody)") $user = "";
 			// update latest revision with new owner
-			$this->Query("update ".$this->config["table_prefix"]."pages set owner = '".mysql_real_escape_string($user)."' where tag = '".mysql_real_escape_string($tag)."' and latest = 'Y' limit 1");
+			$this->Query("update ".$this->config["table_prefix"]."pages set owner = '".mysqli_real_escape_string($this->dblink, $user)."' where tag = '".mysqli_real_escape_string($this->dblink, $tag)."' and latest = 'Y' limit 1");
 		}
 	}
 	function LoadACL($tag, $privilege, $useDefaults = 1)
 	{
-		if ((!$acl = $this->LoadSingle("SELECT ".mysql_real_escape_string($privilege)."_acl FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysql_real_escape_string($tag)."' LIMIT 1")) && $useDefaults)
+		if ((!$acl = $this->LoadSingle("SELECT ".mysqli_real_escape_string($this->dblink, $privilege)."_acl FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' LIMIT 1")) && $useDefaults)
 		{
 			$acl = array("page_tag" => $tag, $privilege."_acl" => $this->GetConfigValue("default_".$privilege."_acl"));
 		}
@@ -1229,18 +1232,18 @@ class Wakka
 	}
 	function LoadAllACLs($tag, $useDefaults = 1)
 	{
-		if ((!$acl = $this->LoadSingle("SELECT * FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysql_real_escape_string($tag)."' LIMIT 1")) && $useDefaults)
+		if ((!$acl = $this->LoadSingle("SELECT * FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' LIMIT 1")) && $useDefaults)
 		{
 			$acl = array("page_tag" => $tag, "read_acl" => $this->GetConfigValue("default_read_acl"), "write_acl" => $this->GetConfigValue("default_write_acl"), "comment_acl" => $this->GetConfigValue("default_comment_acl"));
 		}
 		return $acl;
 	}
 	function SaveACL($tag, $privilege, $list) {
-		if ($this->LoadACL($tag, $privilege, 0)) $this->Query("UPDATE ".$this->config["table_prefix"]."acls SET ".mysql_real_escape_string($privilege)."_acl = '".mysql_real_escape_string(trim(str_replace("\r", "", $list)))."' WHERE page_tag = '".mysql_real_escape_string($tag)."' LIMIT 1");
-		else $this->Query("INSERT INTO ".$this->config["table_prefix"]."acls SET page_tag = '".mysql_real_escape_string($tag)."', ".mysql_real_escape_string($privilege)."_acl = '".mysql_real_escape_string(trim(str_replace("\r", "", $list)))."'");
+		if ($this->LoadACL($tag, $privilege, 0)) $this->Query("UPDATE ".$this->config["table_prefix"]."acls SET ".mysqli_real_escape_string($this->dblink, $privilege)."_acl = '".mysqli_real_escape_string($this->dblink, trim(str_replace("\r", "", $list)))."' WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."' LIMIT 1");
+		else $this->Query("INSERT INTO ".$this->config["table_prefix"]."acls SET page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."', ".mysqli_real_escape_string($this->dblink, $privilege)."_acl = '".mysqli_real_escape_string($this->dblink, trim(str_replace("\r", "", $list)))."'");
 	}
 	function DeleteACL($tag) {
-		$this->Query("DELETE FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysql_real_escape_string($tag)."'");
+		$this->Query("DELETE FROM ".$this->config["table_prefix"]."acls WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
 	}
 	function TrimACLs($list) {
 		foreach (explode("\n", $list) as $line)
@@ -1297,12 +1300,12 @@ class Wakka
 	{
 		// purge referrers
 		if ($days = $this->GetConfigValue("referrers_purge_time")) {
-			$this->Query("DELETE FROM ".$this->config["table_prefix"]."referrers WHERE time < date_sub(now(), interval '".mysql_real_escape_string($days)."' day)");
+			$this->Query("DELETE FROM ".$this->config["table_prefix"]."referrers WHERE time < date_sub(now(), interval '".mysqli_real_escape_string($this->dblink, $days)."' day)");
 		}
 
 		// purge old page revisions
 		if ($days = $this->GetConfigValue("pages_purge_time")) {
-			$this->Query("delete from ".$this->config["table_prefix"]."pages where time < date_sub(now(), interval '".mysql_real_escape_string($days)."' day) and latest = 'N'");
+			$this->Query("delete from ".$this->config["table_prefix"]."pages where time < date_sub(now(), interval '".mysqli_real_escape_string($this->dblink, $days)."' day) and latest = 'N'");
 		}
 	}
 
@@ -1352,5 +1355,5 @@ class Wakka
 			print($this->Header().$this->Method($this->method).$this->Footer());
 		}
 	}
-} 
+}
 ?>

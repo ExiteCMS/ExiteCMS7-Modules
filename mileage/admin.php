@@ -89,28 +89,28 @@ switch ($action) {
 			} else {
 				// if we have a new address, add it first (if needed), and get the adr_id
 				if (!empty($variables['new_ident'])) {
-					$result = dbquery("SELECT adr_id FROM ".$db_prefix."mileage_address WHERE adr_description = '".mysql_real_escape_string($variables['new_ident'])."'");
+					$result = dbquery("SELECT adr_id FROM ".$db_prefix."mileage_address WHERE adr_description = '".mysqli_real_escape_string($variables['new_ident'], $_db_link)."'");
 					if (dbrows($result)) {
 						// existing address identification. Update the address
 						$data = dbarray($result);
 						$variables['car_start_from'] = $data['adr_id'];
-						$result = dbquery("UPDATE ".$db_prefix."mileage_address SET adr_address = '".mysql_real_escape_string($variables['new_address'])."', adr_postcode = '".mysql_real_escape_string($variables['new_postcode'])."', adr_city = '".mysql_real_escape_string($variables['new_city'])."', adr_country = '".$variables['new_country']."' WHERE adr_id = '".$data['adr_id']."'");
+						$result = dbquery("UPDATE ".$db_prefix."mileage_address SET adr_address = '".mysqli_real_escape_string($variables['new_address'], $_db_link)."', adr_postcode = '".mysqli_real_escape_string($variables['new_postcode'], $_db_link)."', adr_city = '".mysqli_real_escape_string($variables['new_city'], $_db_link)."', adr_country = '".$variables['new_country']."' WHERE adr_id = '".$data['adr_id']."'");
 					} else {
 						// new address, add it
-						$result = dbquery("INSERT INTO ".$db_prefix."mileage_address (adr_description, adr_address, adr_postcode, adr_city, adr_country) VALUES('".mysql_real_escape_string($variables['new_ident'])."', '".mysql_real_escape_string($variables['new_address'])."', '".mysql_real_escape_string($variables['new_postcode'])."', '".mysql_real_escape_string($variables['new_city'])."', '".$variables['new_country']."')");
-						$variables['car_start_from'] = mysql_insert_id();
+						$result = dbquery("INSERT INTO ".$db_prefix."mileage_address (adr_description, adr_address, adr_postcode, adr_city, adr_country) VALUES('".mysqli_real_escape_string($variables['new_ident'], $_db_link)."', '".mysqli_real_escape_string($variables['new_address'], $_db_link)."', '".mysqli_real_escape_string($variables['new_postcode'], $_db_link)."', '".mysqli_real_escape_string($variables['new_city'], $_db_link)."', '".$variables['new_country']."')");
+						$variables['car_start_from'] = mysqli_insert_id($_db_link);
 					}
 				}
 				if ($action == "add") {
 					// add the new car
 					$result = dbquery("INSERT INTO ".$db_prefix."mileage_car (car_registration, car_description, car_start_from, car_start_date, car_mileage, car_mileage_unit, car_report_type, car_fuel, car_fuel_type) VALUES ('".$variables['car_registration']."', '".$variables['car_description']."', '".$variables['car_start_from']."', '".$variables['car_start_date']."',  '".$variables['car_mileage']."', '".$variables['car_mileage_unit']."', '".$variables['car_report_type']."', '".$variables['car_fuel']."', '".$variables['car_fuel_type']."')");
 					// we need the key to insert the fuel record
-					$car_id = mysql_insert_id();
+					$car_id = mysqli_insert_id($_db_link);
 					// return to the main panel with a success message
 					$variables['message'] = $locale['eA_902'];
 				} elseif ($action == "edit") {
 					// update the car info
-					$result = dbquery("UPDATE ".$db_prefix."mileage_car SET car_registration = '".mysql_real_escape_string($variables['car_registration'])."', car_description ='".mysql_real_escape_string($variables['car_description'])."', car_start_date = '".$variables['car_start_date']."', car_end_date = '".$variables['car_end_date']."', car_mileage = '".$variables['car_mileage']."', car_mileage_unit = '".$variables['car_mileage_unit']."', car_report_type = '".$variables['car_report_type']."', car_fuel = '".$variables['car_fuel']."', car_fuel_type = '".$variables['car_fuel_type']."' WHERE car_id = '".$car_id."'");
+					$result = dbquery("UPDATE ".$db_prefix."mileage_car SET car_registration = '".mysqli_real_escape_string($variables['car_registration'], $_db_link)."', car_description ='".mysqli_real_escape_string($variables['car_description'], $_db_link)."', car_start_date = '".$variables['car_start_date']."', car_end_date = '".$variables['car_end_date']."', car_mileage = '".$variables['car_mileage']."', car_mileage_unit = '".$variables['car_mileage_unit']."', car_report_type = '".$variables['car_report_type']."', car_fuel = '".$variables['car_fuel']."', car_fuel_type = '".$variables['car_fuel_type']."' WHERE car_id = '".$car_id."'");
 					// return to the main panel with a success message
 					$variables['message'] = $locale['eA_903'];
 				}

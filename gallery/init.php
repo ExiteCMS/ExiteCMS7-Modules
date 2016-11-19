@@ -87,7 +87,7 @@ if (fs_file_exists(dirname(__FILE__) . "/config.php")) {
 */
 if (empty($gallery->app->skipRegisterGlobals) || $gallery->app->skipRegisterGlobals != "yes") {
     $register_globals = @ini_get('register_globals');
-    if (!empty($register_globals) && !eregi("no|off|false", $register_globals)) {
+    if (!empty($register_globals) && !preg_match("^(no|off|false)$", $register_globals)) {
         foreach (array_keys($_REQUEST) as $key) {
             unset($$key);
         }
@@ -111,29 +111,29 @@ if (isset($gallery->app->devMode) && $gallery->app->devMode == 'yes') {
 if(isset($gallery->app)) {
     if (isset($_SERVER["HTTPS"] ) && stristr($_SERVER["HTTPS"], "on")) {
         $gallery->app->photoAlbumURL =
-            eregi_replace("^http:", "https:", $gallery->app->photoAlbumURL);
+            preg_replace("~^http:~i", "https:", $gallery->app->photoAlbumURL);
         $gallery->app->albumDirURL =
-            eregi_replace("^http:", "https:", $gallery->app->albumDirURL);
+            preg_replace("~^http:~i", "https:", $gallery->app->albumDirURL);
     } else {
         $gallery->app->photoAlbumURL =
-            eregi_replace("^https:", "http:", $gallery->app->photoAlbumURL);
+            preg_replace("~^https:~i", "http:", $gallery->app->photoAlbumURL);
         $gallery->app->albumDirURL =
-            eregi_replace("^https:", "http:", $gallery->app->albumDirURL);
+            preg_replace("~^https:~i", "http:", $gallery->app->albumDirURL);
     }
 
     /*
      * We have a Coral (http://www.scs.cs.nyu.edu/coral/) request coming in, adjust outbound links
     */
     if(isset($_SERVER['HTTP_USER_AGENT']) && strstr($_SERVER['HTTP_USER_AGENT'], 'CoralWebPrx')) {
-        if (ereg("^(http://[^:]+):(\d+)(.*)$", $gallery->app->photoAlbumURL)) {
-            $gallery->app->photoAlbumURL = ereg_replace("^(http://[^:]+):(\d+)(.*)$", "\1.\2\3", $galllery->app->photoAlbumURL);
+        if (preg_match("~^(http://[^:]+):(\d+)(.*)$~", $gallery->app->photoAlbumURL)) {
+            $gallery->app->photoAlbumURL = preg_replace("~^(http://[^:]+):(\d+)(.*)$~", "\1.\2\3", $galllery->app->photoAlbumURL);
         }
 
-        $gallery->app->photoAlbumURL = ereg_replace("^(http://[^/]+)(.*)$", '\1.nyud.net:8090\2',$gallery->app->photoAlbumURL);
-        if (ereg("^(http://[^:]+):(\d+)(.*)$", $gallery->app->albumDirURL)) {
-            $gallery->app->albumDirURL = ereg_replace("^(http://[^:]+):(\d+)(.*)$", "\1.\2\3", $galllery->app->albumDirURL);
+        $gallery->app->photoAlbumURL = preg_replace("~^(http://[^/]+)(.*)$~", '\1.nyud.net:8090\2',$gallery->app->photoAlbumURL);
+        if (preg_match("~^(http://[^:]+):(\d+)(.*)$~", $gallery->app->albumDirURL)) {
+            $gallery->app->albumDirURL = preg_replace("~^(http://[^:]+):(\d+)(.*)$~", "\1.\2\3", $galllery->app->albumDirURL);
         }
-        $gallery->app->albumDirURL = ereg_replace("^(http://[^/]+)(.*)$", '\1.nyud.net:8090\2',$gallery->app->albumDirURL);
+        $gallery->app->albumDirURL = preg_replace("~^(http://[^/]+)(.*)$~", '\1.nyud.net:8090\2',$gallery->app->albumDirURL);
     }
 }
 

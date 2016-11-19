@@ -4,30 +4,30 @@
  * current page alias maintenance
  *
  * Usage: create tag aliases for the current page, or delete defined aliases
- * 
+ *
  * This handler checks if the new alias is unique (not defined as an alias elsewhere
  * or the name of an existing page)
  *
  * @package         Handlers
- * @subpackage        
+ * @subpackage
  * @name              aliases
  *
  * @author            {@link http://wikkawiki.org/WanWizard WanWizard} - original idea and code.
  * @version           0.1
  * @since             Wikka 1.1.6.3 - ExiteCMS Edition
- *                      
+ *
  * @input             string  $to  required: the alias to be created
  *                            must be a non existing page and current user must be authorized to create it
- *                            default is source page name 				
- * 
+ *                            default is source page name
+ *
  * @input             string  $note  optional: the note to be added to the page when created
  *                            default is "Cloned from " followed by the name of the source page
- * 
+ *
  * @input             boolean $editoption optional: if true, the new page will be opened for edition on creation
  *                            default is false (to allow multiple cloning of the same source)
  *
  * @todo              Use central library for valid pagenames.
- *        
+ *
  */
 // defaults
 if(!defined('VALID_PAGENAME_PATTERN')) define ('VALID_PAGENAME_PATTERN', '/^[A-Za-zÄÖÜßäöü]+[A-Za-z0-9ÄÖÜßäöü]*$/s');
@@ -62,7 +62,7 @@ if (!$this->ExistsPage($from))
 {
 	// source page does not exist!
 	$box = sprintf(ERROR_PAGE_NOT_EXIST, $from);
-} else 
+} else
 {
 	// 2. page exists - now check user's read-access to the source page
 	if (!$this->HasAccess('read', $from))
@@ -77,7 +77,7 @@ if (!$this->ExistsPage($from))
 			// get parameters
 			$from = isset($_POST['from']) && $_POST['from'] ? $_POST['from'] : $from;
 			$to = isset($_POST['to']) && $_POST['to'] ? $_POST['to'] : $to;
-		
+
 			// 3. check target pagename validity
 			if (!preg_match(VALID_PAGENAME_PATTERN, $to))  //TODO use central regex library
 			{
@@ -86,7 +86,7 @@ if (!$this->ExistsPage($from))
 			} else
 			{
 				// 4. target page name is valid - now check user's write-access
-				if (!$this->HasAccess('write', $to))  
+				if (!$this->HasAccess('write', $to))
 				{
 					$box = '""<em class="error">'.sprintf(ERROR_ACL_WRITE, $to).'</em>""';
 				} else
@@ -96,13 +96,13 @@ if (!$this->ExistsPage($from))
 					{
 						// 5. check target page existence
 						if ($this->ExistsPage($to))
-						{ 
+						{
 							// page already exists!
 							$box = '""<em class="error">'.ERROR_PAGE_ALREADY_EXIST.'</em>""';
 						} else
 						{
 							// 6. Valid request - proceed to create the page alias
-							if ($r = $this->Query("INSERT INTO ".$this->config["table_prefix"]."aliases (from_tag, to_tag) VALUES ('".mysql_escape_string($to)."', '".mysql_escape_string($from)."')"))
+							if ($r = $this->Query("INSERT INTO ".$this->config["table_prefix"]."aliases (from_tag, to_tag) VALUES ('".mysqli_real_escape_string($this->dblink, $to)."', '".mysqli_real_escape_string($this->dblink, $from)."')"))
 							{
 								// show confirmation message
 								$box = '""<em class="success">'.sprintf(ALIAS_SUCCESSFUL, $to).'</em>""';
@@ -110,7 +110,7 @@ if (!$this->ExistsPage($from))
 						}
 					} else if (isset($_POST['delete']) && $_POST['delete'] == LABEL_ALIAS_DELETE)
 					{
-						if ($r = $this->Query("DELETE FROM ".$this->config["table_prefix"]."aliases WHERE from_tag = '".mysql_escape_string($from)."' AND to_tag = '".mysql_escape_string($to)."'"))
+						if ($r = $this->Query("DELETE FROM ".$this->config["table_prefix"]."aliases WHERE from_tag = '".mysqli_real_escape_string($this->dblink, $from)."' AND to_tag = '".mysqli_real_escape_string($this->dblink, $to)."'"))
 						{
 							// show confirmation message
 							$box = '""<em class="success">'.sprintf(ALIAS_SUCCESSFUL_DELETED, $from).'</em>""';
@@ -119,7 +119,7 @@ if (!$this->ExistsPage($from))
 					}
 				}
 			}
-		} 
+		}
 		// build form
 		$form = $this->FormOpen('aliases');
 		$form .= '<table class="alias">'."\n".
@@ -133,7 +133,7 @@ if (!$this->ExistsPage($from))
 			'</table>'."\n";
 		$form .= $this->FormClose();
 		// check for existing aliases for this page
-		$aliases = $this->LoadAll("SELECT * FROM ".$this->config['table_prefix']."aliases WHERE to_tag='".mysql_real_escape_string($from)."'");
+		$aliases = $this->LoadAll("SELECT * FROM ".$this->config['table_prefix']."aliases WHERE to_tag='".mysqli_real_escape_string($this->dblink, $from)."'");
 		if (count($aliases)) {
 			$form .= '<hr /><br />'."\n";
 			$form .= $this->Format(ALIAS_SUBHEADER);

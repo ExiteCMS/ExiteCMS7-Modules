@@ -141,7 +141,7 @@ switch ($cmd) {
 		createGallerySession();
 		$gallery->session->gRedirDone = true;
 
-		if (!ereg("^http|^{$gallery->app->photoAlbumURL}", $return)) {
+		if (!preg_match("~^http|^{$gallery->app->photoAlbumURL}~", $return)) {
 			$return = makeGalleryHeaderUrl($return);
 		}
 		header("Location: $return");

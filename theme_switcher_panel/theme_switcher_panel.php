@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("theme_switcher_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // check if the theme has been changed
 if (isset($_POST['theme_switcher_panel_theme'])) {

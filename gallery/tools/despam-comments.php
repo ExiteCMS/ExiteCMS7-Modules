@@ -42,13 +42,13 @@ if (!$GALLERY_EMBEDDED_INSIDE) {
 <html>
 <head>
 <title><?php echo $gallery->app->galleryTitle ?></title>
-<?php 
+<?php
 common_header() ;
 ?>
 
 </head>
 <body dir="<?php echo $gallery->direction ?>">
-<?php  
+<?php
 }
 includeHtmlWrap("gallery.header");
 $adminbox['text'] ='<span class="head">'. _("Find and remove comment spam") .'</span>';
@@ -286,7 +286,7 @@ function updateBlacklist() {
     $added = array();
     $newlines = split("[\n\r]+", getRequestVar('newBlacklistEntries'));
     foreach ($newlines as $line) {
-        $line = ereg_replace("#.*", "", $line);
+        $line = preg_replace("~#.*~", "", $line);
         $line = trim($line);
         if (empty($line)) {
             continue;

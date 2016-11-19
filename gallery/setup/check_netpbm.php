@@ -20,7 +20,7 @@
  * $Id: check_netpbm.php 16697 2007-06-28 10:31:31Z jenst $
  */
 ?>
-<?php 
+<?php
     require_once(dirname(__FILE__) . '/init.php');
 ?>
 <html>
@@ -35,9 +35,9 @@
 <h1 class="header"><?php echo sprintf(_("Check %s"), $app_name) ?></h1>
 
 <div class="sitedesc">
-<?php 
+<?php
     echo sprintf(_("This script is designed to examine your %s installation to see if it is ok to be used by Gallery."), $app_name);
-    echo sprintf(_("You should run this script <b>after</b> you have run the config wizard, if you have had problems with your %s installation that the wizard did not detect."), $app_name) 
+    echo sprintf(_("You should run this script <b>after</b> you have run the config wizard, if you have had problems with your %s installation that the wizard did not detect."), $app_name)
 ?>
 </div>
 <p>
@@ -68,7 +68,7 @@ if (gallerySanityCheck() != NULL) {
 <?php
         exit;
 } else {
-	require(GALLERY_BASE . '/config.php'); 
+	require(GALLERY_BASE . '/config.php');
 ?>
 			<td class="Success"><?php echo _("OK") ?></td>
 		</tr>
@@ -78,7 +78,7 @@ if (gallerySanityCheck() != NULL) {
 </tr>
 <tr>
 	<td>
-		<table class="inner" width="100%">	
+		<table class="inner" width="100%">
 		<tr>
 			<td class="desc"><?php echo _("Let us see if we can figure out what operating system you are using.") ?></td>
 		</tr>
@@ -90,14 +90,14 @@ if (gallerySanityCheck() != NULL) {
 			<p><?php echo _("This is the type of system on which PHP was compiled") ?>:</p>
 			<p><b><?php echo php_uname() ?></b></p>
 			<p><?php echo _("Make sure that the values above make sense to you.") ?></p>
-			
+
 			<p>
-<?php echo "\t\t\t". sprintf(_("Look for keywords like %s, %s, %s etc. in the output above."), 
+<?php echo "\t\t\t". sprintf(_("Look for keywords like %s, %s, %s etc. in the output above."),
 		'&quot;Linux&quot;', '&quot;Windows&quot;', '&quot;FreeBSD&quot;');
-	echo _("If both the attempts above failed, you should ask your ISP what operating system you are using."); 
+	echo _("If both the attempts above failed, you should ask your ISP what operating system you are using.");
 	echo sprintf(_("You can check via %s, they can often tell you."),
 		'<a href="http://www.netcraft.com/whats?host=' .
-		$_SERVER['HTTP_HOST'] . 
+		$_SERVER['HTTP_HOST'] .
 		'">Netcraft</a>') ;
 ?>
 		</p>
@@ -122,7 +122,7 @@ if (gallerySanityCheck() != NULL) {
 	if (! inOpenBasedir($gallery->app->pnmDir)) {
 ?>
 		<tr>
-			<td class="warningpct" width="100%"><?php echo sprintf(_("<b>Note:</b> Your %s directory (%s) is not in your open_basedir list %s"), 
+			<td class="warningpct" width="100%"><?php echo sprintf(_("<b>Note:</b> Your %s directory (%s) is not in your open_basedir list %s"),
 						$app_name,
 						$gallery->app->pnmDir,
 						'<ul>'.  ini_get('open_basedir') . '</ul>');
@@ -139,21 +139,21 @@ if (gallerySanityCheck() != NULL) {
 		<table class="inner" width="100%">
 		<tr>
 			<td class="desc">
-				<?php echo sprintf(_("We are going to test each %s binary individually."), $app_name) ?>  
+				<?php echo sprintf(_("We are going to test each %s binary individually."), $app_name) ?>
 				<p><?php
 				if (!empty($show_details)) {
-					print sprintf(_("%sClick here%s to hide the details"), 
+					print sprintf(_("%sClick here%s to hide the details"),
 						'<a href="check_Netpbm.php?show_details=0">','</a>');
 				} else {
 					print sprintf(_("If you see errors, you should %sclick here%s to see more details"),
 						'<a href="check_Netpbm.php?show_details=1">','</a>');
 				}
-?>				
+?>
 				</p>
 			</td>
 		</tr>
 		</table>
-		
+
 		<table class="inner" width="100%">
 <?php
 
@@ -199,9 +199,9 @@ foreach ($binaries as $bin) {
 if (fs_file_exists($debugfile)) {
     fs_unlink($debugfile);
 }
-    
+
 ?>
-	
+
 		</table>
 	</td>
 </tr>
@@ -209,7 +209,7 @@ if (fs_file_exists($debugfile)) {
 	<td>
 		<table class="inner" width="100%">
 		<tr>
-			<td class="desc"><?php 
+			<td class="desc"><?php
 				echo sprintf(_("If you see an error above complaining about reading or writing to %s then this is likely a permission/configuration issue on your system.  If it mentions %s then it's because your system is configured with %s enabled."),
 					"<b>$debugfile</b>",
 					'<i>open_basedir</i>',
@@ -253,7 +253,7 @@ function checkNetpbm($cmd) {
 	}
 
 	$cmd .= " --version";
-	
+
 	fs_exec($cmd, $results, $status, $debugfile);
 
 	if ($ok) {
@@ -281,7 +281,7 @@ function checkNetpbm($cmd) {
 					$linecount++;
 					$buf = fgets($fd, 4096);
 					if ($linecount == 1) {
-			    			if (eregi("using lib(pbm|Netpbm) from Netpbm version: Netpbm (.*)[\n\r]$",  $buf, $regs)) {
+			    			if (preg_match("~using lib(pbm|Netpbm) from Netpbm version: Netpbm (.*)[\n\r]$~i",  $buf, $regs)) {
 							$version = $regs[1];
 						} else {
 							$result['error'] = $buf;

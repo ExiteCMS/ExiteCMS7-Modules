@@ -70,7 +70,7 @@ if ($this->UserIsOwner())
 			// or if the posted values are different than the defaults
 
 			$page = $this->LoadSingle('SELECT * FROM '.$this->config['table_prefix'].
-			    "acls WHERE page_tag = '".mysql_real_escape_string($this->GetPageTag()).
+			    "acls WHERE page_tag = '".mysqli_real_escape_string($this->dblink, $this->GetPageTag()).
 			    "' LIMIT 1");
 
 			if ($page ||

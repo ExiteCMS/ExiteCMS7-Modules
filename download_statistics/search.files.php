@@ -16,13 +16,13 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("search.files.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // make sure we have an action variable
 if (isset($action)) {
 
 	if ($action == "") {
-		
+
 		// add the possible  search filters ($data is defined in the calling script!)
 		$data['search_filters' ] = "";
 
@@ -114,7 +114,7 @@ if (isset($action)) {
 		}
 
 		// check how many rows this would output
-		$rptresult = mysql_query($sql.($limit?" LIMIT $limit":""));
+		$rptresult = dbquery($sql.($limit?" LIMIT $limit":""));
 		$rows = dbrows($rptresult);
 
 		// are there any results?

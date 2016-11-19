@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("shout_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // load message parsing functions
 require_once PATH_INCLUDES."forum_functions_include.php";

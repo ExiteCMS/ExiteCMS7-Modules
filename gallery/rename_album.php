@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -56,10 +56,10 @@ if (!empty($newName)) {
 	$newName = str_replace("'", "", $newName);
 	$newName = str_replace("`", "", $newName);
 	$newName = strtr($newName, "%\\/*?\"<>|& .+#(){}~", "-------------------");
-	$newName = ereg_replace("\-+", "-", $newName);
-	$newName = ereg_replace("\-+$", "", $newName);
-	$newName = ereg_replace("^\-", "", $newName);
-	$newName = ereg_replace("\-$", "", $newName);
+	$newName = preg_replace("~\-+~", "-", $newName);
+	$newName = preg_replace("~\-+$~", "", $newName);
+	$newName = preg_replace("~^\-~", "", $newName);
+	$newName = preg_replace("~\-$~", "", $newName);
 	if ($oldName == $newName || empty($newName)) {
 		$dismiss = 1;
 	} elseif ($albumDB->renameAlbum($oldName, $newName)) {
@@ -119,20 +119,20 @@ if (!empty($newName)) {
 <p><?php echo _("Those characters will be ignored in your new album name.") ?></p>
 
 <br>
-<?php echo makeFormIntro("rename_album.php", 
+<?php echo makeFormIntro("rename_album.php",
 	array("name" => "theform"),
 	array("type" => "popup"));
 ?>
 <input type="text" name="newName" value="<?php echo $newName?>">
 <input type="hidden" name="oldName" value="<?php echo $gallery->session->albumName?>">
-<input type="hidden" name="useLoad" value="<?php echo $useLoad?>">    
+<input type="hidden" name="useLoad" value="<?php echo $useLoad?>">
 <p>
 <input type="submit" class="button" name="rename" value="<?php echo _("Rename") ?>">
 <input type="button" class="button" name="cancel" value="<?php echo _("Cancel") ?>" onclick='parent.close()'>
 </form>
 
 <script language="javascript1.2" type="text/JavaScript">
-<!--   
+<!--
 // position cursor in top form field
 document.theform.newName.focus();
 //-->

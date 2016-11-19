@@ -50,7 +50,7 @@ class AlbumDB {
         $i = 0;
         while ($i < sizeof($this->albumOrder)) {
             $name = $this->albumOrder[$i];
-            if (ereg("^\.", $name)) { // how did this get here??
+            if (preg_match("~^\.~", $name)) { // how did this get here??
             array_splice($this->albumOrder, $i, 1);
             $changed = 1;
             } else if (fs_is_dir("$dir/$name")) {
@@ -73,7 +73,7 @@ class AlbumDB {
 
         if ($fd = fs_opendir($dir)) {
             while ($file = readdir($fd)) {
-                if (!ereg("^\.", $file) &&
+                if (!preg_match("~^\.~", $file) &&
                 fs_is_dir("$dir/$file") &&
                 strcmp($file, "_vti_cnf") &&
                 !in_array($file, $this->albumOrder)) {
@@ -172,7 +172,7 @@ class AlbumDB {
                 break;
 
                 default:
-                if (!ereg('[0-9][0-9]$', $name)) {
+                if (!preg_match('~[0-9][0-9]$~', $name)) {
                     $name.="00";
                 }
                 $name++;

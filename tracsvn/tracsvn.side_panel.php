@@ -16,7 +16,7 @@
 | Last modified by $Author:: WanWizard                                $|
 | Revision number $Rev:: 2359                                         $|
 +---------------------------------------------------------------------*/
-if (eregi("svn_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 require_once "tracsvn_include.php";
 

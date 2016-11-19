@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -28,7 +28,7 @@ class Gallery_User extends Abstract_User {
 	var $recoverPassHash;
 	var $lastAction;
 	var $lastActionDate;
-	var $origEmail; 
+	var $origEmail;
 		// the email from original account creation.  Just incase user goes feral
 
 	function Gallery_User() {
@@ -37,7 +37,7 @@ class Gallery_User extends Abstract_User {
 		$this->setDefaultLanguage("");
 
 
-		// assuming revision 4 ensures that if the user_version is 
+		// assuming revision 4 ensures that if the user_version is
 		// not properly read from file due to the file format changes
 		// that we perform the necessary upgrade.
 		$this->version = 4;
@@ -47,7 +47,7 @@ class Gallery_User extends Abstract_User {
 		global $gallery;
 
 		$dir = $gallery->app->userDir;
-		
+
 		$tmp = getFile("$dir/$uid");
 
 		/*
@@ -55,7 +55,7 @@ class Gallery_User extends Abstract_User {
 		 * any saved user objects.
 		 */
 		if (!strcmp(substr($tmp, 0, 10), 'O:4:"user"')) {
-			$tmp = ereg_replace('O:4:"user"', 'O:12:"gallery_user"', $tmp);
+			$tmp = preg_replace('~O:4:"user"~', 'O:12:"gallery_user"', $tmp);
 			foreach (unserialize($tmp) as $k => $v) {
 				$this->$k = $v;
 			}
@@ -78,7 +78,7 @@ class Gallery_User extends Abstract_User {
 	/*
 	 * Whenever you change this code, you should bump the $gallery->user_version
 	 * appropriately.
-	 */	
+	 */
 	function integrityCheck() {
 		global $gallery;
 
@@ -90,21 +90,21 @@ class Gallery_User extends Abstract_User {
 			return true;
 		}
 
-		if ($this->version < 1) 
+		if ($this->version < 1)
 		{
 			$this->setDefaultLanguage("");
 		}
-		if ($this->version < 2) 
+		if ($this->version < 2)
 		{
 			$this->genRecoverPasswordHash(true);
 		}
-		if ($this->version < 3) 
+		if ($this->version < 3)
 		{
 			$this->lastAction=NULL;
 			$this->lastActionDate=time(0);
 			$this->origEmail=$this->email;
 		}
-		if ($this->version < 5) 
+		if ($this->version < 5)
 		{
 			$dir = $gallery->app->userDir;
 			$olduid = $this->uid;
@@ -169,11 +169,11 @@ class Gallery_User extends Abstract_User {
 	}
 
 	function log($action) {
-		$valid_actions = array("register", "self_register", 
-				"bulk_register", "login", 
+		$valid_actions = array("register", "self_register",
+				"bulk_register", "login",
 				"new_password_request", "new_password_set");
 		if (!in_array($action, $valid_actions)) {
-			echo gallery_error(sprintf(_("Not a valid action: %s"), 
+			echo gallery_error(sprintf(_("Not a valid action: %s"),
 						$action));
 			return;
 	       	}

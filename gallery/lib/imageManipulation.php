@@ -131,7 +131,7 @@ function resize_image($src, $dest, $target = 0, $target_fs = 0, $keepProfiles = 
         printf(gTranslate('common', "-> File size: %d kbytes"), round($filesize));
         processingMsg(gTranslate('common', "Done."));
     }
-    
+
     if (fs_file_exists("$out") && fs_filesize("$out") > 0) {
         if ($useTemp) {
             fs_copy($out, $dest);
@@ -154,7 +154,7 @@ function resize_image($src, $dest, $target = 0, $target_fs = 0, $keepProfiles = 
  */
 function Netpbm_decompose_image($input, $format) {
     global $gallery;
-    
+
     $overlay = tempnam($gallery->app->tmpDir, "Netpbm_");
     $alpha = tempnam($gallery->app->tmpDir, "Netpbm_");
 
@@ -172,17 +172,17 @@ function Netpbm_decompose_image($input, $format) {
     }
 
     exec_wrapper($getOverlay);
-    
+
     if (isset($getAlpha)) {
         exec_wrapper($getAlpha);
     }
-    
+
     return array($overlay, $alpha);
 }
 
 function watermark_image($src, $dest, $wmName, $wmAlphaName, $wmAlign, $wmAlignX, $wmAlignY) {
     global $gallery;
-    
+
     if (!strcmp($src,$dest)) {
         $useTemp = true;
         $out = "$dest.tmp";
@@ -191,7 +191,7 @@ function watermark_image($src, $dest, $wmName, $wmAlphaName, $wmAlign, $wmAlignX
         $useTemp = false;
         $out = $dest;
     }
-    
+
     if (isDebugging()) {
         print "<table border=\"1\">";
         print "<tr><td>src</td><td>$src</td></tr>";
@@ -212,15 +212,15 @@ function watermark_image($src, $dest, $wmName, $wmAlphaName, $wmAlign, $wmAlignX
             break;
 
             case 'Netpbm':
-                if (eregi('\.png$',$wmName, $regs)) {
+                if (preg_match('~\.png$~i',$wmName, $regs)) {
                     list ($overlayFile, $alphaFile) = Netpbm_decompose_image($wmName, "png");
                     $tmpOverlay = 1;
                 }
-                elseif (eregi('\.tiff?$',$wmName, $regs)) {
+                elseif (preg_match('~\.tiff?$~i',$wmName, $regs)) {
                     list ($overlayFile, $alphaFile) = Netpbm_decompose_image($wmName, "tif");
                     $tmpOverlay = 1;
                 }
-                elseif (eregi('\.gif$',$wmName, $regs)) {
+                elseif (preg_match('~\.gif$~i',$wmName, $regs)) {
                     list ($overlayFile, $alphaFile) = Netpbm_decompose_image($wmName, "gif");
                     $tmpOverlay = 1;
                 }
@@ -281,7 +281,7 @@ function watermark_image($src, $dest, $wmName, $wmAlphaName, $wmAlign, $wmAlignX
         break;
         case 10: // Other
             // Check for percents
-            if (ereg('([0-9]+)(\%?)', $wmAlignX, $regs)) {
+            if (preg_match('~([0-9]+)(\%?)~', $wmAlignX, $regs)) {
                 if ($regs[2] == '%') {
                     $wmAlignX = round($regs[1] / 100 * ($srcSize[0] - $overlaySize[0]));
                 } else {
@@ -291,7 +291,7 @@ function watermark_image($src, $dest, $wmName, $wmAlphaName, $wmAlign, $wmAlignX
                 $wmAlignX = 0;
             }
 
-            if (ereg('([0-9]+)(\%?)', $wmAlignY, $regs)) {
+            if (preg_match('~([0-9]+)(\%?)~', $wmAlignY, $regs)) {
                 if ($regs[2] == '%') {
                     $wmAlignY = round($regs[1] / 100 * ($srcSize[1] - $overlaySize[1]));
                 } else {
@@ -643,11 +643,11 @@ function fromPnmCmd($file, $quality = NULL) {
 	$quality = $gallery->app->jpegImageQuality;
     }
 
-    if (eregi("\.png(\.tmp)?\$", $file)) {
+    if (preg_match("~\.png(\.tmp)?\$~i", $file)) {
 	$cmd = Netpbm("pnmtopng");
-    } elseif (eregi("\.jpe?g(\.tmp)?\$", $file)) {
+    } elseif (preg_match("~\.jpe?g(\.tmp)?\$~i", $file)) {
 	$cmd = Netpbm($gallery->app->pnmtojpeg, "--quality=$quality");
-    } elseif (eregi("\.gif(\.tmp)?\$", $file)) {
+    } elseif (preg_match("~\.gif(\.tmp)?\$~i", $file)) {
 	$cmd = Netpbm("ppmquant", "256") . " | " . Netpbm("ppmtogif");
     }
 
@@ -747,7 +747,7 @@ function compressImage($src = '', $dest = '', $targetSize = 0, $quality, $keepPr
             /* copy over EXIF data if a JPEG if $keepProfiles is set.
             *  Unfortunately, we can't also keep comments.
             */
-            if ($keepProfiles && eregi('\.jpe?g$', $src)) {
+            if ($keepProfiles && preg_match('~\.jpe?g$~i', $src)) {
                 if (isset($gallery->app->use_exif)) {
                     exec_wrapper(fs_import_filename($gallery->app->use_exif, 1) . ' -te '
                     . $srcFile . ' ' . $destFile);

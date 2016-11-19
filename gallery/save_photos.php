@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -111,38 +111,38 @@ if (!empty($urls)) {
 	    }
 		/* Get rid of any preceding whitespace (fix for odd browsers like konqueror) */
 		$url = ltrim($url);
-		
+
 		$urlParts = parse_url($url);
 		$urlPathInfo = isset($urlParts['path']) ? pathinfo($urlParts['path']) : '';
 		$urlExt = isset($urlPathInfo['extension']) ? strtolower($urlPathInfo['extension']) : '';
-		
+
 		/* If the URI doesn't start with a scheme, prepend 'http://' */
 		if (!empty($url) && !fs_is_file($url)) {
-			if (!ereg("^(http|ftp)", $url)) {
-				processingMsg(sprintf(_('Unable to find %s locally - trying %s.'), 
+			if (!preg_match("~^(http|ftp)~", $url)) {
+				processingMsg(sprintf(_('Unable to find %s locally - trying %s.'),
 					htmlspecialchars(strip_tags(urldecode($url))), 'http'));
 				$url = "http://$url";
 			}
 
 			/* Parse URL for name and file type */
 			$url_stuff = @parse_url($url);
-			if (!isset($url_stuff["path"])) { 
+			if (!isset($url_stuff["path"])) {
 				$url_stuff["path"]="";
 			}
 			$name = basename($url_stuff["path"]);
 		} else {
 			$name = basename($url);
 		}
-		
+
 		/* Dont output warning messages if we cant open url */
-	
+
 		/*
 		 * Try to open the url in lots of creative ways.
 		 * Do NOT use fs_fopen here because that will pre-process
 		 * the URL in win32 style (ie, convert / to \, etc).
 		 */
 		$urlArray = array($url, "$url/");
-		if (!ereg("http", $url)) {
+		if (!preg_match("~^http~", $url)) {
 		    $urlArray[] = "http://$url";
 		    $urlArray[] = "http://$url/";
 		}
@@ -157,9 +157,9 @@ if (!empty($urls)) {
 		    processingMsg(sprintf(_("Could not open url: %s"), $url));
 		    continue;
 		}
-	
+
 		/**
-		 * If this is an image or movie - 
+		 * If this is an image or movie -
 		 * copy it locally and add it to the processor array
 		 */
 		if (acceptableFormat($urlExt) || acceptableArchive($urlExt)) {
@@ -179,7 +179,7 @@ if (!empty($urls)) {
 		    }
 		    /* Make sure we delete this file when we're through... */
 		    $temp_files[$file]=1;
-		    
+
 		    /* Add it to userfile */
 		    $_FILES['userfile']['name'][] = $name;
 		    $_FILES['userfile']['tmp_name'][] = $file;
@@ -202,14 +202,14 @@ if (!empty($urls)) {
 		    * This prevents a directory without a trailing / from being inadvertantly
 		    * dropped from resulting URLs.
 		    */
-		    if (ereg("/$", $url_stuff["path"]) || !ereg("\.", $name)) {
+		    if (preg_match("~/$~", $url_stuff["path"]) || !preg_match("~\.~", $name)) {
 		        $base_dir = $url_stuff["path"];
 		    } else {
 		        $base_dir = dirname($url_stuff["path"]);
 		    }
 
 		    /* Make sure base_dir ends in a / ( accounts for empty base_dir ) */
-		    if (!ereg("/$", $base_dir)) {
+		    if (!preg_match("~/$~", $base_dir)) {
 		        $base_dir .= '/';
 		    }
 
@@ -225,7 +225,7 @@ if (!empty($urls)) {
             /* Add each unique link to an array we scan later */
 			foreach (array_keys($things) as $thing) {
 
-				/* 
+				/*
 				 * Some sites (slashdot) have images that start with // and this
 				 * confuses Gallery.  Prepend 'http:'
 				 */
@@ -246,7 +246,7 @@ if (!empty($urls)) {
 					$image_tags[] = $base_url . $base_dir . $thing;
 				}
 			}
-	
+
 			/* Tell user how many links we found, but delay processing */
 			processingMsg(sprintf(_("Found %d images"), count($image_tags)));
 		}
@@ -284,7 +284,7 @@ if(!empty($_FILES['metafile']['name'][0])) {
     $exampleMetaData = $image_info[0];
     // Find the name of the file name field
     foreach (array_keys($exampleMetaData) as $currKey) {
-        if (eregi("^\"?file\ ?name\"?$", $currKey)) {
+        if (preg_match("~^\"?file\ ?name\"?$~i", $currKey)) {
             $fileNameKey = $currKey;
         }
     }
@@ -316,7 +316,7 @@ while (isset($_FILES['userfile']['tmp_name']) && sizeof($_FILES['userfile']['tmp
         if (!isset($setCaption)) {
             $setCaption = '';
         }
-        
+
         // Find in meta data array
         foreach ($image_info as $info) {
 			if ($info[$fileNameKey] == $name) {
@@ -377,16 +377,16 @@ if (count($image_tags)) {
 	insertFormJS('uploadurl_form');
 
 	echo "\n<p>". insertFormJSLinks('urls[]') ."</p>";
-	
+
     echo _("Select the items you want to upload. To select multiple hold 'ctrl' (PC) or 'Command' (Mac)");
-    echo makeFormIntro("save_photos.php", 
+    echo makeFormIntro("save_photos.php",
 		array('name' => 'uploadurl_form'),
-		array('type' => 'popup')); 
+		array('type' => 'popup'));
 
     /* Allow user to select which files to grab - only show url right now ( no image previews ) */
     sort($image_tags);
     $selectSize = (sizeof($image_tags) > 20) ? 20 : sizeof($image_tags);
-	
+
     echo '<select name="urls[]" multiple="multiple" size="'. $selectSize ."\">\n";
     foreach ( $image_tags as $image_src) {
 	   echo "\t<option value=\"$image_src\" selected>$image_src</option><br>\n";
@@ -396,7 +396,7 @@ if (count($image_tags)) {
 
     /* REVISIT - it'd be nice to have these functions get shoved
      * into util.php at some time - maybe added functionality to the makeFormIntro?
-    */ 
+    */
     echo "\n<p>". insertFormJSLinks('urls[]') ."</p>";
 
     if (count($info_tags)) { ?>
@@ -439,7 +439,7 @@ if (count($image_tags)) {
 </form>
 </div>
 </div>
-<?php 
+<?php
 } /* End if links slurped */ ?>
 </div>
 </body>

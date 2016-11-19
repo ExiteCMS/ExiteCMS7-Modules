@@ -77,7 +77,7 @@ $mod_install_cmds[] = array('type' => 'function', 'value' => "eXtplorer_add_to_m
 
 if (!function_exists('eXtplorer_add_to_menu')) {
 	function eXtplorer_add_to_menu() {
-		global $db_prefix, $settings;
+		global $db_prefix, $_db_link, $settings;
 
 		// determine the next menu order number
 		$order = dbfunction("MAX(link_order)", "site_links") + 1;
@@ -91,7 +91,7 @@ if (!function_exists('eXtplorer_add_to_menu')) {
 			// if it doesn't exist, create it
 			$result = dbquery("INSERT INTO ".$db_prefix."user_groups (group_ident, group_name, group_groups, group_rights, group_description, group_forumname, group_visible)
 							VALUES ('EX01', 'File Administrators', '', '', 'File Administrators', 'File Administrator', '0')");
-			$group = mysql_insert_id();
+			$group = mysqli_insert_id($_db_link);
 		}
 
 		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_locale, link_url, panel_name, link_visibility, link_position, link_window, link_order)

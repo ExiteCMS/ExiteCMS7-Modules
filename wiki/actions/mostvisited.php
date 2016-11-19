@@ -33,7 +33,7 @@
     $i = 0;
 
     // assign the resultset of the msyql query to $hitlist in a custom way ...
-    while( $row = mysql_fetch_array($hitlistQuery) )
+    while( $row = mysqli_fetch_array($hitlistQuery) )
     {
         if (!$hitlist[$row['tag']]){
             $hitlist[$row['tag']] = array("owner" => $row['owner'],"hits" => $row['hits']);

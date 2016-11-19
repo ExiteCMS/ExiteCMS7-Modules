@@ -108,7 +108,7 @@ if (isset($_POST['save_settings'])) {
 				// add if there wasn't any previous thread
 				$result = dbquery("INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_sticky, thread_locked, thread_lastpost, thread_lastuser)
 									VALUES ('".$new_forum_id."', '".$locale['don491']."', '0', '1', '1', '".time()."', '0')");
-				$thread_id = mysql_insert_id();
+				$thread_id = mysqli_insert_id($_db_link);
 			}
 			// and insert all donations in the thread
 			$result = dbquery("SELECT * FROM ".$db_prefix."donations WHERE donate_type IN (0,1) ORDER BY donate_timestamp ASC");
@@ -136,7 +136,7 @@ if (isset($_POST['save_settings'])) {
 } elseif (isset($_POST['save_template'])) {
 	$result = dbquery("SELECT * FROM ".$db_prefix."locales WHERE locales_code = '$lc' AND locales_key = '$lk'");
 	if (dbrows($result)) {
-		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".mysql_real_escape_string($_POST['tpl'])."', locales_datestamp = '".time()."' WHERE locales_code = '$lc' AND locales_key = '$lk'");
+		$result = dbquery("UPDATE ".$db_prefix."locales SET locales_value = '".mysqli_real_escape_string($_POST['tpl'], $_db_link)."', locales_datestamp = '".time()."' WHERE locales_code = '$lc' AND locales_key = '$lk'");
 		$error = 12;
 	} else {
 		$error = 11;

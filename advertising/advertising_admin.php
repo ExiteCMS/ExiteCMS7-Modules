@@ -178,7 +178,7 @@ if (isset($_POST['save'])) {
 					case "addad":
 						$result = dbquery("INSERT INTO ".$db_prefix."advertising (adverts_userid, adverts_contract, adverts_contract_start, adverts_contract_end, adverts_priority, adverts_location, adverts_url, adverts_sold, adverts_image, adverts_status)
 							VALUES ('".$adverts_userid."', '".$adverts_contract."', '".$adverts_contract_start."', '".$adverts_contract_end."', '".$adverts_priority."', '".$adverts_location."', '".$adverts_url."', '".$adverts_sold."', '".$adverts_image."', '".$adverts_status."')");
-						$adverts_id = mysql_insert_id();
+						$adverts_id = mysqli_insert_id($_db_link);
 						$errormessage = $locale['ads906'];
 						break;
 					case "edit":

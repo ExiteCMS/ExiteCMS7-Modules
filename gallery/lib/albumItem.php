@@ -269,7 +269,7 @@ $javascriptSet = true;
     	$photo = $gallery->album->getPhoto($i);
 
     	if ($gallery->album->fields["use_exif"] == 'yes' &&
-    	  (eregi("jpe?g\$", $photo->image->type)) &&
+    	  (preg_match("~jpe?g\$~i", $photo->image->type)) &&
     	  (isset($gallery->app->use_exif) || isset($gallery->app->exiftags)))
 		{
     		$options['showExif'] = array(

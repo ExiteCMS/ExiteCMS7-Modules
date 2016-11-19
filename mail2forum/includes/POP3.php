@@ -156,7 +156,7 @@ class Net_POP3 {
         $this->_maildrop  =  array();
         $this->_timeout   =  3;
         $this->_state     =  NET_POP3_STATE_DISCONNECTED;
-        $this->_socket    =& new Net_Socket();
+        $this->_socket    =  new Net_Socket();
         /*
         * Include the Auth_SASL package.  If the package is not available,
         * we disable the authentication methods that depend upon it.
@@ -194,7 +194,7 @@ class Net_POP3 {
     }
 
 
-    
+
     /*
     * Connects to the given host on the given port.
     * Also looks for the timestamp in the greeting
@@ -249,7 +249,7 @@ class Net_POP3 {
     * @param  string $user Username to use
     * @param  string $pass Password to use
     * @param  mixed $apop Whether to try APOP first, if used as string you can select the auth methd to use ( $pop3->login('validlogin', 'validpass', "CRAM-MD5");
-    *          Valid methods are: 'DIGEST-MD5','CRAM-MD5','LOGIN','PLAIN','APOP','USER' 
+    *          Valid methods are: 'DIGEST-MD5','CRAM-MD5','LOGIN','PLAIN','APOP','USER'
     * @return mixed  true on Success/ PEAR_ERROR on error
     */
     function login($user, $pass, $apop = true)
@@ -277,7 +277,7 @@ class Net_POP3 {
     * @access private
     */
     function _parseCapability()
-    {	
+    {
 
         if(!PEAR::isError($data = $this->_sendCmd('CAPA'))){
             $data = $this->_getMultiline();
@@ -303,7 +303,7 @@ class Net_POP3 {
 			    unset($this->_capability);
 			else {
                     	    $this->_capability['sasl'] = preg_split('/\s+/', $matches[3]);
-                    	    if ($this->_capability['sasl'][0] == "") 
+                    	    if ($this->_capability['sasl'][0] == "")
                         	unset($this->_capability);
 			}
                         break;
@@ -492,7 +492,7 @@ class Net_POP3 {
         if( PEAR::isError($ret=$this->_checkResponse($challenge) )){
             return $ret;
         }
-        
+
         return true;
     }
 
@@ -569,9 +569,9 @@ class Net_POP3 {
         }
 
         // remove '+ '
-        
+
         $challenge=substr($challenge,2);
-        
+
         $challenge = base64_decode( $challenge );
 
         $cram = &Auth_SASL::factory('crammd5');
@@ -639,13 +639,13 @@ class Net_POP3 {
         if ( PEAR::isError( $challenge = $this->_send("\r\n") ) ) {
             return $challenge ;
         }
-        
+
         if ( PEAR::isError( $challenge = $this->_recvLn() ) ) {
             return $challenge;
         }
-        
+
         return $this->_checkResponse($challenge);
-        
+
 
     }
 
@@ -839,10 +839,10 @@ class Net_POP3 {
     */
     function getListing($msg_id = null)
     {
-    
+
         if ($this->_state == NET_POP3_STATE_TRANSACTION) {
             if (!isset($msg_id)){
-            
+
                 $list=array();
                 if ($list = $this->_cmdList()) {
                     if ($uidl = $this->_cmdUidl()) {
@@ -873,7 +873,7 @@ class Net_POP3 {
     function _debug($msg)
     {
 	$msg = date('Ymd').';'.date('His').';'.$msg."\n";
-	
+
         if(!defined('NET_POP3_DEBUG_LOGFILE')) {
             echo $msg;
             return true;
@@ -950,7 +950,7 @@ class Net_POP3 {
             if (!isset($msg_id)) {
                 if(!PEAR::isError($data = $this->_sendCmd('LIST') )){
                     $data = $this->_getMultiline();
-                    $data = explode("\r\n", $data);                    
+                    $data = explode("\r\n", $data);
                     foreach ($data as $line) {
                         if($line !=''){
                             sscanf($line, '%s %s', $msg_id, $size);
@@ -969,7 +969,7 @@ class Net_POP3 {
                 }
             }
         }
-        
+
 
         return false;
     }
@@ -1133,12 +1133,12 @@ class Net_POP3 {
         if (PEAR::isError($data = $this->_recvLn() )){
             return $data;
         }
-        
+
         if ( strtoupper(substr($data, 0, 3)) == '+OK') {
             return $data;
         }
-        
-        
+
+
         return $this->_raiseError($data);
     }
 
@@ -1166,7 +1166,7 @@ class Net_POP3 {
    /**
     * Sets the bebug state
     *
-    * @param  bool $debug 
+    * @param  bool $debug
     * @access public
     * @return void
     */
@@ -1245,11 +1245,11 @@ class Net_POP3 {
                     return true;
                 }
             }
-    
+
         }
         return $this->_raiseError("Unknown Response ($response)");
     }
-    
+
 
 
 }

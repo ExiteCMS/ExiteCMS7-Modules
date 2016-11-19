@@ -113,10 +113,10 @@ if (!empty($searchstring)) {
 		$searchSummary = $searchAlbum->fields['summary'];
 		$searchName = $searchAlbum->fields['name'];
 
-		$matchTitle = eregi("$searchstring", $searchTitle);
-		$matchDescription = eregi("$searchstring", $searchDescription);
-		$matchSummary = eregi("$searchstring", $searchSummary);
-		$matchName = eregi("$searchstring", $searchName);
+		$matchTitle = preg_match("~$searchstring~i", $searchTitle);
+		$matchDescription = preg_match("~$searchstring~i", $searchDescription);
+		$matchSummary = preg_match("~$searchstring~i", $searchSummary);
+		$matchName = preg_match("~$searchstring~i", $searchName);
 
 		if ($matchTitle || $matchDescription || $matchSummary | $matchName) {
 			$searchTitle = preg_replace($searchExpr, $searchRepl, $searchTitle); // cause search word to be bolded
@@ -166,7 +166,7 @@ if (!empty($searchstring)) {
 					}
 					$searchComment .= ": ".$comment->getCommentText();
 
-					if (eregi($searchstring, $searchComment)) {
+					if (preg_match("~$searchstring~i", $searchComment)) {
 						if (!$commentMatch) {
 							$commentText = _("Matching Comments").":<br>";
 							$commentMatch = 1;
@@ -183,7 +183,7 @@ if (!empty($searchstring)) {
 			$extraFieldsText = '';
 			foreach ($searchAlbum->getExtraFields() as $field) {
 				$fieldValue=$searchAlbum->getExtraField($j, $field);
-				if (eregi($searchstring, $fieldValue)) {
+				if (preg_match("~$searchstring~i", $fieldValue)) {
 					$fieldValue = preg_replace($searchExpr, $searchRepl, $fieldValue);
 					$extraFieldsText .= "<b>$field:</b> $fieldValue<br><br>";
 					$extraFieldsMatch = 1;
@@ -193,12 +193,12 @@ if (!empty($searchstring)) {
 			/* Search through caption */
 			$searchCaption = _("Caption: ") . $photo->getCaption();
 			$searchCaption .= $searchAlbum->getCaptionName($j);
-			$captionMatch = eregi($searchstring, $searchCaption);
+			$captionMatch = preg_match("~$searchstring~i", $searchCaption);
 
 			/* Search through keywords */
 			$searchKeywords = $photo->getKeywords();
 			if(!empty($searchKeywords)) {
-				$keywordMatch = eregi($searchstring, $searchKeywords);
+				$keywordMatch = preg_match("~$searchstring~i", $searchKeywords);
 			}
 			else {
 				$keywordMatch = false;
@@ -207,7 +207,7 @@ if (!empty($searchstring)) {
 			/* Search through imagename */
 			if(!empty($photo->image->name)) {
 				$searchName = $photo->image->name;
-				$nameMatch = eregi($searchstring, $searchName);
+				$nameMatch = preg_match("~$searchstring~i", $searchName);
 			}
 			else {
 				$nameMatch = false;

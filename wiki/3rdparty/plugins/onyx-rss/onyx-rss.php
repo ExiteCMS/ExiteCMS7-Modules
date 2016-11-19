@@ -1,7 +1,7 @@
 <?php
 /**
  * Onyx RSS Parser
- * 
+ *
  * @package 3rdParty
  * @subpackage Onyx
  * @filesource
@@ -57,11 +57,6 @@ class ONYX_RSS
    var $error;
    var $outputFile;
    var $inBetween;
-
-   function ONYX_RSS($source=false, $target=false)
-   {
-      $this->__construct($source, $target);
-   }
 
    function __construct($source=false, $target=false)
    {
@@ -206,7 +201,7 @@ class ONYX_RSS
       {
          $parts = parse_url($uri);
          $port  = isset($parts['port']) ? $parts['port'] : 80;
-         $host  = isset($parts['host']) ? $parts['host'] : ''; 
+         $host  = isset($parts['host']) ? $parts['host'] : '';
 
          if (!($fp = @fsockopen($host, $port)))
             return 0;

@@ -1,7 +1,7 @@
 <?php
 /* A php wdiff  (word diff) for wakka, adapted by David Delon
    based on wdiff and phpwiki diff (copyright below).
-   TODO : Since wdiff use only directive lines, all stuff in diff class 
+   TODO : Since wdiff use only directive lines, all stuff in diff class
    related to line and context display should be removed.
 
    This program is free software; you can redistribute it and/or modify
@@ -9,13 +9,13 @@
    the Free Software Foundation; either version 2, or (at your option)
    any later version. */
 
-  
+
 /* A PHP diff engine for phpwiki.
-  
+
    Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
    You may copy this code freely under the conditions of the GPL.
 */
- 
+
 /* wdiff -- front end to diff for comparing on a word per word basis.
    Copyright (C) 1992 Free Software Foundation, Inc.
    Francois Pinard <pinard@iro.umontreal.ca>.
@@ -46,7 +46,7 @@ class Side {
        $this->argument=array();
        $this->length=strlen($this->content);
        $this->character=substr($this->content,0,1);
-       
+
     }
 
     function getposition() {
@@ -66,7 +66,7 @@ class Side {
     }
 
     function nextchar() {
-       $this->cursor++; 
+       $this->cursor++;
        $this->character=substr($this->content,$this->cursor,1);
     }
 
@@ -94,17 +94,17 @@ class Side {
 	 $out .="\n";
        }
     }
-    
+
     function init() {
        $this->position=0;
        $this->cursor=0;
        $this->directive='';
        $this->argument=array();
        $this->character=substr($this->content,0,1);
-    }     
+    }
 
     function isspace($char) {
-       if (ereg('[[:space:]]',$char)) {
+       if (preg_match('~[[:space:]]~',$char)) {
 	  return true;
        }
        else {
@@ -113,7 +113,7 @@ class Side {
     }
 
     function isdigit($char) {
-       if (ereg('[[:digit:]]',$char)) {
+       if (preg_match('~[[:digit:]]~',$char)) {
 	  return true;
        }
        else {
@@ -174,17 +174,17 @@ class Side {
 
 
 	 function decode_directive_line() {
-	
-	 $value=0;                    
-	 $state=0;                   
-	 $error=0;                  
-	
+
+	 $value=0;
+	 $state=0;
+	 $error=0;
+
 	 while (!$error && $state < 4) {
      if ($this->isdigit($this->character)) {
 	 	$value = 0;
 	 	while($this->isdigit($this->character)) {
 	 		$value = 10 * $value + $this->character - '0';
-	    	$this->nextchar(); 
+	    	$this->nextchar();
 	 	}
      }
      else if ($state != 1 && $state != 3)
@@ -211,7 +211,7 @@ class Side {
 		  else
 		    $error = 1;
 		  break;
-	
+
 		case 3:
 		  if ($this->character != "\n")
 		    $error = 1;
@@ -251,7 +251,7 @@ class _DiffOp {
     var $type;
     var $orig;
     var $final;
-    
+
 
     function norig() {
 	return $this->orig ? sizeof($this->orig) : 0;
@@ -264,7 +264,7 @@ class _DiffOp {
 
 class _DiffOp_Copy extends _DiffOp {
     var $type = 'copy';
-    
+
     function _DiffOp_Copy ($orig, $final = false) {
 	if (!is_array($final))
 	    $final = $orig;
@@ -276,7 +276,7 @@ class _DiffOp_Copy extends _DiffOp {
 
 class _DiffOp_Delete extends _DiffOp {
     var $type = 'delete';
-    
+
     function _DiffOp_Delete ($lines) {
 	$this->orig = $lines;
 	$this->final = false;
@@ -286,7 +286,7 @@ class _DiffOp_Delete extends _DiffOp {
 
 class _DiffOp_Add extends _DiffOp {
     var $type = 'add';
-    
+
     function _DiffOp_Add ($lines) {
 	$this->final = $lines;
 	$this->orig = false;
@@ -296,15 +296,15 @@ class _DiffOp_Add extends _DiffOp {
 
 class _DiffOp_Change extends _DiffOp {
     var $type = 'change';
-    
+
     function _DiffOp_Change ($orig, $final) {
 	$this->orig = $orig;
 	$this->final = $final;
     }
 
 }
-	
-      
+
+
 /**
  * Class used internally by Diff to actually compute the diffs.
  *
@@ -337,7 +337,7 @@ class _DiffEngine
 	unset($this->seq);
 	unset($this->in_seq);
 	unset($this->lcs);
-	 
+
 	// Skip leading common lines.
 	for ($skip = 0; $skip < $n_from && $skip < $n_to; $skip++) {
 	    if ($from_lines[$skip] != $to_lines[$skip])
@@ -351,7 +351,7 @@ class _DiffEngine
 		break;
 	    $this->xchanged[$xi] = $this->ychanged[$yi] = false;
 	}
-	
+
 	// Ignore lines which do not exist in both files.
 	for ($xi = $skip; $xi < $n_from - $endskip; $xi++)
 	    $xhash[$from_lines[$xi]] = 1;
@@ -403,7 +403,7 @@ class _DiffEngine
 	    $add = array();
 	    while ($yi < $n_to && $this->ychanged[$yi])
 		$add[] = $to_lines[$yi++];
-	    
+
 	    if ($delete && $add)
 		$edits[] = new _DiffOp_Change($delete, $add);
 	    elseif ($delete)
@@ -413,7 +413,7 @@ class _DiffEngine
 	}
 	return $edits;
     }
-    
+
 
     /* Divide the Largest Common Subsequence (LCS) of the sequences
      * [XOFF, XLIM) and [YOFF, YLIM) into NCHUNKS approximately equally
@@ -433,7 +433,7 @@ class _DiffEngine
      */
     function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
 	$flip = false;
-	
+
 	if ($xlim - $xoff > $ylim - $yoff) {
 	    // Things seems faster (I'm not sure I understand why)
 	    // when the shortest sequence in X.
@@ -453,7 +453,7 @@ class _DiffEngine
 	$this->seq[0]= $yoff - 1;
 	$this->in_seq = array();
 	$ymids[0] = array();
-    
+
 	$numer = $xlim - $xoff + $nchunks - 1;
 	$x = $xoff;
 	for ($chunk = 0; $chunk < $nchunks; $chunk++) {
@@ -620,14 +620,14 @@ class _DiffEngine
 	     */
 	    while ($j < $other_len && $other_changed[$j])
 		$j++;
-	    
+
 	    while ($i < $len && ! $changed[$i]) {
 		USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
 		$i++; $j++;
 		while ($j < $other_len && $other_changed[$j])
 		    $j++;
 	    }
-	    
+
 	    if ($i == $len)
 		break;
 
@@ -709,7 +709,7 @@ class _DiffEngine
 /**
  * Class representing a 'diff' between two sequences of strings.
  */
-class Diff 
+class Diff
 {
     var $edits;
 
@@ -728,7 +728,7 @@ class Diff
 
 }
 
-	    
+
 
 /**
  * A class to format Diffs
@@ -813,7 +813,7 @@ class DiffFormatter
 
 	return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
-    
+
     function _start_block($header) {
 	echo $header."\n";
     }

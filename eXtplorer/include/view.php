@@ -6,18 +6,18 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * @package eXtplorer
  * @copyright soeren 2007
  * @author The eXtplorer project (http://sourceforge.net/projects/extplorer)
- * 
+ *
  * @license
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- * 
+ *
  * Alternatively, the contents of this file may be used under the terms
  * of the GNU General Public License Version 2 or later (the "GPL"), in
  * which case the provisions of the GPL are applicable instead of
@@ -28,7 +28,7 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * other provisions required by the GPL.  If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the GPL."
- * 
+ *
  */
 
 /**
@@ -36,9 +36,9 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  *
  */
 class ext_View extends ext_Action {
-	
+
 	function execAction($dir, $item) {		// show file contents
-	
+
 		echo '<div>
     <div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>
     <div class="x-box-ml"><div class="x-box-mr"><div class="x-box-mc">
@@ -56,16 +56,16 @@ class ext_View extends ext_Action {
 			//echo '<a class="componentheading" href="javascript:opener.location=\''.$index2_edit_link.'\'; window.close();">[ '.$GLOBALS["messages"]["editlink"].' ]</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
 		echo '<a class="componentheading" href="#bottom">[ '._CMN_BOTTOM.' ]</a>';
-		
+
 		echo '<br /><br />';
 		*/
-		
-		if( @eregi($GLOBALS["images_ext"], $item)) {
+
+		if( @preg_match('~'.$GLOBALS["images_ext"].'~i', $item)) {
 			echo '<img src="'.make_link( 'get_image', $dir, rawurlencode($item)).'" alt="'.$GLOBALS["messages"]["actview"].": ".$item.'" /><br /><br />';
 		}
-		
+
 		else {
-			
+
 			$geshiFile = PATH_GESHI . '/geshi.php';
 
 			if( file_exists( $geshiFile )) {
@@ -91,12 +91,12 @@ class ext_View extends ext_Action {
 					$pathinfo = pathinfo($item);
 					$lang = $pathinfo['extension'];
 				}
-				
+
 				$geshi->set_language( $lang );
 				$geshi->enable_line_numbers( GESHI_NORMAL_LINE_NUMBERS );
-			
+
 				$text = $geshi->parse_code();
-				
+
 				if( ext_isFTPMode() ) {
 					unlink( $file );
 				}
@@ -110,15 +110,15 @@ class ext_View extends ext_Action {
 					.'</div>';
 			}
 		}
-		
+
 		//echo '<a href="#top" name="bottom" class="componentheading">[ '._CMN_TOP.' ]</a><br /><br />';
 	}
 	function sendImage( $dir, $item ) {
 		$abs_item = get_abs_item( $dir, $item );
 		if( $GLOBALS['ext_File']->file_exists( $abs_item )) {
-  			if(!@eregi($GLOBALS["images_ext"], $item)) return;
+  			if(!@preg_match('~'.$GLOBALS["images_ext"].'~i', $item)) return;
   			while( @ob_end_clean() );
-  			
+
   			$pathinfo = pathinfo( $item );
 			switch(strtolower($pathinfo['extension'])) {
 				case "gif":
@@ -132,9 +132,9 @@ class ext_View extends ext_Action {
 					header ("Content-type: image/png");
 		  			break;
 	  		}
-	  		
+
 			echo $GLOBALS['ext_File']->file_get_contents( $abs_item );
-			
+
 		}
 		exit;
 	}

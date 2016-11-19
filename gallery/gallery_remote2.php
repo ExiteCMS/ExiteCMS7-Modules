@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -161,7 +161,7 @@ function gr_login( &$gallery, &$response, $uname, $password ) {
 	if ($tmpUser && $tmpUser->isCorrectPassword($password)) {
 		// log user in
 		$gallery->session->username = $uname;
- 
+
 		$response->setProperty( 'debug_user', $tmpUser->getUsername());
 		$response->setProperty( 'debug_user_type', get_class($tmpUser));
 
@@ -300,7 +300,7 @@ function gr_add_item( &$gallery, &$response, &$userfile, &$userfile_name, $capti
 	} else {
 		$name = $userfile_name;
 	}
-	$tag = ereg_replace(".*\.([^\.]*)$", "\\1", $userfile_name);
+	$tag = preg_replace("~.*\.([^\.]*)$~i", "\\1", $userfile_name);
 	$tag = strtolower($tag);
 
 	if ($name) {
@@ -390,7 +390,7 @@ function gr_new_album( &$gallery, &$response, $newAlbumName, $newAlbumTitle, $ne
 function gr_fetch_album_images( &$gallery, &$response, $albums_too ) {
 
 	global $GR_STAT;
-	
+
 	if ($albums_too == 'yes') {
 	    $albums_too = TRUE;
 	} else {
@@ -398,7 +398,7 @@ function gr_fetch_album_images( &$gallery, &$response, $albums_too ) {
 	}
 
 	$tmpImageNum = 0;
-	
+
 	if (isset($gallery->album)) {
 		if (isset($gallery->album->photos)) {
 			foreach($gallery->album->photos as $albumItemObj) {
@@ -466,7 +466,7 @@ function gr_fetch_album_images( &$gallery, &$response, $albums_too ) {
 			foreach ($albumDB->albumList as $myAlbum) {
 				if ($myAlbum->isRoot() && $gallery->user->canReadAlbum($myAlbum)) {
 				    $tmpImageNum++;
-		 
+
 					$response->setProperty( 'album.name.'.$tmpImageNum, $myAlbum->fields['name'] );
 					// root albums can't be hidden
 					$response->setProperty( 'album.hidden.'.$tmpImageNum, 'no' );
@@ -474,7 +474,7 @@ function gr_fetch_album_images( &$gallery, &$response, $albums_too ) {
 			}
 		}
 	}
-	
+
 	$response->setProperty( 'image_count', $tmpImageNum );
 	if (isset($gallery->album)) {
 	    $response->setProperty( 'baseurl', $gallery->album->getAlbumDirURL('full').'/' );
@@ -662,7 +662,7 @@ function check_proto_version( &$response ) {
 
 	if ( isset( $protocol_version ) ) {
 		// check version format
-		if ( eregi( "^([2-9]{1,2})\.([0-9]{1,2})$", $protocol_version, $ver_regs ) ) {
+		if ( preg_match( "~^([2-9]{1,2})\.([0-9]{1,2})$~i", $protocol_version, $ver_regs ) ) {
 			// version string is valid
 			$major_ver = $ver_regs[1];
 			$minor_ver = $ver_regs[2];
@@ -719,11 +719,11 @@ function checkIfNestedAlbum(&$startAlbum,&$possibleSub) {
 //--
 function appendNestedAlbums( &$myAlbum, &$album_index, &$response ) {
     global $gallery;
-	
+
 	$parent_index = $album_index;
 
 	$numPhotos = $myAlbum->numPhotos(1);
-    
+
     for ($i=1; $i <= $numPhotos; $i++) {
         if ($myAlbum->isAlbum($i)) {
             $myName = $myAlbum->getAlbumName($i);
@@ -740,14 +740,14 @@ function appendNestedAlbums( &$myAlbum, &$album_index, &$response ) {
 
 function add_album( &$myAlbum, &$album_index, $parent_index, &$response ){
 	global $gallery;
-	
+
 	// increment index
 	$album_index++;
 
 	// fetch name & title
 	$albumName = $myAlbum->fields['name'];
 	$albumTitle = $myAlbum->fields['title'];
-	
+
 	// write name, title and parent
 	$response->setProperty( "album.name.$album_index", $albumName );
 	$response->setProperty( "album.title.$album_index", $albumTitle );
@@ -763,7 +763,7 @@ function add_album( &$myAlbum, &$album_index, $parent_index, &$response ){
 	$can_delete_from = $gallery->user->canDeleteFromAlbum($myAlbum) ? "true" : "false";
 	$can_delete_alb = $gallery->user->canDeleteAlbum($myAlbum) ? "true" : "false";
 	$can_create_sub = $gallery->user->canCreateSubAlbum($myAlbum) ? "true" : "false";
-	
+
 	$response->setProperty( "album.perms.add.$album_index", $can_add );
 	$response->setProperty( "album.perms.write.$album_index", $can_write );
 	$response->setProperty( "album.perms.del_item.$album_index", $can_delete_from );
@@ -782,7 +782,7 @@ function add_album( &$myAlbum, &$album_index, $parent_index, &$response ){
 
 //-- Renamed this function because it conflicts with
 //-- another one that happens when upgrading the album
-//-- Speaking of which, trying to upload a picture to 
+//-- Speaking of which, trying to upload a picture to
 //-- an album which is not yet upgraded fails. Need warning
 //-- in the docs.
 
@@ -803,7 +803,7 @@ function processFile($file, $tag, $name, $setCaption="") {
         sort($files);
         foreach ($files as $pic_path) {
             $pic = basename($pic_path);
-            $tag = ereg_replace(".*\.([^\.]*)$", "\\1", $pic);
+            $tag = preg_replace("~.*\.([^\.]*)$~i", "\\1", $pic);
             $tag = strtolower($tag);
 
             if (acceptableFormat($tag) || !strcmp($tag, "zip")) {
@@ -825,29 +825,29 @@ function processFile($file, $tag, $name, $setCaption="") {
         $name = urldecode($name);
 
         // parse out original filename without extension
-        $originalFilename = eregi_replace(".$tag$", "", $name);
+        $originalFilename = preg_replace("~.$tag$~i", "", $name);
         // replace multiple non-word characters with a single "_"
-        $mangledFilename = ereg_replace("[^[:alnum:]]", "_", $originalFilename);
+        $mangledFilename = preg_replace("~[^[:alnum:]]~", "_", $originalFilename);
 
         /* Get rid of extra underscores */
-        $mangledFilename = ereg_replace("_+", "_", $mangledFilename);
-        $mangledFilename = ereg_replace("(^_|_$)", "", $mangledFilename);
-   
+        $mangledFilename = preg_replace("~_+~", "_", $mangledFilename);
+        $mangledFilename = preg_replace("~(^_|_$)~", "", $mangledFilename);
+
         /*
         need to prevent users from using original filenames that are purely numeric.
         Purely numeric filenames mess up the rewriterules that we use for mod_rewrite
         specifically:
         RewriteRule ^([^\.\?/]+)/([0-9]+)$  /~jpk/gallery/view_photo.php?set_albumName=$1&index=$2  [QSA]
         */
-   
-        if (ereg("^([0-9]+)$", $mangledFilename)) {
+
+        if (preg_match("~^([0-9]+)$~", $mangledFilename)) {
             $mangledFilename .= "_G";
         }
-   
+
         set_time_limit($gallery->app->timeLimit);
-        
+
         if (acceptableFormat($tag)) {
-   
+
 		    /*
 		     * Move the uploaded image to our temporary directory
 		     * using move_uploaded_file so that we work around
@@ -857,7 +857,7 @@ function processFile($file, $tag, $name, $setCaption="") {
 				$newFile = tempnam($gallery->app->tmpDir, "gallery");
 				if (move_uploaded_file($file, $newFile)) {
 				    $file = $newFile;
-		
+
 				    /* Make sure we remove this file when we're done */
 				    $temp_files[$file] = 1;
 				}
@@ -901,7 +901,7 @@ function processFile($file, $tag, $name, $setCaption="") {
 	    	$error = "Skipping $name (can't handle '$tag' format)";
 	    }
     }
-    
+
     return empty($error) ? '' : $error;
 }
 

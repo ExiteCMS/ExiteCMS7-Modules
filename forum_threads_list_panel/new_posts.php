@@ -58,32 +58,33 @@ require_once PATH_INCLUDES."forum_functions_include.php";
 // check if there are any unread posts for this user
 if ($userdata['user_posts_unread']) {
 	$result = dbquery("
-		SELECT count(*) as unread 
-			FROM ".$db_prefix."posts p 
-				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
-				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+		SELECT count(*) as unread
+			FROM ".$db_prefix."posts p
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 			WHERE ".groupaccess('f.forum_access')."
-				AND  tr.user_id = '".$userdata['user_id']."' 
+				AND  tr.user_id = '".$userdata['user_id']."'
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 				AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 					OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))"
 		);
 } else {
 	$result = dbquery("
-		SELECT count(*) as unread 
-			FROM ".$db_prefix."posts p 
-				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
-				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+		SELECT count(*) as unread
+			FROM ".$db_prefix."posts p
+				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 			WHERE ".groupaccess('f.forum_access')."
-				AND tr.user_id = '".$userdata['user_id']."' 
+				AND tr.user_id = '".$userdata['user_id']."'
 				AND p.post_author != '".$userdata['user_id']."'
 				AND p.post_edituser != '".$userdata['user_id']."'
 				AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 				AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 					OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))"
 		);
-} 
-$variables['unread'] = ($result ? mysql_result($result, 0) : 0);
+}
+$rows = mysqli_fetch_array($result);
+$variables['unread'] = $rows[0];
 
 // make sure rowstart has a valid value
 if (!isset($rowstart) || !isNum($rowstart)) $rowstart = 0;
@@ -95,11 +96,11 @@ if ($variables['unread']) {
 	if ($userdata['user_posts_unread']) {
 		$result = dbquery("
 			SELECT count(*) as unread, tr.thread_id
-				FROM ".$db_prefix."posts p 
-					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
-					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+				FROM ".$db_prefix."posts p
+					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE ".groupaccess('f.forum_access')."
-					AND tr.user_id = '".$userdata['user_id']."' 
+					AND tr.user_id = '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
@@ -107,12 +108,12 @@ if ($variables['unread']) {
 			);
 	} else {
 		$result = dbquery("
-			SELECT count(*) as unread, tr.thread_id 
-				FROM ".$db_prefix."posts p 
-					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id 
-					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id 
+			SELECT count(*) as unread, tr.thread_id
+				FROM ".$db_prefix."posts p
+					INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
+					INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE ".groupaccess('f.forum_access')."
-					AND tr.user_id = '".$userdata['user_id']."' 
+					AND tr.user_id = '".$userdata['user_id']."'
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
@@ -120,7 +121,7 @@ if ($variables['unread']) {
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
 				GROUP BY tr.thread_id"
 			);
-	} 
+	}
 	$variables['threads'] = dbrows($result);
 	// array to store the thread and post info
 	$variables['posts'] = array();
@@ -128,12 +129,12 @@ if ($variables['unread']) {
 	if ($userdata['user_posts_unread']) {
 		$result = dbquery("
 			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
-				FROM ".$db_prefix."posts p 
+				FROM ".$db_prefix."posts p
 				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
 				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE ".groupaccess('f.forum_access')."
-					AND tr.user_id = '".$userdata['user_id']."' 
+					AND tr.user_id = '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
 					AND ((p.post_datestamp > tr.thread_last_read OR p.post_edittime > tr.thread_last_read)
 						OR (p.post_datestamp < tr.thread_first_read OR (p.post_edittime != 0 AND p.post_edittime < tr.thread_first_read)))
@@ -144,12 +145,12 @@ if ($variables['unread']) {
 	} else {
 		$result = dbquery("
 			SELECT p.forum_id, p.thread_id, count( * ) AS unread, f.forum_name, f.forum_cat, t.thread_subject, t.thread_views, t.thread_lastpost, MIN( p.post_id ) AS post_id
-				FROM ".$db_prefix."posts p 
+				FROM ".$db_prefix."posts p
 				INNER JOIN ".$db_prefix."forums f ON p.forum_id = f.forum_id
 				INNER JOIN ".$db_prefix."threads t ON p.thread_id = t.thread_id
 				INNER JOIN ".$db_prefix."threads_read tr ON p.thread_id = tr.thread_id
 				WHERE ".groupaccess('f.forum_access')."
-					AND tr.user_id = '".$userdata['user_id']."' 
+					AND tr.user_id = '".$userdata['user_id']."'
 					AND p.post_author != '".$userdata['user_id']."'
 					AND p.post_edituser != '".$userdata['user_id']."'
 					AND (p.post_datestamp > ".$settings['unread_threshold']." OR p.post_edittime > ".$settings['unread_threshold'].")
@@ -159,7 +160,7 @@ if ($variables['unread']) {
 				ORDER BY t.thread_lastpost DESC
 				LIMIT ".$rowstart.", ".ITEMS_PER_PAGE
 			);
-	} 
+	}
 	// get the number of unread threads
 	$rows = dbrows($result);
 	$variables['rows'] = $rows;

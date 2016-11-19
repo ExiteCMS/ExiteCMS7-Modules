@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*---------------------------------------------------+
 | ExiteCMS Content Management System                 |
 +----------------------------------------------------+
@@ -58,9 +58,9 @@ $messages = array();
 display("Make sure the tables are empty...");
 display(" ");
 
-$result = mysql_query("TRUNCATE ".$db_prefix."dlstats_ips");
-$result = mysql_query("TRUNCATE ".$db_prefix."dlstats_files");
-$result = mysql_query("TRUNCATE ".$db_prefix."dlstats_file_ips");
+$result = dbquery("TRUNCATE ".$db_prefix."dlstats_ips");
+$result = dbquery("TRUNCATE ".$db_prefix."dlstats_files");
+$result = dbquery("TRUNCATE ".$db_prefix."dlstats_file_ips");
 
 display("Migrating the old download statistics...");
 display(" ");
@@ -77,44 +77,44 @@ foreach($tables as $table) {
 
 		// Fill the ip's table from the old statistics table
 		display("Populating the IP table:");
-		$result = mysql_query("SELECT ds_ip, ds_cc, count(*) as ds_count, max(ds_onmap) as on_map FROM ".$db_prefix.$table." GROUP BY ds_ip, ds_cc");
+		$result = dbquery("SELECT ds_ip, ds_cc, count(*) as ds_count, max(ds_onmap) as on_map FROM ".$db_prefix.$table." GROUP BY ds_ip, ds_cc");
 		display("-> migrating ".dbrows($result)." records!");
-		$data = mysql_fetch_assoc($result);
+		$data = dbarray($result);
 		while ($data !== false) {
-			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$data['ds_ip']."', '".$data['ds_cc']."', '".$data['on_map']."', '".$data['ds_count']."')");
-			$data = mysql_fetch_assoc($result);
+			$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$data['ds_ip']."', '".$data['ds_cc']."', '".$data['on_map']."', '".$data['ds_count']."')");
+			$data = dbarray($result);
 		}
 
 		// fill the files table from the old statistics table
-		display("Populating the Files table:");	
-		$result = mysql_query("SELECT ds_file, MAX(ds_success) as success, COUNT(*) as count FROM ".$db_prefix.$table." GROUP BY ds_file");
-		display("-> migrating ".dbrows($result)." unique file records!");	
-		$data = mysql_fetch_assoc($result);
+		display("Populating the Files table:");
+		$result = dbquery("SELECT ds_file, MAX(ds_success) as success, COUNT(*) as count FROM ".$db_prefix.$table." GROUP BY ds_file");
+		display("-> migrating ".dbrows($result)." unique file records!");
+		$data = dbarray($result);
 		while ($data !== false) {
 			$urlinfo = parse_url("http://www.example.com".$data['ds_file']);
 			$data['ds_file'] = $urlinfo['path'];
-			$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['success']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
-			$data = mysql_fetch_assoc($result);
+			$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$data['ds_file']."', '".$data['success']."', '".$data['count']."') ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + ".$data['count']);
+			$data = dbarray($result);
 		}
 
 		// fill the file_ips table from the old statistics table and create the logfiles
-		display("Creating the new download logfiles:");	
-		$result = mysql_query("SELECT * FROM ".$db_prefix.$table." ORDER BY ds_timestamp");
-		display("-> creating ".dbrows($result)." log records!");	
+		display("Creating the new download logfiles:");
+		$result = dbquery("SELECT * FROM ".$db_prefix.$table." ORDER BY ds_timestamp");
+		display("-> creating ".dbrows($result)." log records!");
 		$oldfile = "";
 		$handle = false;
-		$data = mysql_fetch_assoc($result);
+		$data = dbarray($result);
 		while ($data !== false) {
 			// get the dlsi_id for this IP
-			$result2 = mysql_query("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$data['ds_ip']."' LIMIT 1");
+			$result2 = dbquery("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$data['ds_ip']."' LIMIT 1");
 			if (dbrows($result2)) {
-				$data2 = mysql_fetch_assoc($result2);
+				$data2 = dbarray($result2);
 				// get the dlsf_id for this file
 				$urlinfo = parse_url("http://www.example.com".$data['ds_file']);
-				$result3 = mysql_query("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$urlinfo['path']."' LIMIT 1");
+				$result3 = dbquery("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$urlinfo['path']."' LIMIT 1");
 				if (dbrows($result3)) {
-					$data3 = mysql_fetch_assoc($result3);
-					$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$data['ds_timestamp']."')");
+					$data3 = dbarray($result3);
+					$result4 = dbquery("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$data['ds_timestamp']."')");
 				}
 			}
 			// generate the new filename
@@ -125,7 +125,7 @@ foreach($tables as $table) {
 				$handle = @fopen($newfile, "wt");	// overwrite if exists!
 				display("  -> ".$newfile);
 				if (!$handle) {
-					display("     ERROR! Can not open logfile: ".$newfile);	
+					display("     ERROR! Can not open logfile: ".$newfile);
 					break;
 				}
 			}
@@ -142,7 +142,7 @@ foreach($tables as $table) {
 			$line .= "\n";
 			// write the logfile line
 			fwrite($handle, $line);
-			$data = mysql_fetch_assoc($result);
+			$data = dbarray($result);
 		}
 		// make sure the file handle is closed
 		if ($handle) fclose($handle);
@@ -154,20 +154,20 @@ foreach($tables as $table) {
 }
 
 display("Update counters of the items in the download section");
-$result = mysql_query("SELECT * FROM ".$db_prefix."downloads WHERE download_external = 1");
+$result = dbquery("SELECT * FROM ".$db_prefix."downloads WHERE download_external = 1");
 display("-> updating ".dbrows($result)." download records!");
-$data = mysql_fetch_assoc($result);
+$data = dbarray($result);
 while ($data !== false) {
 	// get the filename from the URL
 	$url = parse_url($data['download_url']);
 	// do we have a counter for it?
-	$result2 = mysql_query("SELECT * FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$url['path']."' LIMIT 1");
+	$result2 = dbquery("SELECT * FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$url['path']."' LIMIT 1");
 	if ($result2) {
 		// update the counter
-		$data2 = mysql_fetch_assoc($result2);
-		$result2 = mysql_query("UPDATE ".$db_prefix."downloads SET download_counter = '".$data2['dlsf_counter']."' WHERE download_id = '".$data['download_id']."'");
+		$data2 = dbarray($result2);
+		$result2 = dbquery("UPDATE ".$db_prefix."downloads SET download_counter = '".$data2['dlsf_counter']."' WHERE download_id = '".$data['download_id']."'");
 	}
-	$data = mysql_fetch_assoc($result);
+	$data = dbarray($result);
 }
 
 display(" ");
@@ -183,13 +183,13 @@ if (!CMS_CLI) {
 	// create the html output
 	$variables['html'] = "";
 	foreach($messages as $message) {
-		$variables['html'] .= $message."<br />"; 
+		$variables['html'] .= $message."<br />";
 	}
-	
+
 	// define the body panel variables
 	$template_panels[] = array('type' => 'body', 'name' => 'admin.tools.output', 'title' => "Update GeoIP Database", 'template' => '_custom_html.tpl');
 	$template_variables['admin.tools.output'] = $variables;
-	
+
 	// Call the theme code to generate the output for this webpage
 	require_once PATH_THEME."/theme.php";
 }

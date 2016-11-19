@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -85,10 +85,10 @@ if (!strcmp($cmd, "fetch-albums")) {
 
 function appendNestedAlbums($level, $albumName, $albumString) {
     global $gallery;
- 
+
     $myAlbum = new Album();
     $myAlbum->load($albumName);
-   
+
     $numPhotos = $myAlbum->numPhotos(1);
 
     for ($i=1; $i <= $numPhotos; $i++) {
@@ -126,7 +126,7 @@ if (!strcmp($cmd, "add-item")) {
 
 		$name = $userfile_name;
 		$file = $userfile;
-		$tag = ereg_replace(".*\.([^\.]*)$", "\\1", $name);
+		$tag = preg_replace("~.*\.([^\.]*)$~", "\\1", $name);
 		$tag = strtolower($tag);
 
 		if ($name) {
@@ -173,7 +173,7 @@ function process($file, $tag, $name, $setCaption="") {
         sort($files);
         foreach ($files as $pic_path) {
             $pic = basename($pic_path);
-            $tag = ereg_replace(".*\.([^\.]*)$", "\\1", $pic);
+            $tag = preg_replace("~.*\.([^\.]*)$~", "\\1", $pic);
             $tag = strtolower($tag);
 
             if (acceptableFormat($tag) || !strcmp($tag, "zip")) {
@@ -194,25 +194,25 @@ function process($file, $tag, $name, $setCaption="") {
         // remove %20 and the like from name
         $name = urldecode($name);
         // parse out original filename without extension
-        $originalFilename = eregi_replace(".$tag$", "", $name);
+        $originalFilename = preg_replace("~.$tag$~i", "", $name);
         // replace multiple non-word characters with a single "_"
-        $mangledFilename = ereg_replace("[^[:alnum:]]", "_", $originalFilename);
+        $mangledFilename = preg_replace("~[^[:alnum:]]~", "_", $originalFilename);
 
         /* Get rid of extra underscores */
-        $mangledFilename = ereg_replace("_+", "_", $mangledFilename);
-        $mangledFilename = ereg_replace("(^_|_$)", "", $mangledFilename);
-   
+        $mangledFilename = preg_replace("~_+~", "_", $mangledFilename);
+        $mangledFilename = preg_replace("~(^_|_$)~", "", $mangledFilename);
+
         /*
         need to prevent users from using original filenames that are purely numeric.
         Purely numeric filenames mess up the rewriterules that we use for mod_rewrite
         specifically:
         RewriteRule ^([^\.\?/]+)/([0-9]+)$  /~jpk/gallery/view_photo.php?set_albumName=$1&index=$2  [QSA]
         */
-   
-        if (ereg("^([0-9]+)$", $mangledFilename)) {
+
+        if (preg_match("~^([0-9]+)$~", $mangledFilename)) {
             $mangledFilename .= "_G";
         }
-   
+
         set_time_limit($gallery->app->timeLimit);
         if (acceptableFormat($tag)) {
             if ($setCaption) {
@@ -220,7 +220,7 @@ function process($file, $tag, $name, $setCaption="") {
             } else {
                 $caption = "";
             }
-   
+
 	    /*
 	     * Move the uploaded image to our temporary directory
 	     * using move_uploaded_file so that we work around

@@ -5,7 +5,7 @@ echo $this->FormOpen("", "TextSearch", "get");
 <table width='100%'>
 	<tr>
 		<td>
-<?php 
+<?php
 	echo $this->HasAccess("write") ? "<a href=\"".$this->href("edit")."\" title=\"Click to edit this page\">Edit page</a> |\n" : "";
 	echo $this->HasAccess("write") ? "<a href=\"".$this->href("upload")."\" title=\"Click to upload new files\">Upload File</a> |\n" : "";
 	echo "<a href=\"".$this->href("history")."\" title=\"Click to view recent edits to this page\">Page History</a> |\n";
@@ -47,7 +47,7 @@ echo $this->FormOpen("", "TextSearch", "get");
 		Search: <input name="phrase" style='width:90%;' class="searchbox" />
 	</td>
 	<td width='25' align='right'>
-<?php 
+<?php
 echo $this->GetPageTime() ? " <a href=\"".$this->href("revisions.xml")."\" title=\"Click to view recent page revisions in XML format.\"><img src=\"images/xml.png\" width=\"36\" height=\"14\" align=\"bottom\" style=\"border : 0px;\" alt=\"XML\" /></a>\n" : "&nbsp;";
 ?>
 	</td>
@@ -63,7 +63,7 @@ echo $this->GetPageTime() ? " <a href=\"".$this->href("revisions.xml")."\" title
 </tr>
 </table>
 <?php
-echo $this->FormClose(); 
+echo $this->FormClose();
 ?>
 </div>
 <?php
@@ -86,6 +86,6 @@ echo $this->FormClose();
 		// Update Hit counter
 		$sql = "UPDATE `".$this->config["table_prefix"]."pages` SET `hits` = `hits`+1 WHERE tag='$thispage' AND latest='Y'";
 		// $sql .= " WHERE `ref` = $ref";
-		mysql_query($sql) or die("Unable to process query: " . mysql_error());
+		mysqli_query($this->dblink, $sql) or die("Unable to process query: " . mysqli_error($this->dblink));
 	}
 ?>

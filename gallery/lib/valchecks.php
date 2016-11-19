@@ -129,7 +129,7 @@ function sanitizeInput($value) {
     static $safehtml;
 
     if (empty($safehtml)) {
-        $safehtml =& new HTML_Safe();
+        $safehtml = new HTML_Safe();
     }
 
     if(is_array($value)) {

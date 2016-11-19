@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("ad_side_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // do not display this panel when in an admin module
 if (isset($_GET['aid'])) {
@@ -30,7 +30,7 @@ if (isset($_GET['aid'])) {
 
 	// load the ad include module
 	require_once PATH_MODULES."advertising/get_ad.php";
-	
+
 	// array's to store the variables for this panel
 	$ad = get_ad(0,0,0);
 

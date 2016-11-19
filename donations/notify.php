@@ -23,12 +23,12 @@ locale_load("modules.donations");
 
 // function to process the payment or the refund
 function process_payment($payer_name, $comment, $subject) {
-	global $logmsg, $locale, $db_prefix, $settings;
+	global $logmsg, $locale, $db_prefix, $_db_link, $settings;
 
 	$refund = isset($_POST['payment_status']) && $_POST['payment_status'] == "Refunded";
-	
+
 	// if the payment is completed, write to the database
-	$result = dbquery("INSERT INTO ".$db_prefix."donations (donate_name, donate_amount, donate_currency, donate_country, donate_comment, donate_timestamp) 
+	$result = dbquery("INSERT INTO ".$db_prefix."donations (donate_name, donate_amount, donate_currency, donate_country, donate_comment, donate_timestamp)
 		VALUES ('".$payer_name."', '".($refund ? (-1 * $_POST['mc_gross']) : $_POST['mc_gross'])."', '".$_POST['mc_currency']."', '".$_POST['residence_country']."', '".$comment."', '".strtotime($_POST['payment_date'])."')");
 
 	// if notification is requested, post a notify message
@@ -48,7 +48,7 @@ function process_payment($payer_name, $comment, $subject) {
 			// add if there wasn't any previous thread
 			$result = dbquery("INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_sticky, thread_locked, thread_lastpost, thread_lastuser)
 								VALUES ('".$settings['donate_forum_id']."', '".$locale['don491']."', '0', '1', '1', '".$posttime."', '0')");
-			$thread_id = mysql_insert_id();
+			$thread_id = mysqli_insert_id($_db_link);
 		}
 		// compose the paypal post
 		$message = "[b]".$locale['don456']."[/b] : ".trim($_POST['first_name'])." ".trim($_POST['last_name'])."\n";
@@ -62,7 +62,7 @@ function process_payment($payer_name, $comment, $subject) {
 		}
 		$result = dbquery("INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_author, post_datestamp, post_ip)
 							VALUES ('".$settings['donate_forum_id']."', '".$thread_id."', '".$subject."', '".$message."', '0', '".$posttime."', '0.0.0.0')");
-		$post_id = mysql_insert_id();
+		$post_id = mysqli_insert_id($_db_link);
 	}
 
 	$logmsg .= "\n\n~~~~ PROCESSED: PAYMENT STATUS = ".strtoupper($_POST['payment_status'])." ~~~~";
@@ -102,7 +102,7 @@ $logmsg = "/------------------------------------------------------------------- 
 $logmsg .= "/--- Payment logged: ".date('l, d M Y @ H:i:s')." \n";
 $logmsg .= "/------------------------------------------------------------------- \n";
 
-// Process the verification 
+// Process the verification
 
 $errcnt = 0;
 while ($errcnt++ < 5) {
@@ -126,7 +126,7 @@ while ($errcnt++ < 5) {
 							$payer_name = $_POST['address_name'];
 						} else {
 							$payer_name = ""; // no name fields present in the SOAP post
-						} 
+						}
 					}
 				} else {
 					$payer_name = "";	// anonymous
@@ -148,7 +148,7 @@ while ($errcnt++ < 5) {
 					default:
 						$logmsg .= "\n\n**** NOT PROCESSED: PAYMENT STATUS = ".strtoupper($_POST['payment_status'])." ****";
 				}
-				
+
 				if ($_POST['payment_status']=='Completed') {
 				} else {
 				}

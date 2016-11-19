@@ -7,7 +7,7 @@
  * @version		$Id$
  * @license		http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
- * 
+ *
  * @uses	Wakka::Href()
  * @uses	Wakka::Query()
  * @uses	Wakka::Redirect()
@@ -29,10 +29,10 @@ elseif (isset($_GET['spam_site']))		// coming from referrers_sites handler #312
 
 if (isset($spammer) && $spammer)
 {
-	$this->Query("DELETE FROM ".$this->config["table_prefix"]."referrers WHERE referrer like '%".mysql_real_escape_string($spammer)."%'");
-	if (!$already_blacklisted = $this->LoadSingle("select * from ".$this->config["table_prefix"]."referrer_blacklist WHERE spammer = '".mysql_real_escape_string($spammer)."'"))
+	$this->Query("DELETE FROM ".$this->config["table_prefix"]."referrers WHERE referrer like '%".mysqli_real_escape_string($this->dblink, $spammer)."%'");
+	if (!$already_blacklisted = $this->LoadSingle("select * from ".$this->config["table_prefix"]."referrer_blacklist WHERE spammer = '".mysqli_real_escape_string($this->dblink, $spammer)."'"))
 	{
-		$this->Query("INSERT INTO ".$this->config["table_prefix"]."referrer_blacklist SET spammer = '".mysql_real_escape_string($spammer)."'");
+		$this->Query("INSERT INTO ".$this->config["table_prefix"]."referrer_blacklist SET spammer = '".mysqli_real_escape_string($this->dblink, $spammer)."'");
 	}
 }
 

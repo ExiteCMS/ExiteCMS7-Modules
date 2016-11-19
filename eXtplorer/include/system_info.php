@@ -6,18 +6,18 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * @package eXtplorer
  * @copyright soeren 2007
  * @author The eXtplorer project (http://sourceforge.net/projects/extplorer)
- * 
+ *
  * @license
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- * 
+ *
  * Alternatively, the contents of this file may be used under the terms
  * of the GNU General Public License Version 2 or later (the "GPL"), in
  * which case the provisions of the GPL are applicable instead of
@@ -28,7 +28,7 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * other provisions required by the GPL.  If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the GPL."
- * 
+ *
  */
 
 function get_php_setting($val, $recommended=1) {
@@ -57,12 +57,12 @@ function system_info() {
 	$version = $GLOBALS['ext_version'];
 	//$tab = extGetParam( $_REQUEST, 'tab', 'tab1' );
 	$width = 400;	// width of 100%
-	
+
 	?>
 	<br />
 	<div id="sysinfo">
 	<div id="system-page" class="x-tab" title="<?php echo ext_Lang::msg( 'sisysteminfo' ) ?>">
-	
+
 	<table class="adminform">
 	<tr>
 		<td valign="top" width="250" style="font-weight:bold;">
@@ -77,7 +77,7 @@ function system_info() {
 			<?php echo ext_lang::msg( 'sidbversion' ); ?>:
 		</td>
 		<td>
-		<?php echo mysql_get_server_info(); ?>
+		<?php echo mysqli_get_server_info($_db_link); ?>
 		</td>
 	</tr>
 	<tr>
@@ -266,8 +266,8 @@ function system_info() {
 	<script type="text/javascript">
 <!--
 var tabs = new Ext.TabPanel( "sysinfo" );
-tabs.addTab( "system-page","<?php echo ext_Lang::msg( 'sisysteminfo' ) ?>" ); 
-tabs.addTab( "php-page","<?php echo ext_Lang::msg('siphpinfo' ); ?>" ); 
+tabs.addTab( "system-page","<?php echo ext_Lang::msg( 'sisysteminfo' ) ?>" );
+tabs.addTab( "php-page","<?php echo ext_Lang::msg('siphpinfo' ); ?>" );
 tabs.activate( "system-page" );
 //-->
 </script>

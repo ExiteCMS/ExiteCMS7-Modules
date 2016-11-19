@@ -2,17 +2,17 @@
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2007 Bharat Mediratta
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -116,7 +116,7 @@ if (!strcmp($cmd,"publish") || (isset($returnval) && $returnval == "Login Incorr
 	<input type="hidden" name="cmd" value="login">
 </form>
 
-<?php 
+<?php
 	$ONNEXT_SCRIPT="login.submit();";
 	$SCRIPT_CMD="this.login.uname.focus();";
 }
@@ -152,7 +152,7 @@ if (!strcmp($cmd, "fetch-albums")) {
 	</select><br>
 
 	<input id="setCaption" type="checkbox" name="setCaption" checked value="1"><?php echo _("Use filenames as captions") ?>
-	
+
 	<br><br>
 	<input type="button" value="<?php echo _("Create New Album") ?>" onClick="folder.cmd.value='new-album';folder.submit();">
 
@@ -160,17 +160,17 @@ if (!strcmp($cmd, "fetch-albums")) {
 </form>
 </div>
 <?php
-    $ONNEXT_SCRIPT="folder.submit();"; 
+    $ONNEXT_SCRIPT="folder.submit();";
     $ONBACK_SCRIPT="window.location.href = \"publish_xp.php?cmd=publish\";";
     $WIZARD_BUTTONS="true,true,true";
 }
 
 function appendNestedAlbums($level, $permission, $albumName, $albumCompare = "") {
     global $gallery;
- 
+
     $myAlbum = new Album();
     $myAlbum->load($albumName);
-   
+
     $numPhotos = $myAlbum->numPhotos(1);
 
     for ($i=1; $i <= $numPhotos; $i++) {
@@ -205,7 +205,7 @@ if (!strcmp($cmd, "select-album")) {
 	if (empty($gallery->album) || empty($set_albumName)) {
 		$error = _("No album specified!");
 	} elseif (!$gallery->user->canAddToAlbum($gallery->album) && $set_albumName) {
-	    $error = sprintf(_("This user cannot add photos in %s."), 
+	    $error = sprintf(_("This user cannot add photos in %s."),
 			    $gallery->album->fields[title]);
 	}
 
@@ -271,7 +271,7 @@ if (!strcmp($cmd, "new-album")) {
 
 <div class="popup" align="center">
 <form id="folder">
-	<?php echo _("Enter New Album Title") ?>: 
+	<?php echo _("Enter New Album Title") ?>:
 	<input id="newAlbumTitle" type="text" name="newAlbumTitle" value="<?php echo $newAlbumTitle ?>" size="25">
 
 	<br><br><?php echo _("Select Parent Album") ?>:
@@ -322,7 +322,7 @@ if (!strcmp($cmd, "new-album")) {
 		echo "<input type=\"hidden\" name=\"cmd\" value=\"fetch-albums\">\n";
                 echo "</form>\n";
 
-		if ($success) {	
+		if ($success) {
 			$SCRIPT_CMD = "folder.submit();";
 		}
         }
@@ -346,7 +346,7 @@ if (!strcmp($cmd, "add-item")) {
 	else {
 		$name = $_FILES['userfile']['name'];
 		$file = $_FILES['userfile']['tmp_name'];
-		$tag = ereg_replace(".*\.([^\.]*)$", "\\1", $name);
+		$tag = preg_replace("~.*\.([^\.]*)$~", "\\1", $name);
 		$tag = strtolower($tag);
 
 		if (!empty($name)) {

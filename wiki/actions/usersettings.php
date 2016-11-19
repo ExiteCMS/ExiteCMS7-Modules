@@ -11,7 +11,7 @@
  * @author		{@link http://wikkawiki.org/DarTar Dario Taraborelli} (further cleanup, i18n, replaced JS dialogs with server-generated messages)
  *
  * @uses		Wakka::htmlspecialchars_ent()
- * 
+ *
  * @todo		use different actions for registration / login / user settings;
  * @todo		add documentation links or short explanations for each option;
  * @todo		use error handler for displaying messages and highlighting
@@ -156,21 +156,21 @@ else if ($user = $this->GetUser())
 				break;
 			default: // input is valid
 				$this->Query('UPDATE '.$this->config['table_prefix'].'users SET '.
-					"email = '".mysql_real_escape_string($email)."', ".
-					"doubleclickedit = '".mysql_real_escape_string($doubleclickedit)."', ".
-					"show_comments = '".mysql_real_escape_string($show_comments)."', ".
-					"revisioncount = '".mysql_real_escape_string($revisioncount)."', ".
-					"changescount = '".mysql_real_escape_string($changescount)."' ".
+					"email = '".mysqli_real_escape_string($this->dblink, $email)."', ".
+					"doubleclickedit = '".mysqli_real_escape_string($this->dblink, $doubleclickedit)."', ".
+					"show_comments = '".mysqli_real_escape_string($this->dblink, $show_comments)."', ".
+					"revisioncount = '".mysqli_real_escape_string($this->dblink, $revisioncount)."', ".
+					"changescount = '".mysqli_real_escape_string($this->dblink, $changescount)."' ".
 					"WHERE name = '".$user['name']."' LIMIT 1");
 				$this->SetUser($this->LoadUser($user["name"]));
-			
+
 				// forward
 				$params .= 'stored=true';
 				$this->Redirect($url.$params);
 		}
 	}
 	//user just logged in
-	else 
+	else
 	{
 		// get stored settings
 		$email = $user['email'];
@@ -208,7 +208,7 @@ else if ($user = $this->GetUser())
 			echo '<tr><td></td><td><em class="error">'.$this->Format($error).'</em></td></tr>'."\n";
 			break;
 		case (isset($success)):
-			echo '<tr><td></td><td><em class="success">'.$this->Format($success).'</em></td></tr>'."\n";		
+			echo '<tr><td></td><td><em class="success">'.$this->Format($success).'</em></td></tr>'."\n";
 			break;
 		default:
 	}
@@ -236,7 +236,7 @@ else if ($user = $this->GetUser())
 			</td>
 		</tr>
 	</table>
-<?php	
+<?php
 	echo $this->FormClose(); //close user settings form
 
 	if (isset($_POST['action']) && ($_POST['action'] == 'changepass'))
@@ -246,7 +246,7 @@ else if ($user = $this->GetUser())
 		$password = $_POST['password'];
 		$password_confirm = $_POST['password_confirm'];
 		$update_option = $this->GetSafeVar('update_option', 'post');
-		
+
 		switch (TRUE)
 		{
 			case (strlen($oldpass) == 0):
@@ -256,42 +256,42 @@ else if ($user = $this->GetUser())
 			case (($update_option == 'pw') && md5($oldpass) != $user['password']): //wrong password
 				$passerror = ERROR_WRONG_PASSWORD;
 				$pw_selected = 'selected="selected"';
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				break;
 			case (($update_option == 'hash') && $oldpass != $user['password']): //wrong hash
 				$passerror = ERROR_WRONG_HASH;
 				$hash_selected = 'selected="selected"';
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				break;
 			case (strlen($password) == 0):
 				$passerror = ERROR_EMPTY_NEW_PASSWORD;
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				$password_new_highlight = INPUT_ERROR_STYLE;
 				break;
 			case (preg_match("/ /", $password)):
 				$passerror = ERROR_NO_BLANK;
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				$password_new_highlight = INPUT_ERROR_STYLE;
 				break;
 			case (strlen($password) < PASSWORD_MIN_LENGTH):
 				$passerror = sprintf(ERROR_PASSWORD_TOO_SHORT, PASSWORD_MIN_LENGTH);
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				$password_new_highlight = INPUT_ERROR_STYLE;
 				break;
 			case (strlen($password_confirm) == 0):
 				$passerror = ERROR_EMPTY_NEW_CONFIRMATION_PASSWORD;
-				$password_highlight = INPUT_ERROR_STYLE;			
+				$password_highlight = INPUT_ERROR_STYLE;
 				$password_new_highlight = INPUT_ERROR_STYLE;
 				$password_confirm_highlight = INPUT_ERROR_STYLE;
 				break;
 			case ($password_confirm != $password):
 				$passerror = ERROR_PASSWORD_MATCH;
 				$password_highlight = INPUT_ERROR_STYLE;
-				$password_new_highlight = INPUT_ERROR_STYLE;			
+				$password_new_highlight = INPUT_ERROR_STYLE;
 				$password_confirm_highlight = INPUT_ERROR_STYLE;
 				break;
 			default:
-				$this->Query('UPDATE '.$this->config['table_prefix'].'users set '."password = md5('".mysql_real_escape_string($password)."') "."WHERE name = '".$user['name']."'");
+				$this->Query('UPDATE '.$this->config['table_prefix'].'users set '."password = md5('".mysqli_real_escape_string($this->dblink, $password)."') "."WHERE name = '".$user['name']."'");
 				$user['password'] = md5($password);
 				$this->SetUser($user);
 				$params .= 'newpassword=true';
@@ -307,7 +307,7 @@ else if ($user = $this->GetUser())
 	print($this->FormClose());
 }
 // user is not logged in
-else 
+else
 {
 	echo '<p><em class="error">You aren\'t allowed to read this page.</em></p></div>';
 	echo "\n".'</div><!--closing page content-->'."\n"; //TODO: move to templating class

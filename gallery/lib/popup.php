@@ -54,10 +54,10 @@ function popup($url, $url_is_complete=0, $height=500,$width=500) {
 
 
 function popup_js($url, $window, $attrs) {
-	if (ereg("^http|^ftp|&amp;", $url)) {
+	if (preg_match("~^http|^ftp|&amp;~", $url)) {
 		$url = "'$url'";
 	}
-        
+
 	return "nw=window.open($url,'$window','$attrs'); nw.opener=self; return false;";
 }
 
@@ -81,7 +81,7 @@ function popup_link($title, $url, $url_is_complete=0, $online_only=true, $height
 	if ( !empty($gallery->session->offline) && $online_only ) {
 		return null;
 	}
-        
+
 	$cssclass = empty($cssclass) ? '' : "class=\"$cssclass\"";
 
 	$popup_counter++;

@@ -286,7 +286,7 @@ function check_utf8($str) {
 // add the new message as a post record to the forum
 function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
-	global $imagetypes, $settings, $locale, $db_prefix;
+	global $imagetypes, $settings, $locale, $db_prefix, $_db_link;
 
 	// get the post subject
 	$subject = (is_array($post['subject'])?$post['subject']['subject']:$post['subject']);
@@ -310,14 +310,14 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	// is this a new thread?
 	if ($thread_id == -1) {
 		$sql = "INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_views, thread_lastpost, thread_lastuser, thread_sticky, thread_locked)
-					VALUES('$forum_id', '".mysql_escape_string($subject)."', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
+					VALUES('$forum_id', '".mysqli_real_escape_string($subject, $_db_link)."', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
 		$result = dbquery($sql);
 		if (!$result) {
 			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT', $db_prefix.'threads'));
 			if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 			return false;
 		}
-		$thread_id = mysql_insert_id();
+		$thread_id = mysqli_insert_id($_db_link);
 	} else {
 		// update the thread post status
 		$sql = "UPDATE ".$db_prefix."threads SET thread_lastpost='$posttime', thread_lastuser='".$sender['user_id']."' WHERE thread_id='".$thread_id."'";
@@ -335,14 +335,14 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	// insert the new message into the posts table
 	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_cc, post_edituser, post_edittime)
-		VALUES ('$forum_id', '$thread_id', '".mysql_escape_string($subject)."', '".mysql_escape_string($post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
+		VALUES ('$forum_id', '$thread_id', '".mysqli_real_escape_string($subject, $_db_link)."', '".mysqli_real_escape_string($post['body'], $_db_link)."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
 		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT (new post)', $db_prefix.'posts'));
 		if ($settings['m2f_process_log']) logentry('SQL: ',  $sql);
 		return false;
 	}
-	$post_id = mysql_insert_id();
+	$post_id = mysqli_insert_id($_db_link);
 
 	// update the users message counter
 	$sql = "UPDATE ".$db_prefix."users SET user_posts=user_posts+1 WHERE user_id='".$sender['user_id']."'";
@@ -575,7 +575,7 @@ if (dbrows($result) == 0) {
 }
 
 // initialize POP3-client
-$pop3 =& new Net_POP3();
+$pop3 = new Net_POP3();
 $pop3->_debug = $settings['m2f_pop3_debug'];
 
 // initialize the SMTP mailer if required
@@ -799,7 +799,7 @@ while (true) {
 								}
 								$subject = trim($subject);
 								// See if we can match the subject
-								$result = dbquery("SELECT DISTINCT forum_id, thread_id FROM ".$db_prefix."posts WHERE forum_id = '".$recipient['m2f_forumid']."' AND LOWER(post_subject)='".mysql_escape_string($subject)."' ORDER BY thread_id");
+								$result = dbquery("SELECT DISTINCT forum_id, thread_id FROM ".$db_prefix."posts WHERE forum_id = '".$recipient['m2f_forumid']."' AND LOWER(post_subject)='".mysqli_real_escape_string($subject, $_db_link)."' ORDER BY thread_id");
 								switch (dbrows($result)) {
 									case 0:
 										// subject not found. Must be a new post

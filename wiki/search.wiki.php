@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("search.wiki.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // define the wakka version used
 if (!defined('WAKKA_VERSION')) define('WAKKA_VERSION', '1.1.6.3');
@@ -28,7 +28,7 @@ require_once "wikka.config.php";
 require_once('libs/Wakka.class.php');
 
 // Create Wakka object
-$wakka =& new Wakka($wakkaConfig);
+$wakka = new Wakka($wakkaConfig);
 
 // add the Wikka CSS to the page header, we need some tags
 $headerparms = '	<link rel="stylesheet" type="text/css" href="'.$wakka->GetConfigValue("stylesheet").'" />';
@@ -40,7 +40,7 @@ if ($search_id != 99999) $title = $locale['424'];
 if (isset($action)) {
 
 	if ($action == "") {
-		
+
 		// add the possible  search filters ($data is defined in the calling script!)
 		$data['search_filters' ] = "date,users";
 
@@ -102,7 +102,7 @@ if (isset($action)) {
 
 		// basis of the query for this search
 		if ($boolean) {
-			$sql = "SELECT p.*, u.user_id, 
+			$sql = "SELECT p.*, u.user_id,
 					MATCH(tag, body) AGAINST ('$stext' IN BOOLEAN MODE) AS score
 					FROM ".$wakkaConfig["table_prefix"]."pages p
 					LEFT JOIN ".$db_prefix."users u ON u.user_name = p.owner
@@ -145,7 +145,7 @@ if (isset($action)) {
 		}
 
 		// check how many rows this would output
-		$rptresult = mysql_query($sql.($limit?" LIMIT $limit":""));
+		$rptresult = dbquery($sql.($limit?" LIMIT $limit":""));
 		$rows = dbrows($rptresult);
 
 		// are there any results?
@@ -165,7 +165,7 @@ if (isset($action)) {
 					while ($rptdata = dbarray($rptresult)) {
 						if ($wakka->HasAccess("read",$rptdata["tag"])) {
 							$rptdata['access'] = true;
-							// display portion of the matching body and highlight the search term */ 
+							// display portion of the matching body and highlight the search term */
 							preg_match_all("/(.{0,120})($stext)(.{0,120})/is",$rptdata['body'],$matchString);
 							if (count($matchString[0]) > 3)
 							{
@@ -173,7 +173,7 @@ if (isset($action)) {
 							}
 							$text = $wakka->htmlspecialchars_ent(implode('<br />', $matchString[0]));
 							$text = str_replace('&lt;br /&gt;', '&hellip;<br />&hellip;', $text);
-							// CSS-driven highlighting, tse stands for textsearchexpanded. We highlight $text in 2 steps, 
+							// CSS-driven highlighting, tse stands for textsearchexpanded. We highlight $text in 2 steps,
 							// We do not use <span>..</span> with preg_replace to ensure that the tag `span' won't be replaced if
 							// $phrase contains `span'.
 							$highlightMatch = preg_replace('/('.$wakka->htmlspecialchars_ent($stext).')/i','<<$1>>',$text,-1); // -1 = no limit (default!)

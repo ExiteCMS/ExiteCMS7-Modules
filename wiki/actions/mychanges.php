@@ -10,9 +10,9 @@ if ($user = $this->GetUser())
 
 	if ($_REQUEST["alphabetically"] == 1)
 	{
-		print("<strong>This is a list of pages you've edited, along with the time of your last change (<a href=\"".$this->href("", $tag)."\">order by date</a>).</strong><br /><br />\n");	
+		print("<strong>This is a list of pages you've edited, along with the time of your last change (<a href=\"".$this->href("", $tag)."\">order by date</a>).</strong><br /><br />\n");
 
-		if ($pages = $this->LoadAll("SELECT tag, time FROM ".$this->config["table_prefix"]."pages WHERE user = '".mysql_real_escape_string($this->GetUserName())."' ORDER BY tag ASC, time DESC"))
+		if ($pages = $this->LoadAll("SELECT tag, time FROM ".$this->config["table_prefix"]."pages WHERE user = '".mysqli_real_escape_string($this->dblink, $this->GetUserName())."' ORDER BY tag ASC, time DESC"))
 		{
 			foreach ($pages as $page)
 			{
@@ -22,20 +22,20 @@ if ($user = $this->GetUser())
 					if (!preg_match("/[A-Z,a-z]/", $firstChar)) {
 						$firstChar = "#";
 					}
-		
+
 					if ($firstChar != $curChar) {
 						if ($curChar) print("<br />\n");
 						print("<strong>$firstChar</strong><br />\n");
 						$curChar = $firstChar;
 					}
-	
+
 					// print entry
 					print("&nbsp;&nbsp;&nbsp;(".$page["time"].") (".$this->Link($page["tag"], "revisions", "history", 0).") ".$this->Link($page["tag"], "", "", 0)."<br />\n");
-	
+
 					$my_edits_count++;
 				}
 			}
-			
+
 			if ($my_edits_count == 0)
 			{
 				print("<em>You have not edited any pages yet.</em>");
@@ -48,9 +48,9 @@ if ($user = $this->GetUser())
 	}
 	else
 	{
-		print("<strong>This is a list of pages you've edited, ordered by the time of your last change (<a href=\"".$this->href("", $tag, "alphabetically=1")."\">order alphabetically</a>).</strong><br /><br />\n");	
+		print("<strong>This is a list of pages you've edited, ordered by the time of your last change (<a href=\"".$this->href("", $tag, "alphabetically=1")."\">order alphabetically</a>).</strong><br /><br />\n");
 
-		if ($pages = $this->LoadAll("SELECT tag, time FROM ".$this->config["table_prefix"]."pages WHERE user = '".mysql_real_escape_string($this->GetUserName())."' ORDER BY time ASC, tag ASC"))
+		if ($pages = $this->LoadAll("SELECT tag, time FROM ".$this->config["table_prefix"]."pages WHERE user = '".mysqli_real_escape_string($this->dblink, $this->GetUserName())."' ORDER BY time ASC, tag ASC"))
 		{
 			foreach ($pages as $page)
 			{
@@ -75,7 +75,7 @@ if ($user = $this->GetUser())
 
 				$my_edits_count++;
 			}
-			
+
 			if ($my_edits_count == 0)
 			{
 				print("<em>You have not edited any pages yet.</em>");

@@ -22,7 +22,7 @@
 
 
 
- WARNING! This is modified XML_HTMLSax-2.1.2. 
+ WARNING! This is modified XML_HTMLSax-2.1.2.
  If you'll use unmodified HTMLSax, Safehtml will be NOT SAFE!
 
 
@@ -156,15 +156,15 @@ class XML_HTMLSax_StateParser {
     */
     function XML_HTMLSax_StateParser (& $htmlsax) {
         $this->htmlsax = & $htmlsax;
-        $this->State[XML_HTMLSAX_STATE_START] =& new XML_HTMLSax_StartingState();
+        $this->State[XML_HTMLSAX_STATE_START] = new XML_HTMLSax_StartingState();
 
-        $this->State[XML_HTMLSAX_STATE_CLOSING_TAG] =& new XML_HTMLSax_ClosingTagState();
-        $this->State[XML_HTMLSAX_STATE_TAG] =& new XML_HTMLSax_TagState();
-        $this->State[XML_HTMLSAX_STATE_OPENING_TAG] =& new XML_HTMLSax_OpeningTagState();
+        $this->State[XML_HTMLSAX_STATE_CLOSING_TAG] = new XML_HTMLSax_ClosingTagState();
+        $this->State[XML_HTMLSAX_STATE_TAG] = new XML_HTMLSax_TagState();
+        $this->State[XML_HTMLSAX_STATE_OPENING_TAG] = new XML_HTMLSax_OpeningTagState();
 
-        $this->State[XML_HTMLSAX_STATE_PI] =& new XML_HTMLSax_PiState();
-        $this->State[XML_HTMLSAX_STATE_JASP] =& new XML_HTMLSax_JaspState();
-        $this->State[XML_HTMLSAX_STATE_ESCAPE] =& new XML_HTMLSax_EscapeState();
+        $this->State[XML_HTMLSAX_STATE_PI] = new XML_HTMLSax_PiState();
+        $this->State[XML_HTMLSAX_STATE_JASP] = new XML_HTMLSax_JaspState();
+        $this->State[XML_HTMLSAX_STATE_ESCAPE] = new XML_HTMLSax_EscapeState();
     }
 
     /**
@@ -240,14 +240,14 @@ class XML_HTMLSax_StateParser {
     */
     function parse($data) {
         if ($this->parser_options['XML_OPTION_TRIM_DATA_NODES']==1) {
-            $decorator =& new XML_HTMLSax_Trim(
+            $decorator = new XML_HTMLSax_Trim(
                 $this->handler_object_data,
                 $this->handler_method_data);
             $this->handler_object_data =& $decorator;
             $this->handler_method_data = 'trimData';
         }
         if ($this->parser_options['XML_OPTION_CASE_FOLDING']==1) {
-            $open_decor =& new XML_HTMLSax_CaseFolding(
+            $open_decor = new XML_HTMLSax_CaseFolding(
                 $this->handler_object_element,
                 $this->handler_method_opening,
                 $this->handler_method_closing);
@@ -256,28 +256,28 @@ class XML_HTMLSax_StateParser {
             $this->handler_method_closing ='foldClose';
         }
         if ($this->parser_options['XML_OPTION_LINEFEED_BREAK']==1) {
-            $decorator =& new XML_HTMLSax_Linefeed(
+            $decorator = new XML_HTMLSax_Linefeed(
                 $this->handler_object_data,
                 $this->handler_method_data);
             $this->handler_object_data =& $decorator;
             $this->handler_method_data = 'breakData';
         }
         if ($this->parser_options['XML_OPTION_TAB_BREAK']==1) {
-            $decorator =& new XML_HTMLSax_Tab(
+            $decorator = new XML_HTMLSax_Tab(
                 $this->handler_object_data,
                 $this->handler_method_data);
             $this->handler_object_data =& $decorator;
             $this->handler_method_data = 'breakData';
         }
         if ($this->parser_options['XML_OPTION_ENTITIES_UNPARSED']==1) {
-            $decorator =& new XML_HTMLSax_Entities_Unparsed(
+            $decorator = new XML_HTMLSax_Entities_Unparsed(
                 $this->handler_object_data,
                 $this->handler_method_data);
             $this->handler_object_data =& $decorator;
             $this->handler_method_data = 'breakData';
         }
         if ($this->parser_options['XML_OPTION_ENTITIES_PARSED']==1) {
-            $decorator =& new XML_HTMLSax_Entities_Parsed(
+            $decorator = new XML_HTMLSax_Entities_Parsed(
                 $this->handler_object_data,
                 $this->handler_method_data);
             $this->handler_object_data =& $decorator;
@@ -350,7 +350,7 @@ class XML_HTMLSax_StateParser_Lt430 extends XML_HTMLSax_StateParser {
     * @return void
     */
     function ignoreWhitespace() {
-        while ($this->position < $this->length && 
+        while ($this->position < $this->length &&
             strpos(WHITESPACE, $this->rawtext{$this->position}) !== FALSE) {
             $this->position++;
         }
@@ -464,11 +464,11 @@ class XML_HTMLSax {//extends Pear {
     */
     function XML_HTMLSax() {
         if (version_compare(phpversion(), '4.3', 'ge')) {
-            $this->state_parser =& new XML_HTMLSax_StateParser_Gtet430($this);
+            $this->state_parser = new XML_HTMLSax_StateParser_Gtet430($this);
         } else {
-            $this->state_parser =& new XML_HTMLSax_StateParser_Lt430($this);
+            $this->state_parser = new XML_HTMLSax_StateParser_Lt430($this);
         }
-        $nullhandler =& new XML_HTMLSax_NullHandler();
+        $nullhandler = new XML_HTMLSax_NullHandler();
         $this->set_object($nullhandler);
         $this->set_element_handler('DoNothing', 'DoNothing');
         $this->set_data_handler('DoNothing');
@@ -1037,7 +1037,7 @@ class XML_HTMLSax_OpeningTagState {
     */
     function parseAttributes(&$context) {
         $Attributes = array();
-    
+
         $context->ignoreWhitespace();
         $attributename = $context->scanUntilCharacters("=/>".WHITESPACE);
         while ($attributename != '') {
@@ -1063,7 +1063,7 @@ class XML_HTMLSax_OpeningTagState {
                 $context->unscanCharacter();
             }
             $Attributes[$attributename] = $attributevalue;
-            
+
             $context->ignoreWhitespace();
             $attributename = $context->scanUntilCharacters("=/>".WHITESPACE);
         }
@@ -1087,14 +1087,14 @@ class XML_HTMLSax_OpeningTagState {
                     $context->unscanCharacter();
                 }
                 $context->handler_object_element->
-                    {$context->handler_method_opening}($context->htmlsax, $tag, 
+                    {$context->handler_method_opening}($context->htmlsax, $tag,
                     $Attributes, TRUE);
                 $context->handler_object_element->
-                    {$context->handler_method_closing}($context->htmlsax, $tag, 
+                    {$context->handler_method_closing}($context->htmlsax, $tag,
                     TRUE);
             } else {
                 $context->handler_object_element->
-                    {$context->handler_method_opening}($context->htmlsax, $tag, 
+                    {$context->handler_method_opening}($context->htmlsax, $tag,
                     $Attributes, FALSE);
             }
         }

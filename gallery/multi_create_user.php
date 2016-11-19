@@ -75,7 +75,7 @@ if ($formaction == 'create') {
 
     if (!$errorCount) {
         // Simple test to see if it's a windows file
-        if (sizeof($users) == 1 and ereg("\r\n", $users[0])) {
+        if (sizeof($users) == 1 and preg_match("~\r\n~", $users[0])) {
             $users = explode("\r\n", $users[0]);
         }
         unlink($_FILES['membersfile']['tmp_name']);
@@ -84,7 +84,7 @@ if ($formaction == 'create') {
         foreach ($users as $user) {
             set_time_limit($gallery->app->timeLimit);
             $uname = $user[0];
-            
+
             if (sizeof($user) == 2) {
                 if(check_email($user[1])) {
                     $email = $user[1];
@@ -104,17 +104,17 @@ if ($formaction == 'create') {
             else {
                 processingMsg("- ". sprintf (_("Adding %s (%s)"),
                     $uname, (!empty($fullname) ? $fullname : '<i>' . _("No fullname given") .'</i>')));
-            } 
+            }
             $password = generate_password(10);
             $tmpUser = $gallery->userDB->CreateUser($uname, $email, $password, $fullname, $canCreate, $defaultLanguage, "bulk_register");
             if ($tmpUser) {
                 $total_added++;
                 if ($send_email && !empty($email)) {
                     processingMsg("- " . sprintf(_("Send email to %s"),$email));
-                    $msg = ereg_replace("!!PASSWORD!!", $password,
-                        ereg_replace("!!USERNAME!!", $uname,
-                        ereg_replace("!!FULLNAME!!", $fullname,
-                        ereg_replace("!!NEWPASSWORDLINK!!",
+                    $msg = preg_replace("~!!PASSWORD!!~", $password,
+                        preg_replace("~!!USERNAME!!~", $uname,
+                        preg_replace("~!!FULLNAME!!~", $fullname,
+                        preg_replace("~!!NEWPASSWORDLINK!!~",
                         $tmpUser->genRecoverPasswordHash(),
                         welcome_email()))));
                     $logmsg = sprintf(_("New user '%s' has been registered by %s.  Gallery has sent a notification email to %s."),
@@ -141,7 +141,7 @@ if ($formaction == 'create') {
         echo sprintf(_("%s added, %s skipped"),
 	    gTranslate('core', "1 user", "%d users", $total_added),
 	    gTranslate('core', "1 user", "%d users", $total_skipped));
-        echo "\n</p>";      
+        echo "\n</p>";
 ?>
 
 <center>
@@ -195,7 +195,7 @@ $canCreate = 0;
 
 <br>
 	<input type="hidden" name="formaction" value="">
-    <input type="submit" class="button" name="create" value="<?php echo _("Create") ?>" onclick="usercreate_form.formaction.value='create'">   
+    <input type="submit" class="button" name="create" value="<?php echo _("Create") ?>" onclick="usercreate_form.formaction.value='create'">
     <input type="submit" class="button" name="cancel" value="<?php echo _("Back to usermanagement") ?>" onclick="usercreate_form.formaction.value='cancel'">
 </form>
 

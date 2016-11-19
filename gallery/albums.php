@@ -423,7 +423,7 @@ for ($i = $start; $i <= $end; $i++) {
  // Start tree
  	$_tree = false;
     if (isset($gallery->app->albumTreeDepth) && $gallery->app->albumTreeDepth > 0)
-	if (isset($gallery->app->microTree) && $gallery->app->microTree == 'yes') { 
+	if (isset($gallery->app->microTree) && $gallery->app->microTree == 'yes') {
 		$_tree = true;
 	?>
   <td colspan='2'><div style="width: 100%;">
@@ -446,7 +446,7 @@ for ($i = $start; $i <= $end; $i++) {
 		}
 		echo '</a>';
 
-		if (ereg("album[[:digit:]]+$", $albumURL)) {
+		if (preg_match("~album[[:digit:]]+$~", $albumURL)) {
 			if (!$gallery->session->offline) {
 				echo '<br /><span class="error">'.
 				gTranslate('core', "Hey!") .

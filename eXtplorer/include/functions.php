@@ -7,18 +7,18 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * @copyright soeren 2007
  * @author The eXtplorer project (http://sourceforge.net/projects/extplorer)
  * @author The  The QuiX project (http://quixplorer.sourceforge.net)
- * 
+ *
  * @license
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- * 
+ *
  * Alternatively, the contents of this file may be used under the terms
  * of the GNU General Public License Version 2 or later (the "GPL"), in
  * which case the provisions of the GPL are applicable instead of
@@ -29,7 +29,7 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
  * other provisions required by the GPL.  If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the GPL."
- * 
+ *
  */
 
 /**
@@ -39,12 +39,12 @@ if( !defined( '_JEXEC' ) && !defined( '_VALID_MOS' ) ) die( 'Restricted access' 
 function make_link($_action,$_dir,$_item=NULL,$_order=NULL,$_srt=NULL,$languages=NULL, $extra=null) {
 	// make link to next page
 	if($_action=="" || $_action==NULL) $_action="list";
-	
+
 	if($_item=="") $_item=NULL;
 	if($_order==NULL) $_order=$GLOBALS["order"];
 	if($_srt==NULL) $_srt=$GLOBALS["direction"];
 	if($languages==NULL) $languages=(isset($GLOBALS["lang"])?$GLOBALS["lang"]:NULL);
-	
+
 	$link=$GLOBALS["script_name"]."?option=com_extplorer&action=".$_action;
 	if(!is_null($_dir )) {
 		$link.="&dir=".urlencode($_dir);
@@ -67,7 +67,7 @@ function get_abs_dir($dir) {			// get absolute path
 		return $dir;
 	}
 	$abs_dir=$GLOBALS["home_dir"];
-	
+
 	if($dir!="" && !@stristr( $dir, $abs_dir )) $abs_dir.="/".$dir;
 	elseif(@stristr( $dir, $abs_dir )) $abs_dir = "/".$dir;
 	/*else {
@@ -80,7 +80,7 @@ function get_abs_dir($dir) {			// get absolute path
 	else {
 		return $realpath;
 	}
-	
+
 	return $realpath;
 }
 //------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ function get_abs_item($dir, $item) {		// get absolute file+path
 		// FTP Mode
 		$abs_item = '/' . get_abs_dir($dir)."/".$item['name'];
 		if( get_is_dir($item)) $abs_item.='/';
-		return extPathName($abs_item); 
+		return extPathName($abs_item);
 	}
 	return extPathName( get_abs_dir($dir)."/".$item );
 }
@@ -125,7 +125,7 @@ function get_is_file( $abs_item) {		// can this file be edited?
 		$info = get_item_info( dirname($abs_item), basename($abs_item));
 		return empty($info['is_dir']);
 	}
-	
+
 	return @is_file($abs_item);
 }
 //------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ function get_is_dir( $abs_item ) {		// is this a directory?
 }
 //------------------------------------------------------------------------------
 function parse_file_type( $abs_item ) {		// parsed file type (d / l / -)
-	
+
 	if(@get_is_dir($abs_item)) return "d";
 	if(@is_link($abs_item)) return "l";
 	return "-";
@@ -166,7 +166,7 @@ function get_languages() {
 }
 //------------------------------------------------------------------------------
 function parse_file_perms($mode) {		// parsed file permisions
-	
+
 	if(strlen($mode)<3) return "---------";
 	$parsed_mode="";
 	for($i=0;$i<3;$i++) {
@@ -194,8 +194,8 @@ function decode_ftp_rights( $rights) {
 			$parsed_mode.= '0';
 		}
 	}
-	
-	return $parsed_mode;	
+
+	return $parsed_mode;
 }
 //------------------------------------------------------------------------------
 function get_file_size( $abs_item) {		// file size
@@ -228,7 +228,7 @@ function get_is_image( $abs_item ) {		// is this file an image?
 	if( isset($abs_item['name'])) {
 		$abs_item = $abs_item['name'];
 	}
-	return @eregi($GLOBALS["images_ext"], $abs_item);
+	return @preg_match('~'.$GLOBALS["images_ext"].'~i', $abs_item);
 }
 //-----------------------------------------------------------------------------
 function get_is_editable( $abs_item ) {		// is this file editable?
@@ -236,18 +236,18 @@ function get_is_editable( $abs_item ) {		// is this file editable?
 	if( is_array( $abs_item ) ) {
 		 $abs_item = $abs_item['name'];
 	}
-	foreach($GLOBALS["editable_ext"] as $pat) if(@eregi($pat,$abs_item)) return true;
-	
+	foreach($GLOBALS["editable_ext"] as $pat) if(@preg_match('~'.$pat.'~i',$abs_item)) return true;
+
 	return strpos( basename($abs_item), "." ) ? false : true;
-	
+
 }
 //-----------------------------------------------------------------------------
 function get_mime_type( $abs_item, $query) {	// get file's mimetype
-	
+
 	if(get_is_dir( $abs_item )) {			// directory
 		$mime_type	= $GLOBALS["super_mimes"]["dir"][0];
 		$image		= $GLOBALS["super_mimes"]["dir"][1];
-		
+
 		if($query=="img") return $image;
 		else return $mime_type;
 	}
@@ -258,17 +258,17 @@ function get_mime_type( $abs_item, $query) {	// get file's mimetype
 				// mime_type
 	foreach($GLOBALS["used_mime_types"] as $mime) {
 		list($desc,$img,$ext)	= $mime;
-		if(@eregi($ext,basename($abs_item) )) {
+		if(@preg_match('~'.$ext.'~i', basename($abs_item) )) {
 			$mime_type	= $desc;
 			$image		= $img;
 			if($query=="img") return $image;
 			else return $mime_type . $extra;
 		}
 	}
-	
+
 	if((function_exists("is_executable") &&
 		@is_executable( $abs_item )) ||
-		@eregi($GLOBALS["super_mimes"]["exe"][2],$abs_item))		
+		@preg_match('~'.$GLOBALS["super_mimes"]["exe"][2].'~i',$abs_item))
 	{						// executable
 		$mime_type	= $GLOBALS["super_mimes"]["exe"][0];
 		$image		= $GLOBALS["super_mimes"]["exe"][1];
@@ -276,10 +276,10 @@ function get_mime_type( $abs_item, $query) {	// get file's mimetype
 		$mime_type	= $GLOBALS["super_mimes"]["file"][0];
 		$image		= $GLOBALS["super_mimes"]["file"][1];
 	}
-	
-	if($query=="img") 
+
+	if($query=="img")
 	  return $image;
-	else 
+	else
 	  return $mime_type . $extra;
 }
 //------------------------------------------------------------------------------
@@ -289,14 +289,14 @@ function get_show_item($dir, $item) {		// show this file?
 	}
 	if($item == "." || $item == ".." ||
 		(substr($item,0,1)=="." && $GLOBALS["show_hidden"]==false)) return false;
-		
-	if($GLOBALS["no_access"]!="" && @eregi($GLOBALS["no_access"],$item)) return false;
-	
+
+	if($GLOBALS["no_access"]!="" && @preg_match('~'.$GLOBALS["no_access"].'~i',$item)) return false;
+
 	if($GLOBALS["show_hidden"]==false) {
 		$dirs=explode("/",$dir);
 		foreach($dirs as $i) if(substr($i,0,1)==".") return false;
 	}
-	
+
 	return true;
 }
 //------------------------------------------------------------------------------
@@ -306,21 +306,21 @@ function get_dir_list( $dir='' ) {
 	} else {
 		$files = extReadDirectory( get_abs_dir( $dir), '.', false, true );
 	}
-	
+
 	$dirs =array();
 	foreach( $files as $item) {
 		$itemname = ext_isFTPMode() ? (empty($dir) ? '' : $dir.'/') .$item['name'] :  $item;
-		
+
 		$itemname = str_replace( '\\', '/', $itemname );
 		if( get_is_dir($item)) {
-			$index = str_replace( 
-						str_replace('\\', '/', $GLOBALS['home_dir'].$GLOBALS['separator']), 
+			$index = str_replace(
+						str_replace('\\', '/', $GLOBALS['home_dir'].$GLOBALS['separator']),
 							'', $itemname );
-			
+
 			$dirs[$index]= basename($index);
 		}
 	}
-	
+
 	return $dirs;
 }
 /**
@@ -331,12 +331,12 @@ function get_dir_list( $dir='' ) {
  */
 function get_dir_selects( $dir ) {
 	$dirs = explode( "/", str_replace( "\\", '/', $dir ) );
-	
+
 	$subdirs = get_dir_list();
     if( sizeof( $subdirs ) > 0) {
 		$subdirs = array_merge(Array('ext_disabled' => '-'), $subdirs );
 	}
-	
+
 	if( empty($dirs[0]) ) array_shift($dirs);
 	$dirsCopy = $dirs;
 	$implode = '';
@@ -344,7 +344,7 @@ function get_dir_selects( $dir ) {
 	foreach( $subdirs as $index => $val ) {
 		$subdirs[$index] = utf8_encode($val);
 	}
-	
+
 	$dir_links = ext_selectList('dirselect1', $selectedDir, $subdirs, 1, '', 'onchange="theDir=this.options[this.selectedIndex].value;if(theDir!=\'ext_disabled\' ) chDir(theDir);"' );
 	$i = 2;
 	foreach( $dirs as $directory ) {
@@ -352,7 +352,7 @@ function get_dir_selects( $dir ) {
 			$implode .= $directory;
 			$next = next($dirsCopy);
 			$subdirs = get_dir_list( $implode );
-			
+
 	  		foreach( $subdirs as $index => $val ) {
 	  			unset( $subdirs[$index]);
 				$subdirs[utf8_encode($index)] = utf8_encode($val);
@@ -380,51 +380,51 @@ function copy_dir($source,$dest) {		// copy dir
 	if(!@mkdir($dest,0777)) return false;
 	$itemlist = extReadDirectory( $source, '.', true, true );
 	if( empty( $itemlist )) return true;
-	
+
 	foreach( $itemlist as $file ) {
 		if(($file==".." || $file==".")) continue;
 		$file = str_replace( '\\', '/', $file );
 		$new_dest = str_replace( $source, $dest, $file );
-		
+
 		if(@is_dir($file)) {
 			@mkdir($new_dest,0777);
 		} else {
 			$ok=@copy($file,$new_dest);
 		}
 	}
-	
+
 	return $ok;
 }
 
 //------------------------------------------------------------------------------
 function remove($item) {			// remove file / dir
-	
+
 	if( !is_link( $item )) {
 		$item = realpath($item);
 	}
 	$ok = true;
-	if( is_link($item) ||  is_file($item)) 
+	if( is_link($item) ||  is_file($item))
 	  $ok =  unlink($item);
 	elseif( @is_dir($item)) {
-		
-		if(($handle= opendir($item))===false) 
+
+		if(($handle= opendir($item))===false)
 		  ext_Result::sendResult('delete', false, basename($item).": ".$GLOBALS["error_msg"]["opendir"]);
 
 		while(($file=readdir($handle))!==false) {
 			if(($file==".." || $file==".")) continue;
-			
+
 			$new_item = $item."/".$file;
-			if(!file_exists($new_item)) 
+			if(!file_exists($new_item))
 			  ext_Result::sendResult('delete', false, basename($item).": ".$GLOBALS["error_msg"]["readdir"]);
 			//if(!get_show_item($item, $new_item)) continue;
-			
+
 			if( @is_dir($new_item)) {
 				$ok=remove($new_item);
 			} else {
 				$ok= unlink($new_item);
 			}
 		}
-		
+
 		closedir($handle);
 		$ok=@rmdir($item);
 	}
@@ -432,7 +432,7 @@ function remove($item) {			// remove file / dir
 }
 function chmod_recursive($item, $mode) {			// chmod file / dir
 	$ok = true;
-	
+
 	if(@is_link($item) || @is_file($item)) {
 		$ok=@chmod( $item, $mode );
 		if($ok) ext_Result::add_message($GLOBALS['messages']['permchange'].' '.$new_item);
@@ -440,21 +440,21 @@ function chmod_recursive($item, $mode) {			// chmod file / dir
 	}
 	elseif(@is_dir($item)) {
 		if(($handle=@opendir($item))===false) {
-			
+
 			ext_Result::add_error(basename($item).": ".$GLOBALS["error_msg"]["opendir"]);
-			return false; 
+			return false;
 		}
 
 		while(($file=readdir($handle))!==false) {
 			if(($file==".." || $file==".")) continue;
-			
+
 			$new_item = $item."/".$file;
 			if(!@file_exists($new_item)) {
 				ext_Result::add_error(basename($item).": ".$GLOBALS["error_msg"]["readdir"]);
-				continue; 
+				continue;
 			}
 			//if(!get_show_item($item, $new_item)) continue;
-			
+
 			if(@is_dir($new_item)) {
 				$ok=chmod_recursive($new_item, $mode);
 			} else {
@@ -471,35 +471,35 @@ function chmod_recursive($item, $mode) {			// chmod file / dir
 			$bin = substr_replace( $bin, '1', 2, 1 ); // set 1st x bit to 1
 			$bin = substr_replace( $bin, '1', 5, 1 );// set  2nd x bit to 1
 			$bin = substr_replace( $bin, '1', 8, 1 );// set 3rd x bit to 1
-			$mode = bindec( $bin ); 
+			$mode = bindec( $bin );
 		}
 		$ok=@chmod( $item, $mode );
 		if($ok) ext_Result::add_message($GLOBALS['messages']['permchange'].' '.$item);
 		else ext_Result::add_error($GLOBALS['error_msg']['permchange'].' '.$item);
 	}
-	
+
 	return $ok;
 }
 //------------------------------------------------------------------------------
 function get_max_file_size() {			// get php max_upload_file_size
-	return calc_php_setting_bytes( ini_get("upload_max_filesize") );	
+	return calc_php_setting_bytes( ini_get("upload_max_filesize") );
 }
 function get_max_upload_limit() {
 	return calc_php_setting_bytes( ini_get('post_max_size'));
 }
 
 function calc_php_setting_bytes( $value ) {
-	if(@eregi("G$",$value)) {
+	if(@preg_match("~G$~i",$value)) {
 		$value = substr($value,0,-1);
 		$value = round($value*1073741824);
-	} elseif(@eregi("M$",$value)) {
+	} elseif(@preg_match("~M$~i",$value)) {
 		$value = substr($value,0,-1);
 		$value = round($value*1048576);
-	} elseif(@eregi("K$",$value)) {
+	} elseif(@preg_match("~K$~i",$value)) {
 		$value = substr($value,0,-1);
 		$value = round($value*1024);
 	}
-	
+
 	return $value;
 }
 //------------------------------------------------------------------------------
@@ -509,9 +509,9 @@ function down_home($abs_dir) {			// dir deeper than home?
 	}
 	$real_home = @realpath($GLOBALS["home_dir"]);
 	$real_dir = @realpath($abs_dir);
-	
+
 	if($real_home===false || $real_dir===false) {
-		if(@eregi("\\.\\.",$abs_dir)) return false;
+		if(@preg_match("~\\.\\.~i",$abs_dir)) return false;
 	} else if(strcmp($real_home,@substr($real_dir,0,strlen($real_home)))) {
 		return false;
 	}
@@ -520,23 +520,23 @@ function down_home($abs_dir) {			// dir deeper than home?
 //------------------------------------------------------------------------------
 function id_browser() {
 	$browser=$GLOBALS['__SERVER']['HTTP_USER_AGENT'];
-	
-	if(ereg('Opera(/| )([0-9].[0-9]{1,2})', $browser)) {
+
+	if(preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $browser)) {
 		return 'OPERA';
-	} else if(ereg('MSIE ([0-9].[0-9]{1,2})', $browser)) {
+	} else if(preg_match('~MSIE ([0-9].[0-9]{1,2})~', $browser)) {
 		return 'IE';
-	} else if(ereg('OmniWeb/([0-9].[0-9]{1,2})', $browser)) {
+	} else if(preg_match('~OmniWeb/([0-9].[0-9]{1,2})~', $browser)) {
 		return 'OMNIWEB';
-	} else if(ereg('(Konqueror/)(.*)', $browser)) {
+	} else if(preg_match('~(Konqueror/)(.*)~', $browser)) {
 		return 'KONQUEROR';
-	} else if(ereg('Mozilla/([0-9].[0-9]{1,2})', $browser)) {
+	} else if(preg_replace('~Mozilla/([0-9].[0-9]{1,2})~', $browser)) {
 		return 'MOZILLA';
 	} else {
 		return 'OTHER';
 	}
 }
 function ext_isArchive( $file ) {
-  
+
 	$file_info = pathinfo($file);
 	$ext = @$file_info["extension"];
 	if( $ext == "tar" || $ext == "gz" || $ext == "tgz" || $ext == "zip" || $ext == "bzip2"  || $ext == "bz2" || $ext == "tbz") {
@@ -549,7 +549,7 @@ if( !extension_loaded('posix') ) {
 		return false;
 	}
 	function posix_getpwnam() {
-		
+
 	}
 }
 
@@ -586,7 +586,7 @@ function ext_getSeparator() {
  * @return boolean
  */
 function ext_isIE() {
-	return (ereg('MSIE ([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']));
+	return (preg_match('~MSIE ([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT']));
 }
 
 /**
@@ -595,7 +595,7 @@ function ext_isIE() {
  * will be the selected option in the dropdown.
  * @author gday
  * @author soeren
- * 
+ *
  * @param string $name The name of the select element
  * @param string $value The pre-selected value
  * @param array $arr The array containting $key and $val
@@ -603,7 +603,7 @@ function ext_isIE() {
  * @param string $multiple use "multiple=\"multiple\" to have a multiple choice select list
  * @param string $extra More attributes when needed
  * @return string HTML drop-down list
- */	
+ */
 function ext_selectList($name, $value, $arr, $size=1, $multiple="", $extra="") {
 	$html = '';
 	if( !empty( $arr ) ) {
@@ -642,7 +642,8 @@ function ext_scriptTag( $src = '', $script = '') {
 	}
 }
 function ext_alertBox( $msg ) {
-	return ext_scriptTag('', 'Ext.Msg.alert( \''.$GLOBALS["error_msg"]['message'].'\', \''. @mysql_escape_string( $msg ) .'\' );' );
+	global $_db_link;
+	return ext_scriptTag('', 'Ext.Msg.alert( \''.$GLOBALS["error_msg"]['message'].'\', \''. mysqli_real_escape_string( $msg, $_db_link ) .'\' );' );
 }
 function ext_docLocation( $url ) {
 	return ext_scriptTag('', 'document.location=\''. $url .'\';' );
@@ -653,8 +654,8 @@ function ext_isXHR() {
 }
 function ext_exit() {
 	global $mainframe;
-	
-	if( is_callable( array( $mainframe, 'close' ) ) ) {				
+
+	if( is_callable( array( $mainframe, 'close' ) ) ) {
 		$mainframe->close();
 	} else {
 		session_write_close();
@@ -672,12 +673,12 @@ function ext_isJoomla( $version='', $operator='=', $compare_minor_versions=true)
 		$this_version = $jversion->RELEASE .'.'. $jversion->DEV_LEVEL;
 	} else {
 		return false;
-	}	
+	}
 	if( empty( $version ) ) {
 		return empty($this_version);
 	}
 	$allowed_operators = array( '<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne' );
-	
+
 	if( $compare_minor_versions ) {
 		if( $jversion->RELEASE != substr($version, 0, 3 ) ) {
 			return false;
@@ -694,26 +695,26 @@ function ext_isJoomla( $version='', $operator='=', $compare_minor_versions=true)
  * @param string $setLimit Example: 16M
  */
 function ext_RaiseMemoryLimit( $setLimit ) {
-	
+
 	$memLimit = @ini_get('memory_limit');
-	
+
 	if( stristr( $memLimit, 'k') ) {
 		$memLimit = str_replace( 'k', '', str_replace( 'K', '', $memLimit )) * 1024;
 	}
 	elseif( stristr( $memLimit, 'm') ) {
 		$memLimit = str_replace( 'm', '', str_replace( 'M', '', $memLimit )) * 1024 * 1024;
 	}
-	
+
 	if( stristr( $setLimit, 'k') ) {
 		$setLimitB = str_replace( 'k', '', str_replace( 'K', '', $setLimit )) * 1024;
 	}
 	elseif( stristr( $setLimit, 'm') ) {
 		$setLimitB = str_replace( 'm', '', str_replace( 'M', '', $setLimit )) * 1024 * 1024;
 	}
-	
+
 	if( $memLimit < $setLimitB ) {
 		@ini_set('memory_limit', $setLimit );
-	}	
+	}
 }
 /**
  * Reads a file and sends them in chunks to the browser
@@ -1117,7 +1118,7 @@ function extStripslashes( &$value ) {
  * @return unknown
  */
 function extMkdirR($path, $rights = 0777) {
-	
+
 	$folder_path = array(
 	strstr($path, '.') ? dirname($path) : $path);
 

@@ -112,6 +112,7 @@ echo json_encode($variables);
 // flush any session info
 session_clean_close();
 
-// close the database connection
-mysql_close();
+// close the database connections
+isset($_db_link) and mysqli_close($_db_link);
+isset($_user_db_link) and mysqli_close($_user_db_link);
 ?>

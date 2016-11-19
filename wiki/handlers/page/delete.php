@@ -7,12 +7,12 @@ if ($this->IsAdmin())
     {
         $tag = $this->GetPageTag();
 
-        //  delete the page, comments, related links, acls and referrers 
-        $this->Query("delete from ".$this->config["table_prefix"]."pages where tag = '".mysql_real_escape_string($tag)."'");
-        $this->Query("delete from ".$this->config["table_prefix"]."comments where page_tag = '".mysql_real_escape_string($tag)."'");
-        $this->Query("delete from ".$this->config["table_prefix"]."links where from_tag = '".mysql_real_escape_string($tag)."'");
-        $this->Query("delete from ".$this->config["table_prefix"]."acls where page_tag = '".mysql_real_escape_string($tag)."'");
-        $this->Query("delete from ".$this->config["table_prefix"]."referrers where page_tag = '".mysql_real_escape_string($tag)."'");
+        //  delete the page, comments, related links, acls and referrers
+        $this->Query("delete from ".$this->config["table_prefix"]."pages where tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
+        $this->Query("delete from ".$this->config["table_prefix"]."comments where page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
+        $this->Query("delete from ".$this->config["table_prefix"]."links where from_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
+        $this->Query("delete from ".$this->config["table_prefix"]."acls where page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
+        $this->Query("delete from ".$this->config["table_prefix"]."referrers where page_tag = '".mysqli_real_escape_string($this->dblink, $tag)."'");
 
         // redirect back to main page
         $this->Redirect($this->config["base_url"], "Page has been deleted!");

@@ -66,7 +66,7 @@ if (isset($step) && $step == "subscribers") {
 		fallback(FUSION_SELF.$aidlink);
 	$data = dbarray($result);
 	$variables['forum_name'] = $data['forum_name'];
-	$result = dbquery("SELECT u.* FROM ".$db_prefix."users u, ".$db_prefix."M2F_subscriptions s 
+	$result = dbquery("SELECT u.* FROM ".$db_prefix."users u, ".$db_prefix."M2F_subscriptions s
 		WHERE u.user_id = s.m2f_userid AND s.m2f_forumid = '$forum_id' AND s.m2f_subscribed = '1' AND s.m2f_userid > 1 ORDER BY u.user_id");
 	$variables['subscribers'] = array();
 	while ($data = dbarray($result)) {
@@ -76,7 +76,7 @@ if (isset($step) && $step == "subscribers") {
 
 // reset the poll timer?
 if (isset($_POST['poll_restart'])) {
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".time()."' WHERE cfg_name = 'm2f_lastpoll'");	
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".time()."' WHERE cfg_name = 'm2f_lastpoll'");
 	$template_panels[] = array('type' => 'body', 'name' => 'message_panel', 'title' => $locale['m2f450'], 'template' => '_message_table_panel.tpl');
 	$variables['message'] = $locale['m2f521'];
 	$variables['bold'] = true;
@@ -140,9 +140,9 @@ if (isset($_POST['savesettings'])) {
 	switch ($mailtypes[$m2f_type]) {
 		case $locale['m2f230']:
 			// SMTP/POP3
-			$m2f_email = stripinput(trim(eregi_replace(" +", "", $_POST['m2f_email'])));
-			$m2f_userid = stripinput(trim(eregi_replace(" +", " ", $_POST['m2f_userid'])));
-			$m2f_password = stripinput(trim(eregi_replace(" +", "", $_POST['m2f_password'])));
+			$m2f_email = stripinput(trim(preg_replace("~ +~i", "", $_POST['m2f_email'])));
+			$m2f_userid = stripinput(trim(preg_replace("~ +~i", " ", $_POST['m2f_userid'])));
+			$m2f_password = stripinput(trim(preg_replace("~ +~i", "", $_POST['m2f_password'])));
 			if ($m2f_email == "")
 				$error = $locale['m2f901'];
 			if ($m2f_userid == "")
@@ -256,8 +256,8 @@ if (isset($_POST['delete'])) {
 			$m2f = dbarray($result);
 		}
 	}
-	$user_groups = getusergroups(); 
-	$access_opts = array(); 
+	$user_groups = getusergroups();
+	$access_opts = array();
 	$posting_opts = array();
 	foreach ($user_groups as $key => $value) {
 		$access_opts[] = array('id' => $value['0'], 'name' => $value['1'], 'selected' => ($m2f['m2f_access'] == $value['0']));

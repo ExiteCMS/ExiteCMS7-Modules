@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("report.topfiles.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 // array to store variables we want to use in the report template
 $reportvars = array();
@@ -26,9 +26,9 @@ if (isset($action)) {
 
 	// check if we have a rowstart value
 	if (!isset($rowstart)) $rowstart = 0;
-	
+
 	if ($action == "") {
-		
+
 			// pre-processing
 
 	} else {
@@ -51,7 +51,7 @@ if (isset($action)) {
 		if (!isset($top)) {
 			$top = isset($_POST['top']) ? $_POST['top'] : 0;
 		}
-		
+
 		// construct the page navigator to allow paging
 		$variables['pagenav_url'] = FUSION_SELF."?action=report&amp;report_id=".$report_id."&amp;";
 		$variables['pagenav_url'] .= "filter=".$filter."&amp;";
@@ -86,7 +86,7 @@ if (isset($action)) {
 			}
 
 			// check how many rows this would output
-			$rptresult = mysql_query($sql.($top?" LIMIT $top":""));
+			$rptresult = dbquery($sql.($top?" LIMIT $top":""));
 			if ($rptresult) {
 				// store some row counter for the pager
 				$variables['rows'] = dbrows($rptresult);
@@ -98,7 +98,7 @@ if (isset($action)) {
 				} else {
 					$sql .= " LIMIT ".$rowstart.",".($variables['rows']-$rowstart);
 				}
-				$rptresult = mysql_query($sql);
+				$rptresult = dbquery($sql);
 
 				// get the results
 				$reportvars['output'] = array();
@@ -107,7 +107,7 @@ if (isset($action)) {
 					$reportvars['output'][] = $rptdata;
 				}
 			} else {
-				$variables['message'] = $locale['dls950']." ".mysql_error();
+				$variables['message'] = $locale['dls950']." ".mysqli_error($_db_link);
 			}
 		}
 	}

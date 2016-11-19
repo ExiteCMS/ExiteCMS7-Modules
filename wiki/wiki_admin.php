@@ -30,10 +30,10 @@ if (!checkrights("wW") || !defined("iAUTH") || $aid != iAUTH) fallback(BASEDIR."
 
 if (isset($_POST['savesettings'])) {
 	// save the new settings
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysql_escape_string(stripinput($_POST['root_page']))."' WHERE cfg_name = 'wiki_root_page'");
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysql_escape_string(stripinput($_POST['wakka_name']))."' WHERE cfg_name = 'wiki_wakka_name'");
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysql_escape_string(stripinput($_POST['navigation_links']))."' WHERE cfg_name = 'wiki_navigation_links'");
-	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysql_escape_string(stripinput($_POST['logged_in_navigation_links']))."' WHERE cfg_name = 'wiki_logged_in_navigation_links'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysqli_real_escape_string($_db_link, stripinput($_POST['root_page']))."' WHERE cfg_name = 'wiki_root_page'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysqli_real_escape_string($_db_link, stripinput($_POST['wakka_name']))."' WHERE cfg_name = 'wiki_wakka_name'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysqli_real_escape_string($_db_link, stripinput($_POST['navigation_links']))."' WHERE cfg_name = 'wiki_navigation_links'");
+	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".mysqli_real_escape_string($_db_link, stripinput($_POST['logged_in_navigation_links']))."' WHERE cfg_name = 'wiki_logged_in_navigation_links'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['hide_comments'])."' WHERE cfg_name = 'wiki_hide_comments'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['require_edit_note'])."' WHERE cfg_name = 'wiki_require_edit_note'");
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['anony_delete_own_comments'])."' WHERE cfg_name = 'wiki_anony_delete_own_comments'");
@@ -47,8 +47,8 @@ if (isset($_POST['savesettings'])) {
 	$result = dbquery("UPDATE ".$db_prefix."configuration SET cfg_value = '".stripinput($_POST['report_uploads'])."' WHERE cfg_name = 'wiki_report_uploads'");
 	// if the name of the homepage has changed, update the wiki record
 	if ($settings['wiki_root_page'] != stripinput($_POST['root_page'])) {
-		$result = dbquery("UPDATE ".$db_prefix."wiki_pages SET tag = '".mysql_escape_string(stripinput($_POST['root_page']))."' WHERE tag = '".mysql_escape_string($settings['wiki_root_page'])."'");
-		$result = dbquery("SELECT * FROM ".$db_prefix."wiki_pages WHERE body LIKE '%".mysql_escape_string($settings['wiki_root_page'])."%'");
+		$result = dbquery("UPDATE ".$db_prefix."wiki_pages SET tag = '".mysqli_real_escape_string($_db_link, stripinput($_POST['root_page']))."' WHERE tag = '".mysqli_real_escape_string($_db_link, $settings['wiki_root_page'])."'");
+		$result = dbquery("SELECT * FROM ".$db_prefix."wiki_pages WHERE body LIKE '%".mysqli_real_escape_string($_db_link, $settings['wiki_root_page'])."%'");
 		while ($data = dbarray($result)) {
 			$data['body'] = str_replace($settings['wiki_root_page'], stripinput($_POST['root_page']), $data['body']);
 		}

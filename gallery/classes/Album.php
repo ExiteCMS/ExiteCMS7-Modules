@@ -1181,7 +1181,7 @@ class Album {
                 if (file_exists("$dir/$name.$ext") ||
                 ((isMovie($tag) || $tag=="jpg") && file_exists("$dir/$name.thumb.jpg"))) {
                     // append a 3 digit number to the end of the filename if it exists already
-                    if (!ereg("_[[:digit:]]{3}$", $name)) {
+                    if (!preg_match("~_[[:digit:]]{3}$~", $name)) {
                         $name = $name . "_001";
                     }
                     // increment the 3 digits until we get a unique filename
@@ -2297,7 +2297,7 @@ class Album {
 
 //_debug($this->fields['perms'], true);
 //echo "[",$permName,":",$uid,"]";
- 
+
        if (isset($this->fields["perms"][$permName])) {
             $perm = $this->fields["perms"][$permName];
         } else {
@@ -2315,7 +2315,7 @@ class Album {
         if (isset($perm[$everybody->getUid()])) {
             return true;
         }
-		
+
 		// ExiteCMS: check if the uid is a group. if so, check group membership
 		foreach($perm as $puid => $junk) {
 			if ($puid <= 0) {
@@ -2706,9 +2706,9 @@ class Album {
 
     function getIndexByVotingId($vote_id) {
         global $gallery;
-        if (ereg("^item\.(.*)$", $vote_id, $matches)) {
+        if (preg_match("~^item\.(.*)$~", $vote_id, $matches)) {
             $index = $this->getPhotoIndex($matches[1]);
-        } else if (ereg("^album\.(.*)$", $vote_id, $matches)) {
+        } else if (preg_match("~^album\.(.*)$~", $vote_id, $matches)) {
             $index = $this->getAlbumIndex($matches[1]);
             if ($index > 0) {
                 $myAlbum = new Album();

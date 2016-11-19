@@ -361,7 +361,7 @@ class InputFilter
 			 * Remove all "non-regular" attribute names
 			 * AND blacklisted attributes
 			 */
-			if ((!eregi("^[a-z]*$", $attrSubSet[0])) || (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist)) || (substr($attrSubSet[0], 0, 2) == 'on'))))
+			if ((!preg_match("~^[a-z]*$~i", $attrSubSet[0])) || (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist)) || (substr($attrSubSet[0], 0, 2) == 'on'))))
 			{
 				continue;
 			}
@@ -535,6 +535,7 @@ class InputFilter
 	 * @return	string		Escaped string
 	 */
 	function escapeString($string, & $connection) {
+		global $_db_link;
 		/*
 		* Use the appropriate escape string depending upon which version of php
 		* you are running
@@ -542,7 +543,7 @@ class InputFilter
 		if (version_compare(phpversion(), '4.3.0', '<')) {
 			$string = mysql_escape_string($string);
 		} else 	{
-			$string = mysql_real_escape_string($string);
+			$string = mysqli_real_escape_string($_db_link, $string);
 		}
 
 		return $string;

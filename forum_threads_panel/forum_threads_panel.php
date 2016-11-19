@@ -16,7 +16,7 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("forum_threads_panel.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 define('NEWEST_THREADS', 5);
 define('HOTTEST_THREADS', 5);
@@ -41,7 +41,7 @@ while($data = dbarray($result)) {
 // hottest threads
 
 $result = dbquery("
-	SELECT tf.forum_id, tt.thread_id, tt.thread_subject, COUNT(tp.post_id) as count_posts 
+	SELECT tf.forum_id, tt.thread_id, tt.thread_subject, COUNT(tp.post_id) as count_posts
 	FROM ".$db_prefix."forums tf
 	INNER JOIN ".$db_prefix."threads tt USING(forum_id)
 	INNER JOIN ".$db_prefix."posts tp USING(thread_id)

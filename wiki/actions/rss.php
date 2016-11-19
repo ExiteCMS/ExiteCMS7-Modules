@@ -1,8 +1,8 @@
 <?php
 /**
  * Cache and display an RSS feed.
- * 
- * Action usage: {{rss http://domain.com/feed.xml}} 
+ *
+ * Action usage: {{rss http://domain.com/feed.xml}}
  * or {{rss url="http://domain.com/feed.xml" cachetime="30"}}.
  * NOTE 1 : in Onyx-RSS default is "debugMode" which results in all errors being printed
  * this could be suppressed by turning debug mode off, but then we'd never have a
@@ -12,17 +12,17 @@
  * that way normal display will look clean but you can look at the HTML source to
  * find the cause of any problem.
  * NOTE 2: no solution for timeout problems with non-existing feeds yet...
- * 
+ *
  * @package		Actions
  * @version		$Id$
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @filesource
- * 
+ *
  * @input		string $url mandotary: URL of the feed
  * @input		integer $cachetime optional: time in minutes to cach the feed
  * @uses		Wakka::cleanUrl()
  * @uses		Wakka::ReturnSafeHTML()
- * @todo		should use makeList to generate the list; 
+ * @todo		should use makeList to generate the list;
  * @todo		maybe better convert to using Magpie first;
  */
 
@@ -77,7 +77,7 @@ if (preg_match("/^(http|https):\/\/([^\\s\"<>]+)$/i", $rss_path))
 	}
 
 	//Load the RSS Feed: workaround to hide error messages within HTML comments:
-	$rss =& new Wikka_Onyx();
+	$rss = new Wikka_Onyx();
 	$rss->setCachePath($rss_cache_path);
 	$rss->parse($rss_path, $rss_cache_file, $rss_cache_time);
 	$meta = $rss->getData(ONYX_META);

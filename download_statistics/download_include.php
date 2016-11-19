@@ -16,17 +16,17 @@
 | Last modified by $Author::                                          $|
 | Revision number $Rev::                                              $|
 +---------------------------------------------------------------------*/
-if (eregi("download_include.php", $_SERVER['PHP_SELF']) || !defined('INIT_CMS_OK')) die();
+if (strpos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false || !defined('INIT_CMS_OK')) die();
 
 define("LOG_RETRY_TIMEOUT", 60 * 10 );	// 10 minutes
 
 // load the GeoIP functions
 require_once PATH_INCLUDES."geoip_include.php";
 
-// function to 
+// function to
 function log_download($file, $ip, $map=0, $success=1, $timestamp=0) {
 
-	global $db_prefix, $settings;
+	global $db_prefix, $settings, $_db_link;
 
 	// check the parameters
 	if (empty($file) || empty($ip) || $ip == "0.0.0.0") {
@@ -52,24 +52,24 @@ function log_download($file, $ip, $map=0, $success=1, $timestamp=0) {
 	$result = dbquery("DELETE LOW_PRIORITY FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_timeout < ".(time() - LOG_RETRY_TIMEOUT));
 
 	// check if the file it's in the retry cache
-	$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$ip."' AND dlsfc_file = '".mysql_escape_string($file)."'");
+	$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$ip."' AND dlsfc_file = '".mysqli_real_escape_string($file, $_db_link)."'");
 	// not in the cache...
 	if (dbrows($result) == 0) {
 		if (CMS_CLI && function_exists('display')) display("-> not in the file cache");
 		// update the IP statistics
-		$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$ip."', '".$cc."', '".$map."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($map == 1 ? ", dlsi_onmap = 1" : ""));
+		$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_ips (dlsi_ip, dlsi_ccode, dlsi_onmap, dlsi_counter) VALUES ('".$ip."', '".$cc."', '".$map."', 1) ON DUPLICATE KEY UPDATE dlsi_counter = dlsi_counter + 1".($map == 1 ? ", dlsi_onmap = 1" : ""));
 		// update fhe File statistics
-		$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$file."', '".$success."', 1) ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + 1");
+		$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_files (dlsf_file, dlsf_success, dlsf_counter) VALUES ('".$file."', '".$success."', 1) ON DUPLICATE KEY UPDATE dlsf_counter = dlsf_counter + 1");
 		// now update the download details for this record
 		// get the dlsi_id for this IP
-		$result2 = mysql_query("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$ip."' LIMIT 1");
+		$result2 = dbquery("SELECT dlsi_id FROM ".$db_prefix."dlstats_ips WHERE dlsi_ip = '".$ip."' LIMIT 1");
 		if (dbrows($result2)) {
-			$data2 = mysql_fetch_assoc($result2);
+			$data2 = dbarray($result2);
 			// get the dlsf_id for this file
-			$result3 = mysql_query("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$file."' LIMIT 1");
+			$result3 = dbquery("SELECT dlsf_id FROM ".$db_prefix."dlstats_files WHERE dlsf_file = '".$file."' LIMIT 1");
 			if (dbrows($result3)) {
-				$data3 = mysql_fetch_assoc($result3);
-				$result4 = mysql_query("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$timestamp."')");
+				$data3 = dbarray($result3);
+				$result4 = dbquery("INSERT INTO ".$db_prefix."dlstats_file_ips (dlsi_id, dlsf_id, dlsfi_timestamp) VALUES ('".$data2['dlsi_id']."', '".$data3['dlsf_id']."', '".$timestamp."')");
 				if (CMS_CLI && function_exists('display')) display("-> added to the download logs");
 			}
 		}
@@ -88,7 +88,7 @@ function log_download($file, $ip, $map=0, $success=1, $timestamp=0) {
 		}
 	}
 	// add the record to the file cache (or update the existing record if it was already in the cache
-	$result2 = mysql_query("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$ip."', '".mysql_escape_string($file)."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
+	$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$ip."', '".mysqli_real_escape_string($_db_link, $file)."', '".time()."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".time()."'");
 
 	return true;
 }

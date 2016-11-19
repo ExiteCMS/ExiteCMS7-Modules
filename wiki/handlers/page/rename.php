@@ -4,28 +4,28 @@
  * Rename the current page.
  *
  * Usage: append /rename to the URL of the page you want to rename
- * 
- * This handler checks the existence of the source page, the user's read-access 
+ *
+ * This handler checks the existence of the source page, the user's read-access
  * and write-access to the page.
  * If the edit option is selected, the user is redirected to the target page for
  * edition immediately after its creation.
  *
  * @package         Handlers
- * @subpackage        
+ * @subpackage
  * @name              rename
  *
  * @author            ExiteCMS - WanWizard
  * @version           0.1
  * @since             Wikka 1.1.6.3 - ExiteCMS edition
- *                      
+ *
  * @input             string  $note  optional: the note to be added to the page when renamed
  *                            default is "Renamed from " followed by the original name of the page
- * 
+ *
  * @input             boolean $editoption optional: if true, the page will be opened for edition after rename
  *                            default is false
  *
  * @todo              Use central library for valid pagenames.
- *        
+ *
  * @uses Config::$table_prefix
  * @uses Wakka::ClearLinkTable()
  * @uses Wakka::ExistsPage()
@@ -69,7 +69,7 @@ define('PLEASE_FILL_VALID_TARGET', 'Please fill in a valid target ""PageName"".'
 $from = $this->tag;
 $to = $this->tag;
 $note = sprintf(RENAMED_FROM, $from);
-$editoption = ''; 
+$editoption = '';
 $box = PLEASE_FILL_VALID_TARGET;
 
 // print header
@@ -80,7 +80,7 @@ if (!$this->ExistsPage($from))
 {
 	// source page does not exist!
 	$box = sprintf(ERROR_PAGE_NOT_EXIST, $from);
-} else 
+} else
 {
 	// 2. page exists - now check user's read-access to the source page
 	if (!$this->HasAccess('read', $from))
@@ -96,7 +96,7 @@ if (!$this->ExistsPage($from))
 			$to = isset($_POST['to']) && $_POST['to'] ? $_POST['to'] : $to;
 			$note = isset($_POST['note']) && $_POST['note'] ? $_POST['note'] : $note;
 			$editoption = (isset($_POST['editoption']))? 'checked="checked"' : '';
-		
+
 			// 3. check target pagename validity
 			if (!preg_match(VALID_PAGENAME_PATTERN, $to))  //TODO use central regex library
 			{
@@ -105,22 +105,22 @@ if (!$this->ExistsPage($from))
 			} else
 			{
 				// 4. target page name is valid - now check user's write-access
-				if (!$this->HasAccess('write', $to))  
+				if (!$this->HasAccess('write', $to))
 				{
 					$box = '""<em class="error">'.sprintf(ERROR_ACL_WRITE, $to).'</em>""';
 				} else
 				{
 					// 5. check target page existence
 					if ($this->ExistsPage($to))
-					{ 
+					{
 						// page already exists!
 						$box = '""<em class="error">'.ERROR_PAGE_ALREADY_EXIST.'</em>""';
 					} else
 					{
 						// 6. Valid request - proceed to rename the page
-						
+
 						// find all pages that have links to our page
-						$pages = $this->LoadAll("select * from ".$this->config['table_prefix']."links where to_tag = '".mysql_real_escape_string($from)."'");
+						$pages = $this->LoadAll("select * from ".$this->config['table_prefix']."links where to_tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
 						// load them and rename the tags on those pages, and update the link table
 						foreach($pages as $page) {
 							// get the page record
@@ -143,17 +143,17 @@ if (!$this->ExistsPage($from))
 							$this->ClearLinkTable();
 						}
 						// rename the page, the comments link, the link table, the acl table and the referrer info
-						$this->Query("update ".$this->config["table_prefix"]."pages set tag = '".$to."' where tag = '".mysql_real_escape_string($from)."'");
-						$this->Query("update ".$this->config["table_prefix"]."comments set page_tag = '".$to."' where page_tag = '".mysql_real_escape_string($from)."'");
-						$this->Query("update ".$this->config["table_prefix"]."links set to_tag = '".$to."' where to_tag = '".mysql_real_escape_string($from)."'");
-						$this->Query("update ".$this->config["table_prefix"]."acls set page_tag = '".$to."' where page_tag = '".mysql_real_escape_string($from)."'");
-						$this->Query("update ".$this->config["table_prefix"]."referrers set page_tag = '".$to."' where page_tag = '".mysql_real_escape_string($from)."'");
+						$this->Query("update ".$this->config["table_prefix"]."pages set tag = '".$to."' where tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
+						$this->Query("update ".$this->config["table_prefix"]."comments set page_tag = '".$to."' where page_tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
+						$this->Query("update ".$this->config["table_prefix"]."links set to_tag = '".$to."' where to_tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
+						$this->Query("update ".$this->config["table_prefix"]."acls set page_tag = '".$to."' where page_tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
+						$this->Query("update ".$this->config["table_prefix"]."referrers set page_tag = '".$to."' where page_tag = '".mysqli_real_escape_string($this->dblink, $from)."'");
 						// and redirect to the new page
 						$this->Redirect($this->href(($editoption == 'checked="checked"')?'edit':'', $to));
 					}
 				}
 			}
-		} 
+		}
 		// build form
 		$form = $this->FormOpen('rename');
 		$form .= '<table class="clone">'."\n".
