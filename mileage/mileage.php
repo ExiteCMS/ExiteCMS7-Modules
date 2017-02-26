@@ -213,15 +213,15 @@ switch ($action) {
 			} else {
 				// if we have a new address, add it first (if needed), and get the adr_id
 				if (!empty($variables['new_ident'])) {
-					$result = dbquery("SELECT adr_id FROM ".$db_prefix."mileage_address WHERE adr_driver_id = '".$variables['travel_driver_id']."' AND adr_description = '".mysqli_real_escape_string($variables['new_ident'], $_db_link)."'");
+					$result = dbquery("SELECT adr_id FROM ".$db_prefix."mileage_address WHERE adr_driver_id = '".$variables['travel_driver_id']."' AND adr_description = '".mysqli_real_escape_string($_db_link, $variables['new_ident'])."'");
 					if (dbrows($result)) {
 						// existing address identification. Update the address
 						$data = dbarray($result);
 						$variables['travel_to'] = $data['adr_id'];
-						$result = dbquery("UPDATE ".$db_prefix."mileage_address SET adr_address = '".mysqli_real_escape_string($variables['new_address'], $_db_link)."', adr_postcode = '".mysqli_real_escape_string($variables['new_postcode'], $_db_link)."', adr_city = '".mysqli_real_escape_string($variables['new_city'], $_db_link)."', adr_country = '".$variables['new_country']."' WHERE adr_id = '".$data['adr_id']."'");
+						$result = dbquery("UPDATE ".$db_prefix."mileage_address SET adr_address = '".mysqli_real_escape_string($_db_link, $variables['new_address'])."', adr_postcode = '".mysqli_real_escape_string($_db_link, $variables['new_postcode'])."', adr_city = '".mysqli_real_escape_string($_db_link, $variables['new_city'])."', adr_country = '".$variables['new_country']."' WHERE adr_id = '".$data['adr_id']."'");
 					} else {
 						// new address, add it
-						$result = dbquery("INSERT INTO ".$db_prefix."mileage_address (adr_driver_id, adr_description, adr_address, adr_postcode, adr_city, adr_country) VALUES('".$variables['travel_driver_id']."', '".mysqli_real_escape_string($variables['new_ident'], $_db_link)."', '".mysqli_real_escape_string($variables['new_address'], $_db_link)."', '".mysqli_real_escape_string($variables['new_postcode'], $_db_link)."', '".mysqli_real_escape_string($variables['new_city'], $_db_link)."', '".$variables['new_country']."')");
+						$result = dbquery("INSERT INTO ".$db_prefix."mileage_address (adr_driver_id, adr_description, adr_address, adr_postcode, adr_city, adr_country) VALUES('".$variables['travel_driver_id']."', '".mysqli_real_escape_string($_db_link, $variables['new_ident'])."', '".mysqli_real_escape_string($_db_link, $variables['new_address'])."', '".mysqli_real_escape_string($_db_link, $variables['new_postcode'])."', '".mysqli_real_escape_string($_db_link, $variables['new_city'])."', '".$variables['new_country']."')");
 						$variables['travel_to'] = mysqli_insert_id($_db_link);
 					}
 				}
@@ -236,16 +236,16 @@ switch ($action) {
 				}
 				// save the detour between these two locations as default
 				if (isset($_POST['save_detour'])) {
-					$result = dbquery("UPDATE ".$db_prefix."mileage_distance SET distance_detour = '".$variables['travel_detour']."', distance_detour_type = '".$variables['travel_detour_type']."', distance_detour_reason = '".mysqli_real_escape_string($variables['travel_detour_reason'], $_db_link)."' WHERE distance_from = '".$variables['travel_from']."' AND distance_to = '".$variables['travel_to']."'");
+					$result = dbquery("UPDATE ".$db_prefix."mileage_distance SET distance_detour = '".$variables['travel_detour']."', distance_detour_type = '".$variables['travel_detour_type']."', distance_detour_reason = '".mysqli_real_escape_string($_db_link, $variables['travel_detour_reason'])."' WHERE distance_from = '".$variables['travel_from']."' AND distance_to = '".$variables['travel_to']."'");
 				}
 				if ($action == "add") {
 					// add the new car
-					$result = dbquery("INSERT INTO ".$db_prefix."mileage_travel (travel_car_id, travel_driver_id, travel_to, travel_type, travel_mileage, travel_date, travel_detour, travel_detour_type, travel_detour_reason, travel_details, travel_fuel, travel_fuel_type) VALUES ('".$variables['travel_car_id']."', '".$variables['travel_driver_id']."', '".$variables['travel_to']."', '".$variables['travel_type']."', '".$variables['travel_mileage']."', '".$variables['travel_date']."', '".$variables['travel_detour']."', '".$variables['travel_detour_type']."', '".mysqli_real_escape_string($variables['travel_detour_reason'], $_db_link)."', '".mysqli_real_escape_string($variables['travel_details'], $_db_link)."', '".$variables['travel_fuel']."', '".$variables['travel_fuel_type']."')");
+					$result = dbquery("INSERT INTO ".$db_prefix."mileage_travel (travel_car_id, travel_driver_id, travel_to, travel_type, travel_mileage, travel_date, travel_detour, travel_detour_type, travel_detour_reason, travel_details, travel_fuel, travel_fuel_type) VALUES ('".$variables['travel_car_id']."', '".$variables['travel_driver_id']."', '".$variables['travel_to']."', '".$variables['travel_type']."', '".$variables['travel_mileage']."', '".$variables['travel_date']."', '".$variables['travel_detour']."', '".$variables['travel_detour_type']."', '".mysqli_real_escape_string($_db_link, $variables['travel_detour_reason'])."', '".mysqli_real_escape_string($_db_link, $variables['travel_details'])."', '".$variables['travel_fuel']."', '".$variables['travel_fuel_type']."')");
 					// return to the main panel with a success message
 					$variables['message'] = $locale['eA_915'];
 				} elseif ($action == "edit") {
 					// update the trip
-					$result = dbquery("UPDATE ".$db_prefix."mileage_travel SET travel_car_id = '".$variables['travel_car_id']."', travel_driver_id = '".$variables['travel_driver_id']."', travel_to = '".$variables['travel_to']."', travel_type = '".$variables['travel_type']."', travel_mileage = '".$variables['travel_mileage']."', travel_date = '".$variables['travel_date']."', travel_detour = '".$variables['travel_detour']."', travel_detour_type = '".$variables['travel_detour_type']."', travel_detour_reason = '".mysqli_real_escape_string($variables['travel_detour_reason'], $_db_link)."', travel_details = '".mysqli_real_escape_string($variables['travel_details'], $_db_link)."', travel_fuel = '".$variables['travel_fuel']."', travel_fuel_type = '".$variables['travel_fuel_type']."' WHERE travel_id = '".$travel_id."'");
+					$result = dbquery("UPDATE ".$db_prefix."mileage_travel SET travel_car_id = '".$variables['travel_car_id']."', travel_driver_id = '".$variables['travel_driver_id']."', travel_to = '".$variables['travel_to']."', travel_type = '".$variables['travel_type']."', travel_mileage = '".$variables['travel_mileage']."', travel_date = '".$variables['travel_date']."', travel_detour = '".$variables['travel_detour']."', travel_detour_type = '".$variables['travel_detour_type']."', travel_detour_reason = '".mysqli_real_escape_string($_db_link, $variables['travel_detour_reason'])."', travel_details = '".mysqli_real_escape_string($_db_link, $variables['travel_details'])."', travel_fuel = '".$variables['travel_fuel']."', travel_fuel_type = '".$variables['travel_fuel_type']."' WHERE travel_id = '".$travel_id."'");
 					// return to the main panel with a success message
 					$variables['message'] = $locale['eA_917'];
 				}

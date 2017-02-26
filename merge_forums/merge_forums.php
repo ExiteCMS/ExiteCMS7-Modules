@@ -47,7 +47,7 @@ if (isset($_POST['merge'])) {
 	if (!isset($_POST['forum_from_id']) or !is_numeric($_POST['forum_from_id'])) {
 		$forum_from_id = false;
 	} else {
-		$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = ".mysqli_real_escape_string($_POST['forum_from_id'], $_db_link));
+		$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = ".mysqli_real_escape_string($_db_link, $_POST['forum_from_id']));
 		if ($data = dbarray($result)) {
 			$forum_from_id = $data['forum_id'];
 			$forum_from_name = $data['forum_name'];
@@ -58,7 +58,7 @@ if (isset($_POST['merge'])) {
 	if (!isset($_POST['forum_to_id']) or !is_numeric($_POST['forum_to_id'])) {
 		$forum_to_id = false;
 	} else {
-		$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = ".mysqli_real_escape_string($_POST['forum_to_id'], $_db_link));
+		$result = dbquery("SELECT * FROM ".$db_prefix."forums WHERE forum_id = ".mysqli_real_escape_string($_db_link, $_POST['forum_to_id']));
 		if ($data = dbarray($result)) {
 			$forum_to_id = $data['forum_id'];
 			$forum_to_name = $data['forum_name'];
@@ -85,11 +85,11 @@ if (isset($_POST['merge'])) {
 		$variables['forum_to_id'] = $forum_to_id;
 		$variables['prefix'] = $prefix;
 		// first, add our prefix
-		$result = dbquery("UPDATE ".$db_prefix."threads SET thread_subject = CONCAT('".mysqli_real_escape_string($prefix, $_db_link)."', thread_subject) WHERE LEFT(thread_subject,1) != '[' AND forum_id = ".$forum_from_id);
+		$result = dbquery("UPDATE ".$db_prefix."threads SET thread_subject = CONCAT('".mysqli_real_escape_string($_db_link, $prefix)."', thread_subject) WHERE LEFT(thread_subject,1) != '[' AND forum_id = ".$forum_from_id);
 		// move all threads to the new forum
 		$result = dbquery("UPDATE ".$db_prefix."threads SET forum_id = ".$forum_to_id." WHERE forum_id = ".$forum_from_id);
 		// add our prefix to the post subjects as well
-		$result = dbquery("UPDATE ".$db_prefix."posts SET post_subject = CONCAT('".mysqli_real_escape_string($prefix, $_db_link)."', post_subject) WHERE LEFT(post_subject,1) != '[' AND forum_id = ".$forum_from_id);
+		$result = dbquery("UPDATE ".$db_prefix."posts SET post_subject = CONCAT('".mysqli_real_escape_string($_db_link, $prefix)."', post_subject) WHERE LEFT(post_subject,1) != '[' AND forum_id = ".$forum_from_id);
 		// move all posts to the new forum as well
 		$result = dbquery("UPDATE ".$db_prefix."posts SET forum_id = ".$forum_to_id." WHERE forum_id = ".$forum_from_id);
 		// move all thread read pointers

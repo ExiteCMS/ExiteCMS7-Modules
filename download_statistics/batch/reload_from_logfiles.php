@@ -132,7 +132,7 @@ if (count($logfiles)) {
 					// update the file cache
 					$result = dbquery("DELETE FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_timeout < ".$logrec[1][2]);
 					// check if the file it's in the retry cache
-					$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$logrec[2]."' AND dlsfc_file = '".mysqli_real_escape_string($logrec[4], $_db_link)."'");
+					$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$logrec[2]."' AND dlsfc_file = '".mysqli_real_escape_string($_db_link, $logrec[4])."'");
 					// not in the cache...
 					if (mysqli_affected_rows() == 0) {
 						if (SHOW_DETAILS) display("-> not in the file cache");
@@ -169,7 +169,7 @@ if (count($logfiles)) {
 						}
 					}
 					// add the record to the file cache (or update the existing record if it was already in the cache
-					$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$logrec[2]."', '".mysqli_real_escape_string($logrec[4], $_db_link)."', '".($logrec[1][2]+60*15)."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".($logrec[1][2]+60*15)."'");
+					$result2 = dbquery("INSERT INTO ".$db_prefix."dlstats_fcache (dlsfc_ip, dlsfc_file, dlsfc_timeout) VALUES ('".$logrec[2]."', '".mysqli_real_escape_string($_db_link, $logrec[4])."', '".($logrec[1][2]+60*15)."') ON DUPLICATE KEY UPDATE dlsfc_timeout = '".($logrec[1][2]+60*15)."'");
 
 
 				} else {

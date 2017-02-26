@@ -52,7 +52,7 @@ function log_download($file, $ip, $map=0, $success=1, $timestamp=0) {
 	$result = dbquery("DELETE LOW_PRIORITY FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_timeout < ".(time() - LOG_RETRY_TIMEOUT));
 
 	// check if the file it's in the retry cache
-	$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$ip."' AND dlsfc_file = '".mysqli_real_escape_string($file, $_db_link)."'");
+	$result = dbquery("SELECT * FROM ".$db_prefix."dlstats_fcache WHERE dlsfc_ip = '".$ip."' AND dlsfc_file = '".mysqli_real_escape_string($_db_link, $file)."'");
 	// not in the cache...
 	if (dbrows($result) == 0) {
 		if (CMS_CLI && function_exists('display')) display("-> not in the file cache");

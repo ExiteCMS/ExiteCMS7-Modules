@@ -643,7 +643,7 @@ function ext_scriptTag( $src = '', $script = '') {
 }
 function ext_alertBox( $msg ) {
 	global $_db_link;
-	return ext_scriptTag('', 'Ext.Msg.alert( \''.$GLOBALS["error_msg"]['message'].'\', \''. mysqli_real_escape_string( $msg, $_db_link ) .'\' );' );
+	return ext_scriptTag('', 'Ext.Msg.alert( \''.$GLOBALS["error_msg"]['message'].'\', \''. mysqli_real_escape_string($_db_link, $msg) .'\' );' );
 }
 function ext_docLocation( $url ) {
 	return ext_scriptTag('', 'document.location=\''. $url .'\';' );

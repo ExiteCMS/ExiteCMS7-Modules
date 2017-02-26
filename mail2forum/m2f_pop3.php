@@ -310,7 +310,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 	// is this a new thread?
 	if ($thread_id == -1) {
 		$sql = "INSERT INTO ".$db_prefix."threads (forum_id, thread_subject, thread_author, thread_views, thread_lastpost, thread_lastuser, thread_sticky, thread_locked)
-					VALUES('$forum_id', '".mysqli_real_escape_string($subject, $_db_link)."', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
+					VALUES('$forum_id', '".mysqli_real_escape_string($_db_link, $subject)."', '".$sender['user_id']."', '0', '$posttime', '".$sender['user_id']."', '0', '0')";
 		$result = dbquery($sql);
 		if (!$result) {
 			if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT', $db_prefix.'threads'));
@@ -335,7 +335,7 @@ function addnewpost($forum_id, $thread_id, $sender, $recipient, $post) {
 
 	// insert the new message into the posts table
 	$sql = "INSERT INTO ".$db_prefix."posts (forum_id, thread_id, post_subject, post_message, post_showsig, post_smileys, post_author, post_datestamp, post_ip, post_cc, post_edituser, post_edittime)
-		VALUES ('$forum_id', '$thread_id', '".mysqli_real_escape_string($subject, $_db_link)."', '".mysqli_real_escape_string($post['body'], $_db_link)."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
+		VALUES ('$forum_id', '$thread_id', '".mysqli_real_escape_string($_db_link, $subject)."', '".mysqli_real_escape_string($_db_link, $post['body'])."', '1', '1', '".$sender['user_id']."', '$posttime', '".$post['received']['ip']."', '$sender_cc', '0', '0')";
 	$result = dbquery($sql);
 	if (!$result) {
 		if ($settings['m2f_process_log']) logentry('ADDPOST', sprintf($locale['m2f907'], 'INSERT (new post)', $db_prefix.'posts'));
@@ -799,7 +799,7 @@ while (true) {
 								}
 								$subject = trim($subject);
 								// See if we can match the subject
-								$result = dbquery("SELECT DISTINCT forum_id, thread_id FROM ".$db_prefix."posts WHERE forum_id = '".$recipient['m2f_forumid']."' AND LOWER(post_subject)='".mysqli_real_escape_string($subject, $_db_link)."' ORDER BY thread_id");
+								$result = dbquery("SELECT DISTINCT forum_id, thread_id FROM ".$db_prefix."posts WHERE forum_id = '".$recipient['m2f_forumid']."' AND LOWER(post_subject)='".mysqli_real_escape_string($_db_link, $subject)."' ORDER BY thread_id");
 								switch (dbrows($result)) {
 									case 0:
 										// subject not found. Must be a new post
